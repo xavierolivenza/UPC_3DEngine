@@ -4,8 +4,6 @@
 #include "Globals.h"
 #include "Primitive.h"
 
-#define HUGE_CHICKEN_SCALE 70.0f
-
 struct PhysBody3D;
 struct PhysMotor3D;
 
@@ -15,8 +13,11 @@ public:
 	ModuleSceneIntro(Application* app, bool start_enabled = true);
 	~ModuleSceneIntro();
 
+	bool Init();
 	bool Start();
+	update_status PreUpdate(float dt);
 	update_status Update(float dt);
+	update_status PostUpdate(float dt);
 	bool CleanUp();
 
 	void OnCollision(PhysBody3D* body1, PhysBody3D* body2);

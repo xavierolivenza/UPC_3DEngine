@@ -71,35 +71,6 @@ bool Application::Init()
 		item = item->next;
 	}
 	
-	//Prepare rendering envoriment for ImGui (Or we think so...)
-	unsigned char* pixels;
-	int width = 0;
-	int height = 0;
-	GLuint g_FontTexture;
-
-	ImGuiIO& io{ ImGui::GetIO() };
-
-	io.Fonts->GetTexDataAsAlpha8(&pixels, &width, &height);
-
-	// Upload texture to graphics system
-	GLint last_texture;
-	glGetIntegerv(GL_TEXTURE_BINDING_2D, &last_texture);
-	glGenTextures(1, &g_FontTexture);
-	glBindTexture(GL_TEXTURE_2D, g_FontTexture);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_ALPHA, width, height, 0, GL_ALPHA, GL_UNSIGNED_BYTE, pixels);
-
-	// Get display size
-	App->window->GetWindowSize(width, height);
-	
-	io.DisplaySize = ImVec2((float)width, (float)height);
-	io.RenderDrawListsFn = NULL;
-	io.Fonts->TexID = (void *)(intptr_t)g_FontTexture;
-
-	// Restore state
-	glBindTexture(GL_TEXTURE_2D, last_texture);
-
 	ms_timer.Start();
 	return ret;
 }
@@ -107,8 +78,6 @@ bool Application::Init()
 // ---------------------------------------------
 void Application::PrepareUpdate()
 {
-	ImGui::NewFrame();
-
 	dt = (float)ms_timer.Read() / 1000.0f;
 	ms_timer.Start();
 }
@@ -116,8 +85,7 @@ void Application::PrepareUpdate()
 // ---------------------------------------------
 void Application::FinishUpdate()
 {
-	ImGui::Render();
-	ImGui::GetDrawData();
+
 }
 
 // Call PreUpdate, Update and PostUpdate on all modules

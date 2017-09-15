@@ -4,8 +4,9 @@
 #include "Primitive.h"
 #include "PhysBody3D.h"
 
-#define WIDTH 15
-#define CHICKEN_Y_FLOOR 1.5f
+#include "Glew\include\glew.h"
+#include "imgui-1.51\imgui.h"
+#include "imgui-1.51\imgui_impl_sdl_gl3.h"
 
 ModuleSceneIntro::ModuleSceneIntro(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
@@ -13,6 +14,13 @@ ModuleSceneIntro::ModuleSceneIntro(Application* app, bool start_enabled) : Modul
 
 ModuleSceneIntro::~ModuleSceneIntro()
 {}
+
+bool ModuleSceneIntro::Init()
+{
+	glewInit();
+	ImGui_ImplSdlGL3_Init(App->window->window);
+	return true;
+}
 
 // Load assets
 bool ModuleSceneIntro::Start()
@@ -25,7 +33,7 @@ bool ModuleSceneIntro::Start()
 
 	//--------------------------------------------//
 	//Start
-	cube1.size.x = WIDTH;
+	cube1.size.x = 15;
 	cube1.size.y = 1;
 	cube1.size.z = 15;
 	cube1.color = Chocolate;
@@ -54,23 +62,19 @@ bool ModuleSceneIntro::Start()
 	return ret;
 }
 
-// Load assets
-bool ModuleSceneIntro::CleanUp()
+update_status ModuleSceneIntro::PreUpdate(float dt)
 {
-	LOG("Unloading Intro scene");
-
-	return true;
+	ImGui_ImplSdlGL3_NewFrame(App->window->window);
+	return UPDATE_CONTINUE;
 }
 
 // Update
 update_status ModuleSceneIntro::Update(float dt)
 {
+	ImGui::Text("Hello, world!");
+	ImGui::ShowTestWindow();
 
-
-	
-	//ImGui::ShowTestWindow();
-
-
+	//ImGui::End();
 
 	//--------------------------------------------//
 	//Start
@@ -82,6 +86,20 @@ update_status ModuleSceneIntro::Update(float dt)
 	//--------------------------------------------//
 	
 	return UPDATE_CONTINUE;
+}
+
+update_status ModuleSceneIntro::PostUpdate(float dt)
+{
+	ImGui::Render();
+	return UPDATE_CONTINUE;
+}
+
+// Load assets
+bool ModuleSceneIntro::CleanUp()
+{
+	LOG("Unloading Intro scene");
+	ImGui_ImplSdlGL3_Shutdown();
+	return true;
 }
 
 void ModuleSceneIntro::OnCollision(PhysBody3D* body1, PhysBody3D* body2)
