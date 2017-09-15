@@ -27,9 +27,9 @@ bool ModuleSceneIntro::Start()
 	//Start
 	cube1.size.x = WIDTH;
 	cube1.size.y = 1;
-	cube1.size.z = 110;
+	cube1.size.z = 15;
 	cube1.color = Chocolate;
-	cube1.SetPos(0, 0, 50);
+	cube1.SetPos(0, 0, 0);
 	cube1body = App->physics->AddBody(cube1, 0);
 	//Arc
 	cube1_1.size.x = 1;

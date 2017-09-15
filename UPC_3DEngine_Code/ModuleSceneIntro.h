@@ -8,7 +8,6 @@
 
 struct PhysBody3D;
 struct PhysMotor3D;
-class Chicken;
 
 class ModuleSceneIntro : public Module
 {
