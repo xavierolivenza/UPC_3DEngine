@@ -65,6 +65,13 @@ bool ModuleSceneIntro::CleanUp()
 // Update
 update_status ModuleSceneIntro::Update(float dt)
 {
+
+
+	
+	//ImGui::ShowTestWindow();
+
+
+
 	//--------------------------------------------//
 	//Start
 	cube1.Render();

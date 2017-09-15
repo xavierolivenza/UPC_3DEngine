@@ -11,7 +11,6 @@
 
 class DebugDrawer;
 struct PhysBody3D;
-struct PhysVehicle3D;
 struct VehicleInfo;
 
 class ModulePhysics3D : public Module
@@ -51,7 +50,6 @@ private:
 	p2List<PhysBody3D*> bodies;
 	p2List<btDefaultMotionState*> motions;
 	p2List<btTypedConstraint*> constraints;
-	p2List<PhysVehicle3D*> vehicles;
 };
 
 class DebugDrawer : public btIDebugDraw

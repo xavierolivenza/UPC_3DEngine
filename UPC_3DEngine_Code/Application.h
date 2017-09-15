@@ -1,5 +1,12 @@
 #pragma once
 
+#include <cstdlib>
+//#include "glfw-3.2.1\include\GLFW\glfw3.h"
+//#include "glfw-3.2.1.bin.WIN64\include\GLFW\glfw3.h"
+//#pragma comment (lib,"glfw-3.2.1.bin.WIN64/lib-vc2015/glfw3.dll")
+#include "imgui-1.51\imgui.h"
+//#include "gl_core_3_3.h"
+
 #include "p2List.h"
 #include "Globals.h"
 #include "Timer.h"
@@ -12,6 +19,9 @@
 #include "ModuleCamera3D.h"
 #include "ModulePhysics3D.h"
 #include "ModulePlayer.h"
+#include "p2Log.h"
+
+using namespace ImGui;
 
 class Application
 {
