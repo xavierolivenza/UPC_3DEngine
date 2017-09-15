@@ -10,15 +10,16 @@
 
 ModuleSceneIntro::ModuleSceneIntro(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
+	
 }
 
 ModuleSceneIntro::~ModuleSceneIntro()
-{}
+{
+	
+}
 
 bool ModuleSceneIntro::Init()
 {
-	glewInit();
-	ImGui_ImplSdlGL3_Init(App->window->window);
 	return true;
 }
 
@@ -27,6 +28,9 @@ bool ModuleSceneIntro::Start()
 {
 	LOG("Loading Intro assets");
 	bool ret = true;
+
+	glewInit();
+	ImGui_ImplSdlGL3_Init(App->window->window);
 
 	App->camera->Move(vec3(1.0f, 1.0f, 0.0f));
 	App->camera->LookAt(vec3(0, 0, 0));
@@ -64,18 +68,12 @@ bool ModuleSceneIntro::Start()
 
 update_status ModuleSceneIntro::PreUpdate(float dt)
 {
-	ImGui_ImplSdlGL3_NewFrame(App->window->window);
 	return UPDATE_CONTINUE;
 }
 
 // Update
 update_status ModuleSceneIntro::Update(float dt)
 {
-	ImGui::Text("Hello, world!");
-	ImGui::ShowTestWindow();
-
-	//ImGui::End();
-
 	//--------------------------------------------//
 	//Start
 	cube1.Render();
@@ -85,12 +83,17 @@ update_status ModuleSceneIntro::Update(float dt)
 	cube1_3.Render();
 	//--------------------------------------------//
 	
+	ImGui_ImplSdlGL3_NewFrame(App->window->window);
+
+	ImGui::ShowTestWindow();
+
+	ImGui::Render();
+
 	return UPDATE_CONTINUE;
 }
 
 update_status ModuleSceneIntro::PostUpdate(float dt)
 {
-	ImGui::Render();
 	return UPDATE_CONTINUE;
 }
 

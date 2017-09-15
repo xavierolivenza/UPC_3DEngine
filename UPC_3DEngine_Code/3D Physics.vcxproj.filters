@@ -96,16 +96,7 @@
     <ClInclude Include="imgui-1.51\imgui.h">
       <Filter>Sources\Tools\ImGui</Filter>
     </ClInclude>
-    <ClInclude Include="imgui-1.51\imgui_internal.h">
-      <Filter>Sources\Tools\ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="imgui-1.51\stb_rect_pack.h">
-      <Filter>Sources\Tools\ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="imgui-1.51\stb_textedit.h">
-      <Filter>Sources\Tools\ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="imgui-1.51\stb_truetype.h">
+    <ClInclude Include="imgui-1.51\imgui_impl_sdl_gl3.h">
       <Filter>Sources\Tools\ImGui</Filter>
     </ClInclude>
   </ItemGroup>
@@ -168,6 +159,9 @@
       <Filter>Sources\Tools\ImGui</Filter>
     </ClCompile>
     <ClCompile Include="imgui-1.51\imgui_draw.cpp">
+      <Filter>Sources\Tools\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui-1.51\imgui_impl_sdl_gl3.cpp">
       <Filter>Sources\Tools\ImGui</Filter>
     </ClCompile>
   </ItemGroup>
