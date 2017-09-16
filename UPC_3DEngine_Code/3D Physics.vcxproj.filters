@@ -42,9 +42,6 @@
     <ClInclude Include="ModuleWindow.h">
       <Filter>Sources\Modules</Filter>
     </ClInclude>
-    <ClInclude Include="p2DynArray.h">
-      <Filter>Sources\Containers</Filter>
-    </ClInclude>
     <ClInclude Include="p2List.h">
       <Filter>Sources\Containers</Filter>
     </ClInclude>
@@ -83,9 +80,6 @@
     </ClInclude>
     <ClInclude Include="ModulePlayer.h">
       <Filter>Sources\Modules\Game</Filter>
-    </ClInclude>
-    <ClInclude Include="p2SString.h">
-      <Filter>Sources\Containers</Filter>
     </ClInclude>
     <ClInclude Include="p2Log.h">
       <Filter>Sources\Tools</Filter>
