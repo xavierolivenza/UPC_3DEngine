@@ -43,11 +43,18 @@ public:
 	update_status Update();
 	bool CleanUp();
 
+	void WantToClose()
+	{
+		Want_To_Close = true;
+	}
+
 private:
 
 	void AddModule(Module* mod);
 	void PrepareUpdate();
 	void FinishUpdate();
+
+	bool Want_To_Close = false;
 };
 
 extern Application* App;

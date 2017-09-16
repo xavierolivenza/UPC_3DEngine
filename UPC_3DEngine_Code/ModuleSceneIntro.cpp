@@ -87,6 +87,9 @@ update_status ModuleSceneIntro::Update(float dt)
 
 	ImGui::ShowTestWindow();
 
+	if (ImGui::Button("close"))
+		App->WantToClose();
+
 	ImGui::Render();
 
 	return UPDATE_CONTINUE;

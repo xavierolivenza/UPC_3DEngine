@@ -48,10 +48,7 @@ Application::~Application()
 bool Application::Init()
 {
 	bool ret = true;
-	/*
-	if (!glfwInit())
-		exit(EXIT_FAILURE);
-	*/
+
 	// Call Init() in all modules
 	p2List_item<Module*>* item = list_modules.getFirst();
 
@@ -119,6 +116,10 @@ update_status Application::Update()
 	}
 
 	FinishUpdate();
+
+	if (Want_To_Close)
+		ret = UPDATE_STOP;
+
 	return ret;
 }
 
@@ -132,8 +133,6 @@ bool Application::CleanUp()
 		ret = item->data->CleanUp();
 		item = item->prev;
 	}
-
-	//glfwTerminate();
 
 	return ret;
 }
