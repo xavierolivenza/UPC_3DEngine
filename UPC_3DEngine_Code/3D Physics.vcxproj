@@ -81,6 +81,7 @@
     <ClInclude Include="imgui-1.51\imgui.h" />
     <ClInclude Include="imgui-1.51\imgui_impl_sdl_gl3.h" />
     <ClInclude Include="Light.h" />
+    <ClInclude Include="MathGeoLib\MathGeoLib.h" />
     <ClInclude Include="ModuleCamera3D.h" />
     <ClInclude Include="ModuleEngineUI.h" />
     <ClInclude Include="ModulePhysics3D.h" />

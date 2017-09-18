@@ -1,3 +1,4 @@
+#include "Application.h"
 #include "p2Log.h"
 
 void log(const char file[], int line, const char* format, ...)
@@ -9,6 +10,10 @@ void log(const char file[], int line, const char* format, ...)
 	// Construct the string from variable arguments
 	va_start(ap, format);
 	vsprintf_s(tmp_string, 4096, format, ap);
+
+	if (App && App->engineUI && App->engineUI->IsActive())
+		App->engineUI->PushNewConsoleLabel(&std::string(tmp_string));
+
 	va_end(ap);
 	sprintf_s(tmp_string2, 4096, "\n%s(%d) : %s", file, line, tmp_string);
 	OutputDebugString(tmp_string2);

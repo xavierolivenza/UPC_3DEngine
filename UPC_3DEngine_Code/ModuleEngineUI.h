@@ -15,4 +15,15 @@ public:
 	update_status PostUpdate(float dt);
 	bool CleanUp();
 
+	void PushNewConsoleLabel(std::string* newlabel);
+
+	bool IsActive()
+	{
+		return active;
+	}
+
+private:
+	bool active = false;
+	std::list<std::string> console_logs;
+
 };

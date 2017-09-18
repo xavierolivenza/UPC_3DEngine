@@ -28,12 +28,14 @@ Application::Application()
 	// Scenes
 	AddModule(scene_intro);
 	AddModule(player);
-	AddModule(engineUI);
+	
 	//camera need to be below player
 	AddModule(camera);
 
 	// Renderer last!
 	AddModule(renderer3D);
+
+	AddModule(engineUI);
 }
 
 Application::~Application()
@@ -107,9 +109,12 @@ update_status Application::Update()
 bool Application::CleanUp()
 {
 	bool ret = true;
-	for (std::list<Module*>::iterator item = list_modules.begin(); item != list_modules.cend(); ++item) {
+	for (std::list<Module*>::iterator item = list_modules.begin(); item != list_modules.cend(); ++item)
+	{
 		(*item)->CleanUp();
+		delete *item;
 	}
+	list_modules.clear();
 	return ret;
 }
 

@@ -18,6 +18,7 @@ ModuleEngineUI::~ModuleEngineUI()
 
 bool ModuleEngineUI::Init()
 {
+	active = true;
 	return true;
 }
 
@@ -45,6 +46,11 @@ update_status ModuleEngineUI::Update(float dt)
 
 	ImGui::ShowTestWindow();
 
+	ImGui::Begin("Console");
+	for (std::list<std::string>::iterator item = console_logs.begin(); item != console_logs.cend(); ++item)
+		ImGui::Text(item._Ptr->_Myval.c_str());
+	ImGui::End();
+
 	if (ImGui::Button("close"))
 		App->WantToClose();
 
@@ -63,5 +69,11 @@ bool ModuleEngineUI::CleanUp()
 {
 	LOG("Unloading ModuleEngineUI");
 	ImGui_ImplSdlGL3_Shutdown();
+	active = false;
 	return true;
+}
+
+void ModuleEngineUI::PushNewConsoleLabel(std::string* newlabel)
+{
+	console_logs.push_back(*newlabel);
 }
