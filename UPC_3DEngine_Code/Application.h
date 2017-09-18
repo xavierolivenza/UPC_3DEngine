@@ -13,6 +13,7 @@
 #include "ModuleCamera3D.h"
 #include "ModulePhysics3D.h"
 #include "ModulePlayer.h"
+#include "ModuleEngineUI.h"
 #include "p2Log.h"
 
 class Application
@@ -26,6 +27,7 @@ public:
 	ModuleCamera3D* camera;
 	ModulePhysics3D* physics;
 	ModulePlayer* player;
+	ModuleEngineUI* engineUI;
 
 private:
 

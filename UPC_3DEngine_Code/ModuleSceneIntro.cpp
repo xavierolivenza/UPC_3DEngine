@@ -4,10 +4,6 @@
 #include "Primitive.h"
 #include "PhysBody3D.h"
 
-#include "Glew\include\glew.h"
-#include "imgui-1.51\imgui.h"
-#include "imgui-1.51\imgui_impl_sdl_gl3.h"
-
 ModuleSceneIntro::ModuleSceneIntro(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
 	
@@ -28,9 +24,6 @@ bool ModuleSceneIntro::Start()
 {
 	LOG("Loading Intro assets");
 	bool ret = true;
-
-	glewInit();
-	ImGui_ImplSdlGL3_Init(App->window->window);
 
 	App->camera->Move(vec3(1.0f, 1.0f, 0.0f));
 	App->camera->LookAt(vec3(0, 0, 0));
@@ -83,15 +76,6 @@ update_status ModuleSceneIntro::Update(float dt)
 	cube1_3.Render();
 	//--------------------------------------------//
 	
-	ImGui_ImplSdlGL3_NewFrame(App->window->window);
-
-	ImGui::ShowTestWindow();
-
-	if (ImGui::Button("close"))
-		App->WantToClose();
-
-	ImGui::Render();
-
 	return UPDATE_CONTINUE;
 }
 
@@ -104,7 +88,6 @@ update_status ModuleSceneIntro::PostUpdate(float dt)
 bool ModuleSceneIntro::CleanUp()
 {
 	LOG("Unloading Intro scene");
-	ImGui_ImplSdlGL3_Shutdown();
 	return true;
 }
 

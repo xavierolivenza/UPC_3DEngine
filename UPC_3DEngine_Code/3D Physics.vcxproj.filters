@@ -90,6 +90,9 @@
     <ClInclude Include="imgui-1.51\imgui_impl_sdl_gl3.h">
       <Filter>Sources\Tools\ImGui</Filter>
     </ClInclude>
+    <ClInclude Include="ModuleEngineUI.h">
+      <Filter>Sources\Modules</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ModuleAudio.cpp">
@@ -154,6 +157,9 @@
     </ClCompile>
     <ClCompile Include="imgui-1.51\imgui_impl_sdl_gl3.cpp">
       <Filter>Sources\Tools\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="ModuleEngineUI.cpp">
+      <Filter>Sources\Modules</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
