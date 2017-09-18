@@ -27,7 +27,7 @@ ModuleCamera3D::~ModuleCamera3D()
 // -----------------------------------------------------------------
 bool ModuleCamera3D::Start()
 {
-	LOG("Setting up the camera");
+	LOGP("Setting up the camera");
 	bool ret = true;
 
 	CameraPos = vec3(0.0f, 10.0f, 0.0f);
@@ -39,7 +39,7 @@ bool ModuleCamera3D::Start()
 // -----------------------------------------------------------------
 bool ModuleCamera3D::CleanUp()
 {
-	LOG("Cleaning camera");
+	LOGP("Cleaning camera");
 
 	return true;
 }

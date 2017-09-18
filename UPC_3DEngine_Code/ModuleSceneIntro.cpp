@@ -22,8 +22,20 @@ bool ModuleSceneIntro::Init()
 // Load assets
 bool ModuleSceneIntro::Start()
 {
-	LOG("Loading Intro assets");
+	LOGP("Loading Intro assets");
 	bool ret = true;
+
+	/*
+	vec shere1_centre = { 0,0,0 };
+	Sphere* shere1 = new Sphere(shere1_centre, 2.0f);
+	vec shere2_centre = { 1,0,0 };
+	Sphere* shere2 = new Sphere(shere2_centre, 2.0f);
+	bool intersection = shere1->Intersects(*shere2);
+	if(intersection)
+		LOGP("Spheres intersect");
+	else
+		LOGP("Spheres don't intersect");
+	*/
 
 	App->camera->Move(vec3(1.0f, 1.0f, 0.0f));
 	App->camera->LookAt(vec3(0, 0, 0));
@@ -67,6 +79,12 @@ update_status ModuleSceneIntro::PreUpdate(float dt)
 // Update
 update_status ModuleSceneIntro::Update(float dt)
 {
+	/*
+	LCG rand_test;
+	LOGP("Random generator: %f", rand_test.Float(0.0f, 1.0f));
+	LOGP("Random generator: %i", rand_test.Int(0, 100));
+	*/
+
 	//--------------------------------------------//
 	//Start
 	cube1.Render();
@@ -87,7 +105,7 @@ update_status ModuleSceneIntro::PostUpdate(float dt)
 // Load assets
 bool ModuleSceneIntro::CleanUp()
 {
-	LOG("Unloading Intro scene");
+	LOGP("Unloading Intro scene");
 	return true;
 }
 

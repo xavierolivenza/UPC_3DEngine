@@ -16,7 +16,7 @@ ModulePlayer::~ModulePlayer()
 // Load assets
 bool ModulePlayer::Start()
 {
-	LOG("Loading player");
+	LOGP("Loading player");
 
 	return true;
 }
@@ -24,7 +24,7 @@ bool ModulePlayer::Start()
 // Unload assets
 bool ModulePlayer::CleanUp()
 {
-	LOG("Unloading player");
+	LOGP("Unloading player");
 
 	return true;
 }

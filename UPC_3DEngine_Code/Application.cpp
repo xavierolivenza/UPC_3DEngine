@@ -57,7 +57,7 @@ bool Application::Init()
 	}
 
 	// After all Init calls we call Start() in all modules
-	LOG("Application Start --------------");
+	LOGP("Application Start --------------");
 
 	for (std::list<Module*>::iterator item = list_modules.begin(); item != list_modules.cend() && ret == true; ++item) {
 		ret = (item._Ptr->_Myval)->Start();

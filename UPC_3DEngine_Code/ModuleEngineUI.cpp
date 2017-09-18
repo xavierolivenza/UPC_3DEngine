@@ -25,7 +25,7 @@ bool ModuleEngineUI::Init()
 // Load assets
 bool ModuleEngineUI::Start()
 {
-	LOG("Loading ModuleEngineUI");
+	LOGP("Loading ModuleEngineUI");
 	bool ret = true;
 
 	glewInit();
@@ -67,7 +67,7 @@ update_status ModuleEngineUI::PostUpdate(float dt)
 // Load assets
 bool ModuleEngineUI::CleanUp()
 {
-	LOG("Unloading ModuleEngineUI");
+	LOGP("Unloading ModuleEngineUI");
 	ImGui_ImplSdlGL3_Shutdown();
 	active = false;
 	return true;

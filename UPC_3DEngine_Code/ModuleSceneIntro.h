@@ -3,6 +3,10 @@
 #include "Globals.h"
 #include "Primitive.h"
 
+
+#include "MathGeoLib\MathGeoLib.h"
+#include "MathGeoLib\MathBuildConfig.h"
+
 struct PhysBody3D;
 struct PhysMotor3D;
 
@@ -26,15 +30,15 @@ private:
 	//---------------Circuit parts----------------//
 	//--------------------------------------------//
 	//Start
-	Cube		 cube1;
+	P2Cube		 cube1;
 	PhysBody3D*  cube1body;
 	//--------------------------------------------//
 	//Arc
-	Cube		 cube1_1;
+	P2Cube		 cube1_1;
 	PhysBody3D*  cube1_1body;
-	Cube		 cube1_2;
+	P2Cube		 cube1_2;
 	PhysBody3D*  cube1_2body;
-	Cube		 cube1_3;
+	P2Cube		 cube1_3;
 	PhysBody3D*  cube1_3body;
 	//--------------------------------------------//
 	
