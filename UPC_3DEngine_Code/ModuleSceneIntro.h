@@ -3,7 +3,6 @@
 #include "Globals.h"
 #include "Primitive.h"
 
-
 #include "MathGeoLib\MathGeoLib.h"
 #include "MathGeoLib\MathBuildConfig.h"
 
