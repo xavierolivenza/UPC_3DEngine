@@ -51,7 +51,9 @@ update_status ModuleEngineUI::Update(float dt)
 		ImGui::Text(item._Ptr->_Myval.c_str());
 	static char str0[128] = "";
 	if (ImGui::InputText("input text", str0, 128, ImGuiInputTextFlags_EnterReturnsTrue))
+	{
 		LOGP(str0);
+	}
 	ImGui::End();
 
 	ImGui::Begin("Random generator");

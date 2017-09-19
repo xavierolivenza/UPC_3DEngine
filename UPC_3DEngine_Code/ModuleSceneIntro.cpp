@@ -58,6 +58,39 @@ bool ModuleSceneIntro::Start()
 	LOGP("/-----------------------------------------/");
 
 	/**/
+	vec capsule1_bot = { 0,0,0 };
+	vec capsule1_top = { 0,1,0 };
+	Capsule* capsule1 = new Capsule(capsule1_bot, capsule1_top,2.0f);
+	LOGP("Capsule 1 bottom (0,0,0), top (0,1,0), radius 2.0f");
+	vec capsule2_bot = { 0,1,0 };
+	vec capsule2_top = { 0,2,0 };
+	Capsule* capsule2 = new Capsule(capsule2_bot, capsule2_top, 2.0f);
+	LOGP("Capsule 2 bottom (0,1,0), top (0,2,0), radius 2.0f");
+	bool intersection3 = capsule1->Intersects(*capsule2);
+	if (intersection3)
+		LOGP("Capsule 1-2 intersect");
+	else
+		LOGP("Capsule 1-2 don't intersect");
+	/**/
+
+	/**/
+	vec capsule3_bot = { 0,0,0 };
+	vec capsule3_top = { 0,1,0 };
+	Capsule* capsule3 = new Capsule(capsule3_bot, capsule3_top, 2.0f);
+	LOGP("Capsule 3 bottom (0,0,0), top (0,1,0), radius 2.0f");
+	vec capsule4_bot = { 0,10,0 };
+	vec capsule4_top = { 0,11,0 };
+	Capsule* capsule4 = new Capsule(capsule4_bot, capsule4_top, 2.0f);
+	LOGP("Capsule 4 bottom (0,10,0), top (0,11,0), radius 2.0f");
+	bool intersection4 = capsule3->Intersects(*capsule4);
+	if (intersection4)
+		LOGP("Capsule 3-4 intersect");
+	else
+		LOGP("Capsule 3-4 don't intersect");
+	/**/
+
+	LOGP("/-----------------------------------------/");
+	/**/
 	for (int i = 0; i < 10; i++)
 	{
 		LCG rand_test;
