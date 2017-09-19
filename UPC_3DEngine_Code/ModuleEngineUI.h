@@ -17,10 +17,9 @@ public:
 
 	void PushNewConsoleLabel(std::string* newlabel);
 
-	bool IsActive()
-	{
-		return active;
-	}
+	void GetEvent(SDL_Event* event);
+
+	bool IsActive();
 
 private:
 	bool active = false;

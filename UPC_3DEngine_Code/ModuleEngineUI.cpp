@@ -49,6 +49,9 @@ update_status ModuleEngineUI::Update(float dt)
 	ImGui::Begin("Console");
 	for (std::list<std::string>::iterator item = console_logs.begin(); item != console_logs.cend(); ++item)
 		ImGui::Text(item._Ptr->_Myval.c_str());
+	static char str0[128] = "";
+	if (ImGui::InputText("input text", str0, 128, ImGuiInputTextFlags_EnterReturnsTrue))
+		LOGP(str0);
 	ImGui::End();
 
 	ImGui::Begin("Random generator");
@@ -85,4 +88,14 @@ bool ModuleEngineUI::CleanUp()
 void ModuleEngineUI::PushNewConsoleLabel(std::string* newlabel)
 {
 	console_logs.push_back(*newlabel);
+}
+
+void ModuleEngineUI::GetEvent(SDL_Event* event)
+{
+	ImGui_ImplSdlGL3_ProcessEvent(event);
+}
+
+bool ModuleEngineUI::IsActive()
+{
+	return active;
 }
