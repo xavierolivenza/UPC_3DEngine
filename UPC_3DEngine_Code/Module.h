@@ -4,6 +4,9 @@
 #include <vector>
 #include <string>
 
+#include "MathGeoLib\MathGeoLib.h"
+#include "MathGeoLib\MathBuildConfig.h"
+
 class Application;
 struct PhysBody3D;
 

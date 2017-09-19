@@ -51,6 +51,15 @@ update_status ModuleEngineUI::Update(float dt)
 		ImGui::Text(item._Ptr->_Myval.c_str());
 	ImGui::End();
 
+	ImGui::Begin("Random generator");
+	if (ImGui::Button("Generate"))
+	{
+		LCG rand_test;
+		LOGP("Random generator Flo: %f", rand_test.Float(0.0f, 1.0f));
+		LOGP("Random generator Int: %i", rand_test.Int(0, 100));
+	}
+	ImGui::End();
+
 	if (ImGui::Button("close"))
 		App->WantToClose();
 
