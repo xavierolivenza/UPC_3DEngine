@@ -24,6 +24,7 @@ public:
 	bool IsActive();
 
 private:
+	bool showTestWindow = false;
 	bool active = false;
 	std::list<std::string> console_logs;
 

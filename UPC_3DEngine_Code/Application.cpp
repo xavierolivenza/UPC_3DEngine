@@ -132,3 +132,8 @@ void Application::AddModule(Module* mod)
 {
 	list_modules.push_back(mod);
 }
+
+void Application::OpenLink(const char* link)
+{
+	ShellExecute(NULL, "open", link, NULL, NULL, SW_SHOWMAXIMIZED);
+}

@@ -53,6 +53,8 @@ public:
 		Want_To_Close = true;
 	}
 
+	void OpenLink(const char* link);
+
 private:
 
 	void AddModule(Module* mod);

@@ -54,7 +54,9 @@ bool ModuleEngineUI::CleanUp()
 
 void ModuleEngineUI::DrawModuleImGui()
 {
-	//ImGui::ShowTestWindow();
+	//------------------------------------------//
+	//-----------------Menu Bar-----------------//
+	//------------------------------------------//
 	ImGui::BeginMainMenuBar();
 	if (ImGui::BeginMenu("File"))
 	{
@@ -67,20 +69,16 @@ void ModuleEngineUI::DrawModuleImGui()
 	if (ImGui::BeginMenu("Help"))
 	{
 		if (ImGui::MenuItem("Show Gui Demo Window"))
-		{
-
-		}
+			showTestWindow = !showTestWindow;
 		if (ImGui::MenuItem("Documentation"))
 		{
-
+			//App->OpenLink();
 		}
 		if (ImGui::MenuItem("Download latest"))
-		{
-
-		}
+			App->OpenLink("https://github.com/xavierolivenza/UPC_3DEngine/releases");
 		if (ImGui::MenuItem("Report Bug"))
 		{
-
+			//App->OpenLink();
 		}
 		if (ImGui::MenuItem("About"))
 		{
@@ -98,6 +96,22 @@ void ModuleEngineUI::DrawModuleImGui()
 	}
 	ImGui::EndMainMenuBar();
 
+	//------------------------------------------//
+	//-------------GUI Test Window--------------//
+	//------------------------------------------//
+	if(showTestWindow)
+		ImGui::ShowTestWindow();
+
+	//------------------------------------------//
+	//-----------Configuration Window-----------//
+	//------------------------------------------//
+	ImGui::Begin("Configuration");
+
+	ImGui::End();
+
+	//------------------------------------------//
+	//-----------------Console------------------//
+	//------------------------------------------//
 	ImGui::Begin("Console");
 	for (std::list<std::string>::iterator item = console_logs.begin(); item != console_logs.cend(); ++item)
 		ImGui::Text(item._Ptr->_Myval.c_str());
@@ -108,6 +122,9 @@ void ModuleEngineUI::DrawModuleImGui()
 	}
 	ImGui::End();
 
+	//------------------------------------------//
+	//-----------------Rand Gen-----------------//
+	//------------------------------------------//
 	ImGui::Begin("Random generator");
 	if (ImGui::Button("Generate"))
 	{
