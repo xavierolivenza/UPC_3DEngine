@@ -15,6 +15,8 @@ public:
 	update_status PostUpdate(float dt);
 	bool CleanUp();
 
+	void DrawModuleImGui();
+
 	void PushNewConsoleLabel(std::string* newlabel);
 
 	void GetEvent(SDL_Event* event);

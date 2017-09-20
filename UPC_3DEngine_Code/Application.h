@@ -16,6 +16,10 @@
 #include "ModuleEngineUI.h"
 #include "p2Log.h"
 
+#include "Glew\include\glew.h"
+#include "imgui-1.51\imgui.h"
+#include "imgui-1.51\imgui_impl_sdl_gl3.h"
+
 class Application
 {
 public:

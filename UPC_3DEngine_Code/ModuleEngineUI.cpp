@@ -2,10 +2,6 @@
 #include "Application.h"
 #include "ModuleEngineUI.h"
 
-#include "Glew\include\glew.h"
-#include "imgui-1.51\imgui.h"
-#include "imgui-1.51\imgui_impl_sdl_gl3.h"
-
 ModuleEngineUI::ModuleEngineUI(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
 	
@@ -28,9 +24,6 @@ bool ModuleEngineUI::Start()
 	LOGP("Loading ModuleEngineUI");
 	bool ret = true;
 
-	glewInit();
-	ImGui_ImplSdlGL3_Init(App->window->window);
-
 	return ret;
 }
 
@@ -42,9 +35,68 @@ update_status ModuleEngineUI::PreUpdate(float dt)
 // Update
 update_status ModuleEngineUI::Update(float dt)
 {
-	ImGui_ImplSdlGL3_NewFrame(App->window->window);
+	return UPDATE_CONTINUE;
+}
 
-	ImGui::ShowTestWindow();
+update_status ModuleEngineUI::PostUpdate(float dt)
+{
+	return UPDATE_CONTINUE;
+}
+
+// Load assets
+bool ModuleEngineUI::CleanUp()
+{
+	LOGP("Unloading ModuleEngineUI");
+	ImGui_ImplSdlGL3_Shutdown();
+	active = false;
+	return true;
+}
+
+void ModuleEngineUI::DrawModuleImGui()
+{
+	//ImGui::ShowTestWindow();
+	ImGui::BeginMainMenuBar();
+	if (ImGui::BeginMenu("File"))
+	{
+		ImGui::EndMenu();
+	}
+	if (ImGui::BeginMenu("View"))
+	{
+		ImGui::EndMenu();
+	}
+	if (ImGui::BeginMenu("Help"))
+	{
+		if (ImGui::MenuItem("Show Gui Demo Window"))
+		{
+
+		}
+		if (ImGui::MenuItem("Documentation"))
+		{
+
+		}
+		if (ImGui::MenuItem("Download latest"))
+		{
+
+		}
+		if (ImGui::MenuItem("Report Bug"))
+		{
+
+		}
+		if (ImGui::MenuItem("About"))
+		{
+
+		}
+		ImGui::EndMenu();
+	}
+	if (ImGui::BeginMenu("Close"))
+	{
+		if (ImGui::MenuItem("Close Engine"))
+		{
+			App->WantToClose();
+		}
+		ImGui::EndMenu();
+	}
+	ImGui::EndMainMenuBar();
 
 	ImGui::Begin("Console");
 	for (std::list<std::string>::iterator item = console_logs.begin(); item != console_logs.cend(); ++item)
@@ -64,27 +116,6 @@ update_status ModuleEngineUI::Update(float dt)
 		LOGP("Random generator Int: %i", rand_test.Int(0, 100));
 	}
 	ImGui::End();
-
-	if (ImGui::Button("close"))
-		App->WantToClose();
-
-	ImGui::Render();
-
-	return UPDATE_CONTINUE;
-}
-
-update_status ModuleEngineUI::PostUpdate(float dt)
-{
-	return UPDATE_CONTINUE;
-}
-
-// Load assets
-bool ModuleEngineUI::CleanUp()
-{
-	LOGP("Unloading ModuleEngineUI");
-	ImGui_ImplSdlGL3_Shutdown();
-	active = false;
-	return true;
 }
 
 void ModuleEngineUI::PushNewConsoleLabel(std::string* newlabel)

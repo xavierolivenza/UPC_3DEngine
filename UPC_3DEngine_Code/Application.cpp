@@ -63,6 +63,9 @@ bool Application::Init()
 		ret = (item._Ptr->_Myval)->Start();
 	}
 
+	glewInit();
+	ImGui_ImplSdlGL3_Init(App->window->window);
+
 	ms_timer.Start();
 	return ret;
 }
@@ -95,11 +98,18 @@ update_status Application::Update()
 		(*item)->Update(dt);
 	}
 
+	ImGui_ImplSdlGL3_NewFrame(App->window->window);
+	for (std::list<Module*>::iterator item = list_modules.begin(); item != list_modules.cend(); ++item) {
+		(*item)->DrawModuleImGui();
+	}
+	ImGui::Render();
+
 	for (std::list<Module*>::iterator item = list_modules.begin(); item != list_modules.cend(); ++item) {
 		(*item)->PostUpdate(dt);
 	}
 
 	FinishUpdate();
+
 	if (Want_To_Close)
 		ret = UPDATE_STOP;
 
