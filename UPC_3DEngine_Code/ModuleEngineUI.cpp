@@ -106,7 +106,56 @@ void ModuleEngineUI::DrawModuleImGui()
 	//-----------Configuration Window-----------//
 	//------------------------------------------//
 	ImGui::Begin("Configuration");
+	if (ImGui::CollapsingHeader("Application"))
+	{
+		//App name
+		static char appnamestr[128] = "";
+		if (ImGui::InputText("App name", appnamestr, 128, ImGuiInputTextFlags_EnterReturnsTrue))
+			App->window->SetTitle(appnamestr);
 
+		//Max FPS Slider
+		int MaxFPSValue = 0;
+		ImGui::SliderInt("Max FPS", &MaxFPSValue, 0, 144);
+
+		//Framerate PlotHistogram
+
+
+		//Miliseconds PlotHistogram
+
+
+		//Memory Consumption PlotHistogram
+
+
+		//Memory data
+		char title[50];
+		sMStats MemoryStats = m_getMemoryStatistics();
+		sprintf_s(title, 50, "totalReportedMemory: %i", MemoryStats.totalReportedMemory);
+		ImGui::Text(title);
+		sprintf_s(title, 50, "totalActualMemory: %i", MemoryStats.totalActualMemory);
+		ImGui::Text(title);
+		sprintf_s(title, 50, "peakReportedMemory: %i", MemoryStats.peakReportedMemory);
+		ImGui::Text(title);
+		sprintf_s(title, 50, "peakActualMemory: %i", MemoryStats.peakActualMemory);
+		ImGui::Text(title);
+		sprintf_s(title, 50, "accumulatedReportedMemory: %i", MemoryStats.accumulatedReportedMemory);
+		ImGui::Text(title);
+		sprintf_s(title, 50, "accumulatedActualMemory: %i", MemoryStats.accumulatedActualMemory);
+		ImGui::Text(title);
+		sprintf_s(title, 50, "accumulatedAllocUnitCount: %i", MemoryStats.accumulatedAllocUnitCount);
+		ImGui::Text(title);
+		sprintf_s(title, 50, "totalAllocUnitCount: %i", MemoryStats.totalAllocUnitCount);
+		ImGui::Text(title);
+		sprintf_s(title, 50, "peakAllocUnitCount: %i", MemoryStats.peakAllocUnitCount);
+		ImGui::Text(title);
+	}
+	if (ImGui::CollapsingHeader("Window"))
+	{
+
+	}
+	if (ImGui::CollapsingHeader("Hardware"))
+	{
+
+	}
 	ImGui::End();
 
 	//------------------------------------------//
