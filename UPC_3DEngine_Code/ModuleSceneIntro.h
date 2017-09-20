@@ -21,21 +21,4 @@ public:
 
 	void OnCollision(PhysBody3D* body1, PhysBody3D* body2);
 
-private:
-	//--------------------------------------------//
-	//---------------Circuit parts----------------//
-	//--------------------------------------------//
-	//Start
-	P2Cube		 cube1;
-	PhysBody3D*  cube1body;
-	//--------------------------------------------//
-	//Arc
-	P2Cube		 cube1_1;
-	PhysBody3D*  cube1_1body;
-	P2Cube		 cube1_2;
-	PhysBody3D*  cube1_2body;
-	P2Cube		 cube1_3;
-	PhysBody3D*  cube1_3body;
-	//--------------------------------------------//
-	
 };

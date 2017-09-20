@@ -67,12 +67,14 @@ bool Application::Init()
 	ImGui_ImplSdlGL3_Init(App->window->window);
 
 	ms_timer.Start();
+	startup_timer.Start();
 	return ret;
 }
 
 // ---------------------------------------------
 void Application::PrepareUpdate()
 {
+	performance.frame_count++;
 	dt = (float)ms_timer.Read() / 1000.0f;
 	ms_timer.Start();
 }
@@ -80,7 +82,8 @@ void Application::PrepareUpdate()
 // ---------------------------------------------
 void Application::FinishUpdate()
 {
-
+	performance.framerate = (float)performance.frame_count / ((float)startup_timer.Read() / 1000.0f);
+	performance.miliseconds_per_frame = ms_timer.Read();
 }
 
 // Call PreUpdate, Update and PostUpdate on all modules
@@ -131,6 +134,11 @@ bool Application::CleanUp()
 void Application::AddModule(Module* mod)
 {
 	list_modules.push_back(mod);
+}
+
+const PerformanceStruct* Application::GetPerformanceStruct() const
+{
+	return &performance;
 }
 
 void Application::OpenLink(const char* link)

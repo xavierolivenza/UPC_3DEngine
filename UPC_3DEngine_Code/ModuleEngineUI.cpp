@@ -114,42 +114,59 @@ void ModuleEngineUI::DrawModuleImGui()
 			App->window->SetTitle(appnamestr);
 
 		//Max FPS Slider
-		int MaxFPSValue = 0;
+		static int MaxFPSValue = 0;
 		ImGui::SliderInt("Max FPS", &MaxFPSValue, 0, 144);
 
-		//Framerate PlotHistogram
+		//Some useful variables
+		uint title_size = 50;
+		char title[50];
+		const PerformanceStruct* PerformanceData = App->GetPerformanceStruct();
 
+		//Framerate PlotHistogram
+		sprintf_s(title, title_size, "Framerate: %i", PerformanceData->framerate);
+		ImGui::Text(title);
 
 		//Miliseconds PlotHistogram
-
+		sprintf_s(title, title_size, "Frame Miliseconds: %i", PerformanceData->miliseconds_per_frame);
+		ImGui::Text(title);
 
 		//Memory Consumption PlotHistogram
 
 
 		//Memory data
-		char title[50];
 		sMStats MemoryStats = m_getMemoryStatistics();
-		sprintf_s(title, 50, "totalReportedMemory: %i", MemoryStats.totalReportedMemory);
+		sprintf_s(title, title_size, "totalReportedMemory: %i", MemoryStats.totalReportedMemory);
 		ImGui::Text(title);
-		sprintf_s(title, 50, "totalActualMemory: %i", MemoryStats.totalActualMemory);
+		sprintf_s(title, title_size, "totalActualMemory: %i", MemoryStats.totalActualMemory);
 		ImGui::Text(title);
-		sprintf_s(title, 50, "peakReportedMemory: %i", MemoryStats.peakReportedMemory);
+		sprintf_s(title, title_size, "peakReportedMemory: %i", MemoryStats.peakReportedMemory);
 		ImGui::Text(title);
-		sprintf_s(title, 50, "peakActualMemory: %i", MemoryStats.peakActualMemory);
+		sprintf_s(title, title_size, "peakActualMemory: %i", MemoryStats.peakActualMemory);
 		ImGui::Text(title);
-		sprintf_s(title, 50, "accumulatedReportedMemory: %i", MemoryStats.accumulatedReportedMemory);
+		sprintf_s(title, title_size, "accumulatedReportedMemory: %i", MemoryStats.accumulatedReportedMemory);
 		ImGui::Text(title);
-		sprintf_s(title, 50, "accumulatedActualMemory: %i", MemoryStats.accumulatedActualMemory);
+		sprintf_s(title, title_size, "accumulatedActualMemory: %i", MemoryStats.accumulatedActualMemory);
 		ImGui::Text(title);
-		sprintf_s(title, 50, "accumulatedAllocUnitCount: %i", MemoryStats.accumulatedAllocUnitCount);
+		sprintf_s(title, title_size, "accumulatedAllocUnitCount: %i", MemoryStats.accumulatedAllocUnitCount);
 		ImGui::Text(title);
-		sprintf_s(title, 50, "totalAllocUnitCount: %i", MemoryStats.totalAllocUnitCount);
+		sprintf_s(title, title_size, "totalAllocUnitCount: %i", MemoryStats.totalAllocUnitCount);
 		ImGui::Text(title);
-		sprintf_s(title, 50, "peakAllocUnitCount: %i", MemoryStats.peakAllocUnitCount);
+		sprintf_s(title, title_size, "peakAllocUnitCount: %i", MemoryStats.peakAllocUnitCount);
 		ImGui::Text(title);
 	}
 	if (ImGui::CollapsingHeader("Window"))
 	{
+		static int ScreenW = 0;
+		ImGui::SliderInt("Screen Width", &ScreenW, 0, 1920);
+		static int ScreenH = 0;
+		ImGui::SliderInt("Screen Height", &ScreenH, 0, 1080);
+		static bool fullscreen = false;
+		ImGui::Checkbox("Fullscreen", &fullscreen);
+		static bool resizable = false;
+		ImGui::SameLine();
+		ImGui::Checkbox("Resizable", &resizable);
+		static bool borderless = false;
+		ImGui::Checkbox("Borderless", &borderless);
 
 	}
 	if (ImGui::CollapsingHeader("Hardware"))

@@ -113,6 +113,8 @@ update_status ModulePhysics3D::PreUpdate(float dt)
 // ---------------------------------------------------------
 update_status ModulePhysics3D::Update(float dt)
 {
+	debug_draw->drawGrid(20);
+
 	if(App->input->GetKey(SDL_SCANCODE_F1) == KEY_DOWN)
 		debug = !debug;
 
@@ -296,6 +298,20 @@ void ModulePhysics3D::AddConstraintHinge(PhysBody3D& bodyA, PhysBody3D& bodyB, c
 }
 
 // =============================================
+void DebugDrawer::drawGrid(int gridWH)
+{
+	btVector3 line_color = { 255, 255 ,255 };
+	for (int i = -gridWH; i <= gridWH; i++)
+	{
+		btVector3 line1 = { (float)i, 0.0f , (float)-gridWH };
+		btVector3 line2 = { (float)i, 0.0f , (float)gridWH };
+		drawLine(line1, line2, line_color);
+		line1 = { (float)-gridWH, 0.0f , (float)i };
+		line2 = { (float)gridWH, 0.0f , (float)i };
+		drawLine(line1, line2, line_color);
+	}
+}
+
 void DebugDrawer::drawLine(const btVector3& from, const btVector3& to, const btVector3& color)
 {
 	line.origin.Set(from.getX(), from.getY(), from.getZ());

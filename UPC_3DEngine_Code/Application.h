@@ -23,6 +23,13 @@
 #include "imgui-1.51\imgui.h"
 #include "imgui-1.51\imgui_impl_sdl_gl3.h"
 
+struct PerformanceStruct
+{
+	int frame_count = 0;
+	uint framerate = 0;
+	uint miliseconds_per_frame = 0;
+};
+
 class Application
 {
 public:
@@ -39,8 +46,10 @@ public:
 private:
 
 	Timer	ms_timer;
+	Timer	startup_timer;
 	float	dt;
 	std::list<Module*> list_modules;
+	PerformanceStruct performance;
 
 public:
 
@@ -55,6 +64,8 @@ public:
 	{
 		Want_To_Close = true;
 	}
+
+	const PerformanceStruct* GetPerformanceStruct() const;
 
 	void OpenLink(const char* link);
 
