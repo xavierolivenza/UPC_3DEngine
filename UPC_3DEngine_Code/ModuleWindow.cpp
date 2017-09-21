@@ -94,3 +94,26 @@ void ModuleWindow::SetTitle(const char* title)
 {
 	SDL_SetWindowTitle(window, title);
 }
+
+void ModuleWindow::SetFullscreen(bool set)
+{
+	if (set != fullscreen)
+	{
+		fullscreen = set;
+		if (fullscreen == true)
+		{
+			if (SDL_SetWindowFullscreen(window, SDL_WINDOW_FULLSCREEN) != 0)
+			{
+				LOGP("Could not fullscreen: %s\n", SDL_GetError());
+				fullscreen_desktop = false;
+			}
+		}
+		else
+		{
+			if (SDL_SetWindowFullscreen(window, 0) != 0)
+			{
+				LOGP("Could not window: %s\n", SDL_GetError());
+			}
+		}
+	}
+}

@@ -26,6 +26,8 @@ public:
 		h = w_height;
 	}
 
+	void SetFullscreen(bool set);
+
 public:
 	//The window we'll be rendering to
 	SDL_Window* window;
@@ -36,6 +38,8 @@ public:
 private:
 	int w_width = 0;
 	int w_height = 0;
+	bool fullscreen = false;
+	bool fullscreen_desktop = false;
 };
 
 #endif // __ModuleWindow_H__
