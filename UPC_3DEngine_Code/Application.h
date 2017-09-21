@@ -26,7 +26,8 @@
 struct PerformanceStruct
 {
 	int frame_count = 0;
-	uint framerate = 0;
+	uint average_framerate = 0;
+	uint frames_last_second = 0;
 	uint miliseconds_per_frame = 0;
 };
 
@@ -47,7 +48,10 @@ private:
 
 	Timer	ms_timer;
 	Timer	startup_timer;
+	Timer	last_sec_frame_time;
 	float	dt;
+	uint prev_last_sec_frame_count = 0;
+	uint last_sec_frame_count = 0;
 	std::list<Module*> list_modules;
 	PerformanceStruct performance;
 

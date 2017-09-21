@@ -104,8 +104,9 @@ void ModuleEngineUI::DrawModuleImGui()
 	//------------------------------------------//
 	//-----------Configuration Window-----------//
 	//------------------------------------------//
-	ImGui::Begin("Configuration", false, ImGuiWindowFlags_NoMove);
-	//ImGui::Begin("Configuration", false, ImGuiWindowFlags_NoResize);
+	const PerformanceStruct* PerformanceData = App->GetPerformanceStruct();
+	PushFPSandMSPlot(PerformanceData->frames_last_second, PerformanceData->miliseconds_per_frame);
+	ImGui::Begin("Configuration", false, ImGuiWindowFlags_NoMove|ImGuiWindowFlags_NoResize);
 	if (ImGui::CollapsingHeader("Application"))
 	{
 		//App name
@@ -120,16 +121,14 @@ void ModuleEngineUI::DrawModuleImGui()
 		//Some useful variables
 		uint title_size = 50;
 		char title[50];
-		const PerformanceStruct* PerformanceData = App->GetPerformanceStruct();
-		PushFPSandMSPlot(PerformanceData->framerate, PerformanceData->miliseconds_per_frame);
 		
 		//Framerate PlotHistogram
-		sprintf_s(title, title_size, "Framerate: %i", PerformanceData->framerate);
-		ImGui::PlotHistogram("##Framerate", &fpsPlotData[0], fpsPlotData.size(), 0, title, 0.0f, 144.0f, ImVec2(310, 100));
+		sprintf_s(title, title_size, "Framerate: %i", PerformanceData->frames_last_second);
+		ImGui::PlotHistogram("##Framerate", &fpsPlotData[0], fpsPlotData.size(), 0, title, 0.0f, 150.0f, ImVec2(310, 100));
 
 		//Miliseconds PlotHistogram
 		sprintf_s(title, title_size, "Frame Miliseconds: %i", PerformanceData->miliseconds_per_frame);
-		ImGui::PlotHistogram("##Frame Miliseconds", &msPlotData[0], msPlotData.size(), 0, title, 0.0f, 40.0f, ImVec2(310, 100));
+		ImGui::PlotHistogram("##Frame Miliseconds", &msPlotData[0], msPlotData.size(), 0, title, 0.0f, 50.0f, ImVec2(310, 100));
 
 		//Memory Consumption PlotHistogram
 
@@ -245,7 +244,7 @@ void ModuleEngineUI::DrawModuleImGui()
 	//------------------------------------------//
 	//-----------------Console------------------//
 	//------------------------------------------//
-	ImGui::Begin("Console", false, ImGuiWindowFlags_NoMove);
+	ImGui::Begin("Console", false, ImGuiWindowFlags_NoMove|ImGuiWindowFlags_NoResize);
 	//ImGui::Begin("Console", false, ImGuiWindowFlags_NoResize);
 	for (std::list<std::string>::iterator item = console_logs.begin(); item != console_logs.cend(); ++item)
 		ImGui::Text(item._Ptr->_Myval.c_str());
@@ -262,8 +261,7 @@ void ModuleEngineUI::DrawModuleImGui()
 	//------------------------------------------//
 	//-----------------Rand Gen-----------------//
 	//------------------------------------------//
-	ImGui::Begin("Random generator", false, ImGuiWindowFlags_NoMove);
-	//ImGui::Begin("Random generator", false, ImGuiWindowFlags_NoResize);
+	ImGui::Begin("Random generator", false, ImGuiWindowFlags_NoMove|ImGuiWindowFlags_NoResize);
 	if (ImGui::Button("Generate"))
 	{
 		LCG rand_test;

@@ -67,6 +67,7 @@ bool Application::Init()
 	ImGui_ImplSdlGL3_Init(App->window->window);
 
 	ms_timer.Start();
+	last_sec_frame_time.Start();
 	startup_timer.Start();
 	return ret;
 }
@@ -75,6 +76,7 @@ bool Application::Init()
 void Application::PrepareUpdate()
 {
 	performance.frame_count++;
+	last_sec_frame_count++;
 	dt = (float)ms_timer.Read() / 1000.0f;
 	ms_timer.Start();
 }
@@ -82,7 +84,14 @@ void Application::PrepareUpdate()
 // ---------------------------------------------
 void Application::FinishUpdate()
 {
-	performance.framerate = (float)performance.frame_count / ((float)startup_timer.Read() / 1000.0f);
+	if (last_sec_frame_time.Read() > 1000)
+	{
+		last_sec_frame_time.Start();
+		prev_last_sec_frame_count = last_sec_frame_count;
+		last_sec_frame_count = 0;
+	}
+	performance.frames_last_second = prev_last_sec_frame_count;
+	performance.average_framerate = (float)performance.frame_count / ((float)startup_timer.Read() / 1000.0f);
 	performance.miliseconds_per_frame = ms_timer.Read();
 }
 
@@ -95,7 +104,6 @@ update_status Application::Update()
 	for (std::list<Module*>::iterator item = list_modules.begin(); item != list_modules.cend(); ++item) {
 		(*item)->PreUpdate(dt);
 	}
-
 
 	for (std::list<Module*>::iterator item = list_modules.begin(); item != list_modules.cend(); ++item) {
 		(*item)->Update(dt);
