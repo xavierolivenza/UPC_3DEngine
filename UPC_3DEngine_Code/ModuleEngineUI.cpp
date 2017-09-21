@@ -58,6 +58,7 @@ void ModuleEngineUI::DrawModuleImGui()
 	//------------------------------------------//
 	//-----------------Menu Bar-----------------//
 	//------------------------------------------//
+
 	ImGui::BeginMainMenuBar();
 	if (ImGui::BeginMenu("File"))
 	{
@@ -81,9 +82,40 @@ void ModuleEngineUI::DrawModuleImGui()
 		{
 			//App->OpenLink();
 		}
-		if (ImGui::MenuItem("About"))
+		if (ImGui::BeginMenu("About"))
 		{
-
+			if (ImGui::BeginMenu("Name"))
+			{
+				ImGui::Text("UPC_3DEngine");
+				ImGui::EndMenu();
+			}
+			if (ImGui::BeginMenu("Description"))
+			{
+				ImGui::Text("This 3D Engine is an educational purpose exercise to learn the basics of\nprogramming and working with a 3D Engine in the videogame developing environment");
+				ImGui::EndMenu();
+			}
+			if (ImGui::BeginMenu("Authors"))
+			{
+				ImGui::Text("Sergio Alvarez Llorca");
+				ImGui::Text("Xavier Olivenza Busquets");
+				ImGui::Text("UPC_3DEngine is a project for the subject 3DEngine of the\nVideoGame Developing career in CITM, UPC fundation in Terrassa.\n2017-2018");
+				ImGui::EndMenu();
+			}
+			if (ImGui::BeginMenu("Libraries"))
+			{
+				ImGui::Text("SDL 2.0.3");
+				ImGui::Text("ImGui 1.51");
+				ImGui::Text("MathGeoLib 1.5");
+				ImGui::Text("mmgr");
+				ImGui::Text("parson");
+				ImGui::EndMenu();
+			}
+			if (ImGui::BeginMenu("License"))
+			{
+				ImGui::Text("GNU GENERAL PUBLIC LICENSE Version 3, 29 June 2007");
+				ImGui::EndMenu();
+			}
+			ImGui::EndMenu();
 		}
 		ImGui::EndMenu();
 	}
