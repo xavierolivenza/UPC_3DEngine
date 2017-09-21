@@ -2,7 +2,8 @@
 #include "Application.h"
 #include "ModuleEngineUI.h"
 
-ModuleEngineUI::ModuleEngineUI(Application* app, bool start_enabled) : Module(app, start_enabled)
+ModuleEngineUI::ModuleEngineUI(Application* app, bool start_enabled) : Module(app, start_enabled),
+	fpsPlotData(FPS_AND_MS_PLOT_DATA_LENGTH), msPlotData(FPS_AND_MS_PLOT_DATA_LENGTH)
 {
 	
 }
@@ -89,9 +90,7 @@ void ModuleEngineUI::DrawModuleImGui()
 	if (ImGui::BeginMenu("Close"))
 	{
 		if (ImGui::MenuItem("Close Engine"))
-		{
 			App->WantToClose();
-		}
 		ImGui::EndMenu();
 	}
 	ImGui::EndMainMenuBar();
@@ -121,14 +120,15 @@ void ModuleEngineUI::DrawModuleImGui()
 		uint title_size = 50;
 		char title[50];
 		const PerformanceStruct* PerformanceData = App->GetPerformanceStruct();
-
+		PushFPSandMSPlot(PerformanceData->framerate, PerformanceData->miliseconds_per_frame);
+		
 		//Framerate PlotHistogram
 		sprintf_s(title, title_size, "Framerate: %i", PerformanceData->framerate);
-		ImGui::Text(title);
+		ImGui::PlotHistogram("##Framerate", &fpsPlotData[0], fpsPlotData.size(), 0, title, 0.0f, 144.0f, ImVec2(310, 100));
 
 		//Miliseconds PlotHistogram
 		sprintf_s(title, title_size, "Frame Miliseconds: %i", PerformanceData->miliseconds_per_frame);
-		ImGui::Text(title);
+		ImGui::PlotHistogram("##Frame Miliseconds", &msPlotData[0], msPlotData.size(), 0, title, 0.0f, 40.0f, ImVec2(310, 100));
 
 		//Memory Consumption PlotHistogram
 
@@ -171,7 +171,53 @@ void ModuleEngineUI::DrawModuleImGui()
 	}
 	if (ImGui::CollapsingHeader("Hardware"))
 	{
+		uint title_size = 50;
+		char title[50];
+		SDL_version SDLVersion;
 
+		SDL_GetVersion(&SDLVersion);
+		sprintf_s(title, title_size, "SDL Minor Version: %i", SDLVersion.minor);
+		ImGui::Text(title);
+		sprintf_s(title, title_size, "SDL Major Version: %i", SDLVersion.major);
+		ImGui::Text(title);
+		sprintf_s(title, title_size, "SDL Patch Version: %i", SDLVersion.patch);
+		ImGui::Text(title);
+		sprintf_s(title, title_size, "SDL Compiled Version: %i", SDL_COMPILEDVERSION);
+		ImGui::Text(title);
+		
+		ImGui::Separator();
+
+		sprintf_s(title, title_size, "CPU Cache Line Size: %i", SDL_GetCPUCacheLineSize());
+		ImGui::Text(title);
+		sprintf_s(title, title_size, "CPU Cores: %i", SDL_GetCPUCount());
+		ImGui::Text(title);
+		if (SDL_Has3DNow()) ImGui::Text("3D Now Avalible");
+		else ImGui::Text("3D Now Unavalible");
+		if (SDL_HasAVX()) ImGui::Text("AVX Avalible");
+		else ImGui::Text("AVX Unavalible");
+		//if (SDL_HasAVX2()) ImGui::Text("AVX2 Avalible");
+		//else ImGui::Text("AVX2 Unavalible");
+		if (SDL_HasAltiVec()) ImGui::Text("AltiVec Avalible");
+		else ImGui::Text("AltiVec Unavalible");
+		if (SDL_HasMMX()) ImGui::Text("MMX Avalible");
+		else ImGui::Text("MMX Unavalible");
+		if (SDL_HasRDTSC()) ImGui::Text("RDTSC Avalible");
+		else ImGui::Text("RDTSC Unavalible");
+		if (SDL_HasSSE()) ImGui::Text("SSE Avalible");
+		else ImGui::Text("SSE Unavalible");
+		if (SDL_HasSSE2()) ImGui::Text("SSE2 Avalible");
+		else ImGui::Text("SSE2 Unavalible");
+		if (SDL_HasSSE3()) ImGui::Text("SSE3 Avalible");
+		else ImGui::Text("SSE3 Unavalible");
+		if (SDL_HasSSE41()) ImGui::Text("SSE41 Avalible");
+		else ImGui::Text("SSE41 Unavalible");
+		if (SDL_HasSSE42()) ImGui::Text("SSE42 Avalible");
+		else ImGui::Text("SSE42 Unavalible");
+
+		ImGui::Separator();
+
+		sprintf_s(title, title_size, "RAM: %i", SDL_GetSystemRAM());
+		ImGui::Text(title);
 	}
 	ImGui::End();
 
@@ -214,4 +260,21 @@ void ModuleEngineUI::GetEvent(SDL_Event* event)
 bool ModuleEngineUI::IsActive()
 {
 	return active;
+}
+
+void ModuleEngineUI::PushFPSandMSPlot(uint fps, uint ms)
+{
+	static uint count = 0;
+
+	if (count >= FPS_AND_MS_PLOT_DATA_LENGTH)
+		for (int i = 0; i < FPS_AND_MS_PLOT_DATA_LENGTH - 1; i++)
+		{
+			fpsPlotData[i] = fpsPlotData[i + 1];
+			msPlotData[i] = msPlotData[i + 1];
+		}
+	else
+		count++;
+
+	fpsPlotData[count - 1] = fps;
+	msPlotData[count - 1] = ms;
 }

@@ -2,6 +2,8 @@
 #include "Module.h"
 #include "Globals.h"
 
+#define FPS_AND_MS_PLOT_DATA_LENGTH 100
+
 class ModuleEngineUI : public Module
 {
 public:
@@ -23,9 +25,12 @@ public:
 
 	bool IsActive();
 
+	void PushFPSandMSPlot(uint fps, uint ms);
+
 private:
 	bool showTestWindow = false;
 	bool active = false;
 	std::list<std::string> console_logs;
-
+	std::vector<float> fpsPlotData;
+	std::vector<float> msPlotData;
 };

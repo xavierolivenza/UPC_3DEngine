@@ -310,6 +310,16 @@ void DebugDrawer::drawGrid(int gridWH)
 		line2 = { (float)gridWH, 0.0f , (float)i };
 		drawLine(line1, line2, line_color);
 	}
+	btVector3 origin = { 0.0f ,0.01f ,0.0f };
+	btVector3 axis = { 2.0f ,0.01f ,0.0f };
+	line_color = { 255 ,0 ,0 };
+	drawLine(origin, axis, line_color);
+	axis = { 0.0f ,2.01f ,0.0f };
+	line_color = { 0 ,255 ,0 };
+	drawLine(origin, axis, line_color);
+	axis = { 0.0f ,0.01f ,2.0f };
+	line_color = { 0 ,0 ,255 };
+	drawLine(origin, axis, line_color);
 }
 
 void DebugDrawer::drawLine(const btVector3& from, const btVector3& to, const btVector3& color)
