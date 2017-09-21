@@ -81,9 +81,7 @@ bool ModuleWindow::CleanUp()
 
 	//Destroy window
 	if(window != NULL)
-	{
 		SDL_DestroyWindow(window);
-	}
 
 	//Quit SDL subsystems
 	SDL_Quit();
@@ -100,20 +98,14 @@ void ModuleWindow::SetFullscreen(bool set)
 	if (set != fullscreen)
 	{
 		fullscreen = set;
-		if (fullscreen == true)
-		{
+		if (fullscreen)
 			if (SDL_SetWindowFullscreen(window, SDL_WINDOW_FULLSCREEN) != 0)
 			{
 				LOGP("Could not fullscreen: %s\n", SDL_GetError());
 				fullscreen_desktop = false;
 			}
-		}
-		else
-		{
-			if (SDL_SetWindowFullscreen(window, 0) != 0)
-			{
-				LOGP("Could not window: %s\n", SDL_GetError());
-			}
-		}
+			else
+				if (SDL_SetWindowFullscreen(window, 0) != 0)
+					LOGP("Could not window: %s\n", SDL_GetError());
 	}
 }

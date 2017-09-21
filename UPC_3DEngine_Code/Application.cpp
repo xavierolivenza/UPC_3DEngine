@@ -133,7 +133,7 @@ bool Application::CleanUp()
 	for (std::list<Module*>::iterator item = list_modules.begin(); item != list_modules.cend(); ++item)
 	{
 		(*item)->CleanUp();
-		delete *item;
+		RELEASE(item._Ptr->_Myval);
 	}
 	list_modules.clear();
 	return ret;

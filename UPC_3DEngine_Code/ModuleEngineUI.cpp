@@ -161,16 +161,13 @@ void ModuleEngineUI::DrawModuleImGui()
 		static int ScreenH = 0;
 		ImGui::SliderInt("Screen Height", &ScreenH, 0, 1080);
 		static bool fullscreen = false;
-		ImGui::Checkbox("Fullscreen", &fullscreen);
-		{
+		if(ImGui::Checkbox("Fullscreen", &fullscreen))
 			App->window->SetFullscreen(fullscreen);
-		}
 		static bool resizable = false;
 		ImGui::SameLine();
 		ImGui::Checkbox("Resizable", &resizable);
 		static bool borderless = false;
 		ImGui::Checkbox("Borderless", &borderless);
-
 	}
 	if (ImGui::CollapsingHeader("Hardware"))
 	{
