@@ -46,6 +46,9 @@
     <Filter Include="Sources\Tools\mmgr">
       <UniqueIdentifier>{62d89607-9195-44de-b11f-25f77ed30664}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Sources\Tools\parson">
+      <UniqueIdentifier>{33ead01a-35c7-4834-973f-def4b76528de}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Module.h">
@@ -315,6 +318,9 @@
     <ClInclude Include="Fluid_Studios_Memory_Manager\nommgr.h">
       <Filter>Sources\Tools\mmgr</Filter>
     </ClInclude>
+    <ClInclude Include="parson\parson.h">
+      <Filter>Sources\Tools\parson</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ModuleAudio.cpp">
@@ -493,6 +499,9 @@
     </ClCompile>
     <ClCompile Include="Fluid_Studios_Memory_Manager\mmgr.cpp">
       <Filter>Sources\Tools\mmgr</Filter>
+    </ClCompile>
+    <ClCompile Include="parson\parson.c">
+      <Filter>Sources\Tools\parson</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
