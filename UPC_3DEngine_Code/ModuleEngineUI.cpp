@@ -218,6 +218,26 @@ void ModuleEngineUI::DrawModuleImGui()
 
 		sprintf_s(title, title_size, "RAM: %i", SDL_GetSystemRAM());
 		ImGui::Text(title);
+
+		ImGui::Separator();
+
+		const GLubyte* GPUData = nullptr;
+		GPUData = glGetString(GL_VENDOR);
+		sprintf_s(title, title_size, "GL_Vendor: %s", GPUData);
+		ImGui::Text(title);
+		GPUData = glGetString(GL_RENDERER);
+		sprintf_s(title, title_size, "GL_Renderer: %s", GPUData);
+		ImGui::Text(title);
+		GPUData = glGetString(GL_VERSION);
+		sprintf_s(title, title_size, "GL_Versions: %s", GPUData);
+		ImGui::Text(title);
+		/*
+		//Huge str buffer>1000
+		char title2[1000];
+		GPUData = glGetString(GL_EXTENSIONS);
+		sprintf_s(title2, 1000, "GL_Extensions: %s", GPUData);
+		ImGui::Text(title2);
+		*/
 	}
 	ImGui::End();
 
