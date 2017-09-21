@@ -104,7 +104,8 @@ void ModuleEngineUI::DrawModuleImGui()
 	//------------------------------------------//
 	//-----------Configuration Window-----------//
 	//------------------------------------------//
-	ImGui::Begin("Configuration");
+	ImGui::Begin("Configuration", false, ImGuiWindowFlags_NoMove);
+	//ImGui::Begin("Configuration", false, ImGuiWindowFlags_NoResize);
 	if (ImGui::CollapsingHeader("Application"))
 	{
 		//App name
@@ -244,20 +245,25 @@ void ModuleEngineUI::DrawModuleImGui()
 	//------------------------------------------//
 	//-----------------Console------------------//
 	//------------------------------------------//
-	ImGui::Begin("Console");
+	ImGui::Begin("Console", false, ImGuiWindowFlags_NoMove);
+	//ImGui::Begin("Console", false, ImGuiWindowFlags_NoResize);
 	for (std::list<std::string>::iterator item = console_logs.begin(); item != console_logs.cend(); ++item)
 		ImGui::Text(item._Ptr->_Myval.c_str());
+	ImGui::SetScrollHere();
+	ImGui::Separator();
 	static char str0[128] = "";
 	if (ImGui::InputText("input text", str0, 128, ImGuiInputTextFlags_EnterReturnsTrue))
 	{
 		LOGP(str0);
+		strcpy(str0, "");
 	}
 	ImGui::End();
 
 	//------------------------------------------//
 	//-----------------Rand Gen-----------------//
 	//------------------------------------------//
-	ImGui::Begin("Random generator");
+	ImGui::Begin("Random generator", false, ImGuiWindowFlags_NoMove);
+	//ImGui::Begin("Random generator", false, ImGuiWindowFlags_NoResize);
 	if (ImGui::Button("Generate"))
 	{
 		LCG rand_test;
