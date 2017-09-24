@@ -29,8 +29,10 @@ public:
 
 private:
 	bool showTestWindow = false;
+	bool freezeplots = false;
 	bool active = false;
 	std::list<std::string> console_logs;
 	std::vector<float> fpsPlotData;
 	std::vector<float> msPlotData;
+
 };

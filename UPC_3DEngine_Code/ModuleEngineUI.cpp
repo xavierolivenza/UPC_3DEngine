@@ -154,6 +154,9 @@ void ModuleEngineUI::DrawModuleImGui()
 		uint title_size = 50;
 		char title[50];
 		
+		//Freeze plots
+		ImGui::Checkbox("FrezePlotData", &freezeplots);
+
 		//Framerate PlotHistogram
 		sprintf_s(title, title_size, "Framerate: %i", PerformanceData->frames_last_second);
 		ImGui::PlotHistogram("##Framerate", &fpsPlotData[0], fpsPlotData.size(), 0, title, 0.0f, 150.0f, ImVec2(310, 100));
@@ -161,6 +164,40 @@ void ModuleEngineUI::DrawModuleImGui()
 		//Miliseconds PlotHistogram
 		sprintf_s(title, title_size, "Frame Miliseconds: %i", PerformanceData->miliseconds_per_frame);
 		ImGui::PlotHistogram("##Frame Miliseconds", &msPlotData[0], msPlotData.size(), 0, title, 0.0f, 50.0f, ImVec2(310, 100));
+
+		if (ImGui::CollapsingHeader("Modules Ms"))
+		{
+			if (ImGui::CollapsingHeader("Modules PreUpdate Ms"))
+			{
+				/*
+				for (int i = 0; i < 10; i++)
+				{
+					sprintf_s(title, title_size, "Framerate%i", i);
+					ImGui::PlotHistogram(title, &fpsPlotData[0], fpsPlotData.size(), 0, title, 0.0f, 150.0f, ImVec2(310, 100));
+				}
+				*/
+			}
+			if (ImGui::CollapsingHeader("Modules Update Ms"))
+			{
+				/*
+				for (int i = 0; i < 10; i++)
+				{
+					sprintf_s(title, title_size, "Framerate%i", i);
+					ImGui::PlotHistogram(title, &fpsPlotData[0], fpsPlotData.size(), 0, title, 0.0f, 150.0f, ImVec2(310, 100));
+				}
+				*/
+			}
+			if (ImGui::CollapsingHeader("Modules PostUpdate Ms"))
+			{
+				/*
+				for (int i = 0; i < 10; i++)
+				{
+					sprintf_s(title, title_size, "Framerate%i", i);
+					ImGui::PlotHistogram(title, &fpsPlotData[0], fpsPlotData.size(), 0, title, 0.0f, 150.0f, ImVec2(310, 100));
+				}
+				*/
+			}
+		}
 
 		//Memory Consumption PlotHistogram
 
@@ -320,6 +357,9 @@ bool ModuleEngineUI::IsActive()
 
 void ModuleEngineUI::PushFPSandMSPlot(uint fps, uint ms)
 {
+	if (freezeplots)
+		return;
+
 	static uint count = 0;
 
 	if (count >= FPS_AND_MS_PLOT_DATA_LENGTH)
