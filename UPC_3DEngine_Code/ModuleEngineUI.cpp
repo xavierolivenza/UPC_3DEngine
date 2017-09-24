@@ -165,39 +165,35 @@ void ModuleEngineUI::DrawModuleImGui()
 		sprintf_s(title, title_size, "Frame Miliseconds: %i", PerformanceData->miliseconds_per_frame);
 		ImGui::PlotHistogram("##Frame Miliseconds", &msPlotData[0], msPlotData.size(), 0, title, 0.0f, 50.0f, ImVec2(310, 100));
 
+		/*
 		if (ImGui::CollapsingHeader("Modules Ms"))
 		{
 			if (ImGui::CollapsingHeader("Modules PreUpdate Ms"))
 			{
-				/*
 				for (int i = 0; i < 10; i++)
 				{
 					sprintf_s(title, title_size, "Framerate%i", i);
 					ImGui::PlotHistogram(title, &fpsPlotData[0], fpsPlotData.size(), 0, title, 0.0f, 150.0f, ImVec2(310, 100));
 				}
-				*/
 			}
 			if (ImGui::CollapsingHeader("Modules Update Ms"))
 			{
-				/*
 				for (int i = 0; i < 10; i++)
 				{
 					sprintf_s(title, title_size, "Framerate%i", i);
 					ImGui::PlotHistogram(title, &fpsPlotData[0], fpsPlotData.size(), 0, title, 0.0f, 150.0f, ImVec2(310, 100));
 				}
-				*/
 			}
 			if (ImGui::CollapsingHeader("Modules PostUpdate Ms"))
 			{
-				/*
 				for (int i = 0; i < 10; i++)
 				{
 					sprintf_s(title, title_size, "Framerate%i", i);
 					ImGui::PlotHistogram(title, &fpsPlotData[0], fpsPlotData.size(), 0, title, 0.0f, 150.0f, ImVec2(310, 100));
 				}
-				*/
 			}
 		}
+		*/
 
 		//Memory Consumption PlotHistogram
 

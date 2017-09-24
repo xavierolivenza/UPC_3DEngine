@@ -4,6 +4,8 @@
 
 #define FPS_AND_MS_PLOT_DATA_LENGTH 100
 
+//class ModuleMsData;
+
 class ModuleEngineUI : public Module
 {
 public:
@@ -36,3 +38,30 @@ private:
 	std::vector<float> msPlotData;
 
 };
+/*
+class ModuleMsData
+{
+public:
+	ModuleMsData(const char* modulename);
+	~ModuleMsData();
+
+	void PushMSToPreUpdate(uint ms);
+	void PushMSToUpdate(uint ms);
+	void PushMSToPostUpdate(uint ms);
+
+private:
+	enum PushType
+	{
+		PreUpdate,
+		Update,
+		PostUpdate
+	};
+	void CommonPush(uint ms, PushType type);
+
+private:
+	std::string ModuleName = "";
+	std::vector<float> ModulePreUpdateMs;
+	std::vector<float> ModuleUpdateMs;
+	std::vector<float> ModulePostUpdateMs;
+};
+*/
