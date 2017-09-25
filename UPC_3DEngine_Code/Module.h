@@ -9,14 +9,13 @@
 #include "MathGeoLib\MathGeoLib.h"
 #include "MathGeoLib\MathBuildConfig.h"
 
+#include "parson\parson.h"
+
 class Application;
 struct PhysBody3D;
 
 class Module
 {
-private :
-	bool enabled;
-
 public:
 
 	Module(Application* parent, bool start_enabled = true) : enabled(start_enabled)
@@ -62,4 +61,16 @@ public:
 
 	virtual void DrawModuleImGui()
 	{}
+
+	virtual bool SaveConfig(JSON_Object* node)
+	{
+		return true;
+	}
+
+private:
+	bool enabled;
+
+public:
+	std::string name = "";
+
 };

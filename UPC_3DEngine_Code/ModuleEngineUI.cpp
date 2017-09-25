@@ -5,7 +5,7 @@
 ModuleEngineUI::ModuleEngineUI(Application* app, bool start_enabled) : Module(app, start_enabled),
 	fpsPlotData(FPS_AND_MS_PLOT_DATA_LENGTH), msPlotData(FPS_AND_MS_PLOT_DATA_LENGTH)
 {
-	
+	name = "engineUI";
 }
 
 ModuleEngineUI::~ModuleEngineUI()

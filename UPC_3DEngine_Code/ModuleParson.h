@@ -2,7 +2,6 @@
 #define __ModuleParson_H__
 
 #include "Module.h"
-#include "parson\parson.h"
 
 class ModuleParson : public Module
 {
