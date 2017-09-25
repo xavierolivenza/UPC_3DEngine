@@ -29,10 +29,10 @@ bool ModuleSceneIntro::Start()
 
 	/**/
 	vec shere1_centre = { 0,0,0 };
-	Sphere* shere1 = new Sphere(shere1_centre, 2.0f);
+	shere1 = new Sphere(shere1_centre, 2.0f);
 	LOGP("Sphere 1 centre (0,0,0), radius 2.0f");
 	vec shere2_centre = { 1,0,0 };
-	Sphere* shere2 = new Sphere(shere2_centre, 2.0f);
+	shere2 = new Sphere(shere2_centre, 2.0f);
 	LOGP("Sphere 2 centre (1,0,0), radius 2.0f");
 	bool intersection1 = shere1->Intersects(*shere2);
 	if(intersection1)
@@ -43,10 +43,10 @@ bool ModuleSceneIntro::Start()
 
 	/**/
 	vec shere3_centre = { 0,0,0 };
-	Sphere* shere3 = new Sphere(shere3_centre, 2.0f);
+	shere3 = new Sphere(shere3_centre, 2.0f);
 	LOGP("Sphere 3 centre (0,0,0), radius 2.0f");
 	vec shere4_centre = { 5,0,0 };
-	Sphere* shere4 = new Sphere(shere4_centre, 2.0f);
+	shere4 = new Sphere(shere4_centre, 2.0f);
 	LOGP("Sphere 4 centre (5,0,0), radius 2.0f");
 	bool intersection2 = shere3->Intersects(*shere4);
 	if (intersection2)
@@ -60,11 +60,11 @@ bool ModuleSceneIntro::Start()
 	/**/
 	vec capsule1_bot = { 0,0,0 };
 	vec capsule1_top = { 0,1,0 };
-	Capsule* capsule1 = new Capsule(capsule1_bot, capsule1_top,2.0f);
+	capsule1 = new Capsule(capsule1_bot, capsule1_top,2.0f);
 	LOGP("Capsule 1 bottom (0,0,0), top (0,1,0), radius 2.0f");
 	vec capsule2_bot = { 0,1,0 };
 	vec capsule2_top = { 0,2,0 };
-	Capsule* capsule2 = new Capsule(capsule2_bot, capsule2_top, 2.0f);
+	capsule2 = new Capsule(capsule2_bot, capsule2_top, 2.0f);
 	LOGP("Capsule 2 bottom (0,1,0), top (0,2,0), radius 2.0f");
 	bool intersection3 = capsule1->Intersects(*capsule2);
 	if (intersection3)
@@ -76,11 +76,11 @@ bool ModuleSceneIntro::Start()
 	/**/
 	vec capsule3_bot = { 0,0,0 };
 	vec capsule3_top = { 0,1,0 };
-	Capsule* capsule3 = new Capsule(capsule3_bot, capsule3_top, 2.0f);
+	capsule3 = new Capsule(capsule3_bot, capsule3_top, 2.0f);
 	LOGP("Capsule 3 bottom (0,0,0), top (0,1,0), radius 2.0f");
 	vec capsule4_bot = { 0,10,0 };
 	vec capsule4_top = { 0,11,0 };
-	Capsule* capsule4 = new Capsule(capsule4_bot, capsule4_top, 2.0f);
+	capsule4 = new Capsule(capsule4_bot, capsule4_top, 2.0f);
 	LOGP("Capsule 4 bottom (0,10,0), top (0,11,0), radius 2.0f");
 	bool intersection4 = capsule3->Intersects(*capsule4);
 	if (intersection4)
@@ -127,6 +127,14 @@ update_status ModuleSceneIntro::PostUpdate(float dt)
 bool ModuleSceneIntro::CleanUp()
 {
 	LOGP("Unloading Intro scene");
+	RELEASE(shere1);
+	RELEASE(shere2);
+	RELEASE(shere3);
+	RELEASE(shere4);
+	RELEASE(capsule1);
+	RELEASE(capsule2);
+	RELEASE(capsule3);
+	RELEASE(capsule4);
 	return true;
 }
 

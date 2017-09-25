@@ -21,4 +21,13 @@ public:
 
 	void OnCollision(PhysBody3D* body1, PhysBody3D* body2);
 
+private:
+	Sphere* shere1;
+	Sphere* shere2;
+	Sphere* shere3;
+	Sphere* shere4;
+	Capsule* capsule1;
+	Capsule* capsule2;
+	Capsule* capsule3;
+	Capsule* capsule4;
 };
