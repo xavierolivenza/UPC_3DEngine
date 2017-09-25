@@ -4,6 +4,8 @@
 #include <vector>
 #include <string>
 
+#include "Globals.h"
+
 #include "MathGeoLib\MathGeoLib.h"
 #include "MathGeoLib\MathBuildConfig.h"
 
