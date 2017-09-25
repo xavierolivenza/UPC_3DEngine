@@ -28,10 +28,12 @@ bool ModuleWindow::Init()
 	else
 	{
 		//Create window
+		/*
 		int width = SCREEN_WIDTH * SCREEN_SIZE;
 		int height = SCREEN_HEIGHT * SCREEN_SIZE;
 		w_width = width;
 		w_height = height;
+		*/
 		Uint32 flags = SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN;
 
 		//Use OpenGL 2.1
@@ -58,7 +60,7 @@ bool ModuleWindow::Init()
 			flags |= SDL_WINDOW_FULLSCREEN_DESKTOP;
 		}
 
-		window = SDL_CreateWindow(TITLE, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, width, height, flags);
+		window = SDL_CreateWindow(title.c_str(), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, w_width, w_height, flags);
 
 		if(window == NULL)
 		{
@@ -89,8 +91,25 @@ bool ModuleWindow::CleanUp()
 	return true;
 }
 
+bool ModuleWindow::SaveConf(JSON_Object* conf) const
+{
+	json_object_set_number(conf, "width", w_width);
+	json_object_set_number(conf, "height", w_height);
+	json_object_set_string(conf, "title", title.c_str());
+	return true;
+}
+
+bool ModuleWindow::LoadConf(JSON_Object* conf)
+{
+	w_width = json_object_get_number(conf, "width");
+	w_height = json_object_get_number(conf, "height");
+	title = json_object_get_string(conf, "title");
+	return true;
+}
+
 void ModuleWindow::SetTitle(const char* title)
 {
+	this->title = title;
 	SDL_SetWindowTitle(window, title);
 }
 

@@ -16,6 +16,8 @@ ModuleEngineUI::~ModuleEngineUI()
 bool ModuleEngineUI::Init()
 {
 	active = true;
+	App->window->GetWindowSize(ScreenW, ScreenH);
+	strcpy(appnamestr, App->window->GetTitle()->c_str());
 	return true;
 }
 
@@ -142,7 +144,6 @@ void ModuleEngineUI::DrawModuleImGui()
 	if (ImGui::CollapsingHeader("Application"))
 	{
 		//App name
-		static char appnamestr[128] = "";
 		if (ImGui::InputText("App name", appnamestr, 128, ImGuiInputTextFlags_EnterReturnsTrue))
 			App->window->SetTitle(appnamestr);
 
@@ -221,10 +222,9 @@ void ModuleEngineUI::DrawModuleImGui()
 	}
 	if (ImGui::CollapsingHeader("Window"))
 	{
-		static int ScreenW = 0;
 		ImGui::SliderInt("Screen Width", &ScreenW, 0, 1920);
-		static int ScreenH = 0;
 		ImGui::SliderInt("Screen Height", &ScreenH, 0, 1080);
+		App->window->SetWindowSize(ScreenW, ScreenH);
 		static bool fullscreen = false;
 		if(ImGui::Checkbox("Fullscreen", &fullscreen))
 			App->window->SetFullscreen(fullscreen);

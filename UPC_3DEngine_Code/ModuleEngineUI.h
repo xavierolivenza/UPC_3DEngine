@@ -37,6 +37,10 @@ private:
 	std::vector<float> fpsPlotData;
 	std::vector<float> msPlotData;
 
+private:
+	int ScreenW = 0;
+	int ScreenH = 0;
+	char appnamestr[128];
 };
 /*
 class ModuleMsData

@@ -14,7 +14,6 @@ Application::Application()
 	physics = new ModulePhysics3D(this);
 	player = new ModulePlayer(this);
 	engineUI = new ModuleEngineUI(this);
-	parson_module = new ModuleParson(this);
 
 	// The order of calls is very important!
 	// Modules will Init() Start() and Update in this order
@@ -37,7 +36,6 @@ Application::Application()
 	AddModule(renderer3D);
 
 	AddModule(engineUI);
-	AddModule(parson_module);
 }
 
 Application::~Application()
@@ -51,6 +49,10 @@ Application::~Application()
 bool Application::Init()
 {
 	bool ret = true;
+
+	parsonjson = new ParsonJSON();
+	parsonjson->Init();
+	parsonjson->Load();
 
 	// Call Init() in all modules
 	for (std::list<Module*>::iterator item = list_modules.begin(); item != list_modules.cend() && ret == true; ++item) {
@@ -131,6 +133,8 @@ update_status Application::Update()
 bool Application::CleanUp()
 {
 	bool ret = true;
+	parsonjson->Save();
+	RELEASE(parsonjson);
 	for (std::list<Module*>::iterator item = list_modules.begin(); item != list_modules.cend(); ++item)
 	{
 		(*item)->CleanUp();

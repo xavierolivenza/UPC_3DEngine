@@ -5,11 +5,10 @@
 #include <string>
 
 #include "Globals.h"
+#include "ModuleParson.h"
 
 #include "MathGeoLib\MathGeoLib.h"
 #include "MathGeoLib\MathBuildConfig.h"
-
-#include "parson\parson.h"
 
 class Application;
 struct PhysBody3D;
@@ -62,7 +61,12 @@ public:
 	virtual void DrawModuleImGui()
 	{}
 
-	virtual bool SaveConfig(JSON_Object* node)
+	virtual bool SaveConf(JSON_Object* conf) const
+	{
+		return true;
+	}
+
+	virtual bool LoadConf(JSON_Object* conf)
 	{
 		return true;
 	}

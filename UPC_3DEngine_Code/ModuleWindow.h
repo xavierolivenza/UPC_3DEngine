@@ -18,12 +18,26 @@ public:
 	bool Init();
 	bool CleanUp();
 
+	bool SaveConf(JSON_Object* conf) const;
+	bool LoadConf(JSON_Object* conf);
+
 	void SetTitle(const char* title);
 
-	void GetWindowSize(int& w, int& h)
+	void GetWindowSize(int& w, int& h) const
 	{
 		w = w_width;
 		h = w_height;
+	}
+
+	void SetWindowSize(int w, int h)
+	{
+		w_width = w;
+		w_height = h;
+	}
+
+	const std::string* GetTitle() const
+	{
+		return &title;
 	}
 
 	void SetFullscreen(bool set);
@@ -40,6 +54,7 @@ private:
 	int w_height = 0;
 	bool fullscreen = false;
 	bool fullscreen_desktop = false;
+	std::string title;
 };
 
 #endif // __ModuleWindow_H__

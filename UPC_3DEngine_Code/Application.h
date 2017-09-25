@@ -44,7 +44,8 @@ public:
 	ModulePhysics3D* physics;
 	ModulePlayer* player;
 	ModuleEngineUI* engineUI;
-	ModuleParson* parson_module;
+
+	ParsonJSON* parsonjson;
 
 private:
 
@@ -74,6 +75,11 @@ public:
 	const PerformanceStruct* GetPerformanceStruct() const;
 
 	void OpenLink(const char* link);
+
+	const std::list<Module*>* GetModuleList() const
+	{
+		return &list_modules;
+	}
 
 private:
 

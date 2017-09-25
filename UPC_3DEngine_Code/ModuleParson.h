@@ -1,18 +1,19 @@
 #ifndef __ModuleParson_H__
 #define __ModuleParson_H__
 
-#include "Module.h"
+#include <string>
 
-class ModuleParson : public Module
+#include "parson\parson.h"
+
+class ParsonJSON
 {
 public:
-	ModuleParson(Application* app, bool start_enabled = true);
-	~ModuleParson();
+	ParsonJSON();
+	~ParsonJSON();
 
 	bool Init();
-	bool CleanUp();
 
-	bool Save();
+	bool Save() const;
 	bool Load();
 
 public:
