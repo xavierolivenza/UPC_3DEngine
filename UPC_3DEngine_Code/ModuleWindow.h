@@ -53,6 +53,8 @@ private:
 	int w_width = 0;
 	int w_height = 0;
 	bool fullscreen = false;
+	bool resizable = false;
+	bool borderless = false;
 	bool fullscreen_desktop = false;
 	std::string title;
 };

@@ -233,6 +233,8 @@ void ModuleEngineUI::DrawModuleImGui()
 		ImGui::Checkbox("Resizable", &resizable);
 		static bool borderless = false;
 		ImGui::Checkbox("Borderless", &borderless);
+		static bool fullscreen_desktop = false;
+		ImGui::Checkbox("Fullscreen Desktop", &fullscreen_desktop);
 	}
 	if (ImGui::CollapsingHeader("Hardware"))
 	{

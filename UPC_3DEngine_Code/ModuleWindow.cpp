@@ -96,6 +96,10 @@ bool ModuleWindow::SaveConf(JSON_Object* conf) const
 	json_object_set_number(conf, "width", w_width);
 	json_object_set_number(conf, "height", w_height);
 	json_object_set_string(conf, "title", title.c_str());
+	json_object_set_boolean(conf, "fullscreen", fullscreen);
+	json_object_set_boolean(conf, "resizable", resizable);
+	json_object_set_boolean(conf, "borderless", borderless);
+	json_object_set_boolean(conf, "fullscreen desktop", fullscreen_desktop);
 	return true;
 }
 
@@ -107,6 +111,14 @@ bool ModuleWindow::LoadConf(JSON_Object* conf)
 		w_height = json_object_get_number(conf, "height");
 	if (json_object_get_value(conf, "title") != NULL)
 		title = json_object_get_string(conf, "title");
+	if (json_object_get_value(conf, "fullscreen") != NULL)
+		fullscreen = json_object_get_boolean(conf, "fullscreen");
+	if (json_object_get_value(conf, "resizable") != NULL)
+		fullscreen = json_object_get_boolean(conf, "resizable");
+	if (json_object_get_value(conf, "borderless") != NULL)
+		fullscreen = json_object_get_boolean(conf, "borderless");
+	if (json_object_get_value(conf, "fullscreen desktop") != NULL)
+		fullscreen = json_object_get_boolean(conf, "fullscreen desktop");
 	return true;
 }
 
