@@ -101,9 +101,12 @@ bool ModuleWindow::SaveConf(JSON_Object* conf) const
 
 bool ModuleWindow::LoadConf(JSON_Object* conf)
 {
-	w_width = json_object_get_number(conf, "width");
-	w_height = json_object_get_number(conf, "height");
-	title = json_object_get_string(conf, "title");
+	if (json_object_get_value(conf, "width") != NULL)
+		w_width = json_object_get_number(conf, "width");
+	if (json_object_get_value(conf, "height") != NULL)
+		w_height = json_object_get_number(conf, "height");
+	if (json_object_get_value(conf, "title") != NULL)
+		title = json_object_get_string(conf, "title");
 	return true;
 }
 
