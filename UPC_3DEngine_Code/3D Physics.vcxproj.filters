@@ -321,6 +321,9 @@
     <ClInclude Include="parson\parson.h">
       <Filter>Sources\Tools\parson</Filter>
     </ClInclude>
+    <ClInclude Include="ModuleParson.h">
+      <Filter>Sources\Modules</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ModuleAudio.cpp">
@@ -502,6 +505,9 @@
     </ClCompile>
     <ClCompile Include="parson\parson.c">
       <Filter>Sources\Tools\parson</Filter>
+    </ClCompile>
+    <ClCompile Include="ModuleParson.cpp">
+      <Filter>Sources\Modules</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

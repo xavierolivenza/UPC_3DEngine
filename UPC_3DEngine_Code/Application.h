@@ -17,6 +17,7 @@
 #include "ModulePhysics3D.h"
 #include "ModulePlayer.h"
 #include "ModuleEngineUI.h"
+#include "ModuleParson.h"
 #include "p2Log.h"
 
 #include "Glew\include\glew.h"
@@ -43,6 +44,7 @@ public:
 	ModulePhysics3D* physics;
 	ModulePlayer* player;
 	ModuleEngineUI* engineUI;
+	ModuleParson* parson_module;
 
 private:
 

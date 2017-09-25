@@ -14,6 +14,7 @@ Application::Application()
 	physics = new ModulePhysics3D(this);
 	player = new ModulePlayer(this);
 	engineUI = new ModuleEngineUI(this);
+	parson_module = new ModuleParson(this);
 
 	// The order of calls is very important!
 	// Modules will Init() Start() and Update in this order
@@ -36,13 +37,13 @@ Application::Application()
 	AddModule(renderer3D);
 
 	AddModule(engineUI);
+	AddModule(parson_module);
 }
 
 Application::~Application()
 {
-	for (std::list<Module*>::reverse_iterator item = list_modules.rbegin(); item != list_modules.crend(); ++item) {
-		delete((*item));
-	}
+	for (std::list<Module*>::reverse_iterator item = list_modules.rbegin(); item != list_modules.crend(); ++item)
+		RELEASE(*item);
 
 	list_modules.clear();
 }
