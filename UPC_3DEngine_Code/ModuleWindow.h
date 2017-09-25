@@ -50,6 +50,7 @@ public:
 	SDL_Surface* screen_surface;
 
 private:
+	int MaxFPSValue = 0;
 	int w_width = 0;
 	int w_height = 0;
 	bool fullscreen = false;

@@ -40,22 +40,22 @@ bool ModuleWindow::Init()
 		SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 2);
 		SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 1);
 
-		if(WIN_FULLSCREEN == true)
+		if(fullscreen == true)
 		{
 			flags |= SDL_WINDOW_FULLSCREEN;
 		}
 
-		if(WIN_RESIZABLE == true)
+		if(resizable == true)
 		{
 			flags |= SDL_WINDOW_RESIZABLE;
 		}
 
-		if(WIN_BORDERLESS == true)
+		if(borderless == true)
 		{
 			flags |= SDL_WINDOW_BORDERLESS;
 		}
 
-		if(WIN_FULLSCREEN_DESKTOP == true)
+		if(fullscreen_desktop == true)
 		{
 			flags |= SDL_WINDOW_FULLSCREEN_DESKTOP;
 		}
@@ -93,6 +93,7 @@ bool ModuleWindow::CleanUp()
 
 bool ModuleWindow::SaveConf(JSON_Object* conf) const
 {
+	json_object_set_number(conf, "Max FPS Value", MaxFPSValue);
 	json_object_set_number(conf, "width", w_width);
 	json_object_set_number(conf, "height", w_height);
 	json_object_set_string(conf, "title", title.c_str());
@@ -105,6 +106,8 @@ bool ModuleWindow::SaveConf(JSON_Object* conf) const
 
 bool ModuleWindow::LoadConf(JSON_Object* conf)
 {
+	if (json_object_get_value(conf, "Max FPS Value") != NULL)
+		w_width = json_object_get_number(conf, "Max FPS Value");
 	if (json_object_get_value(conf, "width") != NULL)
 		w_width = json_object_get_number(conf, "width");
 	if (json_object_get_value(conf, "height") != NULL)
