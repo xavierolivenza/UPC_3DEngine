@@ -165,35 +165,21 @@ void ModuleEngineUI::DrawModuleImGui()
 		sprintf_s(title, title_size, "Frame Miliseconds: %i", PerformanceData->miliseconds_per_frame);
 		ImGui::PlotHistogram("##Frame Miliseconds", &msPlotData[0], msPlotData.size(), 0, title, 0.0f, 50.0f, ImVec2(310, 100));
 
-		/*
+		//Module Miliseconds PlotHistogram
 		if (ImGui::CollapsingHeader("Modules Ms"))
-		{
-			if (ImGui::CollapsingHeader("Modules PreUpdate Ms"))
+			for (std::list<Module*>::const_iterator item = App->GetModuleList()->begin(); item != App->GetModuleList()->cend(); ++item)
 			{
-				for (int i = 0; i < 10; i++)
+				sprintf_s(title, title_size, "Module: %s", item._Ptr->_Myval->name.c_str());
+				if (ImGui::CollapsingHeader(title))
 				{
-					sprintf_s(title, title_size, "Framerate%i", i);
-					ImGui::PlotHistogram(title, &fpsPlotData[0], fpsPlotData.size(), 0, title, 0.0f, 150.0f, ImVec2(310, 100));
+					sprintf_s(title, title_size, "PreUpdate Ms: %i", (uint)item._Ptr->_Myval->ModulePreUpdateMs.back());
+					ImGui::PlotHistogram("##PreUpdate Ms", &item._Ptr->_Myval->ModulePreUpdateMs[0], item._Ptr->_Myval->ModulePreUpdateMs.size(), 0, title, 0.0f, 30.0f, ImVec2(310, 50));
+					sprintf_s(title, title_size, "Update Ms: %i", (uint)item._Ptr->_Myval->ModuleUpdateMs.back());
+					ImGui::PlotHistogram("##Update Ms", &item._Ptr->_Myval->ModuleUpdateMs[0], item._Ptr->_Myval->ModuleUpdateMs.size(), 0, title, 0.0f, 30.0f, ImVec2(310, 50));
+					sprintf_s(title, title_size, "PostUpdate Ms: %i", (uint)item._Ptr->_Myval->ModulePostUpdateMs.back());
+					ImGui::PlotHistogram("##PostUpdate Ms", &item._Ptr->_Myval->ModulePostUpdateMs[0], item._Ptr->_Myval->ModulePostUpdateMs.size(), 0, title, 0.0f, 30.0f, ImVec2(310, 50));
 				}
 			}
-			if (ImGui::CollapsingHeader("Modules Update Ms"))
-			{
-				for (int i = 0; i < 10; i++)
-				{
-					sprintf_s(title, title_size, "Framerate%i", i);
-					ImGui::PlotHistogram(title, &fpsPlotData[0], fpsPlotData.size(), 0, title, 0.0f, 150.0f, ImVec2(310, 100));
-				}
-			}
-			if (ImGui::CollapsingHeader("Modules PostUpdate Ms"))
-			{
-				for (int i = 0; i < 10; i++)
-				{
-					sprintf_s(title, title_size, "Framerate%i", i);
-					ImGui::PlotHistogram(title, &fpsPlotData[0], fpsPlotData.size(), 0, title, 0.0f, 150.0f, ImVec2(310, 100));
-				}
-			}
-		}
-		*/
 
 		//Memory Consumption PlotHistogram
 

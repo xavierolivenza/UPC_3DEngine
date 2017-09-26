@@ -6,9 +6,12 @@
 
 #include "Globals.h"
 #include "ModuleParson.h"
+#include "Timer.h"
 
 #include "MathGeoLib\MathGeoLib.h"
 #include "MathGeoLib\MathBuildConfig.h"
+
+#define FPS_AND_MS_PLOT_DATA_LENGTH 100
 
 class Application;
 struct PhysBody3D;
@@ -17,7 +20,8 @@ class Module
 {
 public:
 
-	Module(Application* parent, bool start_enabled = true) : enabled(start_enabled)
+	Module(Application* parent, bool start_enabled = true) : enabled(start_enabled),
+		ModulePreUpdateMs(FPS_AND_MS_PLOT_DATA_LENGTH), ModuleUpdateMs(FPS_AND_MS_PLOT_DATA_LENGTH), ModulePostUpdateMs(FPS_AND_MS_PLOT_DATA_LENGTH)
 	{
 
 	}
@@ -73,8 +77,12 @@ public:
 
 private:
 	bool enabled;
-
+	
 public:
 	std::string name = "";
+	std::vector<float> ModulePreUpdateMs;
+	std::vector<float> ModuleUpdateMs;
+	std::vector<float> ModulePostUpdateMs;
+	Timer ms_timer;
 
 };

@@ -88,6 +88,10 @@ private:
 	void FinishUpdate();
 
 	bool Want_To_Close = false;
+
+	void PushMSToPreUpdate(Module* module, uint ms);
+	void PushMSToUpdate(Module* module, uint ms);
+	void PushMSToPostUpdate(Module* module, uint ms);
 };
 
 extern Application* App;

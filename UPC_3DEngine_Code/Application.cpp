@@ -104,22 +104,32 @@ update_status Application::Update()
 	update_status ret = UPDATE_CONTINUE;
 	PrepareUpdate();
 
-	for (std::list<Module*>::iterator item = list_modules.begin(); item != list_modules.cend(); ++item) {
+	for (std::list<Module*>::iterator item = list_modules.begin(); item != list_modules.cend(); ++item)
+	{
+		(*item)->ms_timer.Start();
 		(*item)->PreUpdate(dt);
+		PushMSToPreUpdate(*item, (*item)->ms_timer.Read());
 	}
 
-	for (std::list<Module*>::iterator item = list_modules.begin(); item != list_modules.cend(); ++item) {
+	for (std::list<Module*>::iterator item = list_modules.begin(); item != list_modules.cend(); ++item)
+	{
+		(*item)->ms_timer.Start();
 		(*item)->Update(dt);
+		PushMSToUpdate(*item, (*item)->ms_timer.Read());
 	}
 
 	ImGui_ImplSdlGL3_NewFrame(App->window->window);
-	for (std::list<Module*>::iterator item = list_modules.begin(); item != list_modules.cend(); ++item) {
+	for (std::list<Module*>::iterator item = list_modules.begin(); item != list_modules.cend(); ++item)
+	{
 		(*item)->DrawModuleImGui();
 	}
 	ImGui::Render();
 
-	for (std::list<Module*>::iterator item = list_modules.begin(); item != list_modules.cend(); ++item) {
+	for (std::list<Module*>::iterator item = list_modules.begin(); item != list_modules.cend(); ++item)
+	{
+		(*item)->ms_timer.Start();
 		(*item)->PostUpdate(dt);
+		PushMSToPostUpdate(*item, (*item)->ms_timer.Read());
 	}
 
 	FinishUpdate();
@@ -157,4 +167,58 @@ const PerformanceStruct* Application::GetPerformanceStruct() const
 void Application::OpenLink(const char* link)
 {
 	ShellExecute(NULL, "open", link, NULL, NULL, SW_SHOWMAXIMIZED);
+}
+
+void Application::PushMSToPreUpdate(Module* module, uint ms)
+{
+	if (App->engineUI->PlotsFreezed())
+		return;
+
+	static uint count = 0;
+
+	if (count >= FPS_AND_MS_PLOT_DATA_LENGTH)
+		for (int i = 0; i < FPS_AND_MS_PLOT_DATA_LENGTH - 1; i++)
+		{
+			module->ModulePreUpdateMs[i] = module->ModulePreUpdateMs[i + 1];
+		}
+	else
+		count++;
+
+	module->ModulePreUpdateMs[count - 1] = ms;
+}
+
+void Application::PushMSToUpdate(Module* module, uint ms)
+{
+	if (App->engineUI->PlotsFreezed())
+		return;
+
+	static uint count = 0;
+
+	if (count >= FPS_AND_MS_PLOT_DATA_LENGTH)
+		for (int i = 0; i < FPS_AND_MS_PLOT_DATA_LENGTH - 1; i++)
+		{
+			module->ModuleUpdateMs[i] = module->ModuleUpdateMs[i + 1];
+		}
+	else
+		count++;
+
+	module->ModuleUpdateMs[count - 1] = ms;
+}
+
+void Application::PushMSToPostUpdate(Module* module, uint ms)
+{
+	if (App->engineUI->PlotsFreezed())
+		return;
+
+	static uint count = 0;
+
+	if (count >= FPS_AND_MS_PLOT_DATA_LENGTH)
+		for (int i = 0; i < FPS_AND_MS_PLOT_DATA_LENGTH - 1; i++)
+		{
+			module->ModulePostUpdateMs[i] = module->ModulePostUpdateMs[i + 1];
+		}
+	else
+		count++;
+
+	module->ModulePostUpdateMs[count - 1] = ms;
 }
