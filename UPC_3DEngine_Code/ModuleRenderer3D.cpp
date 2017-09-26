@@ -174,6 +174,42 @@ update_status ModuleRenderer3D::Update(float dt)
 	glDeleteBuffers(1, &vertexbuffer);
 	if (GL_Wireframe)
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+
+
+	//test to draw a sphere
+	vec sphere_center = { -3,0,0 };
+	Sphere *triangle_sphere = new Sphere(sphere_center, 1);
+	math::vec outPos[1536];
+	math::vec outNormal[1536];
+	triangle_sphere->Triangulate(outPos, outNormal, NULL, 1536, false);
+	// This will identify our vertex buffer
+	GLuint vertexbuffer2;
+	// Generate 1 buffer, put the resulting identifier in vertexbuffer
+	glGenBuffers(1, &vertexbuffer2);
+	// The following commands will talk about our 'vertexbuffer' buffer
+	glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer2);
+	// Give our vertices to OpenGL.
+	glBufferData(GL_ARRAY_BUFFER, sizeof(outPos), outPos, GL_STATIC_DRAW);
+	// 1rst attribute buffer : vertices
+	glEnableVertexAttribArray(0);
+	glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer2);
+	glVertexAttribPointer(
+		0,                  // attribute 0. No particular reason for 0, but must match the layout in the shader.
+		3,                  // size
+		GL_FLOAT,           // type
+		GL_FALSE,           // normalized?
+		0,                  // stride
+		(void*)0            // array buffer offset
+	);
+	// Draw the triangle
+	if (GL_Wireframe)
+		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	glDrawArrays(GL_TRIANGLES, 0, 1536); // Starting from vertex 0; 3 vertices total -> 1 triangle
+	glDisableVertexAttribArray(0);
+	glDeleteBuffers(1, &vertexbuffer2);
+	if (GL_Wireframe)
+		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+
 	return UPDATE_CONTINUE;
 }
 
