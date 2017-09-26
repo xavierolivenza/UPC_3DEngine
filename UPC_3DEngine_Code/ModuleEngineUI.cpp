@@ -311,7 +311,6 @@ void ModuleEngineUI::DrawModuleImGui()
 	//-----------------Console------------------//
 	//------------------------------------------//
 	ImGui::Begin("Console", false, ImGuiWindowFlags_NoMove|ImGuiWindowFlags_NoResize);
-	//ImGui::Begin("Console", false, ImGuiWindowFlags_NoResize);
 	for (std::list<std::string>::iterator item = console_logs.begin(); item != console_logs.cend(); ++item)
 		ImGui::Text(item._Ptr->_Myval.c_str());
 	ImGui::SetScrollHere();

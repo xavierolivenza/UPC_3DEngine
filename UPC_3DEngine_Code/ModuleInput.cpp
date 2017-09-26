@@ -129,3 +129,25 @@ bool ModuleInput::CleanUp()
 	SDL_QuitSubSystem(SDL_INIT_EVENTS);
 	return true;
 }
+
+void ModuleInput::ImGuiModuleVariables()
+{
+	static char str0[50] = "";
+	static char str1[25] = "";
+
+	strcpy(str0, itoa(mouse_x, str1, 10));
+	if (ImGui::InputText("mouse_x", str0, 50, ImGuiInputTextFlags_EnterReturnsTrue | ImGuiInputTextFlags_CharsDecimal))
+		mouse_x = atoi(str0);
+	strcpy(str0, itoa(mouse_y, str1, 10));
+	if (ImGui::InputText("mouse_y", str0, 50, ImGuiInputTextFlags_EnterReturnsTrue | ImGuiInputTextFlags_CharsDecimal))
+		mouse_y = atoi(str0);
+	strcpy(str0, itoa(mouse_z, str1, 10));
+	if (ImGui::InputText("mouse_z", str0, 50, ImGuiInputTextFlags_EnterReturnsTrue | ImGuiInputTextFlags_CharsDecimal))
+		mouse_z = atoi(str0);
+	strcpy(str0, itoa(mouse_x_motion, str1, 10));
+	if (ImGui::InputText("mouse_x_motion", str0, 50, ImGuiInputTextFlags_EnterReturnsTrue | ImGuiInputTextFlags_CharsDecimal))
+		mouse_x_motion = atoi(str0);
+	strcpy(str0, itoa(mouse_y_motion, str1, 10));
+	if (ImGui::InputText("mouse_y_motion", str0, 50, ImGuiInputTextFlags_EnterReturnsTrue | ImGuiInputTextFlags_CharsDecimal))
+		mouse_y_motion = atoi(str0);
+}

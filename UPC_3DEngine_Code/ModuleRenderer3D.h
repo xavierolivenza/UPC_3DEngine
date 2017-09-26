@@ -23,6 +23,8 @@ public:
 
 	void OnResize(int width, int height);
 
+	void ImGuiModuleVariables();
+
 public:
 
 	Light lights[MAX_LIGHTS];

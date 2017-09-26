@@ -90,19 +90,24 @@ bool ModuleRenderer3D::Init()
 		GLfloat MaterialDiffuse[] = {1.0f, 1.0f, 1.0f, 1.0f};
 		glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, MaterialDiffuse);
 		
-		glEnable(GL_DEPTH_TEST);
-		glEnable(GL_CULL_FACE);
 		lights[0].Active(true);
-		glEnable(GL_LIGHTING);
-		glEnable(GL_COLOR_MATERIAL);
-		glEnable(GL_TEXTURE_2D);
 
-		//glEnable(GL_FOG);
-
-		//glEnable(GL_NICEST);
-		//glEnable(GL_AMBIENT);
-		//glEnable(GL_DIFFUSE);
-		//glEnable(GL_SPECULAR);
+		if (GL_DepthTest)
+			glEnable(GL_DEPTH_TEST);
+		if (GL_CullFace)
+			glEnable(GL_CULL_FACE);
+		if (GL_Lighting)
+			glEnable(GL_LIGHTING);
+		if (GL_ColorMaterial)
+			glEnable(GL_COLOR_MATERIAL);
+		if (GL_Texture2D)
+			glEnable(GL_TEXTURE_2D);
+		if (GL_Fog)
+			glEnable(GL_FOG);
+		if (GL_Diffuse)
+			glEnable(GL_DIFFUSE);
+		if (GL_Specular)
+			glEnable(GL_SPECULAR);
 	}
 
 	// Projection matrix for
@@ -201,10 +206,10 @@ bool ModuleRenderer3D::SaveConf(JSON_Object* conf) const
 
 bool ModuleRenderer3D::LoadConf(JSON_Object* conf)
 {
-	GL_DepthTest = App->parsonjson->GetBool(conf, "GL_DepthTest", false);
-	GL_CullFace = App->parsonjson->GetBool(conf, "GL_CullFace", false);
-	GL_Lighting = App->parsonjson->GetBool(conf, "GL_Lighting", false);
-	GL_ColorMaterial = App->parsonjson->GetBool(conf, "GL_ColorMaterial", false);
+	GL_DepthTest = App->parsonjson->GetBool(conf, "GL_DepthTest", true);
+	GL_CullFace = App->parsonjson->GetBool(conf, "GL_CullFace", true);
+	GL_Lighting = App->parsonjson->GetBool(conf, "GL_Lighting", true);
+	GL_ColorMaterial = App->parsonjson->GetBool(conf, "GL_ColorMaterial", true);
 	GL_Texture2D = App->parsonjson->GetBool(conf, "GL_Texture2D", false);
 	GL_Fog = App->parsonjson->GetBool(conf, "GL_Fog", false);
 	GL_Diffuse = App->parsonjson->GetBool(conf, "GL_Diffuse", false);
@@ -223,4 +228,48 @@ void ModuleRenderer3D::OnResize(int width, int height)
 
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
+}
+
+void ModuleRenderer3D::ImGuiModuleVariables()
+{
+	if (ImGui::Checkbox("GL_DEPTH_TEST", &GL_DepthTest))
+	{
+		if (GL_DepthTest) glEnable(GL_DEPTH_TEST);
+		else glDisable(GL_DEPTH_TEST);
+	}
+	if (ImGui::Checkbox("GL_CULL_FACE", &GL_CullFace))
+	{
+		if (GL_CullFace) glEnable(GL_CULL_FACE);
+		else glDisable(GL_CULL_FACE);
+	}
+	if (ImGui::Checkbox("GL_LIGHTING", &GL_Lighting))
+	{
+		if (GL_Lighting) glEnable(GL_LIGHTING);
+		else glDisable(GL_LIGHTING);
+	}
+	if (ImGui::Checkbox("GL_COLOR_MATERIAL", &GL_ColorMaterial))
+	{
+		if (GL_ColorMaterial) glEnable(GL_COLOR_MATERIAL);
+		else glDisable(GL_COLOR_MATERIAL);
+	}
+	if (ImGui::Checkbox("GL_TEXTURE_2D", &GL_Texture2D))
+	{
+		if (GL_Texture2D) glEnable(GL_TEXTURE_2D);
+		else glDisable(GL_TEXTURE_2D);
+	}
+	if (ImGui::Checkbox("GL_FOG", &GL_Fog))
+	{
+		if (GL_Fog) glEnable(GL_FOG);
+		else glDisable(GL_FOG);
+	}
+	if (ImGui::Checkbox("GL_DIFFUSE", &GL_Diffuse))
+	{
+		if (GL_Diffuse) glEnable(GL_DIFFUSE);
+		else glDisable(GL_DIFFUSE);
+	}
+	if (ImGui::Checkbox("GL_SPECULAR", &GL_Specular))
+	{
+		if (GL_Specular) glEnable(GL_SPECULAR);
+		else glDisable(GL_SPECULAR);
+	}
 }
