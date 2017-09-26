@@ -1,7 +1,18 @@
-﻿UPC_3DEngine is a project for the subject 3DEngine of the VideoGame Developing career in CITM, UPC fundation in Terrassa.
+UPC_3DEngine is a project for the subject 3DEngine of the VideoGame Developing career in CITM, UPC fundation in Terrassa.
 The main objective is to create a simple 3D game editor.
 
 CHANGELOG
+
+v0.2:
+	-Added Console.
+	-OpenGl totally operative.
+	-Added geometry options: Fog, Wireframe, Lightning, Culling, etc...
+	-All modules frame, ms, memory usage plot.
+	-First triangles printed on screen.
+	-Random generator feature added.
+	-Help and close menu added.
+	-Hardware data.
+	-Now you can modify variables from the editor.
 
 v0.1:
 
