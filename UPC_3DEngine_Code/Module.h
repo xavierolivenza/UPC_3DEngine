@@ -65,6 +65,9 @@ public:
 	virtual void DrawModuleImGui()
 	{}
 
+	virtual void ImGuiModuleVariables()
+	{}
+
 	virtual bool SaveConf(JSON_Object* conf) const
 	{
 		return true;

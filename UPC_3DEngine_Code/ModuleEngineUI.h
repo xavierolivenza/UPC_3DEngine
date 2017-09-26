@@ -23,7 +23,7 @@ public:
 
 	bool IsActive();
 
-	void PushFPSandMSPlot(uint fps, uint ms);
+	void PushFPSandMSPlot(uint fps, uint ms, uint mem);
 
 	bool PlotsFreezed() const
 	{
@@ -37,6 +37,7 @@ private:
 	std::list<std::string> console_logs;
 	std::vector<float> fpsPlotData;
 	std::vector<float> msPlotData;
+	std::vector<float> memPlotData;
 
 private:
 	char appnamestr[128];

@@ -3,7 +3,7 @@
 #include "ModuleEngineUI.h"
 
 ModuleEngineUI::ModuleEngineUI(Application* app, bool start_enabled) : Module(app, start_enabled),
-	fpsPlotData(FPS_AND_MS_PLOT_DATA_LENGTH), msPlotData(FPS_AND_MS_PLOT_DATA_LENGTH)
+	fpsPlotData(FPS_AND_MS_PLOT_DATA_LENGTH), msPlotData(FPS_AND_MS_PLOT_DATA_LENGTH), memPlotData(FPS_AND_MS_PLOT_DATA_LENGTH)
 {
 	name = "engineUI";
 }
@@ -138,7 +138,8 @@ void ModuleEngineUI::DrawModuleImGui()
 	//-----------Configuration Window-----------//
 	//------------------------------------------//
 	const PerformanceStruct* PerformanceData = App->GetPerformanceStruct();
-	PushFPSandMSPlot(PerformanceData->frames_last_second, PerformanceData->miliseconds_per_frame);
+	sMStats MemoryStats = m_getMemoryStatistics();
+	PushFPSandMSPlot(PerformanceData->frames_last_second, PerformanceData->miliseconds_per_frame, MemoryStats.totalReportedMemory);
 	ImGui::Begin("Configuration", false, ImGuiWindowFlags_NoMove|ImGuiWindowFlags_NoResize);
 	if (ImGui::CollapsingHeader("Application"))
 	{
@@ -149,6 +150,8 @@ void ModuleEngineUI::DrawModuleImGui()
 		//Max FPS Slider
 		static int MaxFPSValue = 0;
 		ImGui::SliderInt("Max FPS", &MaxFPSValue, 0, 144);
+
+		ImGui::Separator();
 
 		//Some useful variables
 		uint title_size = 50;
@@ -181,11 +184,13 @@ void ModuleEngineUI::DrawModuleImGui()
 				}
 			}
 
-		//Memory Consumption PlotHistogram
+		ImGui::Separator();
 
+		//Memory Consumption PlotHistogram
+		sprintf_s(title, title_size, "Memory: %i", MemoryStats.totalReportedMemory);
+		ImGui::PlotHistogram("##Memory", &memPlotData[0], memPlotData.size(), 0, title, 0.0f, (float)MemoryStats.peakReportedMemory * 1.2f, ImVec2(310, 100));
 
 		//Memory data
-		sMStats MemoryStats = m_getMemoryStatistics();
 		sprintf_s(title, title_size, "totalReportedMemory: %i", MemoryStats.totalReportedMemory);
 		ImGui::Text(title);
 		sprintf_s(title, title_size, "totalActualMemory: %i", MemoryStats.totalActualMemory);
@@ -279,6 +284,7 @@ void ModuleEngineUI::DrawModuleImGui()
 		GPUData = glGetString(GL_VERSION);
 		sprintf_s(title, title_size, "GL_Versions: %s", GPUData);
 		ImGui::Text(title);
+
 		/*
 		//Huge str buffer>1000
 		char title2[1000];
@@ -286,6 +292,18 @@ void ModuleEngineUI::DrawModuleImGui()
 		sprintf_s(title2, 1000, "GL_Extensions: %s", GPUData);
 		ImGui::Text(title2);
 		*/
+	}
+	if (ImGui::CollapsingHeader("Modules Variables"))
+	{
+		uint title_size = 50;
+		char title[50];
+
+		for (std::list<Module*>::const_iterator item = App->GetModuleList()->begin(); item != App->GetModuleList()->cend(); ++item)
+		{
+			sprintf_s(title, title_size, "Module: %s", item._Ptr->_Myval->name.c_str());
+			if (ImGui::CollapsingHeader(title))
+				item._Ptr->_Myval->ImGuiModuleVariables();
+		}
 	}
 	ImGui::End();
 
@@ -334,7 +352,7 @@ bool ModuleEngineUI::IsActive()
 	return active;
 }
 
-void ModuleEngineUI::PushFPSandMSPlot(uint fps, uint ms)
+void ModuleEngineUI::PushFPSandMSPlot(uint fps, uint ms, uint mem)
 {
 	if (freezeplots)
 		return;
@@ -346,10 +364,12 @@ void ModuleEngineUI::PushFPSandMSPlot(uint fps, uint ms)
 		{
 			fpsPlotData[i] = fpsPlotData[i + 1];
 			msPlotData[i] = msPlotData[i + 1];
+			memPlotData[i] = memPlotData[i + 1];
 		}
 	else
 		count++;
 
 	fpsPlotData[count - 1] = fps;
 	msPlotData[count - 1] = ms;
+	memPlotData[count - 1] = mem;
 }
