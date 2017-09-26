@@ -6,11 +6,6 @@
 
 class Application;
 
-struct WindowData
-{
-	
-};
-
 class ModuleWindow : public Module
 {
 	friend class ModuleEngineUI;

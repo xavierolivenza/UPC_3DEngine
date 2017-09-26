@@ -62,6 +62,12 @@ bool ModuleWindow::Init()
 
 		window = SDL_CreateWindow(title.c_str(), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, w_width, w_height, flags);
 
+		/*
+		GLuint VertexArrayID;
+		glGenVertexArrays(1, &VertexArrayID);
+		glBindVertexArray(VertexArrayID);
+		*/
+
 		if(window == NULL)
 		{
 			LOGP("Window could not be created! SDL_Error: %s\n", SDL_GetError());
