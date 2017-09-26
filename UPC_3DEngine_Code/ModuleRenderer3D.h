@@ -18,6 +18,9 @@ public:
 	update_status PostUpdate(float dt);
 	bool CleanUp();
 
+	bool SaveConf(JSON_Object* conf) const;
+	bool LoadConf(JSON_Object* conf);
+
 	void OnResize(int width, int height);
 
 public:
@@ -26,4 +29,12 @@ public:
 	SDL_GLContext context;
 	mat3x3 NormalMatrix;
 	mat4x4 ModelMatrix, ViewMatrix, ProjectionMatrix;
+	bool GL_DepthTest = false;
+	bool GL_CullFace = false;
+	bool GL_Lighting = false;
+	bool GL_ColorMaterial = false;
+	bool GL_Texture2D = false;
+	bool GL_Fog = false;
+	bool GL_Diffuse = false;
+	bool GL_Specular = false;
 };

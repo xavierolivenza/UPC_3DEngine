@@ -186,6 +186,31 @@ bool ModuleRenderer3D::CleanUp()
 	return true;
 }
 
+bool ModuleRenderer3D::SaveConf(JSON_Object* conf) const
+{
+	App->parsonjson->SetBool(conf, "GL_DepthTest", GL_DepthTest);
+	App->parsonjson->SetBool(conf, "GL_CullFace", GL_CullFace);
+	App->parsonjson->SetBool(conf, "GL_Lighting", GL_Lighting);
+	App->parsonjson->SetBool(conf, "GL_ColorMaterial", GL_ColorMaterial);
+	App->parsonjson->SetBool(conf, "GL_Texture2D", GL_Texture2D);
+	App->parsonjson->SetBool(conf, "GL_Fog", GL_Fog);
+	App->parsonjson->SetBool(conf, "GL_Diffuse", GL_Diffuse);
+	App->parsonjson->SetBool(conf, "GL_Specular", GL_Specular);
+	return true;
+}
+
+bool ModuleRenderer3D::LoadConf(JSON_Object* conf)
+{
+	GL_DepthTest = App->parsonjson->GetBool(conf, "GL_DepthTest", false);
+	GL_CullFace = App->parsonjson->GetBool(conf, "GL_CullFace", false);
+	GL_Lighting = App->parsonjson->GetBool(conf, "GL_Lighting", false);
+	GL_ColorMaterial = App->parsonjson->GetBool(conf, "GL_ColorMaterial", false);
+	GL_Texture2D = App->parsonjson->GetBool(conf, "GL_Texture2D", false);
+	GL_Fog = App->parsonjson->GetBool(conf, "GL_Fog", false);
+	GL_Diffuse = App->parsonjson->GetBool(conf, "GL_Diffuse", false);
+	GL_Specular = App->parsonjson->GetBool(conf, "GL_Specular", false);
+	return true;
+}
 
 void ModuleRenderer3D::OnResize(int width, int height)
 {
