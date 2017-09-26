@@ -38,8 +38,6 @@ private:
 	std::vector<float> msPlotData;
 
 private:
-	int ScreenW = 0;
-	int ScreenH = 0;
 	char appnamestr[128];
 };
 /*

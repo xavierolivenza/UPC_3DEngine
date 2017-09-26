@@ -6,8 +6,14 @@
 
 class Application;
 
+struct WindowData
+{
+	
+};
+
 class ModuleWindow : public Module
 {
+	friend class ModuleEngineUI;
 public:
 
 	ModuleWindow(Application* app, bool start_enabled = true);
@@ -29,12 +35,6 @@ public:
 		h = w_height;
 	}
 
-	void SetWindowSize(int w, int h)
-	{
-		w_width = w;
-		w_height = h;
-	}
-
 	const std::string* GetTitle() const
 	{
 		return &title;
@@ -50,9 +50,9 @@ public:
 	SDL_Surface* screen_surface;
 
 private:
-	int MaxFPSValue = 0;
 	int w_width = 0;
 	int w_height = 0;
+	int MaxFPSValue = 0;
 	bool fullscreen = false;
 	bool resizable = false;
 	bool borderless = false;

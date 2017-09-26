@@ -16,7 +16,6 @@ ModuleEngineUI::~ModuleEngineUI()
 bool ModuleEngineUI::Init()
 {
 	active = true;
-	App->window->GetWindowSize(ScreenW, ScreenH);
 	strcpy(appnamestr, App->window->GetTitle()->c_str());
 	return true;
 }
@@ -222,19 +221,15 @@ void ModuleEngineUI::DrawModuleImGui()
 	}
 	if (ImGui::CollapsingHeader("Window"))
 	{
-		ImGui::SliderInt("Screen Width", &ScreenW, 0, 1920);
-		ImGui::SliderInt("Screen Height", &ScreenH, 0, 1080);
-		App->window->SetWindowSize(ScreenW, ScreenH);
-		static bool fullscreen = false;
-		if(ImGui::Checkbox("Fullscreen", &fullscreen))
-			App->window->SetFullscreen(fullscreen);
-		static bool resizable = false;
+		ImGui::SliderInt("Screen Width", &App->window->w_width, 0, 1920);
+		ImGui::SliderInt("Screen Height", &App->window->w_height, 0, 1080);
+		if(ImGui::Checkbox("Fullscreen", &App->window->fullscreen))
+			App->window->SetFullscreen(App->window->fullscreen);
 		ImGui::SameLine();
-		ImGui::Checkbox("Resizable", &resizable);
-		static bool borderless = false;
-		ImGui::Checkbox("Borderless", &borderless);
-		static bool fullscreen_desktop = false;
-		ImGui::Checkbox("Fullscreen Desktop", &fullscreen_desktop);
+		ImGui::Checkbox("Resizable", &App->window->resizable);
+		ImGui::Checkbox("Fullscreen Desktop", &App->window->fullscreen_desktop);
+		ImGui::SameLine();
+		ImGui::Checkbox("Borderless", &App->window->borderless);
 	}
 	if (ImGui::CollapsingHeader("Hardware"))
 	{

@@ -107,7 +107,7 @@ bool ModuleWindow::SaveConf(JSON_Object* conf) const
 bool ModuleWindow::LoadConf(JSON_Object* conf)
 {
 	if (json_object_get_value(conf, "Max FPS Value") != NULL)
-		w_width = json_object_get_number(conf, "Max FPS Value");
+		MaxFPSValue = json_object_get_number(conf, "Max FPS Value");
 	if (json_object_get_value(conf, "width") != NULL)
 		w_width = json_object_get_number(conf, "width");
 	if (json_object_get_value(conf, "height") != NULL)
@@ -117,11 +117,11 @@ bool ModuleWindow::LoadConf(JSON_Object* conf)
 	if (json_object_get_value(conf, "fullscreen") != NULL)
 		fullscreen = json_object_get_boolean(conf, "fullscreen");
 	if (json_object_get_value(conf, "resizable") != NULL)
-		fullscreen = json_object_get_boolean(conf, "resizable");
+		resizable = json_object_get_boolean(conf, "resizable");
 	if (json_object_get_value(conf, "borderless") != NULL)
-		fullscreen = json_object_get_boolean(conf, "borderless");
+		borderless = json_object_get_boolean(conf, "borderless");
 	if (json_object_get_value(conf, "fullscreen desktop") != NULL)
-		fullscreen = json_object_get_boolean(conf, "fullscreen desktop");
+		fullscreen_desktop = json_object_get_boolean(conf, "fullscreen desktop");
 	return true;
 }
 
