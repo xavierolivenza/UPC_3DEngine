@@ -40,4 +40,5 @@ public:
 	bool GL_Diffuse = false;
 	bool GL_Specular = false;
 	bool GL_Wireframe = false;
+	bool GL_Point = false;
 };

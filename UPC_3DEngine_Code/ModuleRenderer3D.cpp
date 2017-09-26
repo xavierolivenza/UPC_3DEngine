@@ -169,10 +169,14 @@ update_status ModuleRenderer3D::Update(float dt)
 	// Draw the triangle
 	if (GL_Wireframe)
 		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	if (GL_Point)
+		glPolygonMode(GL_FRONT_AND_BACK, GL_POINT);
 	glDrawArrays(GL_TRIANGLES, 0, 6); // Starting from vertex 0; 3 vertices total -> 1 triangle
 	glDisableVertexAttribArray(0);
 	glDeleteBuffers(1, &vertexbuffer);
 	if (GL_Wireframe)
+		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	if (GL_Point)
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
 
@@ -204,10 +208,14 @@ update_status ModuleRenderer3D::Update(float dt)
 	// Draw the triangle
 	if (GL_Wireframe)
 		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	if (GL_Point)
+		glPolygonMode(GL_FRONT_AND_BACK, GL_POINT);
 	glDrawArrays(GL_TRIANGLES, 0, 1536); // Starting from vertex 0; 3 vertices total -> 1 triangle
 	glDisableVertexAttribArray(0);
 	glDeleteBuffers(1, &vertexbuffer2);
 	if (GL_Wireframe)
+		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	if (GL_Point)
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
 	return UPDATE_CONTINUE;
@@ -241,6 +249,7 @@ bool ModuleRenderer3D::SaveConf(JSON_Object* conf) const
 	App->parsonjson->SetBool(conf, "GL_Diffuse", GL_Diffuse);
 	App->parsonjson->SetBool(conf, "GL_Specular", GL_Specular);
 	App->parsonjson->SetBool(conf, "GL_Wireframe", GL_Wireframe);
+	App->parsonjson->SetBool(conf, "GL_Point", GL_Point);
 	return true;
 }
 
@@ -255,6 +264,7 @@ bool ModuleRenderer3D::LoadConf(JSON_Object* conf)
 	GL_Diffuse = App->parsonjson->GetBool(conf, "GL_Diffuse", false);
 	GL_Specular = App->parsonjson->GetBool(conf, "GL_Specular", false);
 	GL_Wireframe = App->parsonjson->GetBool(conf, "GL_Wireframe", false);
+	GL_Point = App->parsonjson->GetBool(conf, "GL_Point", false);
 	return true;
 }
 
@@ -314,4 +324,5 @@ void ModuleRenderer3D::ImGuiModuleVariables()
 		else glDisable(GL_SPECULAR);
 	}
 	ImGui::Checkbox("GL_Wireframe", &GL_Wireframe);
+	ImGui::Checkbox("GL_Point", &GL_Point);
 }
