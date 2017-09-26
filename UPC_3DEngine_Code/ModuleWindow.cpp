@@ -93,35 +93,27 @@ bool ModuleWindow::CleanUp()
 
 bool ModuleWindow::SaveConf(JSON_Object* conf) const
 {
-	json_object_set_number(conf, "Max FPS Value", MaxFPSValue);
-	json_object_set_number(conf, "width", w_width);
-	json_object_set_number(conf, "height", w_height);
-	json_object_set_string(conf, "title", title.c_str());
-	json_object_set_boolean(conf, "fullscreen", fullscreen);
-	json_object_set_boolean(conf, "resizable", resizable);
-	json_object_set_boolean(conf, "borderless", borderless);
-	json_object_set_boolean(conf, "fullscreen desktop", fullscreen_desktop);
+	App->parsonjson->SetInt(conf, "Max FPS Value", MaxFPSValue);
+	App->parsonjson->SetInt(conf, "width", w_width);
+	App->parsonjson->SetInt(conf, "height", w_height);
+	App->parsonjson->SetString(conf, "title", title.c_str());
+	App->parsonjson->SetBool(conf, "fullscreen", fullscreen);
+	App->parsonjson->SetBool(conf, "resizable", resizable);
+	App->parsonjson->SetBool(conf, "borderless", borderless);
+	App->parsonjson->SetBool(conf, "fullscreen desktop", fullscreen_desktop);
 	return true;
 }
 
 bool ModuleWindow::LoadConf(JSON_Object* conf)
 {
-	if (json_object_get_value(conf, "Max FPS Value") != NULL)
-		MaxFPSValue = json_object_get_number(conf, "Max FPS Value");
-	if (json_object_get_value(conf, "width") != NULL)
-		w_width = json_object_get_number(conf, "width");
-	if (json_object_get_value(conf, "height") != NULL)
-		w_height = json_object_get_number(conf, "height");
-	if (json_object_get_value(conf, "title") != NULL)
-		title = json_object_get_string(conf, "title");
-	if (json_object_get_value(conf, "fullscreen") != NULL)
-		fullscreen = json_object_get_boolean(conf, "fullscreen");
-	if (json_object_get_value(conf, "resizable") != NULL)
-		resizable = json_object_get_boolean(conf, "resizable");
-	if (json_object_get_value(conf, "borderless") != NULL)
-		borderless = json_object_get_boolean(conf, "borderless");
-	if (json_object_get_value(conf, "fullscreen desktop") != NULL)
-		fullscreen_desktop = json_object_get_boolean(conf, "fullscreen desktop");
+	MaxFPSValue = App->parsonjson->GetInt(conf, "Max FPS Value", 0);
+	w_width = App->parsonjson->GetInt(conf, "width", 1280);
+	w_height = App->parsonjson->GetInt(conf, "height", 720);
+	title = App->parsonjson->GetString(conf, "title", "Default Title");
+	fullscreen = App->parsonjson->GetBool(conf, "fullscreen", false);
+	resizable = App->parsonjson->GetBool(conf, "resizable", false);
+	borderless = App->parsonjson->GetBool(conf, "borderless", false);
+	fullscreen_desktop = App->parsonjson->GetBool(conf, "fullscreen desktop", false);
 	return true;
 }
 

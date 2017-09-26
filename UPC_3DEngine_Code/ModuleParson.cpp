@@ -76,3 +76,83 @@ bool ParsonJSON::Load()
 	}
 	return true;
 }
+
+int ParsonJSON::GetInt(JSON_Object* conf, const char* field, int default) const
+{
+	JSON_Value* value = json_object_get_value(conf, field);
+	if (value && (json_value_get_type(value) == JSONNumber))
+		return (int)json_value_get_number(value);
+	return default;
+}
+
+uint ParsonJSON::GetUInt(JSON_Object* conf, const char* field, uint default) const
+{
+	JSON_Value* value = json_object_get_value(conf, field);
+	if (value && (json_value_get_type(value) == JSONNumber))
+		return (uint)json_value_get_number(value);
+	return default;
+}
+
+float ParsonJSON::GetFloat(JSON_Object* conf, const char* field, float default) const
+{
+	JSON_Value* value = json_object_get_value(conf, field);
+	if (value && (json_value_get_type(value) == JSONNumber))
+		return (float)json_value_get_number(value);
+	return default;
+}
+
+double ParsonJSON::GetDouble(JSON_Object* conf, const char* field, double default) const
+{
+	JSON_Value* value = json_object_get_value(conf, field);
+	if (value && (json_value_get_type(value) == JSONNumber))
+		return json_value_get_number(value);
+	return default;
+}
+
+bool ParsonJSON::GetBool(JSON_Object* conf, const char* field, bool default) const
+{
+	JSON_Value* value = json_object_get_value(conf, field);
+	if (value && (json_value_get_type(value) == JSONNumber))
+		return json_value_get_boolean(value);
+	return default;
+}
+
+const char* ParsonJSON::GetString(JSON_Object* conf, const char* field, const char* default) const
+{
+	JSON_Value* value = json_object_get_value(conf, field);
+	if (value && (json_value_get_type(value) == JSONString))
+		return json_value_get_string(value);
+	return default;
+}
+
+bool ParsonJSON::SetInt(JSON_Object* conf, const char * field, int value)
+{
+	return json_object_set_number(conf, field, (double)value) == JSONSuccess;
+}
+
+bool ParsonJSON::SetUInt(JSON_Object* conf, const char * field, uint value)
+{
+	return json_object_set_number(conf, field, (double)value) == JSONSuccess;
+}
+
+bool ParsonJSON::SetFloat(JSON_Object* conf, const char * field, float value)
+{
+	return json_object_set_number(conf, field, (double)value) == JSONSuccess;
+}
+
+bool ParsonJSON::SetDouble(JSON_Object* conf, const char * field, double value)
+{
+	return json_object_set_number(conf, field, (double)value) == JSONSuccess;
+}
+
+bool ParsonJSON::SetBool(JSON_Object* conf, const char * field, bool value)
+{
+	uint boolean = 0;
+	if(value) boolean = 1;
+	return json_object_set_boolean(conf, field, boolean) == JSONSuccess;
+}
+
+bool ParsonJSON::SetString(JSON_Object* conf, const char * field, const char* value)
+{
+	return json_object_set_string(conf, field, value) == JSONSuccess;
+}
