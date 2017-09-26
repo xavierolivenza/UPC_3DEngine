@@ -39,4 +39,5 @@ public:
 	bool GL_Fog = false;
 	bool GL_Diffuse = false;
 	bool GL_Specular = false;
+	bool GL_Wireframe = false;
 };
