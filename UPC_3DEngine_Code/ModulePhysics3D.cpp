@@ -318,7 +318,7 @@ void DebugDrawer::drawAxis(float axislen)
 {
 	btVector3 line_color = { 255, 255 ,255 };
 	btVector3 origin = { 0.0f ,0.01f ,0.0f };
-	btVector3 axis = { 0.0f ,0.01f ,0.0f };
+	btVector3 axis = { 2.0f ,0.01f ,0.0f };
 	line_color = { 255 ,0 ,0 };
 	drawLine(origin, axis, line_color);
 	axis = { 0.0f ,2.01f ,0.0f };
