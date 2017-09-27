@@ -136,6 +136,7 @@ update_status ModuleRenderer3D::PreUpdate(float dt)
 
 update_status ModuleRenderer3D::Update(float dt)
 {
+	glColor3f(1.0f,1.0f,1.0f);
 	//Test to draw a triangle with openGL http://www.opengl-tutorial.org/beginners-tutorials/tutorial-2-the-first-triangle/
 	//3 vertices
 	static const GLfloat g_vertex_buffer_data[] =
