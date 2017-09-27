@@ -60,6 +60,42 @@ void ModuleEngineUI::DrawModuleImGui()
 	//-----------------Menu Bar-----------------//
 	//------------------------------------------//
 
+	ImGuiDrawMenuBar();
+
+	//------------------------------------------//
+	//-------------GUI Test Window--------------//
+	//------------------------------------------//
+
+	if(showTestWindow)
+		ImGui::ShowTestWindow();
+
+	//------------------------------------------//
+	//-----------Configuration Window-----------//
+	//------------------------------------------//
+	
+	ImGuiConfigurationWindow();
+
+	//------------------------------------------//
+	//-----------------Console------------------//
+	//------------------------------------------//
+	
+	ImGuiConsole();
+
+	//------------------------------------------//
+	//-----------------Rand Gen-----------------//
+	//------------------------------------------//
+	ImGui::Begin("Random generator", false, ImGuiWindowFlags_NoMove|ImGuiWindowFlags_NoResize);
+	if (ImGui::Button("Generate"))
+	{
+		LCG rand_test;
+		LOGP("Random generator Flo: %f", rand_test.Float(0.0f, 1.0f));
+		LOGP("Random generator Int: %i", rand_test.Int(0, 100));
+	}
+	ImGui::End();
+}
+
+void ModuleEngineUI::ImGuiDrawMenuBar()
+{
 	ImGui::BeginMainMenuBar();
 	if (ImGui::BeginMenu("File"))
 	{
@@ -127,20 +163,14 @@ void ModuleEngineUI::DrawModuleImGui()
 		ImGui::EndMenu();
 	}
 	ImGui::EndMainMenuBar();
+}
 
-	//------------------------------------------//
-	//-------------GUI Test Window--------------//
-	//------------------------------------------//
-	if(showTestWindow)
-		ImGui::ShowTestWindow();
-
-	//------------------------------------------//
-	//-----------Configuration Window-----------//
-	//------------------------------------------//
+void ModuleEngineUI::ImGuiConfigurationWindow()
+{
 	const PerformanceStruct* PerformanceData = App->GetPerformanceStruct();
 	sMStats MemoryStats = m_getMemoryStatistics();
 	PushFPSandMSPlot(PerformanceData->frames_last_second, PerformanceData->miliseconds_per_frame, MemoryStats.totalReportedMemory);
-	ImGui::Begin("Configuration", false, ImGuiWindowFlags_NoMove|ImGuiWindowFlags_NoResize);
+	ImGui::Begin("Configuration", false, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize);
 	if (ImGui::CollapsingHeader("Application"))
 	{
 		//App name
@@ -156,7 +186,7 @@ void ModuleEngineUI::DrawModuleImGui()
 		//Some useful variables
 		uint title_size = 50;
 		char title[50];
-		
+
 		//Freeze plots
 		ImGui::Checkbox("FrezePlotData", &freezeplots);
 
@@ -214,7 +244,7 @@ void ModuleEngineUI::DrawModuleImGui()
 	{
 		ImGui::SliderInt("Screen Width", &App->window->w_width, 0, 1920);
 		ImGui::SliderInt("Screen Height", &App->window->w_height, 0, 1080);
-		if(ImGui::Checkbox("Fullscreen", &App->window->fullscreen))
+		if (ImGui::Checkbox("Fullscreen", &App->window->fullscreen))
 			App->window->SetFullscreen(App->window->fullscreen);
 		ImGui::SameLine();
 		ImGui::Checkbox("Resizable", &App->window->resizable);
@@ -237,7 +267,7 @@ void ModuleEngineUI::DrawModuleImGui()
 		ImGui::Text(title);
 		sprintf_s(title, title_size, "SDL Compiled Version: %i", SDL_COMPILEDVERSION);
 		ImGui::Text(title);
-		
+
 		ImGui::Separator();
 
 		sprintf_s(title, title_size, "CPU Cache Line Size: %i", SDL_GetCPUCacheLineSize());
@@ -306,11 +336,11 @@ void ModuleEngineUI::DrawModuleImGui()
 		}
 	}
 	ImGui::End();
+}
 
-	//------------------------------------------//
-	//-----------------Console------------------//
-	//------------------------------------------//
-	ImGui::Begin("Console", false, ImGuiWindowFlags_NoMove|ImGuiWindowFlags_NoResize);
+void ModuleEngineUI::ImGuiConsole()
+{
+	ImGui::Begin("Console", false, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize);
 	for (std::list<std::string>::iterator item = console_logs.begin(); item != console_logs.cend(); ++item)
 		ImGui::Text(item._Ptr->_Myval.c_str());
 	ImGui::SetScrollHere();
@@ -320,18 +350,6 @@ void ModuleEngineUI::DrawModuleImGui()
 	{
 		LOGP(str0);
 		strcpy(str0, "");
-	}
-	ImGui::End();
-
-	//------------------------------------------//
-	//-----------------Rand Gen-----------------//
-	//------------------------------------------//
-	ImGui::Begin("Random generator", false, ImGuiWindowFlags_NoMove|ImGuiWindowFlags_NoResize);
-	if (ImGui::Button("Generate"))
-	{
-		LCG rand_test;
-		LOGP("Random generator Flo: %f", rand_test.Float(0.0f, 1.0f));
-		LOGP("Random generator Int: %i", rand_test.Int(0, 100));
 	}
 	ImGui::End();
 }

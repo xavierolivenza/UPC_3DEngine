@@ -16,6 +16,9 @@ public:
 	bool CleanUp();
 
 	void DrawModuleImGui();
+	void ImGuiDrawMenuBar();
+	void ImGuiConfigurationWindow();
+	void ImGuiConsole();
 
 	void PushNewConsoleLabel(std::string* newlabel);
 
