@@ -136,7 +136,147 @@ update_status ModuleRenderer3D::PreUpdate(float dt)
 
 update_status ModuleRenderer3D::Update(float dt)
 {
+	if (GL_Wireframe)
+		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	if (GL_Point)
+		glPolygonMode(GL_FRONT_AND_BACK, GL_POINT);
+
 	glColor3f(1.0f,1.0f,1.0f);
+
+	//draw line
+	/*
+	glLineWidth(2.0f);
+	glBegin(GL_LINES);
+	glVertex3f(0.0f, 0.0f, 0.0f);
+	glVertex3f(0.0f, 10.0f, 0.0f);
+	glEnd();
+	glLineWidth(1.0f);
+	*/
+
+	//draw cube
+	/*
+	glLineWidth(2.0f);
+	glBegin(GL_TRIANGLES);
+	glVertex3f(0.0f, 0.0f, 1.0f);
+	glVertex3f(1.0f, 1.0f, 1.0f);
+	glVertex3f(0.0f, 1.0f, 1.0f);
+
+	glVertex3f(0.0f, 0.0f, 1.0f);
+	glVertex3f(1.0f, 0.0f, 1.0f);
+	glVertex3f(1.0f, 1.0f, 1.0f);
+
+	glVertex3f(1.0f, 0.0f, 1.0f);
+	glVertex3f(1.0f, 1.0f, 0.0f);
+	glVertex3f(1.0f, 1.0f, 1.0f);
+
+	glVertex3f(1.0f, 0.0f, 1.0f);
+	glVertex3f(1.0f, 0.0f, 0.0f);
+	glVertex3f(1.0f, 1.0f, 0.0f);
+
+	glVertex3f(1.0f, 0.0f, 0.0f);
+	glVertex3f(0.0f, 1.0f, 0.0f);
+	glVertex3f(1.0f, 1.0f, 0.0f);
+
+	glVertex3f(1.0f, 0.0f, 0.0f);
+	glVertex3f(0.0f, 0.0f, 0.0f);
+	glVertex3f(0.0f, 1.0f, 0.0f);
+
+	glVertex3f(0.0f, 0.0f, 0.0f);
+	glVertex3f(0.0f, 1.0f, 1.0f);
+	glVertex3f(0.0f, 1.0f, 0.0f);
+
+	glVertex3f(0.0f, 0.0f, 0.0f);
+	glVertex3f(0.0f, 0.0f, 1.0f);
+	glVertex3f(0.0f, 1.0f, 1.0f);
+
+	glVertex3f(0.0f, 1.0f, 1.0f);
+	glVertex3f(1.0f, 1.0f, 0.0f);
+	glVertex3f(0.0f, 1.0f, 0.0f);
+
+	glVertex3f(0.0f, 1.0f, 1.0f);
+	glVertex3f(1.0f, 1.0f, 1.0f);
+	glVertex3f(1.0f, 1.0f, 0.0f);
+
+	glVertex3f(0.0f, 0.0f, 0.0f);
+	glVertex3f(1.0f, 0.0f, 0.0f);
+	glVertex3f(0.0f, 0.0f, 1.0f);
+
+	glVertex3f(1.0f, 0.0f, 0.0f);
+	glVertex3f(1.0f, 0.0f, 1.0f);
+	glVertex3f(0.0f, 0.0f, 1.0f);
+	glEnd();
+	glLineWidth(1.0f);
+	*/
+
+	/**/
+	static const GLfloat vertex_buffer[] =
+	{
+		0.0f, 0.0f, 1.0f,
+		1.0f, 1.0f, 1.0f,
+		0.0f, 1.0f, 1.0f,
+
+		0.0f, 0.0f, 1.0f,
+		1.0f, 0.0f, 1.0f,
+		1.0f, 1.0f, 1.0f,
+
+		1.0f, 0.0f, 1.0f,
+		1.0f, 1.0f, 0.0f,
+		1.0f, 1.0f, 1.0f,
+
+		1.0f, 0.0f, 1.0f,
+		1.0f, 0.0f, 0.0f,
+		1.0f, 1.0f, 0.0f,
+
+		1.0f, 0.0f, 0.0f,
+		0.0f, 1.0f, 0.0f,
+		1.0f, 1.0f, 0.0f,
+
+		1.0f, 0.0f, 0.0f,
+		0.0f, 0.0f, 0.0f,
+		0.0f, 1.0f, 0.0f,
+
+		0.0f, 0.0f, 0.0f,
+		0.0f, 1.0f, 1.0f,
+		0.0f, 1.0f, 0.0f,
+
+		0.0f, 0.0f, 0.0f,
+		0.0f, 0.0f, 1.0f,
+		0.0f, 1.0f, 1.0f,
+
+		0.0f, 1.0f, 1.0f,
+		1.0f, 1.0f, 0.0f,
+		0.0f, 1.0f, 0.0f,
+
+		0.0f, 1.0f, 1.0f,
+		1.0f, 1.0f, 1.0f,
+		1.0f, 1.0f, 0.0f,
+
+		0.0f, 0.0f, 0.0f,
+		1.0f, 0.0f, 0.0f,
+		0.0f, 0.0f, 1.0f,
+
+		1.0f, 0.0f, 0.0f,
+		1.0f, 0.0f, 1.0f,
+		0.0f, 0.0f, 1.0f
+	};
+
+	GLuint vertexbuffer;
+	glGenBuffers(1, &vertexbuffer);
+	glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(vertex_buffer), vertex_buffer, GL_STATIC_DRAW);
+
+	glEnableClientState(GL_VERTEX_ARRAY);
+	glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
+	glVertexPointer(3, GL_FLOAT, 0, NULL);
+	glDrawArrays(GL_TRIANGLES, 0, 12*3*3);
+	glDisableClientState(GL_VERTEX_ARRAY);
+
+
+
+	/**/
+
+
+	/*
 	//Test to draw a triangle with openGL http://www.opengl-tutorial.org/beginners-tutorials/tutorial-2-the-first-triangle/
 	//3 vertices
 	static const GLfloat g_vertex_buffer_data[] =
@@ -168,17 +308,9 @@ update_status ModuleRenderer3D::Update(float dt)
 		(void*)0            // array buffer offset
 	);
 	// Draw the triangle
-	if (GL_Wireframe)
-		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-	if (GL_Point)
-		glPolygonMode(GL_FRONT_AND_BACK, GL_POINT);
 	glDrawArrays(GL_TRIANGLES, 0, 6); // Starting from vertex 0; 3 vertices total -> 1 triangle
 	glDisableVertexAttribArray(0);
 	glDeleteBuffers(1, &vertexbuffer);
-	if (GL_Wireframe)
-		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-	if (GL_Point)
-		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
 
 	//test to draw a sphere
@@ -207,18 +339,13 @@ update_status ModuleRenderer3D::Update(float dt)
 		(void*)0            // array buffer offset
 	);
 	// Draw the triangle
-	if (GL_Wireframe)
-		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-	if (GL_Point)
-		glPolygonMode(GL_FRONT_AND_BACK, GL_POINT);
 	glDrawArrays(GL_TRIANGLES, 0, 1536); // Starting from vertex 0; 3 vertices total -> 1 triangle
 	glDisableVertexAttribArray(0);
 	glDeleteBuffers(1, &vertexbuffer2);
-	if (GL_Wireframe)
-		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-	if (GL_Point)
-		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	*/
 
+	if (GL_Wireframe | GL_Point)
+		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	return UPDATE_CONTINUE;
 }
 
