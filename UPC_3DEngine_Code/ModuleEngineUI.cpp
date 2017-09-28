@@ -74,6 +74,12 @@ void ModuleEngineUI::DrawModuleImGui()
 		ImGuiProfierWindow();
 
 	//------------------------------------------//
+	//---------Module Variables Window----------//
+	//------------------------------------------//
+	if (showModuleVariablesWindow)
+		ImGuiModuleVariablesWindow();
+
+	//------------------------------------------//
 	//-----------Configuration Window-----------//
 	//------------------------------------------//
 	ImGuiConfigurationWindow();
@@ -107,6 +113,8 @@ void ModuleEngineUI::ImGuiDrawMenuBar()
 	{
 		if (ImGui::MenuItem("Show Profiler Window"))
 			showProfilerWindow = !showProfilerWindow;
+		if (ImGui::MenuItem("Show Module Variables Window"))
+			showModuleVariablesWindow = !showModuleVariablesWindow;
 		ImGui::EndMenu();
 	}
 	if (ImGui::BeginMenu("Help"))
@@ -310,18 +318,6 @@ void ModuleEngineUI::ImGuiConfigurationWindow()
 		ImGui::Text(title2);
 		*/
 	}
-	if (ImGui::CollapsingHeader("Modules Variables"))
-	{
-		uint title_size = 50;
-		char title[50];
-
-		for (std::list<Module*>::const_iterator item = App->GetModuleList()->begin(); item != App->GetModuleList()->cend(); ++item)
-		{
-			sprintf_s(title, title_size, "Module: %s", item._Ptr->_Myval->name.c_str());
-			if (ImGui::CollapsingHeader(title))
-				item._Ptr->_Myval->ImGuiModuleVariables();
-		}
-	}
 	ImGui::End();
 }
 
@@ -343,6 +339,21 @@ void  ModuleEngineUI::ImGuiProfierWindow()
 			sprintf_s(title, title_size, "PostUpdate Ms: %i", (uint)item._Ptr->_Myval->ModulePostUpdateMs.back());
 			ImGui::PlotHistogram("##PostUpdate Ms", &item._Ptr->_Myval->ModulePostUpdateMs[0], item._Ptr->_Myval->ModulePostUpdateMs.size(), 0, title, 0.0f, 30.0f, ImVec2(310, 50));
 		}
+	}
+	ImGui::End();
+}
+
+void ModuleEngineUI::ImGuiModuleVariablesWindow()
+{
+	ImGui::Begin("Module Variables", false, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize);
+	uint title_size = 50;
+	char title[50];
+
+	for (std::list<Module*>::const_iterator item = App->GetModuleList()->begin(); item != App->GetModuleList()->cend(); ++item)
+	{
+		sprintf_s(title, title_size, "Module: %s", item._Ptr->_Myval->name.c_str());
+		if (ImGui::CollapsingHeader(title))
+			item._Ptr->_Myval->ImGuiModuleVariables();
 	}
 	ImGui::End();
 }

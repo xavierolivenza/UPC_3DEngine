@@ -19,6 +19,7 @@ public:
 	void ImGuiDrawMenuBar();
 	void ImGuiConfigurationWindow();
 	void ImGuiProfierWindow();
+	void ImGuiModuleVariablesWindow();
 	void ImGuiConsole();
 
 	void PushNewConsoleLabel(std::string* newlabel);
@@ -37,6 +38,7 @@ public:
 private:
 	bool showTestWindow = false;
 	bool showProfilerWindow = false;
+	bool showModuleVariablesWindow = false;
 	bool freezeplots = false;
 	bool active = false;
 	std::list<std::string> console_logs;
