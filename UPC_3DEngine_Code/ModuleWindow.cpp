@@ -160,19 +160,4 @@ void ModuleWindow::ImGuiModuleVariables()
 	strcpy(str0, itoa(MaxFPSValue, str1, 10));
 	if (ImGui::InputText("MaxFPSValue", str0, 50, ImGuiInputTextFlags_EnterReturnsTrue | ImGuiInputTextFlags_CharsDecimal))
 		MaxFPSValue = atoi(str0);
-
-	/*
-	bool fullscreen = false;
-	bool resizable = false;
-	bool borderless = false;
-	bool fullscreen_desktop = false;
-	*/
-
-	/*
-	if (ImGui::Checkbox("GL_DEPTH_TEST", &GL_DepthTest))
-	{
-		if (GL_DepthTest) glEnable(GL_DEPTH_TEST);
-		else glDisable(GL_DEPTH_TEST);
-	}
-	*/
 }

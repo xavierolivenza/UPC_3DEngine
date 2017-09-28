@@ -59,26 +59,28 @@ void ModuleEngineUI::DrawModuleImGui()
 	//------------------------------------------//
 	//-----------------Menu Bar-----------------//
 	//------------------------------------------//
-
 	ImGuiDrawMenuBar();
 
 	//------------------------------------------//
 	//-------------GUI Test Window--------------//
 	//------------------------------------------//
-
 	if(showTestWindow)
 		ImGui::ShowTestWindow();
 
 	//------------------------------------------//
+	//-------------Brofiler Window--------------//
+	//------------------------------------------//
+	if (showProfilerWindow)
+		ImGuiProfierWindow();
+
+	//------------------------------------------//
 	//-----------Configuration Window-----------//
 	//------------------------------------------//
-	
 	ImGuiConfigurationWindow();
 
 	//------------------------------------------//
 	//-----------------Console------------------//
 	//------------------------------------------//
-	
 	ImGuiConsole();
 
 	//------------------------------------------//
@@ -103,6 +105,8 @@ void ModuleEngineUI::ImGuiDrawMenuBar()
 	}
 	if (ImGui::BeginMenu("View"))
 	{
+		if (ImGui::MenuItem("Show Profiler Window"))
+			showProfilerWindow = !showProfilerWindow;
 		ImGui::EndMenu();
 	}
 	if (ImGui::BeginMenu("Help"))
@@ -196,22 +200,6 @@ void ModuleEngineUI::ImGuiConfigurationWindow()
 		//Miliseconds PlotHistogram
 		sprintf_s(title, title_size, "Frame Miliseconds: %i", PerformanceData->miliseconds_per_frame);
 		ImGui::PlotHistogram("##Frame Miliseconds", &msPlotData[0], msPlotData.size(), 0, title, 0.0f, 50.0f, ImVec2(310, 100));
-
-		//Module Miliseconds PlotHistogram
-		if (ImGui::CollapsingHeader("Modules Ms"))
-			for (std::list<Module*>::const_iterator item = App->GetModuleList()->begin(); item != App->GetModuleList()->cend(); ++item)
-			{
-				sprintf_s(title, title_size, "Module: %s", item._Ptr->_Myval->name.c_str());
-				if (ImGui::CollapsingHeader(title))
-				{
-					sprintf_s(title, title_size, "PreUpdate Ms: %i", (uint)item._Ptr->_Myval->ModulePreUpdateMs.back());
-					ImGui::PlotHistogram("##PreUpdate Ms", &item._Ptr->_Myval->ModulePreUpdateMs[0], item._Ptr->_Myval->ModulePreUpdateMs.size(), 0, title, 0.0f, 30.0f, ImVec2(310, 50));
-					sprintf_s(title, title_size, "Update Ms: %i", (uint)item._Ptr->_Myval->ModuleUpdateMs.back());
-					ImGui::PlotHistogram("##Update Ms", &item._Ptr->_Myval->ModuleUpdateMs[0], item._Ptr->_Myval->ModuleUpdateMs.size(), 0, title, 0.0f, 30.0f, ImVec2(310, 50));
-					sprintf_s(title, title_size, "PostUpdate Ms: %i", (uint)item._Ptr->_Myval->ModulePostUpdateMs.back());
-					ImGui::PlotHistogram("##PostUpdate Ms", &item._Ptr->_Myval->ModulePostUpdateMs[0], item._Ptr->_Myval->ModulePostUpdateMs.size(), 0, title, 0.0f, 30.0f, ImVec2(310, 50));
-				}
-			}
 
 		ImGui::Separator();
 
@@ -332,6 +320,28 @@ void ModuleEngineUI::ImGuiConfigurationWindow()
 			sprintf_s(title, title_size, "Module: %s", item._Ptr->_Myval->name.c_str());
 			if (ImGui::CollapsingHeader(title))
 				item._Ptr->_Myval->ImGuiModuleVariables();
+		}
+	}
+	ImGui::End();
+}
+
+void  ModuleEngineUI::ImGuiProfierWindow()
+{
+	ImGui::Begin("Profiler", false, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize);
+	uint title_size = 50;
+	char title[50];
+	//Module Miliseconds PlotHistogram
+	for (std::list<Module*>::const_iterator item = App->GetModuleList()->begin(); item != App->GetModuleList()->cend(); ++item)
+	{
+		sprintf_s(title, title_size, "Module: %s", item._Ptr->_Myval->name.c_str());
+		if (ImGui::CollapsingHeader(title))
+		{
+			sprintf_s(title, title_size, "PreUpdate Ms: %i", (uint)item._Ptr->_Myval->ModulePreUpdateMs.back());
+			ImGui::PlotHistogram("##PreUpdate Ms", &item._Ptr->_Myval->ModulePreUpdateMs[0], item._Ptr->_Myval->ModulePreUpdateMs.size(), 0, title, 0.0f, 30.0f, ImVec2(310, 50));
+			sprintf_s(title, title_size, "Update Ms: %i", (uint)item._Ptr->_Myval->ModuleUpdateMs.back());
+			ImGui::PlotHistogram("##Update Ms", &item._Ptr->_Myval->ModuleUpdateMs[0], item._Ptr->_Myval->ModuleUpdateMs.size(), 0, title, 0.0f, 30.0f, ImVec2(310, 50));
+			sprintf_s(title, title_size, "PostUpdate Ms: %i", (uint)item._Ptr->_Myval->ModulePostUpdateMs.back());
+			ImGui::PlotHistogram("##PostUpdate Ms", &item._Ptr->_Myval->ModulePostUpdateMs[0], item._Ptr->_Myval->ModulePostUpdateMs.size(), 0, title, 0.0f, 30.0f, ImVec2(310, 50));
 		}
 	}
 	ImGui::End();
