@@ -178,8 +178,7 @@ void ModuleEngineUI::ImGuiConfigurationWindow()
 			App->window->SetTitle(appnamestr);
 
 		//Max FPS Slider
-		static int MaxFPSValue = 0;
-		ImGui::SliderInt("Max FPS", &MaxFPSValue, 0, 144);
+		ImGui::SliderInt("Max FPS", &App->window->MaxFPSValue, 0, 144);
 
 		ImGui::Separator();
 

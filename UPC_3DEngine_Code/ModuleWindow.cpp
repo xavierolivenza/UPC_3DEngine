@@ -145,3 +145,34 @@ void ModuleWindow::SetFullscreen(bool set)
 					LOGP("Could not window: %s\n", SDL_GetError());
 	}
 }
+
+void ModuleWindow::ImGuiModuleVariables()
+{
+	static char str0[50] = "";
+	static char str1[25] = "";
+
+	strcpy(str0, itoa(w_width, str1, 10));
+	if (ImGui::InputText("w_width", str0, 50, ImGuiInputTextFlags_EnterReturnsTrue | ImGuiInputTextFlags_CharsDecimal))
+		w_width = atoi(str0);
+	strcpy(str0, itoa(w_height, str1, 10));
+	if (ImGui::InputText("w_height", str0, 50, ImGuiInputTextFlags_EnterReturnsTrue | ImGuiInputTextFlags_CharsDecimal))
+		w_height = atoi(str0);
+	strcpy(str0, itoa(MaxFPSValue, str1, 10));
+	if (ImGui::InputText("MaxFPSValue", str0, 50, ImGuiInputTextFlags_EnterReturnsTrue | ImGuiInputTextFlags_CharsDecimal))
+		MaxFPSValue = atoi(str0);
+
+	/*
+	bool fullscreen = false;
+	bool resizable = false;
+	bool borderless = false;
+	bool fullscreen_desktop = false;
+	*/
+
+	/*
+	if (ImGui::Checkbox("GL_DEPTH_TEST", &GL_DepthTest))
+	{
+		if (GL_DepthTest) glEnable(GL_DEPTH_TEST);
+		else glDisable(GL_DEPTH_TEST);
+	}
+	*/
+}

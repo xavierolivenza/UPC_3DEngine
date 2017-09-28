@@ -37,6 +37,8 @@ public:
 
 	void SetFullscreen(bool set);
 
+	void ImGuiModuleVariables();
+
 public:
 	//The window we'll be rendering to
 	SDL_Window* window;
