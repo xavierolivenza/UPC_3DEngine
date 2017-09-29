@@ -272,148 +272,52 @@ update_status ModuleRenderer3D::Update(float dt)
 	glDisableClientState(GL_VERTEX_ARRAY);
 	*/
 
-	/*
-	static const GLfloat vertex_buffer[] =
+	static std::vector<GLfloat>  vertices =
 	{
-		0.0f, 0.0f, 1.0f,
-		1.0f, 1.0f, 1.0f,
-		0.0f, 1.0f, 1.0f,
-
-		0.0f, 0.0f, 1.0f,
-		1.0f, 0.0f, 1.0f,
-		1.0f, 1.0f, 1.0f,
-
-		1.0f, 0.0f, 1.0f,
-		1.0f, 1.0f, 0.0f,
-		1.0f, 1.0f, 1.0f,
-
-		1.0f, 0.0f, 1.0f,
-		1.0f, 0.0f, 0.0f,
-		1.0f, 1.0f, 0.0f,
-
-		1.0f, 0.0f, 0.0f,
-		0.0f, 1.0f, 0.0f,
-		1.0f, 1.0f, 0.0f,
-
-		1.0f, 0.0f, 0.0f,
-		0.0f, 0.0f, 0.0f,
-		0.0f, 1.0f, 0.0f,
-		
-		0.0f, 0.0f, 0.0f,
-		0.0f, 1.0f, 1.0f,
-		0.0f, 1.0f, 0.0f,
-
-		0.0f, 0.0f, 0.0f,
-		0.0f, 0.0f, 1.0f,
-		0.0f, 1.0f, 1.0f,
-
-		0.0f, 1.0f, 1.0f,
-		1.0f, 1.0f, 0.0f,
-		0.0f, 1.0f, 0.0f,
-
-		0.0f, 1.0f, 1.0f,
-		1.0f, 1.0f, 1.0f,
-		1.0f, 1.0f, 0.0f,
-	
-		0.0f, 0.0f, 0.0f,
-		1.0f, 0.0f, 0.0f,
-		0.0f, 0.0f, 1.0f,
-
-		1.0f, 0.0f, 0.0f,
-		1.0f, 0.0f, 1.0f,
-		0.0f, 0.0f, 1.0f
+		0.0f,0.0f,0.0f,
+		1.0f,0.0f,0.0f,
+		1.0f,0.0f,1.0f,
+		0.0f,0.0f,1.0f,
+		0.0f,1.0f,1.0f,
+		0.0f,1.0f,0.0f,
+		1.0f,1.0f,0.0f,
+		1.0f,1.0f,1.0f
 	};
 
-	static const GLubyte indices[] =
+	static std::vector<uint> indices =
 	{
-		3, 5, 6,
-		3, 7, 5,
-
-		7, 4, 5,
-		7, 1, 4,
-
-		1, 2, 4,
-		1, 0, 2,
-
-		0, 6, 2,
-		0, 3, 6,
-
-		6, 4, 2,
-		6, 5, 4,
-
-		0, 1, 3,
-		1, 7, 3
+		3,7,4,
+		3,2,7,
+		2,6,7,
+		2,1,6,
+		1,5,6,
+		1,0,5,
+		0,4,5,
+		0,3,4,
+		4,6,5,
+		4,7,6,
+		1,3,0,
+		2,3,1
 	};
-	*/
 
-	/*
-	GLuint ibo_cube_elements;
-	glGenBuffers(1, &ibo_cube_elements);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo_cube_elements);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo_cube_elements);
-	int size = 0;
-	glGetBufferParameteriv(GL_ELEMENT_ARRAY_BUFFER, GL_BUFFER_SIZE, &size);
-	glDrawElements(GL_TRIANGLES, size / sizeof(GLushort), GL_UNSIGNED_SHORT, 0);
-	*/
+	static GLuint indices_buf = 0;
+	static GLuint vertices_buf;
 
-	/*
-	GLuint vertexbuffer;
-	glGenBuffers(1, &vertexbuffer);
-	glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(vertex_buffer), vertex_buffer, GL_STATIC_DRAW);
+	// Buffer for vertices
+	glGenBuffers(1, &vertices_buf);
+	glBindBuffer(GL_ARRAY_BUFFER, vertices_buf);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(float) *vertices.size() * 3, &vertices[0], GL_STATIC_DRAW);
 
-	GLuint indexbuffer;
-	glGenBuffers(1, &indexbuffer);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexbuffer);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+	// Buffer for indices
+	glGenBuffers(1, &indices_buf);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indices_buf);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint) * indices.size(), &indices[0], GL_STATIC_DRAW);
 
 	glEnableClientState(GL_VERTEX_ARRAY);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vertexbuffer);
-	glVertexPointer(3, GL_FLOAT, 0, vertex_buffer);
-	glDrawElements(GL_TRIANGLES, vertexbuffer, GL_UNSIGNED_BYTE, indices);
-	glDisableClientState(GL_VERTEX_ARRAY);
-	*/
-
-
-	/*
-	GLuint vertexbuffer;
-	glGenBuffers(1, &vertexbuffer);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vertexbuffer);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(vertex_buffer), vertex_buffer, GL_STATIC_DRAW);
-
-	glEnableClientState(GL_VERTEX_ARRAY);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vertexbuffer);
-	glVertexPointer(3, GL_FLOAT, 0, vertex_buffer);
-	glDrawElements(GL_TRIANGLES, vertexbuffer, GL_UNSIGNED_BYTE, indices);
-	glDisableClientState(GL_VERTEX_ARRAY);
-	*/
-
-	/*
-	GLuint my_indices;
-	glGenBuffers(1, &(my_indices));
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, my_indices);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(vertex_buffer), indices, GL_STATIC_DRAW);
-
-	glEnableClientState(GL_VERTEX_ARRAY);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, my_indices);
-	glVertexPointer(3, GL_FLOAT, 0, vertex_buffer);
-	glDrawElements(GL_TRIANGLES, my_indices, GL_UNSIGNED_BYTE, indices);
-	glDisableClientState(GL_VERTEX_ARRAY);
-	*/
-
-	/*
-	GLuint vertexbuffer2;
-	glGenBuffers(1, &vertexbuffer2);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vertexbuffer2);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(vertex_buffer), vertex_buffer, GL_STATIC_DRAW);
-
-	glEnableClientState(GL_VERTEX_ARRAY);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vertexbuffer2);
-	glVertexPointer(3, GL_FLOAT, 0, vertex_buffer);
-	glDrawElements(GL_TRIANGLES, vertexbuffer2, GL_FLOAT, NULL);
-	glDisableClientState(GL_VERTEX_ARRAY);
-	*/
+	glBindBuffer(GL_ARRAY_BUFFER, vertices_buf);
+	glVertexPointer(3, GL_FLOAT, 0, NULL);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indices_buf);
+	glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, NULL);
 
 	/*
 	//Test to draw a triangle with openGL http://www.opengl-tutorial.org/beginners-tutorials/tutorial-2-the-first-triangle/
