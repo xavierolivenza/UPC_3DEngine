@@ -7,6 +7,7 @@
 #include "Primitive.h"
 #include "Application.h"
 #include "ModuleRenderer3D.h"
+#include "p2Log.h"
 
 //#include "glut/glut.h"
 //#pragma comment (lib, "glut/glut32.lib")
@@ -124,7 +125,7 @@ void P2Cube::InnerRender() const
 	float sy = size.y * 0.5f;
 	float sz = size.z * 0.5f;
 
-	static std::vector<GLfloat>  vertices =
+	static GLfloat vertices[] =
 	{
 		-sx,-sy,-sz,
 		sx,-sy,-sz,
@@ -136,7 +137,7 @@ void P2Cube::InnerRender() const
 		sx,sy,sz,
 	};
 
-	static std::vector<uint> indices =
+	static uint indices[] =
 	{
 		3,7,4,
 		3,2,7,
@@ -158,12 +159,12 @@ void P2Cube::InnerRender() const
 	// Buffer for vertices
 	glGenBuffers(1, &vertices_buf);
 	glBindBuffer(GL_ARRAY_BUFFER, vertices_buf);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(float) *vertices.size() * 3, &vertices[0], GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), &vertices[0], GL_STATIC_DRAW);
 
 	// Buffer for indices
 	glGenBuffers(1, &indices_buf);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indices_buf);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint) * indices.size(), &indices[0], GL_STATIC_DRAW);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), &indices[0], GL_STATIC_DRAW);
 
 	glEnableClientState(GL_VERTEX_ARRAY);
 	glBindBuffer(GL_ARRAY_BUFFER, vertices_buf);
