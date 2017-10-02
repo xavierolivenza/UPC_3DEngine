@@ -112,6 +112,9 @@ bool ModuleSceneIntro::Start()
 	cube1.SetPos(1, 1, 1);
 
 
+	sphere1 = new P2Sphere(1.0f);
+	sphere1->SetPos(-3, 1, 0);
+
 	return ret;
 }
 
@@ -124,6 +127,7 @@ update_status ModuleSceneIntro::PreUpdate(float dt)
 update_status ModuleSceneIntro::Update(float dt)
 {
 	cube1.Render();
+	sphere1->Render();
 	return UPDATE_CONTINUE;
 }
 
@@ -144,6 +148,8 @@ bool ModuleSceneIntro::CleanUp()
 	RELEASE(capsule2);
 	RELEASE(capsule3);
 	RELEASE(capsule4);
+	
+	delete sphere1;
 	return true;
 }
 

@@ -2,6 +2,10 @@
 #pragma once
 #include "glmath.h"
 #include "Color.h"
+#include "MathGeoLib\MathGeoLib.h"
+#include <list>
+#include <vector>
+
 
 enum PrimitiveTypes
 {
@@ -53,9 +57,21 @@ class P2Sphere : public Primitive
 public:
 	P2Sphere();
 	P2Sphere(float radius);
+	~P2Sphere();
 	void InnerRender() const;
 public:
 	float radius;
+private:
+	math::Sphere geo_sphere;
+
+	mutable float3*	vertex3 = nullptr;
+	mutable float2* vertex3_uv = nullptr;
+
+	int stacks = 0;
+	int slices = 0;
+
+	mutable std::list<vec3> mesh;
+	mutable std::vector<float> vertex_array;
 };
 
 // ============================================
