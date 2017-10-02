@@ -25,6 +25,16 @@ public:
 
 	void ImGuiModuleVariables();
 
+	bool GL_Wireframe_Active()
+	{
+		return GL_Wireframe;
+	}
+
+	bool GL_Point_Active()
+	{
+		return GL_Point;
+	}
+
 public:
 
 	Light lights[MAX_LIGHTS];

@@ -5,12 +5,14 @@
 #include <gl/GLU.h>
 #include <vector>
 #include "Primitive.h"
+#include "Application.h"
+#include "ModuleRenderer3D.h"
 
 //#include "glut/glut.h"
 //#pragma comment (lib, "glut/glut32.lib")
 
 // ------------------------------------------------------------
-Primitive::Primitive() : transform(IdentityMatrix), color(White), wire(false), axis(false), type(PrimitiveTypes::Primitive_Point)
+Primitive::Primitive() : transform(IdentityMatrix), color(White), axis(false), type(PrimitiveTypes::Primitive_Point)
 {}
 
 // ------------------------------------------------------------
@@ -58,13 +60,17 @@ void Primitive::Render() const
 	}
 
 	glColor3f(color.r, color.g, color.b);
-
-	if (wire)
+	
+	
+	if (App->renderer3D->GL_Wireframe_Active())
 		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-	else
-		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	if (App->renderer3D->GL_Point_Active())
+		glPolygonMode(GL_FRONT_AND_BACK, GL_POINT);
 
 	InnerRender();
+
+	if (App->renderer3D->GL_Wireframe_Active() | App->renderer3D->GL_Point_Active())
+		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
 	glPopMatrix();
 }
@@ -114,101 +120,6 @@ P2Cube::P2Cube(float sizeX, float sizeY, float sizeZ) : Primitive(), size(sizeX,
 
 void P2Cube::InnerRender() const
 {	
-	/*
-	float sx = size.x * 0.5f;
-	float sy = size.y * 0.5f;
-	float sz = size.z * 0.5f;
-
-	glBegin(GL_QUADS);
-
-	glNormal3f(0.0f, 0.0f, 1.0f);
-	glVertex3f(-sx, -sy, sz);
-	glVertex3f( sx, -sy, sz);
-	glVertex3f( sx,  sy, sz);
-	glVertex3f(-sx,  sy, sz);
-
-	glNormal3f(0.0f, 0.0f, -1.0f);
-	glVertex3f( sx, -sy, -sz);
-	glVertex3f(-sx, -sy, -sz);
-	glVertex3f(-sx,  sy, -sz);
-	glVertex3f( sx,  sy, -sz);
-
-	glNormal3f(1.0f, 0.0f, 0.0f);
-	glVertex3f(sx, -sy,  sz);
-	glVertex3f(sx, -sy, -sz);
-	glVertex3f(sx,  sy, -sz);
-	glVertex3f(sx,  sy,  sz);
-
-	glNormal3f(-1.0f, 0.0f, 0.0f);
-	glVertex3f(-sx, -sy, -sz);
-	glVertex3f(-sx, -sy,  sz);
-	glVertex3f(-sx,  sy,  sz);
-	glVertex3f(-sx,  sy, -sz);
-
-	glNormal3f(0.0f, 1.0f, 0.0f);
-	glVertex3f(-sx, sy,  sz);
-	glVertex3f( sx, sy,  sz);
-	glVertex3f( sx, sy, -sz);
-	glVertex3f(-sx, sy, -sz);
-
-	glNormal3f(0.0f, -1.0f, 0.0f);
-	glVertex3f(-sx, -sy, -sz);
-	glVertex3f( sx, -sy, -sz);
-	glVertex3f( sx, -sy,  sz);
-	glVertex3f(-sx, -sy,  sz);
-
-	glEnd();
-	*/
-
-	/*
-	static std::vector<GLfloat>  vertices =
-	{
-		0.0f,0.0f,0.0f,
-		1.0f,0.0f,0.0f,
-		1.0f,0.0f,1.0f,
-		0.0f,0.0f,1.0f,
-		0.0f,1.0f,1.0f,
-		0.0f,1.0f,0.0f,
-		1.0f,1.0f,0.0f,
-		1.0f,1.0f,1.0f
-	};
-
-	static std::vector<uint> indices =
-	{
-		3,7,4,
-		3,2,7,
-		2,6,7,
-		2,1,6,
-		1,5,6,
-		1,0,5,
-		0,4,5,
-		0,3,4,
-		4,6,5,
-		4,7,6,
-		1,3,0,
-		2,3,1
-	};
-
-	static GLuint indices_buf = 0;
-	static GLuint vertices_buf;
-
-	// Buffer for vertices
-	glGenBuffers(1, &vertices_buf);
-	glBindBuffer(GL_ARRAY_BUFFER, vertices_buf);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(float) *vertices.size() * 3, &vertices[0], GL_STATIC_DRAW);
-
-	// Buffer for indices
-	glGenBuffers(1, &indices_buf);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indices_buf);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint) * indices.size(), &indices[0], GL_STATIC_DRAW);
-
-	glEnableClientState(GL_VERTEX_ARRAY);
-	glBindBuffer(GL_ARRAY_BUFFER, vertices_buf);
-	glVertexPointer(3, GL_FLOAT, 0, NULL);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indices_buf);
-	glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, NULL);
-	*/
-
 	float sx = size.x * 0.5f;
 	float sy = size.y * 0.5f;
 	float sz = size.z * 0.5f;
