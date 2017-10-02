@@ -30,4 +30,6 @@ private:
 	Capsule* capsule2;
 	Capsule* capsule3;
 	Capsule* capsule4;
+
+	P2Cube cube1;
 };

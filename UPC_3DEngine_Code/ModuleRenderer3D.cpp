@@ -272,6 +272,7 @@ update_status ModuleRenderer3D::Update(float dt)
 	glDisableClientState(GL_VERTEX_ARRAY);
 	*/
 
+	/*
 	static std::vector<GLfloat>  vertices =
 	{
 		0.0f,0.0f,0.0f,
@@ -318,6 +319,7 @@ update_status ModuleRenderer3D::Update(float dt)
 	glVertexPointer(3, GL_FLOAT, 0, NULL);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indices_buf);
 	glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, NULL);
+	*/
 
 	/*
 	//Test to draw a triangle with openGL http://www.opengl-tutorial.org/beginners-tutorials/tutorial-2-the-first-triangle/

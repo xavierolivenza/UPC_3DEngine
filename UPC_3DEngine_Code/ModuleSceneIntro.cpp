@@ -104,6 +104,14 @@ bool ModuleSceneIntro::Start()
 	App->camera->Move(vec3(1.0f, 1.0f, 0.0f));
 	App->camera->LookAt(vec3(0, 0, 0));
 
+
+	cube1.size.x = 1;
+	cube1.size.y = 1;
+	cube1.size.z = 1;
+	cube1.color = Chocolate;
+	cube1.SetPos(0, 0, 0);
+
+
 	return ret;
 }
 
@@ -115,6 +123,7 @@ update_status ModuleSceneIntro::PreUpdate(float dt)
 // Update
 update_status ModuleSceneIntro::Update(float dt)
 {
+	cube1.Render();
 	return UPDATE_CONTINUE;
 }
 
