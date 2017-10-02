@@ -109,7 +109,7 @@ bool ModuleSceneIntro::Start()
 	cube1.size.y = 1;
 	cube1.size.z = 1;
 	cube1.color = Chocolate;
-	cube1.SetPos(0, 0, 0);
+	cube1.SetPos(1, 1, 1);
 
 
 	return ret;
