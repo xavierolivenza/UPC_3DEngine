@@ -75,6 +75,19 @@ bool ModuleLoadMesh::Load(std::string* file, std::vector<GeometryData>& meshData
 	if (file == nullptr)
 		return false;
 
+	if (geomLoaded)
+	{
+		//clean vector
+		for (std::vector<GeometryData>::iterator item = meshDataOutput.begin(); item != meshDataOutput.cend(); ++item)
+		{
+			RELEASE_ARRAY(item._Ptr->vertices);
+			RELEASE_ARRAY(item._Ptr->indices);
+			glDeleteBuffers(1, &item._Ptr->id_vertices);
+			glDeleteBuffers(1, &item._Ptr->id_indices);
+		}
+		meshDataOutput.clear();
+	}
+
 	const aiScene* scene = aiImportFile(file->c_str(), aiProcessPreset_TargetRealtime_MaxQuality);
 	if (scene != nullptr && scene->HasMeshes())
 	{
