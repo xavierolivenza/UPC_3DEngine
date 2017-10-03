@@ -75,6 +75,10 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Application.h" />
+    <ClInclude Include="Assimp\include\cfileio.h" />
+    <ClInclude Include="Assimp\include\cimport.h" />
+    <ClInclude Include="Assimp\include\postprocess.h" />
+    <ClInclude Include="Assimp\include\scene.h" />
     <ClInclude Include="Color.h" />
     <ClInclude Include="Fluid_Studios_Memory_Manager\mmgr.h" />
     <ClInclude Include="Fluid_Studios_Memory_Manager\nommgr.h" />

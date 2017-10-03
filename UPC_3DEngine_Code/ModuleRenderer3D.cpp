@@ -411,6 +411,29 @@ bool ModuleRenderer3D::CleanUp()
 	return true;
 }
 
+bool ModuleRenderer3D::Draw(GeometryData* meshData)
+{
+	bool ret = true;
+
+	glEnableClientState(GL_VERTEX_ARRAY);
+	glBindBuffer(GL_ARRAY_BUFFER, meshData->id_vertices);
+	glVertexPointer(3, GL_FLOAT, 0, NULL);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, meshData->id_indices);
+	glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, NULL);
+
+	return ret;
+}
+
+bool  ModuleRenderer3D::Draw(std::vector<GeometryData>* meshData)
+{
+	bool ret = true;
+
+	for (std::vector<GeometryData>::iterator item = meshData->begin(); item != meshData->cend() && ret == true; ++item)
+		ret = Draw(item._Ptr);
+
+	return ret;
+}
+
 bool ModuleRenderer3D::SaveConf(JSON_Object* conf) const
 {
 	App->parsonjson->SetBool(conf, "GL_DepthTest", GL_DepthTest);

@@ -18,7 +18,7 @@ enum PrimitiveTypes
 	Primitive_Cylinder
 };
 
-struct Geometry
+struct GeometryData
 {
 	uint id_vertices = 0; // id in VRAM
 	uint num_indices = 0;
@@ -50,7 +50,7 @@ public:
 
 protected:
 	PrimitiveTypes type;
-	Geometry GeometryStruct;
+	GeometryData GeometryStruct;
 };
 
 // ============================================

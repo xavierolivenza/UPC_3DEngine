@@ -49,6 +49,9 @@
     <Filter Include="Sources\Tools\parson">
       <UniqueIdentifier>{33ead01a-35c7-4834-973f-def4b76528de}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Sources\Tools\Assimp">
+      <UniqueIdentifier>{3aeba366-5eee-4b59-b6a9-5427c720c935}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Module.h">
@@ -326,6 +329,18 @@
     </ClInclude>
     <ClInclude Include="ModuleLoadMesh.h">
       <Filter>Sources\Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="Assimp\include\cfileio.h">
+      <Filter>Sources\Tools\Assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="Assimp\include\cimport.h">
+      <Filter>Sources\Tools\Assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="Assimp\include\postprocess.h">
+      <Filter>Sources\Tools\Assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="Assimp\include\scene.h">
+      <Filter>Sources\Tools\Assimp</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -327,6 +327,7 @@ void DebugDrawer::drawAxis(float axislen)
 	axis = { 0.0f ,0.01f ,2.0f };
 	line_color = { 0 ,0 ,255 };
 	drawLine(origin, axis, line_color);
+	glColor3f(1.0f, 1.0f, 1.0f);
 }
 
 void DebugDrawer::drawLine(const btVector3& from, const btVector3& to, const btVector3& color)
