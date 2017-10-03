@@ -60,6 +60,11 @@ public:
 
 	void ImGuiModuleVariables();
 
+	const std::string* GetDroppedFile()
+	{
+		return &DroppedFileDir;
+	}
+
 private:
 	KEY_STATE* keyboard;
 	KEY_STATE mouse_buttons[MAX_MOUSE_BUTTONS];
@@ -68,5 +73,6 @@ private:
 	int mouse_z;
 	int mouse_x_motion;
 	int mouse_y_motion;
+	std::string DroppedFileDir;
 	//int mouse_z_motion;
 };
