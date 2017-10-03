@@ -26,6 +26,12 @@ struct GeometryData
 	uint id_indices = 0; // id in VRAM
 	uint num_vertices = 0;
 	float* vertices = nullptr;
+	uint id_colors = 0; // id in VRAM
+	float* colors = nullptr;
+	uint id_normals = 0; // id in VRAM
+	float* normals = nullptr;
+	uint id_texture_coords = 0; // id in VRAM
+	float* texture_coords = nullptr;
 };
 
 class Primitive

@@ -118,6 +118,27 @@ bool ModuleLoadMesh::Load(std::string* file, std::vector<GeometryData>& meshData
 				}
 			}
 
+			// normals
+			if (new_mesh->HasNormals())
+			{
+				geomData.normals = new float[geomData.num_vertices * 3];
+				memcpy(geomData.normals, new_mesh->mNormals, sizeof(float) * geomData.num_vertices * 3);
+			}
+
+			// colors
+			if (new_mesh->HasVertexColors(0))
+			{
+				geomData.colors = new float[geomData.num_vertices * 3];
+				memcpy(geomData.colors, new_mesh->mColors, sizeof(float) * geomData.num_vertices * 3);
+			}
+
+			// texture coords (only one texture for now)
+			if (new_mesh->HasTextureCoords(0))
+			{
+				geomData.texture_coords = new float[geomData.num_vertices * 3];
+				memcpy(geomData.texture_coords, new_mesh->mTextureCoords[0], sizeof(float) * geomData.num_vertices * 3);
+			}
+
 			// Buffer for vertices
 			glGenBuffers(1, (GLuint*) &(geomData.id_vertices));
 			glBindBuffer(GL_ARRAY_BUFFER, geomData.id_vertices);
@@ -127,6 +148,30 @@ bool ModuleLoadMesh::Load(std::string* file, std::vector<GeometryData>& meshData
 			glGenBuffers(1, (GLuint*) &(geomData.id_indices));
 			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, geomData.id_indices);
 			glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint) * geomData.num_indices, geomData.indices, GL_STATIC_DRAW);
+
+			// Buffer for normals
+			if (geomData.normals != nullptr)
+			{
+				glGenBuffers(1, (GLuint*) &(geomData.id_normals));
+				glBindBuffer(GL_ARRAY_BUFFER, geomData.id_normals);
+				glBufferData(GL_ARRAY_BUFFER, sizeof(float) * geomData.num_vertices * 3, geomData.normals, GL_STATIC_DRAW);
+			}
+
+			// Buffer for vertex colors
+			if (geomData.colors != nullptr)
+			{
+				glGenBuffers(1, (GLuint*) &(geomData.id_colors));
+				glBindBuffer(GL_ARRAY_BUFFER, geomData.id_colors);
+				glBufferData(GL_ARRAY_BUFFER, sizeof(float) * geomData.num_vertices * 3, geomData.colors, GL_STATIC_DRAW);
+			}
+
+			// Buffer for texture coords
+			if (geomData.texture_coords != nullptr)
+			{
+				glGenBuffers(1, (GLuint*) &(geomData.id_texture_coords));
+				glBindBuffer(GL_ARRAY_BUFFER, geomData.id_texture_coords);
+				glBufferData(GL_ARRAY_BUFFER, sizeof(float) * geomData.num_vertices * 3, geomData.texture_coords, GL_STATIC_DRAW);
+			}
 
 			meshDataOutput.push_back(geomData);
 		}
