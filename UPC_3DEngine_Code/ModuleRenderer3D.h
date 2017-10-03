@@ -18,8 +18,8 @@ public:
 	update_status PostUpdate(float dt);
 	bool CleanUp();
 
-	bool Draw(GeometryData* meshData);
-	bool Draw(std::vector<GeometryData>* meshData);
+	bool Draw(const GeometryData* meshData) const;
+	bool Draw(const std::vector<GeometryData>* meshData) const;
 
 	bool SaveConf(JSON_Object* conf) const;
 	bool LoadConf(JSON_Object* conf);

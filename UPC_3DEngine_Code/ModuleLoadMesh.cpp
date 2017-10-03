@@ -134,7 +134,10 @@ bool ModuleLoadMesh::Load(std::string* file, std::vector<GeometryData>& meshData
 		geomLoaded = true;
 	}
 	else
+	{
 		LOGP("Error loading scene %s", file->c_str());
+		LOGP("Error: %s", aiGetErrorString());
+	}
 
 	return ret;
 }

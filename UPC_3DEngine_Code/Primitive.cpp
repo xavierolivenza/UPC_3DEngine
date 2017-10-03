@@ -142,13 +142,7 @@ void P2Cube::InnerRender() const
 	}
 	
 	if (buffersCreated)
-	{
-		glEnableClientState(GL_VERTEX_ARRAY);
-		glBindBuffer(GL_ARRAY_BUFFER, GeometryStruct.id_vertices);
-		glVertexPointer(3, GL_FLOAT, 0, NULL);
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, GeometryStruct.id_indices);
-		glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, NULL);
-	}
+		App->renderer3D->Draw(&GeometryStruct);
 }
 
 void P2Cube::GeneratePrimitiveWithNewData()
