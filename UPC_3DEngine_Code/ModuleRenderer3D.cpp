@@ -420,6 +420,7 @@ bool ModuleRenderer3D::Draw(const GeometryData* meshData) const
 	if (GL_Point)
 		glPolygonMode(GL_FRONT_AND_BACK, GL_POINT);
 
+	if(GL_Normals)
 	if(meshData->normals != nullptr)
 		for (uint i = 0; i < meshData->num_vertices * 3; i += 3)
 		{
@@ -470,6 +471,7 @@ bool ModuleRenderer3D::SaveConf(JSON_Object* conf) const
 	App->parsonjson->SetBool(conf, "GL_Specular", GL_Specular);
 	App->parsonjson->SetBool(conf, "GL_Wireframe", GL_Wireframe);
 	App->parsonjson->SetBool(conf, "GL_Point", GL_Point);
+	App->parsonjson->SetBool(conf, "GL_Normals", GL_Normals);
 	return true;
 }
 
@@ -485,6 +487,7 @@ bool ModuleRenderer3D::LoadConf(JSON_Object* conf)
 	GL_Specular = App->parsonjson->GetBool(conf, "GL_Specular", false);
 	GL_Wireframe = App->parsonjson->GetBool(conf, "GL_Wireframe", false);
 	GL_Point = App->parsonjson->GetBool(conf, "GL_Point", false);
+	GL_Normals = App->parsonjson->GetBool(conf, "GL_Normals", false);
 	return true;
 }
 
@@ -545,4 +548,5 @@ void ModuleRenderer3D::ImGuiModuleVariables()
 	}
 	ImGui::Checkbox("GL_Wireframe", &GL_Wireframe);
 	ImGui::Checkbox("GL_Point", &GL_Point);
+	ImGui::Checkbox("GL_Normals", &GL_Normals);
 }
