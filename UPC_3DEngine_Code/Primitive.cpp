@@ -213,10 +213,32 @@ P2Sphere::P2Sphere() : Primitive(), radius(1.0f)
 P2Sphere::P2Sphere(float radius) : Primitive(), radius(radius)
 {
 	type = PrimitiveTypes::Primitive_Sphere;
+}
 
-	stacks = 50;
-	slices = 50;
+P2Sphere::~P2Sphere()
+{
 
+}
+
+void P2Sphere::InnerRender() const
+{
+	//glutSolidSphere(radius, 25, 25);
+	GLuint sphere_id = 0;
+	GLfloat magic_vertices[344 * 3];
+
+	glGenBuffers(1, (GLuint*)&sphere_id);
+	glBindBuffer(GL_ARRAY_BUFFER, sphere_id);
+	glBufferData(GL_ARRAY_BUFFER, vertex_array.size() * sizeof(float), &vertex_array[0], GL_STATIC_DRAW);
+
+	glEnableClientState(GL_VERTEX_ARRAY);
+	glBindBuffer(GL_ARRAY_BUFFER, sphere_id);
+	glVertexPointer(3, GL_FLOAT, 0, NULL);
+	glDrawArrays(GL_TRIANGLES, 0, vertex_array.size() / 3);
+	glDisableClientState(GL_VERTEX_ARRAY);
+}
+
+void P2Sphere::GeneratePrimitiveWithNewData()
+{
 	for (int t = 0; t < stacks; t++)
 	{
 		float theta1 = ((float)t / stacks) * 1 * pi;
@@ -304,37 +326,6 @@ P2Sphere::P2Sphere(float radius) : Primitive(), radius(radius)
 			}
 		}
 	}
-}
-
-P2Sphere::~P2Sphere()
-{
-
-}
-
-void P2Sphere::InnerRender() const
-{
-	//glutSolidSphere(radius, 25, 25);
-	GLuint sphere_id = 0;
-	GLfloat magic_vertices[344 * 3];
-
-	glGenBuffers(1, (GLuint*)&sphere_id);
-	glBindBuffer(GL_ARRAY_BUFFER, sphere_id);
-	glBufferData(GL_ARRAY_BUFFER, vertex_array.size() * sizeof(float), &vertex_array[0], GL_STATIC_DRAW);
-
-	glEnableClientState(GL_VERTEX_ARRAY);
-	glBindBuffer(GL_ARRAY_BUFFER, sphere_id);
-	glVertexPointer(3, GL_FLOAT, 0, NULL);
-
-	glDrawArrays(GL_TRIANGLES, 0, vertex_array.size() / 3);
-	glDisableClientState(GL_VERTEX_ARRAY);
-
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-}
-
-void P2Sphere::GeneratePrimitiveWithNewData()
-{
-
 }
 
 // CYLINDER ============================================

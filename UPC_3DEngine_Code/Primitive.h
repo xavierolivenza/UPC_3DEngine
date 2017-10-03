@@ -78,15 +78,15 @@ public:
 	void InnerRender() const;
 	void GeneratePrimitiveWithNewData();
 public:
-	float radius;
+	float radius = 1.0f;
+	uint stacks = 10;
+	uint slices = 10;
+
 private:
 	math::Sphere geo_sphere;
 
 	float3*	vertex3 = nullptr;
 	float2* vertex3_uv = nullptr;
-
-	int stacks = 0;
-	int slices = 0;
 
 	std::list<vec3> mesh;
 	std::vector<float> vertex_array;

@@ -32,5 +32,5 @@ private:
 	Capsule* capsule4;
 
 	P2Cube cube1;
-	P2Sphere* sphere1 = nullptr;
+	P2Sphere sphere1;
 };
