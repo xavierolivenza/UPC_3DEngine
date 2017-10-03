@@ -85,6 +85,7 @@ update_status ModuleInput::PreUpdate(float dt)
 
 	mouse_x_motion = mouse_y_motion = 0;
 	DroppedFileDir = "";
+	DroppedFile = false;
 
 	bool quit = false;
 	SDL_Event e;
@@ -111,6 +112,7 @@ update_status ModuleInput::PreUpdate(float dt)
 			DroppedFileDir = dropped_file;
 			SDL_free(dropped_file);
 			//LOGP("DroppedFile: %s", DroppedFileDir.c_str());
+			DroppedFile = true;
 			break;
 		}
 

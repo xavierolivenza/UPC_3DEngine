@@ -60,9 +60,11 @@ public:
 
 	void ImGuiModuleVariables();
 
-	const std::string* GetDroppedFile()
+	std::string* GetDroppedFile()
 	{
-		return &DroppedFileDir;
+		if(DroppedFile)
+			return &DroppedFileDir;
+		return nullptr;
 	}
 
 private:
@@ -74,5 +76,6 @@ private:
 	int mouse_x_motion;
 	int mouse_y_motion;
 	std::string DroppedFileDir;
+	bool DroppedFile = false;
 	//int mouse_z_motion;
 };

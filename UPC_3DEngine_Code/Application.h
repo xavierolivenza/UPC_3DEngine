@@ -18,6 +18,7 @@
 #include "ModulePlayer.h"
 #include "ModuleEngineUI.h"
 #include "ModuleParson.h"
+#include "ModuleLoadMesh.h"
 #include "p2Log.h"
 
 #include "Glew\include\glew.h"
@@ -46,6 +47,7 @@ public:
 	ModuleEngineUI* engineUI;
 
 	ParsonJSON* parsonjson;
+	ModuleLoadMesh* loadmesh;
 
 private:
 

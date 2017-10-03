@@ -14,6 +14,7 @@ Application::Application()
 	physics = new ModulePhysics3D(this);
 	player = new ModulePlayer(this);
 	engineUI = new ModuleEngineUI(this);
+	loadmesh = new ModuleLoadMesh(this);
 
 	// The order of calls is very important!
 	// Modules will Init() Start() and Update in this order
@@ -25,6 +26,8 @@ Application::Application()
 	AddModule(audio);
 	AddModule(physics);
 	
+	AddModule(loadmesh);
+
 	// Scenes
 	AddModule(scene_intro);
 	AddModule(player);
