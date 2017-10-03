@@ -110,6 +110,7 @@ bool ModuleSceneIntro::Start()
 	cube1.size.z = 1;
 	cube1.color = Chocolate;
 	cube1.SetPos(1, 1, 1);
+	cube1.GeneratePrimitiveWithNewData();
 
 
 	sphere1 = new P2Sphere(1.0f);

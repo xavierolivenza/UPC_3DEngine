@@ -1,11 +1,12 @@
-
 #pragma once
-#include "glmath.h"
-#include "Color.h"
-#include "MathGeoLib\MathGeoLib.h"
+
 #include <list>
 #include <vector>
 
+#include "Globals.h"
+#include "glmath.h"
+#include "Color.h"
+#include "MathGeoLib\MathGeoLib.h"
 
 enum PrimitiveTypes
 {
@@ -17,6 +18,16 @@ enum PrimitiveTypes
 	Primitive_Cylinder
 };
 
+struct Geometry
+{
+	uint id_vertices = 0; // id in VRAM
+	uint num_indices = 0;
+	uint* indices = nullptr;
+	uint id_indices = 0; // id in VRAM
+	uint num_vertices = 0;
+	float* vertices = nullptr;
+};
+
 class Primitive
 {
 public:
@@ -25,6 +36,7 @@ public:
 
 	virtual void	Render() const;
 	virtual void	InnerRender() const;
+	virtual void	GeneratePrimitiveWithNewData();
 	void			SetPos(float x, float y, float z);
 	void			SetRotation(float angle, const vec3 &u);
 	void			Scale(float x, float y, float z);
@@ -38,6 +50,7 @@ public:
 
 protected:
 	PrimitiveTypes type;
+	Geometry GeometryStruct;
 };
 
 // ============================================
@@ -47,8 +60,12 @@ public :
 	P2Cube();
 	P2Cube(float sizeX, float sizeY, float sizeZ);
 	void InnerRender() const;
+	void GeneratePrimitiveWithNewData();
 public:
 	vec3 size;
+private:
+	bool buffersCreated = false;
+	bool newVertexBufferCreated = false;
 };
 
 // ============================================
@@ -59,19 +76,20 @@ public:
 	P2Sphere(float radius);
 	~P2Sphere();
 	void InnerRender() const;
+	void GeneratePrimitiveWithNewData();
 public:
 	float radius;
 private:
 	math::Sphere geo_sphere;
 
-	mutable float3*	vertex3 = nullptr;
-	mutable float2* vertex3_uv = nullptr;
+	float3*	vertex3 = nullptr;
+	float2* vertex3_uv = nullptr;
 
 	int stacks = 0;
 	int slices = 0;
 
-	mutable std::list<vec3> mesh;
-	mutable std::vector<float> vertex_array;
+	std::list<vec3> mesh;
+	std::vector<float> vertex_array;
 };
 
 // ============================================

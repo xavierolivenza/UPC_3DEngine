@@ -1,9 +1,8 @@
-
-#include "Globals.h"
 #include "Glew\include\glew.h"
 #include <gl/GL.h>
 #include <gl/GLU.h>
 #include <vector>
+
 #include "Primitive.h"
 #include "Application.h"
 #include "ModuleRenderer3D.h"
@@ -90,6 +89,11 @@ void Primitive::InnerRender() const
 	glPointSize(1.0f);
 }
 
+void Primitive::GeneratePrimitiveWithNewData()
+{
+
+}
+
 // ------------------------------------------------------------
 void Primitive::SetPos(float x, float y, float z)
 {
@@ -121,11 +125,47 @@ P2Cube::P2Cube(float sizeX, float sizeY, float sizeZ) : Primitive(), size(sizeX,
 
 void P2Cube::InnerRender() const
 {	
+	if (newVertexBufferCreated)
+	{
+		// Buffer for vertices
+		glGenBuffers(1, (GLuint*) &(GeometryStruct.id_vertices));
+		glBindBuffer(GL_ARRAY_BUFFER, GeometryStruct.id_vertices);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(float) * GeometryStruct.num_vertices * 3, GeometryStruct.vertices, GL_STATIC_DRAW);
+
+		// Buffer for indices
+		glGenBuffers(1, (GLuint*) &(GeometryStruct.id_indices));
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, GeometryStruct.id_indices);
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint) * GeometryStruct.num_indices, GeometryStruct.indices, GL_STATIC_DRAW);
+
+		//I don't like it and this can be dangerous, but i want to preserve InnerRender const, so by now i take the risk.
+		const_cast<bool&>(newVertexBufferCreated) = false;
+	}
+	
+	if (buffersCreated)
+	{
+		glEnableClientState(GL_VERTEX_ARRAY);
+		glBindBuffer(GL_ARRAY_BUFFER, GeometryStruct.id_vertices);
+		glVertexPointer(3, GL_FLOAT, 0, NULL);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, GeometryStruct.id_indices);
+		glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, NULL);
+	}
+}
+
+void P2Cube::GeneratePrimitiveWithNewData()
+{
+	if(buffersCreated)
+	{
+		glDeleteBuffers(1, &GeometryStruct.id_vertices);
+		RELEASE_ARRAY(GeometryStruct.vertices);
+	}
+
 	float sx = size.x * 0.5f;
 	float sy = size.y * 0.5f;
 	float sz = size.z * 0.5f;
 
-	static GLfloat vertices[] =
+	GeometryStruct.num_vertices = 8;
+	GeometryStruct.vertices = new float[GeometryStruct.num_vertices * 3];
+	float vertices[] =
 	{
 		-sx,-sy,-sz,
 		sx,-sy,-sz,
@@ -136,41 +176,32 @@ void P2Cube::InnerRender() const
 		sx,sy,-sz,
 		sx,sy,sz,
 	};
+	memcpy(GeometryStruct.vertices, vertices, sizeof(float) * GeometryStruct.num_vertices * 3);
 
-	static uint indices[] =
+	if (!buffersCreated)
 	{
-		3,7,4,
-		3,2,7,
-		2,6,7,
-		2,1,6,
-		1,5,6,
-		1,0,5,
-		0,4,5,
-		0,3,4,
-		4,6,5,
-		4,7,6,
-		1,3,0,
-		2,3,1
-	};
+		GeometryStruct.num_indices = 36;
+		GeometryStruct.indices = new uint[GeometryStruct.num_indices];
+		uint indices[] =
+		{
+			3,7,4,
+			3,2,7,
+			2,6,7,
+			2,1,6,
+			1,5,6,
+			1,0,5,
+			0,4,5,
+			0,3,4,
+			4,6,5,
+			4,7,6,
+			1,3,0,
+			2,3,1
+		};
+		memcpy(GeometryStruct.indices, indices, sizeof(uint) * GeometryStruct.num_indices);
+	}
 
-	static GLuint indices_buf = 0;
-	static GLuint vertices_buf;
-
-	// Buffer for vertices
-	glGenBuffers(1, &vertices_buf);
-	glBindBuffer(GL_ARRAY_BUFFER, vertices_buf);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), &vertices[0], GL_STATIC_DRAW);
-
-	// Buffer for indices
-	glGenBuffers(1, &indices_buf);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indices_buf);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), &indices[0], GL_STATIC_DRAW);
-
-	glEnableClientState(GL_VERTEX_ARRAY);
-	glBindBuffer(GL_ARRAY_BUFFER, vertices_buf);
-	glVertexPointer(3, GL_FLOAT, 0, NULL);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indices_buf);
-	glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, NULL);
+	buffersCreated = true;
+	newVertexBufferCreated = true;
 }
 
 // SPHERE ============================================
@@ -182,15 +213,9 @@ P2Sphere::P2Sphere() : Primitive(), radius(1.0f)
 P2Sphere::P2Sphere(float radius) : Primitive(), radius(radius)
 {
 	type = PrimitiveTypes::Primitive_Sphere;
-	geo_sphere = Sphere(math::vec(-5.f, 0.f, 0.f), radius);
-	vertex3 = new float3[36];
-	//geo_sphere.Triangulate(vertices3, nullptr, nullptr, 344, false);
 
 	stacks = 50;
 	slices = 50;
-
-
-
 
 	for (int t = 0; t < stacks; t++)
 	{
@@ -215,16 +240,13 @@ P2Sphere::P2Sphere(float radius) : Primitive(), radius(radius)
 			vertex2.x = radius * Sin(theta1) * Sin(phi2);
 			vertex2.y = radius * Cos(theta1);
 
-
 			vertex3.z = radius * Sin(theta2) * Cos(phi2);
 			vertex3.x = radius * Sin(theta2) * Sin(phi2);
 			vertex3.y = radius * Cos(theta2);
 
-
 			vertex4.z = radius * Sin(theta2) * Cos(phi1);
 			vertex4.x = radius * Sin(theta2) * Sin(phi1);
 			vertex4.y = radius * Cos(theta2);
-
 
 			if (t == 0)
 			{
@@ -235,7 +257,6 @@ P2Sphere::P2Sphere(float radius) : Primitive(), radius(radius)
 				vertex_array.push_back(vertex4.x);
 				vertex_array.push_back(vertex4.y);
 				vertex_array.push_back(vertex4.z);
-
 
 				vertex_array.push_back(vertex3.x);
 				vertex_array.push_back(vertex3.y);
@@ -269,7 +290,6 @@ P2Sphere::P2Sphere(float radius) : Primitive(), radius(radius)
 				vertex_array.push_back(vertex2.y);
 				vertex_array.push_back(vertex2.z);
 
-
 				vertex_array.push_back(vertex2.x);
 				vertex_array.push_back(vertex2.y);
 				vertex_array.push_back(vertex2.z);
@@ -288,7 +308,7 @@ P2Sphere::P2Sphere(float radius) : Primitive(), radius(radius)
 
 P2Sphere::~P2Sphere()
 {
-	delete vertex3;
+
 }
 
 void P2Sphere::InnerRender() const
@@ -296,9 +316,6 @@ void P2Sphere::InnerRender() const
 	//glutSolidSphere(radius, 25, 25);
 	GLuint sphere_id = 0;
 	GLfloat magic_vertices[344 * 3];
-
-
-
 
 	glGenBuffers(1, (GLuint*)&sphere_id);
 	glBindBuffer(GL_ARRAY_BUFFER, sphere_id);
@@ -315,6 +332,10 @@ void P2Sphere::InnerRender() const
 
 }
 
+void P2Sphere::GeneratePrimitiveWithNewData()
+{
+
+}
 
 // CYLINDER ============================================
 P2Cylinder::P2Cylinder() : Primitive(), radius(1.0f), height(1.0f)
