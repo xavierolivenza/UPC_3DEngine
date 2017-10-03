@@ -420,6 +420,22 @@ bool ModuleRenderer3D::Draw(const GeometryData* meshData) const
 	if (GL_Point)
 		glPolygonMode(GL_FRONT_AND_BACK, GL_POINT);
 
+	if(meshData->normals != nullptr)
+		for (uint i = 0; i < meshData->num_vertices * 3; i += 3)
+		{
+			glLineWidth(2.0f);
+			glColor3f(1.0f, 0.0f, 0.0f);
+
+			glBegin(GL_LINES);
+			glVertex3f(meshData->vertices[i], meshData->vertices[i + 1], meshData->vertices[i + 2]);
+			glVertex3f(meshData->vertices[i] + meshData->normals[i], meshData->vertices[i + 1] + meshData->normals[i + 1], meshData->vertices[i + 2] + meshData->normals[i + 2]);
+
+			glEnd();
+
+			glLineWidth(1.0f);
+			glColor3f(1.0f, 1.0f, 1.0f);
+		}
+
 	glEnableClientState(GL_VERTEX_ARRAY);
 	glBindBuffer(GL_ARRAY_BUFFER, meshData->id_vertices);
 	glVertexPointer(3, GL_FLOAT, 0, NULL);
