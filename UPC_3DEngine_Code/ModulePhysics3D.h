@@ -25,6 +25,11 @@ public:
 	update_status PostUpdate(float dt);
 	bool CleanUp();
 
+	bool SaveConf(JSON_Object* conf) const;
+	bool LoadConf(JSON_Object* conf);
+
+	void ImGuiModuleVariables();
+
 	PhysBody3D* AddBody(const P2Sphere& sphere, float mass = 1.0f);
 	PhysBody3D* AddBody(const P2Cube& cube, float mass = 1.0f);
 	PhysBody3D* AddBody(const P2Cylinder& cylinder, float mass = 1.0f);
@@ -70,4 +75,9 @@ public:
 	DebugDrawModes mode;
 	P2Line line;
 	Primitive point;
+
+	bool DrawGrid = true;
+	bool DrawAxis = true;
+	uint GridSize = 20;
+	float AxisLength = 2.0f;
 };

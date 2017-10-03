@@ -60,6 +60,10 @@ void ModuleEngineUI::DrawModuleImGui()
 	//-----------------Menu Bar-----------------//
 	//------------------------------------------//
 	ImGuiDrawMenuBar();
+	if (App->input->GetKey(SDL_SCANCODE_1) == KEY_DOWN) showProfilerWindow = !showProfilerWindow;
+	if (App->input->GetKey(SDL_SCANCODE_2) == KEY_DOWN) showModuleVariablesWindow = !showModuleVariablesWindow;
+	if (App->input->GetKey(SDL_SCANCODE_3) == KEY_DOWN) showConfigurationWindow = !showConfigurationWindow;
+	if (App->input->GetKey(SDL_SCANCODE_4) == KEY_DOWN) showConsoleWindow = !showConsoleWindow;
 
 	//------------------------------------------//
 	//-------------GUI Test Window--------------//
@@ -82,17 +86,21 @@ void ModuleEngineUI::DrawModuleImGui()
 	//------------------------------------------//
 	//-----------Configuration Window-----------//
 	//------------------------------------------//
-	ImGuiConfigurationWindow();
+	if(showConfigurationWindow)
+		ImGuiConfigurationWindow();
 
 	//------------------------------------------//
 	//-----------------Console------------------//
 	//------------------------------------------//
-	ImGuiConsole();
+	if(showConsoleWindow)
+		ImGuiConsole();
 
 	//------------------------------------------//
 	//-----------------Rand Gen-----------------//
 	//------------------------------------------//
+	/*
 	ImGui::Begin("Random generator", false, ImGuiWindowFlags_NoMove|ImGuiWindowFlags_NoResize);
+	//ImGui::Begin("Random generator", false);
 	if (ImGui::Button("Generate"))
 	{
 		LCG rand_test;
@@ -100,6 +108,7 @@ void ModuleEngineUI::DrawModuleImGui()
 		LOGP("Random generator Int: %i", rand_test.Int(0, 100));
 	}
 	ImGui::End();
+	*/
 }
 
 void ModuleEngineUI::ImGuiDrawMenuBar()
@@ -111,10 +120,10 @@ void ModuleEngineUI::ImGuiDrawMenuBar()
 	}
 	if (ImGui::BeginMenu("View"))
 	{
-		if (ImGui::MenuItem("Show Profiler Window"))
-			showProfilerWindow = !showProfilerWindow;
-		if (ImGui::MenuItem("Show Module Variables Window"))
-			showModuleVariablesWindow = !showModuleVariablesWindow;
+		ImGui::MenuItem("Profiler", "1", &showProfilerWindow);
+		ImGui::MenuItem("Module Variables", "2", &showModuleVariablesWindow);
+		ImGui::MenuItem("Configuration", "3", &showConfigurationWindow);
+		ImGui::MenuItem("Console", "4", &showConsoleWindow);
 		ImGui::EndMenu();
 	}
 	if (ImGui::BeginMenu("Help"))
@@ -183,6 +192,7 @@ void ModuleEngineUI::ImGuiConfigurationWindow()
 	sMStats MemoryStats = m_getMemoryStatistics();
 	PushFPSandMSPlot(PerformanceData->frames_last_second, PerformanceData->miliseconds_per_frame, MemoryStats.totalReportedMemory);
 	ImGui::Begin("Configuration", false, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize);
+	//ImGui::Begin("Configuration", false);
 	if (ImGui::CollapsingHeader("Application"))
 	{
 		//App name
@@ -324,6 +334,7 @@ void ModuleEngineUI::ImGuiConfigurationWindow()
 void  ModuleEngineUI::ImGuiProfierWindow()
 {
 	ImGui::Begin("Profiler", false, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize);
+	//ImGui::Begin("Profiler", false);
 	uint title_size = 50;
 	char title[50];
 	//Module Miliseconds PlotHistogram
@@ -346,6 +357,7 @@ void  ModuleEngineUI::ImGuiProfierWindow()
 void ModuleEngineUI::ImGuiModuleVariablesWindow()
 {
 	ImGui::Begin("Module Variables", false, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize);
+	//ImGui::Begin("Module Variables", false);
 	uint title_size = 50;
 	char title[50];
 
@@ -361,6 +373,7 @@ void ModuleEngineUI::ImGuiModuleVariablesWindow()
 void ModuleEngineUI::ImGuiConsole()
 {
 	ImGui::Begin("Console", false, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize);
+	//ImGui::Begin("Console", false);
 	for (std::list<std::string>::iterator item = console_logs.begin(); item != console_logs.cend(); ++item)
 		ImGui::Text(item._Ptr->_Myval.c_str());
 	ImGui::SetScrollHere();

@@ -54,5 +54,5 @@ public:
 	bool GL_Specular = false;
 	bool GL_Wireframe = false;
 	bool GL_Point = false;
-	bool GL_Normals = false;
+	bool DebugVNormals = false;
 };

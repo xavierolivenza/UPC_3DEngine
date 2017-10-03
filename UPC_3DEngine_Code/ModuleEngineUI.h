@@ -37,8 +37,10 @@ public:
 
 private:
 	bool showTestWindow = false;
-	bool showProfilerWindow = false;
-	bool showModuleVariablesWindow = false;
+	bool showProfilerWindow = true;
+	bool showModuleVariablesWindow = true;
+	bool showConfigurationWindow = true;
+	bool showConsoleWindow = true;
 	bool freezeplots = false;
 	bool active = false;
 	std::list<std::string> console_logs;
