@@ -3,7 +3,19 @@ The main objective is to create a simple 3D game editor.
 
 CHANGELOG
 
+v0.3:
+
+	-Profiler window
+	-Module variables window
+	-Primitive cube and sphere
+	-Drag & drop
+	-Assimp implemented
+	-Load fbx files
+	-Show vertices normals
+	-New more clean layout
+
 v0.2:
+
 	-Added Console.
 	-OpenGl totally operative.
 	-Added geometry options: Fog, Wireframe, Lightning, Culling, etc...
@@ -13,6 +25,7 @@ v0.2:
 	-Help and close menu added.
 	-Hardware data.
 	-Now you can modify variables from the editor.
+	-Parson save & load.
 
 v0.1:
 
