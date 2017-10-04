@@ -6,6 +6,9 @@
 
 #define MAX_LIGHTS 8
 
+#define CHECKERS_HEIGHT 128
+#define CHECKERS_WIDTH 128
+
 class ModuleRenderer3D : public Module
 {
 public:
@@ -13,6 +16,7 @@ public:
 	~ModuleRenderer3D();
 
 	bool Init();
+	bool Start();
 	update_status PreUpdate(float dt);
 	update_status Update(float dt);
 	update_status PostUpdate(float dt);
@@ -55,4 +59,9 @@ public:
 	bool GL_Wireframe = false;
 	bool GL_Point = false;
 	bool DebugVNormals = false;
+
+private:
+	//direct mode cube test
+	uint ImageName;
+	unsigned char checkImage[CHECKERS_HEIGHT][CHECKERS_WIDTH][4];
 };

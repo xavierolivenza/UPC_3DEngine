@@ -21,11 +21,11 @@ enum PrimitiveTypes
 struct GeometryData
 {
 	uint id_vertices = 0; // id in VRAM
-	uint num_indices = 0;
-	uint* indices = nullptr;
-	uint id_indices = 0; // id in VRAM
 	uint num_vertices = 0;
 	float* vertices = nullptr;
+	uint id_indices = 0; // id in VRAM
+	uint num_indices = 0;
+	uint* indices = nullptr;
 	uint id_colors = 0; // id in VRAM
 	float* colors = nullptr;
 	uint id_normals = 0; // id in VRAM

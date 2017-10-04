@@ -104,6 +104,7 @@ bool ModuleSceneIntro::Start()
 	App->camera->Move(vec3(1.0f, 1.0f, 0.0f));
 	App->camera->LookAt(vec3(0, 0, 0));
 	
+	/*
 	cube1.size.x = 1;
 	cube1.size.y = 1;
 	cube1.size.z = 1;
@@ -116,7 +117,7 @@ bool ModuleSceneIntro::Start()
 	sphere1.stacks = 15;
 	sphere1.SetPos(-3, 1, 0);
 	sphere1.GeneratePrimitiveWithNewData();
-	
+	*/
 	return ret;
 }
 
@@ -128,8 +129,8 @@ update_status ModuleSceneIntro::PreUpdate(float dt)
 // Update
 update_status ModuleSceneIntro::Update(float dt)
 {
-	cube1.Render();
-	sphere1.Render();
+	//cube1.Render();
+	//sphere1.Render();
 	return UPDATE_CONTINUE;
 }
 
