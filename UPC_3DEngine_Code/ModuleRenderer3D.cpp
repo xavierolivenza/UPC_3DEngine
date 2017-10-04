@@ -8,6 +8,9 @@
 #pragma comment (lib, "glu32.lib")    /* link OpenGL Utility lib     */
 #pragma comment (lib, "opengl32.lib") /* link Microsoft OpenGL lib   */
 
+#define CHECKERS_HEIGHT 128
+#define CHECKERS_WIDTH 128
+
 ModuleRenderer3D::ModuleRenderer3D(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
 	name = "renderer3d";
@@ -154,59 +157,126 @@ update_status ModuleRenderer3D::Update(float dt)
 	*/
 
 	//draw cube
-	/*
+	/**/
+	static GLubyte checkImage[CHECKERS_HEIGHT][CHECKERS_WIDTH][4];
+	for (int i = 0; i < CHECKERS_HEIGHT; i++) {
+		for (int j = 0; j < CHECKERS_WIDTH; j++) {
+			int c = ((((i & 0x8) == 0) ^ (((j & 0x8)) == 0))) * 255;
+			checkImage[i][j][0] = (GLubyte)c;
+			checkImage[i][j][1] = (GLubyte)c;
+			checkImage[i][j][2] = (GLubyte)c;
+			checkImage[i][j][3] = (GLubyte)255;
+		}
+	}
+
+	static GLuint ImageName = 0;
+	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+	glGenTextures(1, &ImageName);
+	glBindTexture(GL_TEXTURE_2D, ImageName);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, CHECKERS_WIDTH, CHECKERS_HEIGHT,
+		0, GL_RGBA, GL_UNSIGNED_BYTE, checkImage);
+
+	glEnableClientState(GL_TEXTURE_2D);
+	glBindTexture(GL_TEXTURE, ImageName);
+	glDisableClientState(GL_TEXTURE_2D);
+
 	glLineWidth(2.0f);
 	glBegin(GL_TRIANGLES);
+	
 	glVertex3f(0.0f, 0.0f, 1.0f);
-	glVertex3f(1.0f, 1.0f, 1.0f);
+	glTexCoord2f(0.0f, 1.0f);
+	glVertex3f(1.0f, 1.0f, 1.0f); 
+	glTexCoord2f(1.0f, 0.0f);
 	glVertex3f(0.0f, 1.0f, 1.0f);
+	glTexCoord2f(0.0f, 0.0f);
 
 	glVertex3f(0.0f, 0.0f, 1.0f);
+	glTexCoord2f(0.0f, 1.0f);
 	glVertex3f(1.0f, 0.0f, 1.0f);
+	glTexCoord2f(1.0f, 1.0f);
 	glVertex3f(1.0f, 1.0f, 1.0f);
+	glTexCoord2f(1.0f, 0.0f);
 
 	glVertex3f(1.0f, 0.0f, 1.0f);
+	glTexCoord2f(0.0f, 1.0f);
 	glVertex3f(1.0f, 1.0f, 0.0f);
+	glTexCoord2f(1.0f, 0.0f);
 	glVertex3f(1.0f, 1.0f, 1.0f);
+	glTexCoord2f(0.0f, 0.0f);
 
 	glVertex3f(1.0f, 0.0f, 1.0f);
+	glTexCoord2f(0.0f, 1.0f);
 	glVertex3f(1.0f, 0.0f, 0.0f);
+	glTexCoord2f(1.0f, 1.0f);
 	glVertex3f(1.0f, 1.0f, 0.0f);
+	glTexCoord2f(1.0f, 0.0f);
 
 	glVertex3f(1.0f, 0.0f, 0.0f);
+	glTexCoord2f(0.0f, 1.0f);
 	glVertex3f(0.0f, 1.0f, 0.0f);
+	glTexCoord2f(1.0f, 0.0f);
 	glVertex3f(1.0f, 1.0f, 0.0f);
+	glTexCoord2f(0.0f, 0.0f);
 
 	glVertex3f(1.0f, 0.0f, 0.0f);
+	glTexCoord2f(0.0f, 1.0f);
 	glVertex3f(0.0f, 0.0f, 0.0f);
+	glTexCoord2f(1.0f, 1.0f);
 	glVertex3f(0.0f, 1.0f, 0.0f);
+	glTexCoord2f(1.0f, 0.0f);
 
 	glVertex3f(0.0f, 0.0f, 0.0f);
+	glTexCoord2f(0.0f, 1.0f);
 	glVertex3f(0.0f, 1.0f, 1.0f);
+	glTexCoord2f(1.0f, 0.0f);
 	glVertex3f(0.0f, 1.0f, 0.0f);
+	glTexCoord2f(0.0f, 0.0f);
 
 	glVertex3f(0.0f, 0.0f, 0.0f);
+	glTexCoord2f(0.0f, 1.0f);
 	glVertex3f(0.0f, 0.0f, 1.0f);
+	glTexCoord2f(1.0f, 1.0f);
 	glVertex3f(0.0f, 1.0f, 1.0f);
+	glTexCoord2f(1.0f, 0.0f);
 
 	glVertex3f(0.0f, 1.0f, 1.0f);
+	glTexCoord2f(0.0f, 1.0f);
 	glVertex3f(1.0f, 1.0f, 0.0f);
+	glTexCoord2f(1.0f, 0.0f);
 	glVertex3f(0.0f, 1.0f, 0.0f);
+	glTexCoord2f(0.0f, 0.0f);
 
 	glVertex3f(0.0f, 1.0f, 1.0f);
+	glTexCoord2f(0.0f, 1.0f);
 	glVertex3f(1.0f, 1.0f, 1.0f);
+	glTexCoord2f(1.0f, 1.0f);
 	glVertex3f(1.0f, 1.0f, 0.0f);
+	glTexCoord2f(1.0f, 0.0f);
 
 	glVertex3f(0.0f, 0.0f, 0.0f);
+	glTexCoord2f(0.0f, 1.0f);
 	glVertex3f(1.0f, 0.0f, 0.0f);
+	glTexCoord2f(1.0f, 0.0f);
 	glVertex3f(0.0f, 0.0f, 1.0f);
+	glTexCoord2f(0.0f, 0.0f);
 
 	glVertex3f(1.0f, 0.0f, 0.0f);
+	glTexCoord2f(0.0f, 1.0f);
 	glVertex3f(1.0f, 0.0f, 1.0f);
+	glTexCoord2f(1.0f, 1.0f);
 	glVertex3f(0.0f, 0.0f, 1.0f);
+	glTexCoord2f(1.0f, 0.0f);
+
 	glEnd();
 	glLineWidth(1.0f);
-	*/
+
+	glBindTexture(GL_TEXTURE, 0);
+	
+	/**/
 
 	/*
 	static const GLfloat vertex_buffer[] =
