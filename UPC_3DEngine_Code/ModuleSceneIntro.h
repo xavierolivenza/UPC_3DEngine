@@ -33,4 +33,5 @@ private:
 
 	//P2Cube cube1;
 	//P2Sphere sphere1;
+	P2Ray debugray;
 };

@@ -15,11 +15,14 @@ enum PrimitiveTypes
 	Primitive_Plane,
 	Primitive_Cube,
 	Primitive_Sphere,
-	Primitive_Cylinder
+	Primitive_Cylinder,
+	Primitive_Ray
 };
 
 struct GeometryData
 {
+	AABB BoundBox;
+
 	uint id_vertices = 0; // id in VRAM
 	uint num_vertices = 0;
 	float* vertices = nullptr;
@@ -120,6 +123,20 @@ public:
 public:
 	vec3 origin;
 	vec3 destination;
+};
+
+// ============================================
+class P2Ray : public Primitive
+{
+public:
+	P2Ray();
+	void InnerRender() const;
+	const Ray* GetRay() const;
+	void SetOrigin(float x, float y, float z);
+	void SetDirection(float x, float y, float z);
+private:
+	Ray GeolibRay;
+	uint length = 1000;
 };
 
 // ============================================

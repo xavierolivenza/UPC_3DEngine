@@ -139,6 +139,10 @@ bool ModuleLoadMesh::Load(std::string* file, std::vector<GeometryData>& meshData
 				memcpy(geomData.texture_coords, new_mesh->mTextureCoords[0], sizeof(float) * geomData.num_vertices * 3);
 			}
 
+			// Generate AABB
+			geomData.BoundBox.SetNegativeInfinity();
+			geomData.BoundBox.Enclose((float3*)geomData.vertices, geomData.num_vertices);
+
 			// Buffer for vertices
 			glGenBuffers(1, (GLuint*) &(geomData.id_vertices));
 			glBindBuffer(GL_ARRAY_BUFFER, geomData.id_vertices);

@@ -394,6 +394,48 @@ void P2Line::InnerRender() const
 	glLineWidth(1.0f);
 }
 
+// RAY ==================================================
+P2Ray::P2Ray() : Primitive()
+{
+	type = PrimitiveTypes::Primitive_Ray;
+	SetOrigin(0.0f, 0.0f, 0.0f);
+	SetDirection(0.0f, 1.0f, 0.0f);
+}
+
+const Ray* P2Ray::GetRay() const
+{
+	return &GeolibRay;
+}
+
+void P2Ray::SetOrigin(float x, float y, float z)
+{
+	GeolibRay.pos = vec(x, y, z);
+}
+
+void P2Ray::SetDirection(float x, float y, float z)
+{
+	vec direction;
+	direction.x = x;
+	direction.y = y;
+	direction.z = z;
+	direction.Normalize();
+	GeolibRay.dir = direction;
+}
+
+void P2Ray::InnerRender() const
+{
+	glLineWidth(2.0f);
+
+	glBegin(GL_LINES);
+
+	glVertex3f(GeolibRay.pos.x, GeolibRay.pos.y, GeolibRay.pos.z);
+	glVertex3f((GeolibRay.pos.x + GeolibRay.dir.x) * length, (GeolibRay.pos.y + GeolibRay.dir.y) * length, (GeolibRay.pos.z + GeolibRay.dir.z) * length);
+
+	glEnd();
+
+	glLineWidth(1.0f);
+}
+
 // PLANE ==================================================
 P2Plane::P2Plane() : Primitive(), normal(0, 1, 0), constant(1)
 {

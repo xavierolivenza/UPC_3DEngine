@@ -101,7 +101,7 @@ bool ModuleSceneIntro::Start()
 
 	LOGP("/-----------------------------------------/");
 	
-	App->camera->Move(vec3(1.0f, 1.0f, 0.0f));
+	App->camera->Move(vec3(10.0f, 0.0f, 10.0f));
 	App->camera->LookAt(vec3(0, 0, 0));
 	
 	/*
@@ -129,6 +129,35 @@ update_status ModuleSceneIntro::PreUpdate(float dt)
 // Update
 update_status ModuleSceneIntro::Update(float dt)
 {
+	if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_DOWN)
+	{
+		debugray.SetOrigin(App->camera->Position.x, App->camera->Position.y, App->camera->Position.z);
+		float* viewmatrix = App->camera->GetViewMatrix();
+		/*
+		LOGP("%f", viewmatrix[0]);
+		LOGP("%f", viewmatrix[1]);
+		LOGP("%f", viewmatrix[2]);
+		//LOGP("%f", viewmatrix[3]);
+		LOGP("%f", viewmatrix[4]);
+		LOGP("%f", viewmatrix[5]);
+		LOGP("%f", viewmatrix[6]);
+		//LOGP("%f", viewmatrix[7]);
+		LOGP("%f", viewmatrix[8]);
+		LOGP("%f", viewmatrix[9]);
+		LOGP("%f", viewmatrix[10]);
+		//LOGP("%f", viewmatrix[11]);
+		//LOGP("%f", viewmatrix[12]);
+		//LOGP("%f", viewmatrix[13]);
+		//LOGP("%f", viewmatrix[14]);
+		//LOGP("%f", viewmatrix[15]);
+		LOGP("cam %f", App->camera->Position.x);
+		LOGP("cam %f", App->camera->Position.y);
+		LOGP("cam %f", App->camera->Position.z);
+		*/
+		debugray.SetDirection(viewmatrix[2], viewmatrix[6], -viewmatrix[10]);
+	}
+	debugray.Render();
+
 	//cube1.Render();
 	//sphere1.Render();
 	return UPDATE_CONTINUE;
