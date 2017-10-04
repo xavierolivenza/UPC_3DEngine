@@ -187,90 +187,90 @@ update_status ModuleRenderer3D::Update(float dt)
 	glLineWidth(2.0f);
 	glBegin(GL_TRIANGLES);
 	
-	glVertex3f(0.0f, 0.0f, 1.0f);
+	glVertex3f(0.0f, 0.0f, 1.0f); //4
 	glTexCoord2f(0.0f, 1.0f);
-	glVertex3f(1.0f, 1.0f, 1.0f); 
+	glVertex3f(1.0f, 1.0f, 1.0f); //8
+	glTexCoord2f(1.0f, 0.0f);
+	glVertex3f(0.0f, 1.0f, 1.0f); //5
 	glTexCoord2f(0.0f, 0.0f);
-	glVertex3f(0.0f, 1.0f, 1.0f);
-	glTexCoord2f(1.0f, 0.0f);
-
-	glVertex3f(0.0f, 0.0f, 1.0f);
+	
+	glVertex3f(0.0f, 0.0f, 1.0f); //4
+	glTexCoord2f(0.0f, 1.0f);
+	glVertex3f(1.0f, 0.0f, 1.0f); //3
 	glTexCoord2f(1.0f, 1.0f);
-	glVertex3f(1.0f, 0.0f, 1.0f);
-	glTexCoord2f(0.0f, 1.0f);
-	glVertex3f(1.0f, 1.0f, 1.0f);
+	glVertex3f(1.0f, 1.0f, 1.0f); //8
 	glTexCoord2f(1.0f, 0.0f);
-
-	glVertex3f(1.0f, 0.0f, 1.0f);
+	
+	glVertex3f(1.0f, 0.0f, 1.0f); //3
 	glTexCoord2f(0.0f, 1.0f);
-	glVertex3f(1.0f, 1.0f, 0.0f);
+	glVertex3f(1.0f, 1.0f, 0.0f); //7
+	glTexCoord2f(1.0f, 0.0f);
+	glVertex3f(1.0f, 1.0f, 1.0f); //8
 	glTexCoord2f(0.0f, 0.0f);
-	glVertex3f(1.0f, 1.0f, 1.0f);
-	glTexCoord2f(1.0f, 0.0f);
-
-	glVertex3f(1.0f, 0.0f, 1.0f);
+	
+	glVertex3f(1.0f, 0.0f, 1.0f); //3
+	glTexCoord2f(0.0f, 1.0f);
+	glVertex3f(1.0f, 0.0f, 0.0f); //2
 	glTexCoord2f(1.0f, 1.0f);
-	glVertex3f(1.0f, 0.0f, 0.0f);
-	glTexCoord2f(0.0f, 1.0f);
-	glVertex3f(1.0f, 1.0f, 0.0f);
+	glVertex3f(1.0f, 1.0f, 0.0f); //7
 	glTexCoord2f(1.0f, 0.0f);
-
-	glVertex3f(1.0f, 0.0f, 0.0f);
+	
+	glVertex3f(1.0f, 0.0f, 0.0f); //2
 	glTexCoord2f(0.0f, 1.0f);
-	glVertex3f(0.0f, 1.0f, 0.0f);
+	glVertex3f(0.0f, 1.0f, 0.0f); //6
+	glTexCoord2f(1.0f, 0.0f);
+	glVertex3f(1.0f, 1.0f, 0.0f); //7
 	glTexCoord2f(0.0f, 0.0f);
-	glVertex3f(1.0f, 1.0f, 0.0f);
-	glTexCoord2f(1.0f, 0.0f);
-
-	glVertex3f(1.0f, 0.0f, 0.0f);
+	
+	glVertex3f(1.0f, 0.0f, 0.0f); //2
+	glTexCoord2f(0.0f, 1.0f);
+	glVertex3f(0.0f, 0.0f, 0.0f); //1
 	glTexCoord2f(1.0f, 1.0f);
-	glVertex3f(0.0f, 0.0f, 0.0f);
-	glTexCoord2f(0.0f, 1.0f);
-	glVertex3f(0.0f, 1.0f, 0.0f);
+	glVertex3f(0.0f, 1.0f, 0.0f); //6
 	glTexCoord2f(1.0f, 0.0f);
-
-	glVertex3f(0.0f, 0.0f, 0.0f);
+	
+	glVertex3f(0.0f, 0.0f, 0.0f); //1
 	glTexCoord2f(0.0f, 1.0f);
-	glVertex3f(0.0f, 1.0f, 1.0f);
+	glVertex3f(0.0f, 1.0f, 1.0f); //5
+	glTexCoord2f(1.0f, 0.0f);
+	glVertex3f(0.0f, 1.0f, 0.0f); //6
 	glTexCoord2f(0.0f, 0.0f);
-	glVertex3f(0.0f, 1.0f, 0.0f);
-	glTexCoord2f(1.0f, 0.0f);
-
-	glVertex3f(0.0f, 0.0f, 0.0f);
+	
+	glVertex3f(0.0f, 0.0f, 0.0f); //1
+	glTexCoord2f(0.0f, 1.0f);
+	glVertex3f(0.0f, 0.0f, 1.0f); //4
 	glTexCoord2f(1.0f, 1.0f);
-	glVertex3f(0.0f, 0.0f, 1.0f);
-	glTexCoord2f(0.0f, 1.0f);
-	glVertex3f(0.0f, 1.0f, 1.0f);
+	glVertex3f(0.0f, 1.0f, 1.0f); //5
 	glTexCoord2f(1.0f, 0.0f);
-
-	glVertex3f(0.0f, 1.0f, 1.0f);
+	
+	glVertex3f(0.0f, 1.0f, 1.0f); //5
 	glTexCoord2f(0.0f, 1.0f);
-	glVertex3f(1.0f, 1.0f, 0.0f);
+	glVertex3f(1.0f, 1.0f, 0.0f); //7
+	glTexCoord2f(1.0f, 0.0f);
+	glVertex3f(0.0f, 1.0f, 0.0f); //6
 	glTexCoord2f(0.0f, 0.0f);
-	glVertex3f(0.0f, 1.0f, 0.0f);
-	glTexCoord2f(1.0f, 0.0f);
-
-	glVertex3f(0.0f, 1.0f, 1.0f);
-	glTexCoord2f(1.0f, 1.0f);
-	glVertex3f(1.0f, 1.0f, 1.0f);
+	
+	glVertex3f(0.0f, 1.0f, 1.0f); //5
 	glTexCoord2f(0.0f, 1.0f);
-	glVertex3f(1.0f, 1.0f, 0.0f);
-	glTexCoord2f(1.0f, 0.0f);
-
-	glVertex3f(0.0f, 0.0f, 0.0f);
+	glVertex3f(1.0f, 1.0f, 1.0f); //8
 	glTexCoord2f(1.0f, 1.0f);
-	glVertex3f(1.0f, 0.0f, 0.0f);
+	glVertex3f(1.0f, 1.0f, 0.0f); //7
 	glTexCoord2f(1.0f, 0.0f);
-	glVertex3f(0.0f, 0.0f, 1.0f);
+	
+	glVertex3f(1.0f, 0.0f, 1.0f); //3
 	glTexCoord2f(0.0f, 1.0f);
-
-	glVertex3f(1.0f, 0.0f, 0.0f);
+	glVertex3f(0.0f, 0.0f, 0.0f); //1
 	glTexCoord2f(1.0f, 0.0f);
-	glVertex3f(1.0f, 0.0f, 1.0f);
+	glVertex3f(1.0f, 0.0f, 0.0f); //2
 	glTexCoord2f(0.0f, 0.0f);
-	glVertex3f(0.0f, 0.0f, 1.0f);
-	glTexCoord2f(0.0f, 1.0f);
 
+	glVertex3f(1.0f, 0.0f, 1.0f); //3
+	glTexCoord2f(0.0f, 1.0f);
+	glVertex3f(0.0f, 0.0f, 1.0f); //4
+	glTexCoord2f(1.0f, 1.0f);
+	glVertex3f(0.0f, 0.0f, 0.0f); //1
+	glTexCoord2f(1.0f, 0.0f);
+	
 	glEnd();
 	glLineWidth(1.0f);
 
