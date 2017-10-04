@@ -52,6 +52,9 @@
     <Filter Include="Sources\Tools\Assimp">
       <UniqueIdentifier>{3aeba366-5eee-4b59-b6a9-5427c720c935}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Sources\Tools\Devil">
+      <UniqueIdentifier>{62434721-a2a6-4813-975b-83f0a6ad5731}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Module.h">
@@ -429,6 +432,30 @@
     <ClInclude Include="Assimp\include\version.h">
       <Filter>Sources\Tools\Assimp</Filter>
     </ClInclude>
+    <ClInclude Include="Devil\include\config.h">
+      <Filter>Sources\Tools\Devil</Filter>
+    </ClInclude>
+    <ClInclude Include="Devil\include\devil_internal_exports.h">
+      <Filter>Sources\Tools\Devil</Filter>
+    </ClInclude>
+    <ClInclude Include="Devil\include\il.h">
+      <Filter>Sources\Tools\Devil</Filter>
+    </ClInclude>
+    <ClInclude Include="Devil\include\il_wrap.h">
+      <Filter>Sources\Tools\Devil</Filter>
+    </ClInclude>
+    <ClInclude Include="Devil\include\ilu.h">
+      <Filter>Sources\Tools\Devil</Filter>
+    </ClInclude>
+    <ClInclude Include="Devil\include\ilu_region.h">
+      <Filter>Sources\Tools\Devil</Filter>
+    </ClInclude>
+    <ClInclude Include="Devil\include\ilut.h">
+      <Filter>Sources\Tools\Devil</Filter>
+    </ClInclude>
+    <ClInclude Include="Devil\include\ilut_config.h">
+      <Filter>Sources\Tools\Devil</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ModuleAudio.cpp">
@@ -663,6 +690,9 @@
     </None>
     <None Include="Assimp\include\vector3.inl">
       <Filter>Sources\Tools\Assimp</Filter>
+    </None>
+    <None Include="Devil\include\config.h.win">
+      <Filter>Sources\Tools\Devil</Filter>
     </None>
   </ItemGroup>
 </Project>
