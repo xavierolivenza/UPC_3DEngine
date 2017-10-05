@@ -488,7 +488,6 @@ void P2Ray::SetDirection(float x, float y, float z)
 
 void P2Ray::InnerRender() const
 {
-	/*
 	glLineWidth(2.0f);
 
 	glBegin(GL_LINES);
@@ -504,7 +503,6 @@ void P2Ray::InnerRender() const
 	glEnd();
 
 	glLineWidth(1.0f);
-	*/
 }
 
 // PLANE ==================================================

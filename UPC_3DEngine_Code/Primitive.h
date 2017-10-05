@@ -136,7 +136,7 @@ public:
 	void SetDirection(float x, float y, float z);
 private:
 	Ray GeolibRay;
-	uint length = 10;
+	uint length = 1000;
 };
 
 // ============================================
