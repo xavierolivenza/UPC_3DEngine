@@ -31,7 +31,7 @@ private:
 	Capsule* capsule3;
 	Capsule* capsule4;
 
-	//P2Cube cube1;
+	P2Cube cube1;
 	//P2Sphere sphere1;
 	P2Ray debugray;
 };

@@ -137,6 +137,10 @@ void P2Cube::InnerRender() const
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, GeometryStruct.id_indices);
 		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint) * GeometryStruct.num_indices, GeometryStruct.indices, GL_STATIC_DRAW);
 
+		glGenBuffers(1, (GLuint*) &(GeometryStruct.id_texture_coords));
+		glBindBuffer(GL_ARRAY_BUFFER, GeometryStruct.id_texture_coords);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(float) * GeometryStruct.num_vertices * 2, GeometryStruct.texture_coords, GL_STATIC_DRAW);
+
 		//I don't like it and this can be dangerous, but i want to preserve InnerRender const, so by now i take the risk.
 		const_cast<bool&>(newVertexBufferCreated) = false;
 	}
@@ -194,24 +198,58 @@ void P2Cube::GeneratePrimitiveWithNewData()
 		memcpy(GeometryStruct.indices, indices, sizeof(uint) * GeometryStruct.num_indices);
 
 		//Texture
-		GeometryStruct.num_indices = 36;
-		GeometryStruct.texture_coords = new float[GeometryStruct.num_indices];
+		GeometryStruct.texture_coords = new float[GeometryStruct.num_vertices * 2];
 		float texture_coords[] =
 		{
-			3,7,4,
-			3,2,7,
-			2,6,7,
-			2,1,6,
-			1,5,6,
-			1,0,5,
-			0,4,5,
-			0,3,4,
-			4,6,5,
-			4,7,6,
-			1,3,0,
-			2,3,1
+			0.0f, 0.0f,
+			1.0f, 1.0f,
+			0.0f, 1.0f,
+
+			0.0f, 0.0f,
+			1.0f, 0.0f,
+			1.0f, 1.0f,
+
+			0.0f, 0.0f,
+			1.0f, 1.0f,
+			1.0f, 0.0f,
+
+			0.0f, 0.0f,
+			1.0f, 0.0f,
+			1.0f, 1.0f,
+
+			0.0f, 0.0f,
+			1.0f, 1.0f,
+			1.0f, 0.0f,
+
+			0.0f, 0.0f,
+			1.0f, 0.0f,
+			1.0f, 1.0f,
+
+			0.0f, 0.0f,
+			1.0f, 1.0f,
+			1.0f, 0.0f,
+
+			0.0f, 0.0f,
+			0.0f, 1.0f,
+			1.0f, 1.0f,
+
+			0.0f, 0.0f,
+			1.0f, 1.0f,
+			1.0f, 0.0f,
+
+			0.0f, 0.0f,
+			0.0f, 1.0f,
+			1.0f, 1.0f,
+
+			0.0f, 0.0f,
+			1.0f, 1.0f,
+			1.0f, 0.0f,
+
+			0.0f, 0.0f,
+			0.0f, 1.0f,
+			1.0f, 1.0f
 		};
-		memcpy(GeometryStruct.texture_coords, texture_coords, sizeof(float) * GeometryStruct.num_indices);
+		memcpy(GeometryStruct.texture_coords, texture_coords, sizeof(float) * GeometryStruct.num_vertices * 2);
 	}
 
 	buffersCreated = true;

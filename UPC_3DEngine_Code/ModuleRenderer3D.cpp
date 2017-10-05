@@ -181,7 +181,7 @@ update_status ModuleRenderer3D::Update(float dt)
 	*/
 
 	//draw cube
-	/**/
+	/*
 	
 	glEnable(GL_TEXTURE_2D);
 	glBindTexture(GL_TEXTURE, ImageName);
@@ -279,7 +279,7 @@ update_status ModuleRenderer3D::Update(float dt)
 	glBindTexture(GL_TEXTURE, 0);
 	glDisable(GL_TEXTURE_2D);
 	
-	/**/
+	*/
 
 	/*
 	static const GLfloat vertex_buffer[] =
@@ -559,6 +559,9 @@ bool ModuleRenderer3D::Draw(const GeometryData* meshData) const
 			glColor3f(1.0f, 1.0f, 1.0f);
 		}
 
+	glEnable(GL_TEXTURE_2D);
+	glBindTexture(GL_TEXTURE, ImageName);
+
 	glEnableClientState(GL_VERTEX_ARRAY);
 	glBindBuffer(GL_ARRAY_BUFFER, meshData->id_vertices);
 	glVertexPointer(3, GL_FLOAT, 0, NULL);
@@ -582,6 +585,9 @@ bool ModuleRenderer3D::Draw(const GeometryData* meshData) const
 
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, meshData->id_indices);
 	glDrawElements(GL_TRIANGLES, meshData->num_indices, GL_UNSIGNED_INT, NULL);
+
+	glBindTexture(GL_TEXTURE, 0);
+	glDisable(GL_TEXTURE_2D);
 
 	if (GL_Wireframe | GL_Point)
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);

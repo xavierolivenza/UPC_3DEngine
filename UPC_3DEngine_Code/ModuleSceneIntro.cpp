@@ -104,14 +104,14 @@ bool ModuleSceneIntro::Start()
 	App->camera->Move(vec3(10.0f, 0.0f, 10.0f));
 	App->camera->LookAt(vec3(0, 0, 0));
 	
-	/*
+	/**/
 	cube1.size.x = 1;
 	cube1.size.y = 1;
 	cube1.size.z = 1;
-	cube1.color = Chocolate;
-	cube1.SetPos(3, 0.5f, 0);
+	//cube1.color = Chocolate;
+	cube1.SetPos(0, 0, 0);
 	cube1.GeneratePrimitiveWithNewData();
-
+	/*
 	sphere1.radius = 1.0f;
 	sphere1.slices = 15;
 	sphere1.stacks = 15;
@@ -177,7 +177,7 @@ update_status ModuleSceneIntro::Update(float dt)
 	}
 	debugray.Render();
 
-	//cube1.Render();
+	cube1.Render();
 	//sphere1.Render();
 	return UPDATE_CONTINUE;
 }
