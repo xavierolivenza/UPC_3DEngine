@@ -18,7 +18,7 @@ public:
 	bool CleanUp();
 
 	bool Load(std::string* file, std::vector<GeometryData>& meshDataOutput);
-	//uint LoadImageFromFile(const char* theFileName);
+	uint LoadImageFromFile(const char* theFileName);
 
 	bool SaveConf(JSON_Object* conf) const;
 	bool LoadConf(JSON_Object* conf);
@@ -31,6 +31,9 @@ public:
 	{
 		return &geomData;
 	}
+
+public:
+	uint Lenna_tex = 0;
 
 private:
 	std::vector<GeometryData> geomData;

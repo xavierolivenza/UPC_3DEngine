@@ -5,6 +5,10 @@
 #include <gl/GL.h>
 #include <gl/GLU.h>
 
+#include "DevIL\include\il.h"
+#include "DevIL\include\ilu.h"
+#include "DevIL\include\ilut.h"
+
 #pragma comment (lib, "glu32.lib")    /* link OpenGL Utility lib     */
 #pragma comment (lib, "opengl32.lib") /* link Microsoft OpenGL lib   */
 
@@ -113,7 +117,11 @@ bool ModuleRenderer3D::Init()
 	// Projection matrix for
 	OnResize(SCREEN_WIDTH, SCREEN_HEIGHT);
 
+	ilutRenderer(ILUT_OPENGL);
 	ilInit();
+	iluInit();
+	ilutInit();
+	ilutRenderer(ILUT_OPENGL);
 	ilClearColour(255, 255, 255, 000);
 	ILenum ilError = ilGetError();
 	if (ilError != IL_NO_ERROR)
@@ -124,6 +132,7 @@ bool ModuleRenderer3D::Init()
 
 bool ModuleRenderer3D::Start()
 {
+	/*
 	checkImage[CHECKERS_HEIGHT][CHECKERS_WIDTH][4];
 	for (int i = 0; i < CHECKERS_HEIGHT; i++) {
 		for (int j = 0; j < CHECKERS_WIDTH; j++) {
@@ -144,7 +153,7 @@ bool ModuleRenderer3D::Start()
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, CHECKERS_WIDTH, CHECKERS_HEIGHT,
 		0, GL_RGBA, GL_UNSIGNED_BYTE, checkImage);
-
+	*/
 	return true;
 }
 
@@ -568,8 +577,10 @@ bool ModuleRenderer3D::Draw(const GeometryData* meshData) const
 	if(meshData->texture_name != "")
 		glBindTexture(GL_TEXTURE, meshData->id_texture);
 	else
-		glBindTexture(GL_TEXTURE, id_checkImage);
-
+	{
+		//glBindTexture(GL_TEXTURE, id_checkImage);
+		glBindTexture(GL_TEXTURE, App->loadmesh->Lenna_tex);
+	}
 	glEnableClientState(GL_VERTEX_ARRAY);
 	glBindBuffer(GL_ARRAY_BUFFER, meshData->id_vertices);
 	glVertexPointer(3, GL_FLOAT, 0, NULL);
@@ -588,7 +599,7 @@ bool ModuleRenderer3D::Draw(const GeometryData* meshData) const
 	if (meshData->texture_coords != nullptr) {
 		glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 		glBindBuffer(GL_ARRAY_BUFFER, meshData->id_texture_coords);
-		glTexCoordPointer(2, GL_FLOAT, 0, NULL);
+		glTexCoordPointer(3, GL_FLOAT, 0, NULL);
 	}
 
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, meshData->id_indices);

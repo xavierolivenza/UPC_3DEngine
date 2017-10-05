@@ -4,6 +4,13 @@
 #include "p2Log.h"
 #include "Primitive.h"
 
+#include "DevIL\include\il.h"
+#include "DevIL\include\ilu.h"
+#include "DevIL\include\ilut.h"
+#pragma comment (lib, "DevIL/libx86/DevIL.lib")
+#pragma comment (lib, "DevIL/libx86/ILU.lib")
+#pragma comment (lib, "DevIL/libx86/ILUT.lib")
+
 #include "Assimp/include/cimport.h"
 #include "Assimp/include/scene.h"
 #include "Assimp/include/postprocess.h"
@@ -37,6 +44,7 @@ bool ModuleLoadMesh::Start()
 {
 	LOGP("LoadMesh Start");
 	bool ret = true;
+	Lenna_tex = LoadImageFromFile("Lenna.png");
 	return ret;
 }
 
@@ -135,19 +143,13 @@ bool ModuleLoadMesh::Load(std::string* file, std::vector<GeometryData>& meshData
 			// texture coords (only one texture for now)
 			if (new_mesh->HasTextureCoords(0))
 			{
-				geomData.texture_coords = new float[geomData.num_vertices * 2];
-				float* texture_coords2 = new float[geomData.num_vertices * 3];
-				memcpy(texture_coords2, new_mesh->mTextureCoords[0], sizeof(float) * geomData.num_vertices * 3);
-				uint j = 0;
-				for (uint i = 0; i < geomData.num_vertices * 3; i++)
-				{
-					if (((i % 3) != 0) || (i == 0))
-					{
-						geomData.texture_coords[j] = texture_coords2[i];
-						j++;
-					}	
-				}
+				geomData.texture_coords = new float[geomData.num_vertices * 3];
+				memcpy(geomData.texture_coords, new_mesh->mTextureCoords[0], sizeof(float) * geomData.num_vertices * 3);
 			}
+
+			//test for house model
+			geomData.texture_name = std::string("Baker_house.png");
+			geomData.id_texture = LoadImageFromFile(geomData.texture_name.c_str());
 
 			// Generate AABB
 			geomData.BoundBox.SetNegativeInfinity();
@@ -184,7 +186,7 @@ bool ModuleLoadMesh::Load(std::string* file, std::vector<GeometryData>& meshData
 			{
 				glGenBuffers(1, (GLuint*) &(geomData.id_texture_coords));
 				glBindBuffer(GL_ARRAY_BUFFER, geomData.id_texture_coords);
-				glBufferData(GL_ARRAY_BUFFER, sizeof(float) * geomData.num_vertices * 2, geomData.texture_coords, GL_STATIC_DRAW);
+				glBufferData(GL_ARRAY_BUFFER, sizeof(float) * geomData.num_vertices * 3, geomData.texture_coords, GL_STATIC_DRAW);
 			}
 
 			meshDataOutput.push_back(geomData);
@@ -200,24 +202,24 @@ bool ModuleLoadMesh::Load(std::string* file, std::vector<GeometryData>& meshData
 
 	return ret;
 }
-/*
+
 // Function load a image, turn it into a texture, and return the texture ID as a GLuint for use
 uint ModuleLoadMesh::LoadImageFromFile(const char* theFileName)
 {
 	// Create an image ID as a ULuint
-	ILuint imageID;		
+	ILuint imageID;
 	// Create a texture ID as a GLuint
-	GLuint textureID;			
+	GLuint textureID;
 	// Create a flag to keep track of success/failure
-	ILboolean success;			
+	ILboolean success;
 	// Create a flag to keep track of the IL error state
-	ILenum error;				
+	ILenum error;
 	// Generate the image ID
-	ilGenImages(1, &imageID); 		
+	ilGenImages(1, &imageID);
 	// Bind the image
-	ilBindImage(imageID); 			
+	ilBindImage(imageID);
 	// Load the image file
-	success = ilLoadImage(theFileName); 	
+	success = ilLoadImage(theFileName);
 
 	// If we managed to load the image, then we can start to do things with it...
 	if (success)
@@ -238,8 +240,7 @@ uint ModuleLoadMesh::LoadImageFromFile(const char* theFileName)
 		if (!success)
 		{
 			error = ilGetError();
-			LOGP("");
-			std::cout << "Image conversion failed - IL reports error: " << error << " - " << iluErrorString(error) << std::endl;
+			LOGP("Image conversion failed - IL reports error: %i - %s", error, iluErrorString(error));
 			exit(-1);
 		}
 
@@ -271,17 +272,17 @@ uint ModuleLoadMesh::LoadImageFromFile(const char* theFileName)
 	else // If we failed to open the image file in the first place...
 	{
 		error = ilGetError();
-		std::cout << "Image load failed - IL reports error: " << error << " - " << iluErrorString(error) << std::endl;
+		LOGP("Image load failed - IL reports error: %i - %s", error, iluErrorString(error));
 		exit(-1);
 	}
 
 	ilDeleteImages(1, &imageID); // Because we have already copied image data into texture data we can release memory used by image.
 
-	std::cout << "Texture creation successful." << std::endl;
+	LOGP("Texture creation successful.");
 
 	return textureID; // Return the GLuint to the texture so you can use it!
 }
-*/
+
 bool ModuleLoadMesh::SaveConf(JSON_Object* conf) const
 {
 	return true;
