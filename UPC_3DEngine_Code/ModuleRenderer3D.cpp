@@ -577,7 +577,7 @@ bool ModuleRenderer3D::Draw(const GeometryData* meshData) const
 	if (meshData->texture_coords != nullptr) {
 		glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 		glBindBuffer(GL_ARRAY_BUFFER, meshData->id_texture_coords);
-		glTexCoordPointer(3, GL_FLOAT, 0, NULL);
+		glTexCoordPointer(2, GL_FLOAT, 0, NULL);
 	}
 
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, meshData->id_indices);

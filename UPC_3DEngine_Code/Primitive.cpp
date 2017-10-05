@@ -192,6 +192,26 @@ void P2Cube::GeneratePrimitiveWithNewData()
 			2,3,1
 		};
 		memcpy(GeometryStruct.indices, indices, sizeof(uint) * GeometryStruct.num_indices);
+
+		//Texture
+		GeometryStruct.num_indices = 36;
+		GeometryStruct.texture_coords = new float[GeometryStruct.num_indices];
+		float texture_coords[] =
+		{
+			3,7,4,
+			3,2,7,
+			2,6,7,
+			2,1,6,
+			1,5,6,
+			1,0,5,
+			0,4,5,
+			0,3,4,
+			4,6,5,
+			4,7,6,
+			1,3,0,
+			2,3,1
+		};
+		memcpy(GeometryStruct.texture_coords, texture_coords, sizeof(float) * GeometryStruct.num_indices);
 	}
 
 	buffersCreated = true;

@@ -135,8 +135,8 @@ bool ModuleLoadMesh::Load(std::string* file, std::vector<GeometryData>& meshData
 			// texture coords (only one texture for now)
 			if (new_mesh->HasTextureCoords(0))
 			{
-				geomData.texture_coords = new float[geomData.num_vertices * 3];
-				memcpy(geomData.texture_coords, new_mesh->mTextureCoords[0], sizeof(float) * geomData.num_vertices * 3);
+				geomData.texture_coords = new float[geomData.num_vertices * 2];
+				memcpy(geomData.texture_coords, new_mesh->mTextureCoords[0], sizeof(float) * geomData.num_vertices * 2);
 			}
 
 			// Generate AABB
@@ -174,7 +174,7 @@ bool ModuleLoadMesh::Load(std::string* file, std::vector<GeometryData>& meshData
 			{
 				glGenBuffers(1, (GLuint*) &(geomData.id_texture_coords));
 				glBindBuffer(GL_ARRAY_BUFFER, geomData.id_texture_coords);
-				glBufferData(GL_ARRAY_BUFFER, sizeof(float) * geomData.num_vertices * 3, geomData.texture_coords, GL_STATIC_DRAW);
+				glBufferData(GL_ARRAY_BUFFER, sizeof(float) * geomData.num_vertices * 2, geomData.texture_coords, GL_STATIC_DRAW);
 			}
 
 			meshDataOutput.push_back(geomData);
