@@ -130,8 +130,8 @@ bool ModuleRenderer3D::Start()
 	}
 
 	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-	glGenTextures(1, &ImageName);
-	glBindTexture(GL_TEXTURE_2D, ImageName);
+	glGenTextures(1, &id_checkImage);
+	glBindTexture(GL_TEXTURE_2D, id_checkImage);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
@@ -559,7 +559,10 @@ bool ModuleRenderer3D::Draw(const GeometryData* meshData) const
 		}
 
 	glEnable(GL_TEXTURE_2D);
-	glBindTexture(GL_TEXTURE, ImageName);
+	if(meshData->texture_name != "")
+		glBindTexture(GL_TEXTURE, meshData->id_texture);
+	else
+		glBindTexture(GL_TEXTURE, id_checkImage);
 
 	glEnableClientState(GL_VERTEX_ARRAY);
 	glBindBuffer(GL_ARRAY_BUFFER, meshData->id_vertices);

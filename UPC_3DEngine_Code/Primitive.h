@@ -35,6 +35,8 @@ struct GeometryData
 	float* normals = nullptr;
 	uint id_texture_coords = 0; // id in VRAM
 	float* texture_coords = nullptr;
+	uint id_texture = 0; // id in VRAM
+	std::string texture_name = "";
 };
 
 class Primitive
