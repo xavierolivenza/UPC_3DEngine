@@ -189,6 +189,23 @@ bool ModuleLoadMesh::Load(std::string* file, std::vector<GeometryData>& meshData
 				glBufferData(GL_ARRAY_BUFFER, sizeof(float) * geomData.num_vertices * 3, geomData.texture_coords, GL_STATIC_DRAW);
 			}
 
+			/*
+			aiVector3D translation;
+			aiVector3D scaling;
+			aiQuaternion rotation;
+			node->mTransformation.Decompose(scaling, rotation, translation);
+			*/
+
+			/*
+			aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];
+			uint numTextures = material->GetTextureCount(aiTextureType_DIFFUSE);
+			if (numTextures >= 0)
+			{
+				aiString path;
+				material->GetTexture(aiTextureType_DIFFUSE, 0, &path);
+			}
+			*/
+
 			meshDataOutput.push_back(geomData);
 		}
 		aiReleaseImport(scene);
