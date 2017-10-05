@@ -551,7 +551,7 @@ bool ModuleRenderer3D::Draw(const GeometryData* meshData) const
 
 			glBegin(GL_LINES);
 			glVertex3f(meshData->vertices[i], meshData->vertices[i + 1], meshData->vertices[i + 2]);
-			glVertex3f(meshData->vertices[i] + meshData->normals[i], meshData->vertices[i + 1] + meshData->normals[i + 1], meshData->vertices[i + 2] + meshData->normals[i + 2]);
+			glVertex3f(meshData->vertices[i] + meshData->normals[i] * 10, meshData->vertices[i + 1] + meshData->normals[i + 1] * 10, meshData->vertices[i + 2] + meshData->normals[i + 2] * 10);
 			glEnd();
 
 			glLineWidth(1.0f);

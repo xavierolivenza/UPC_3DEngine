@@ -101,7 +101,7 @@ bool ModuleSceneIntro::Start()
 
 	LOGP("/-----------------------------------------/");
 	
-	App->camera->Move(vec3(10.0f, 0.0f, 10.0f));
+	App->camera->Move(vec3(1.0f, 0.0f, 0.0f));
 	App->camera->LookAt(vec3(0, 0, 0));
 	
 	/**/
@@ -131,8 +131,7 @@ update_status ModuleSceneIntro::Update(float dt)
 {
 	if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_DOWN)
 	{
-		debugray.SetOrigin(App->camera->Position.x, App->camera->Position.y, App->camera->Position.z);
-		float* viewmatrix = App->camera->GetViewMatrix();
+		//float* viewmatrix = App->camera->GetViewMatrix();
 		/*
 		LOGP("%f", viewmatrix[0]);
 		LOGP("%f", viewmatrix[1]);
@@ -167,8 +166,59 @@ update_status ModuleSceneIntro::Update(float dt)
 
 		debugray.SetDirection(rotate.x, rotate.y, rotate.z);
 		*/
+		//debugray.SetDirection(viewmatrix[8], viewmatrix[9], viewmatrix[10]);
+		/*
+		LOGP("cam %f", App->camera->Position.x);
+		LOGP("cam %f", App->camera->Position.y);
+		LOGP("cam %f", App->camera->Position.z);
+		LOGP("view %f", -App->camera->Z.x);
+		LOGP("view %f", -App->camera->Z.y);
+		LOGP("view %f", -App->camera->Z.z);
+		debugray.SetOrigin(App->camera->Position.x, App->camera->Position.y, App->camera->Position.z);
+		debugray.SetDirection(-App->camera->Z.x, -App->camera->Z.y, -App->camera->Z.z);
+		*/
 
-		debugray.SetDirection(viewmatrix[8], viewmatrix[9], viewmatrix[10]);
+		/*
+		int mouse_x = App->input->GetMouseX();
+		int mouse_y = App->input->GetMouseY();
+
+		int w = 0;
+		int h = 0;
+		App->window->GetWindowSize(w, h);
+		float x = (2.0f * mouse_x) / w - 1.0f;
+		float y = 1.0f - (2.0f * mouse_y) / h;
+		float z = 1.0f;
+		vec3 ray_nds = vec3(x, y, z);
+
+		vec4 ray_clip = vec4(ray_nds.x, -1.0, 1.0);
+
+		vec4 ray_eye = inverse(App->camera->GetViewMatrix()) * ray_clip;
+
+		ray_eye = vec4(ray_eye.xy, -1.0, 0.0);
+		*/
+
+		/*
+		App->input->GetMouseX();
+		App->input->GetMouseY();
+
+		float x = (2.0f * mouse_x) / width - 1.0f;
+		float y = 1.0f - (2.0f * mouse_y) / height;
+		float z = 1.0f;
+		vec3 ray_nds = vec3(x, y, z);
+
+		vec4 ray_clip = vec4(ray_nds.xy, -1.0, 1.0);
+
+		vec4 ray_eye = inverse(projection_matrix) * ray_clip;
+
+		ray_eye = vec4(ray_eye.xy, -1.0, 0.0);
+
+		vec3 ray_wor = (inverse(view_matrix) * ray_eye).xyz;
+		// don't forget to normalise the vector at some point
+		ray_wor = normalise(ray_wor);
+		*/
+
+		//http://antongerdelan.net/opengl/raycasting.html
+
 		for (std::vector<GeometryData>::const_iterator item = App->loadmesh->GetGeometryStructVector()->begin(); item != App->loadmesh->GetGeometryStructVector()->cend(); ++item)
 			if (debugray.GetRay()->Intersects(item->BoundBox))
 			{

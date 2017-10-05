@@ -488,16 +488,23 @@ void P2Ray::SetDirection(float x, float y, float z)
 
 void P2Ray::InnerRender() const
 {
+	/*
 	glLineWidth(2.0f);
 
 	glBegin(GL_LINES);
 
 	glVertex3f(GeolibRay.pos.x, GeolibRay.pos.y, GeolibRay.pos.z);
-	glVertex3f((GeolibRay.pos.x + GeolibRay.dir.x) * length, (GeolibRay.pos.y + GeolibRay.dir.y) * length, (GeolibRay.pos.z + GeolibRay.dir.z) * length);
+	vec dir;
+	dir.x = GeolibRay.pos.x + GeolibRay.dir.x;
+	dir.y = GeolibRay.pos.y + GeolibRay.dir.y;
+	dir.z = GeolibRay.pos.z + GeolibRay.dir.z;
+	dir.Normalize();
+	glVertex3f(dir.x * length, dir.y * length, dir.z * length);
 
 	glEnd();
 
 	glLineWidth(1.0f);
+	*/
 }
 
 // PLANE ==================================================
