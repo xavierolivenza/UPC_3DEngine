@@ -241,6 +241,8 @@ void P2Cube::GeneratePrimitiveWithNewData()
 		/**/
 	}
 
+	GeometryStruct.BoundBox = AABB(vec(-sx, -sy, -sz), vec(sx, sy, sz));
+
 	buffersCreated = true;
 	newVertexBufferCreated = true;
 }
@@ -263,7 +265,6 @@ P2Sphere::~P2Sphere()
 
 void P2Sphere::InnerRender() const
 {
-	//glutSolidSphere(radius, 25, 25);
 	GLuint sphere_id = 0;
 	GLfloat magic_vertices[344 * 3];
 
@@ -367,6 +368,9 @@ void P2Sphere::GeneratePrimitiveWithNewData()
 			}
 		}
 	}
+
+	GeometryStruct.BoundBox = AABB(vec(-radius, -radius, -radius), vec(radius, radius, radius));
+
 }
 
 // CYLINDER ============================================
