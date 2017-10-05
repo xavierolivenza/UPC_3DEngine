@@ -75,7 +75,7 @@ bool ModuleRenderer3D::Init()
 			ret = false;
 		}
 		
-		GLfloat LightModelAmbient[] = {0.0f, 0.0f, 0.0f, 1.0f};
+		//GLfloat LightModelAmbient[] = {0.0f, 0.0f, 0.0f, 1.0f};
 		glLightModelfv(GL_LIGHT_MODEL_AMBIENT, LightModelAmbient);
 		
 		lights[0].ref = GL_LIGHT0;
@@ -618,6 +618,10 @@ bool ModuleRenderer3D::SaveConf(JSON_Object* conf) const
 	App->parsonjson->SetBool(conf, "GL_DepthTest", GL_DepthTest);
 	App->parsonjson->SetBool(conf, "GL_CullFace", GL_CullFace);
 	App->parsonjson->SetBool(conf, "GL_Lighting", GL_Lighting);
+	App->parsonjson->SetFloat(conf, "Red", LightModelAmbient[0]);
+	App->parsonjson->SetFloat(conf,"Green", LightModelAmbient[1]);
+	App->parsonjson->SetFloat(conf, "Blue", LightModelAmbient[2]);
+	App->parsonjson->SetFloat(conf, "Alpha", LightModelAmbient[3]);
 	App->parsonjson->SetBool(conf, "GL_ColorMaterial", GL_ColorMaterial);
 	App->parsonjson->SetBool(conf, "GL_Texture2D", GL_Texture2D);
 	App->parsonjson->SetBool(conf, "GL_Fog", GL_Fog);
@@ -634,6 +638,10 @@ bool ModuleRenderer3D::LoadConf(JSON_Object* conf)
 	GL_DepthTest = App->parsonjson->GetBool(conf, "GL_DepthTest", true);
 	GL_CullFace = App->parsonjson->GetBool(conf, "GL_CullFace", true);
 	GL_Lighting = App->parsonjson->GetBool(conf, "GL_Lighting", true);
+	LightModelAmbient[0] = App->parsonjson->GetFloat(conf, "Red", 0.0f);
+	LightModelAmbient[1] = App->parsonjson->GetFloat(conf, "Green", 0.0f);
+	LightModelAmbient[2] = App->parsonjson->GetFloat(conf, "Blue", 0.0f);
+	LightModelAmbient[3] = App->parsonjson->GetFloat(conf, "Alpha", 1.0f);
 	GL_ColorMaterial = App->parsonjson->GetBool(conf, "GL_ColorMaterial", true);
 	GL_Texture2D = App->parsonjson->GetBool(conf, "GL_Texture2D", false);
 	GL_Fog = App->parsonjson->GetBool(conf, "GL_Fog", false);
@@ -675,6 +683,8 @@ void ModuleRenderer3D::ImGuiModuleVariables()
 		if (GL_Lighting) glEnable(GL_LIGHTING);
 		else glDisable(GL_LIGHTING);
 	}
+	if (ImGui::ColorEdit4("Light color", LightModelAmbient))
+		glLightModelfv(GL_LIGHT_MODEL_AMBIENT, LightModelAmbient);
 	if (ImGui::Checkbox("GL_COLOR_MATERIAL", &GL_ColorMaterial))
 	{
 		if (GL_ColorMaterial) glEnable(GL_COLOR_MATERIAL);

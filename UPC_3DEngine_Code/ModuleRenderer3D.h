@@ -51,6 +51,7 @@ public:
 	bool GL_DepthTest = false;
 	bool GL_CullFace = false;
 	bool GL_Lighting = false;
+	float LightModelAmbient[4] = { 0.0f, 0.0f, 0.0f, 1.0f };
 	bool GL_ColorMaterial = false;
 	bool GL_Texture2D = false;
 	bool GL_Fog = false;
