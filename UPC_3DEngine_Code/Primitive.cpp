@@ -127,6 +127,8 @@ void P2Cube::InnerRender() const
 {	
 	if (newVertexBufferCreated)
 	{
+		//I do this here because if i put this in the GeneratePrimitiveWithNewData i get an error, i don't know why, so by now this stays here.
+
 		// Buffer for vertices
 		glGenBuffers(1, (GLuint*) &(GeometryStruct.id_vertices));
 		glBindBuffer(GL_ARRAY_BUFFER, GeometryStruct.id_vertices);
@@ -137,9 +139,11 @@ void P2Cube::InnerRender() const
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, GeometryStruct.id_indices);
 		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint) * GeometryStruct.num_indices, GeometryStruct.indices, GL_STATIC_DRAW);
 
+		/**/
 		glGenBuffers(1, (GLuint*) &(GeometryStruct.id_texture_coords));
 		glBindBuffer(GL_ARRAY_BUFFER, GeometryStruct.id_texture_coords);
-		glBufferData(GL_ARRAY_BUFFER, sizeof(float) * GeometryStruct.num_vertices * 2, GeometryStruct.texture_coords, GL_STATIC_DRAW);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(float) * GeometryStruct.num_indices * 2, GeometryStruct.texture_coords, GL_STATIC_DRAW);
+		/**/
 
 		//I don't like it and this can be dangerous, but i want to preserve InnerRender const, so by now i take the risk.
 		const_cast<bool&>(newVertexBufferCreated) = false;
@@ -198,7 +202,8 @@ void P2Cube::GeneratePrimitiveWithNewData()
 		memcpy(GeometryStruct.indices, indices, sizeof(uint) * GeometryStruct.num_indices);
 
 		//Texture
-		GeometryStruct.texture_coords = new float[GeometryStruct.num_vertices * 2];
+		/**/
+		GeometryStruct.texture_coords = new float[GeometryStruct.num_indices * 2];
 		float texture_coords[] =
 		{
 			0.0f, 0.0f,
@@ -211,7 +216,7 @@ void P2Cube::GeneratePrimitiveWithNewData()
 
 			0.0f, 0.0f,
 			1.0f, 1.0f,
-			1.0f, 0.0f,
+			0.0f, 1.0f,
 
 			0.0f, 0.0f,
 			1.0f, 0.0f,
@@ -219,7 +224,7 @@ void P2Cube::GeneratePrimitiveWithNewData()
 
 			0.0f, 0.0f,
 			1.0f, 1.0f,
-			1.0f, 0.0f,
+			0.0f, 1.0f,
 
 			0.0f, 0.0f,
 			1.0f, 0.0f,
@@ -227,29 +232,30 @@ void P2Cube::GeneratePrimitiveWithNewData()
 
 			0.0f, 0.0f,
 			1.0f, 1.0f,
-			1.0f, 0.0f,
+			0.0f, 1.0f,
 
 			0.0f, 0.0f,
+			1.0f, 0.0f,
+			1.0f, 1.0f,
+
+			0.0f, 0.0f,
+			1.0f, 1.0f,
+			0.0f, 1.0f,
+
+			0.0f, 0.0f,
+			1.0f, 0.0f,
+			1.0f, 1.0f,
+
+			1.0f, 0.0f,
 			0.0f, 1.0f,
 			1.0f, 1.0f,
 
 			0.0f, 0.0f,
-			1.0f, 1.0f,
 			1.0f, 0.0f,
-
-			0.0f, 0.0f,
-			0.0f, 1.0f,
-			1.0f, 1.0f,
-
-			0.0f, 0.0f,
-			1.0f, 1.0f,
-			1.0f, 0.0f,
-
-			0.0f, 0.0f,
-			0.0f, 1.0f,
-			1.0f, 1.0f
+			0.0f, 1.0f
 		};
-		memcpy(GeometryStruct.texture_coords, texture_coords, sizeof(float) * GeometryStruct.num_vertices * 2);
+		memcpy(GeometryStruct.texture_coords, texture_coords, sizeof(float) * GeometryStruct.num_indices * 2);
+		/**/
 	}
 
 	buffersCreated = true;

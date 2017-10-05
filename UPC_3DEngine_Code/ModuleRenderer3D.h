@@ -62,6 +62,6 @@ public:
 
 private:
 	//direct mode cube test
-	uint ImageName;
+	uint ImageName = 0;
 	unsigned char checkImage[CHECKERS_HEIGHT][CHECKERS_WIDTH][4];
 };
