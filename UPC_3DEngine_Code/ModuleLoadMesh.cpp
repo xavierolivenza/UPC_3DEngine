@@ -136,7 +136,17 @@ bool ModuleLoadMesh::Load(std::string* file, std::vector<GeometryData>& meshData
 			if (new_mesh->HasTextureCoords(0))
 			{
 				geomData.texture_coords = new float[geomData.num_vertices * 2];
-				memcpy(geomData.texture_coords, new_mesh->mTextureCoords[0], sizeof(float) * geomData.num_vertices * 2);
+				float* texture_coords2 = new float[geomData.num_vertices * 3];
+				memcpy(texture_coords2, new_mesh->mTextureCoords[0], sizeof(float) * geomData.num_vertices * 3);
+				uint j = 0;
+				for (uint i = 0; i < geomData.num_vertices * 3; i++)
+				{
+					if (((i % 3) != 0) || (i == 0))
+					{
+						geomData.texture_coords[j] = texture_coords2[i];
+						j++;
+					}	
+				}
 			}
 
 			// Generate AABB
