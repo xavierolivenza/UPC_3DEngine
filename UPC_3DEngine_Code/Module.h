@@ -11,6 +11,10 @@
 #include "MathGeoLib\MathGeoLib.h"
 #include "MathGeoLib\MathBuildConfig.h"
 
+#include "DevIL\include\il.h"
+#include "DevIL\include\ilu.h"
+#pragma comment (lib, "DevIL/libx86/DevIL.lib")
+
 #define FPS_AND_MS_PLOT_DATA_LENGTH 100
 
 class Application;

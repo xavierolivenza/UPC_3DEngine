@@ -113,6 +113,12 @@ bool ModuleRenderer3D::Init()
 	// Projection matrix for
 	OnResize(SCREEN_WIDTH, SCREEN_HEIGHT);
 
+	ilInit();
+	ilClearColour(255, 255, 255, 000);
+	ILenum ilError = ilGetError();
+	if (ilError != IL_NO_ERROR)
+		return false;
+
 	return ret;
 }
 
