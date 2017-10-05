@@ -25,6 +25,12 @@ public:
 	void ImGuiModuleVariables();
 
 	//TEST
+
+	const std::vector<GeometryData>* GetGeometryStructVector() const
+	{
+		return &geomData;
+	}
+
 private:
 	std::vector<GeometryData> geomData;
 	bool geomLoaded = false;

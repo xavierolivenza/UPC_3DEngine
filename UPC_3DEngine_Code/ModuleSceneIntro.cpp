@@ -154,7 +154,26 @@ update_status ModuleSceneIntro::Update(float dt)
 		LOGP("cam %f", App->camera->Position.y);
 		LOGP("cam %f", App->camera->Position.z);
 		*/
-		debugray.SetDirection(viewmatrix[2], viewmatrix[6], -viewmatrix[10]);
+		/*
+		vec3 axis = { 0.0f,1.0f,0.0f };
+		mat3x3 rotmatrix =
+		{
+			-1 + 2 * axis.x * axis.x, 2 * axis.x * axis.y, 2 * axis.x * axis.z,
+			2 * axis.y * axis.z, -1 + 2 * axis.y*axis.y, 2 * axis.y*axis.z,
+			2 * axis.z*axis.x, 2 * axis.z*axis.y, -1 + 2 * axis.z*axis.z
+		};
+		vec3 vectortorotate = { viewmatrix[8], viewmatrix[9], viewmatrix[10] };
+		vec3 rotate = rotmatrix * vectortorotate;
+
+		debugray.SetDirection(rotate.x, rotate.y, rotate.z);
+		*/
+
+		debugray.SetDirection(viewmatrix[8], viewmatrix[9], viewmatrix[10]);
+		for (std::vector<GeometryData>::const_iterator item = App->loadmesh->GetGeometryStructVector()->begin(); item != App->loadmesh->GetGeometryStructVector()->cend(); ++item)
+			if (debugray.GetRay()->Intersects(item->BoundBox))
+			{
+				LOGP("hit");
+			}
 	}
 	debugray.Render();
 
