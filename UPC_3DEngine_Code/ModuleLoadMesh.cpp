@@ -147,9 +147,26 @@ bool ModuleLoadMesh::Load(std::string* file, std::vector<GeometryData>& meshData
 				memcpy(geomData.texture_coords, new_mesh->mTextureCoords[0], sizeof(float) * geomData.num_vertices * 3);
 			}
 
-			//test for house model
-			geomData.texture_name = std::string("Baker_house.png");
-			geomData.id_texture = LoadImageFromFile(geomData.texture_name.c_str());
+			//loadmeshtexture
+			//Textures need to be inside Game folder
+			//This can load fbx from any directory (desktop dor example), but textures are loaded from Game folder
+			if (scene->HasMaterials())
+			{
+				aiString path;
+				scene->mMaterials[new_mesh->mMaterialIndex]->GetTexture(aiTextureType_DIFFUSE, 0, &path);
+				geomData.texture_name = path.C_Str();
+				int id_texture = LoadImageFromFile(geomData.texture_name.c_str());
+				if (id_texture < 0)
+				{
+					LOGP("Error loading texture with path: %s", geomData.texture_name.c_str());
+					geomData.texture_name = "";
+				}
+				else
+				{
+					LOGP("Texture loaded with path: %s", geomData.texture_name.c_str());
+					geomData.id_texture = id_texture;
+				}
+			}
 
 			// Generate AABB
 			geomData.BoundBox.SetNegativeInfinity();
@@ -221,7 +238,7 @@ bool ModuleLoadMesh::Load(std::string* file, std::vector<GeometryData>& meshData
 }
 
 // Function load a image, turn it into a texture, and return the texture ID as a GLuint for use
-uint ModuleLoadMesh::LoadImageFromFile(const char* theFileName)
+int ModuleLoadMesh::LoadImageFromFile(const char* theFileName)
 {
 	// Create an image ID as a ULuint
 	ILuint imageID;
@@ -258,7 +275,7 @@ uint ModuleLoadMesh::LoadImageFromFile(const char* theFileName)
 		{
 			error = ilGetError();
 			LOGP("Image conversion failed - IL reports error: %i - %s", error, iluErrorString(error));
-			exit(-1);
+			return -1;
 		}
 
 		// Generate a new texture
@@ -290,7 +307,7 @@ uint ModuleLoadMesh::LoadImageFromFile(const char* theFileName)
 	{
 		error = ilGetError();
 		LOGP("Image load failed - IL reports error: %i - %s", error, iluErrorString(error));
-		exit(-1);
+		return -1;
 	}
 
 	ilDeleteImages(1, &imageID); // Because we have already copied image data into texture data we can release memory used by image.

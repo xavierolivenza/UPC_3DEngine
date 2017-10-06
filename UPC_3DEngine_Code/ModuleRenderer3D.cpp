@@ -132,7 +132,7 @@ bool ModuleRenderer3D::Init()
 
 bool ModuleRenderer3D::Start()
 {
-	/*
+	/**/
 	checkImage[CHECKERS_HEIGHT][CHECKERS_WIDTH][4];
 	for (int i = 0; i < CHECKERS_HEIGHT; i++) {
 		for (int j = 0; j < CHECKERS_WIDTH; j++) {
@@ -153,7 +153,7 @@ bool ModuleRenderer3D::Start()
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, CHECKERS_WIDTH, CHECKERS_HEIGHT,
 		0, GL_RGBA, GL_UNSIGNED_BYTE, checkImage);
-	*/
+	/**/
 	return true;
 }
 
@@ -578,8 +578,8 @@ bool ModuleRenderer3D::Draw(const GeometryData* meshData) const
 		glBindTexture(GL_TEXTURE, meshData->id_texture);
 	else
 	{
-		//glBindTexture(GL_TEXTURE, id_checkImage);
-		glBindTexture(GL_TEXTURE, App->loadmesh->Lenna_tex);
+		glBindTexture(GL_TEXTURE, id_checkImage);
+		//glBindTexture(GL_TEXTURE, App->loadmesh->Lenna_tex);
 	}
 	glEnableClientState(GL_VERTEX_ARRAY);
 	glBindBuffer(GL_ARRAY_BUFFER, meshData->id_vertices);
@@ -606,6 +606,11 @@ bool ModuleRenderer3D::Draw(const GeometryData* meshData) const
 	glDrawElements(GL_TRIANGLES, meshData->num_indices, GL_UNSIGNED_INT, NULL);
 
 	glBindTexture(GL_TEXTURE, 0);
+
+	glDisableClientState(GL_VERTEX_ARRAY);
+	glDisableClientState(GL_NORMAL_ARRAY);
+	glDisableClientState(GL_COLOR_ARRAY);
+	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 	glDisable(GL_TEXTURE_2D);
 
 	if (GL_Wireframe | GL_Point)
