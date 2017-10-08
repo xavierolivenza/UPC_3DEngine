@@ -1,6 +1,7 @@
 #pragma once
 #include "Module.h"
 #include "Globals.h"
+#include "imgui-1.51\imgui.h"
 
 class ModuleEngineUI : public Module
 {
@@ -49,6 +50,7 @@ private:
 	std::vector<float> fpsPlotData;
 	std::vector<float> msPlotData;
 	std::vector<float> memPlotData;
+	ImGuiStyle style_custom;
 
 private:
 	char appnamestr[128];
