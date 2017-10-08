@@ -48,30 +48,37 @@ bool ModuleCamera3D::CleanUp()
 // -----------------------------------------------------------------
 update_status ModuleCamera3D::Update(float dt)
 {
-	// Implement a debug camera with keys and mouse
-	// Now we can make this movememnt frame rate independant!
+	//TODO
+	//Mouse wheel zoom in and out
+	//Pressing “f” should focus the camera around the geometry, use AABB
+
+	if (App->input->GetMouseButton(SDL_BUTTON_RIGHT) == KEY_DOWN)
+		Cam_move = !Cam_move;
+	if(!Cam_move)
+		return UPDATE_CONTINUE;
 
 	vec3 newPos(0,0,0);
 	float speed = 50.0f * dt;
-	if(App->input->GetKey(SDL_SCANCODE_LSHIFT) == KEY_REPEAT)
+	
+	//Speed
+	if (App->input->GetKey(SDL_SCANCODE_LSHIFT) == KEY_REPEAT)
 		speed = 100.0f * dt;
 
-	if(App->input->GetKey(SDL_SCANCODE_R) == KEY_REPEAT) newPos.y += speed;
-	if(App->input->GetKey(SDL_SCANCODE_F) == KEY_REPEAT) newPos.y -= speed;
-
+	//FPS like movement
 	if(App->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT) newPos -= Z * speed;
 	if(App->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT) newPos += Z * speed;
-
-
 	if(App->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT) newPos -= X * speed;
 	if(App->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT) newPos += X * speed;
 
+	//Elevator/lift like movement
+	if (App->input->GetKey(SDL_SCANCODE_Q) == KEY_REPEAT) newPos.y += speed;
+	if (App->input->GetKey(SDL_SCANCODE_E) == KEY_REPEAT) newPos.y -= speed;
+
+	//Orbit the geometry in scene
 	Position += newPos;
 	Reference += newPos;
 
-	// Mouse motion ----------------
-
-	if(App->input->GetMouseButton(SDL_BUTTON_RIGHT) == KEY_REPEAT)
+	if((App->input->GetKey(SDL_SCANCODE_LALT) == KEY_REPEAT) && (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_REPEAT))
 	{
 		int dx = -App->input->GetMouseXMotion();
 		int dy = -App->input->GetMouseYMotion();
@@ -105,27 +112,6 @@ update_status ModuleCamera3D::Update(float dt)
 
 		Position = Reference + Z * length(Position);
 	}
-
-	// Camera follow car
-	/*
-	else
-	{
-		if (App->player->freecam == false)
-		{
-			mat4x4 vehicle_trans;
-			Target->GetTransform(&vehicle_trans);
-
-			//Vehicle Axis
-			X = vec3(vehicle_trans[0], vehicle_trans[1], vehicle_trans[2]);
-			Y = vec3(vehicle_trans[4], vehicle_trans[5], vehicle_trans[6]);
-			Z = vec3(vehicle_trans[8], vehicle_trans[9], vehicle_trans[10]);
-
-			//Vehicle pos and camera look to it
-			VehiclePos = vehicle_trans.translation();
-			App->camera->Look((VehiclePos + CameraPos) - Z * 10, ViewDirection + VehiclePos, true);
-		}
-	}
-	*/
 
 	// Recalculate matrix -------------
 	CalculateViewMatrix();

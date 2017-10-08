@@ -29,7 +29,7 @@ public:
 	vec3 X, Y, Z, Position, Reference;
 
 private:
-	
+	bool			Cam_move = false;
 	vec3			CameraPos;
 	vec3			ViewDirection;
 	vec3			VehiclePos;
