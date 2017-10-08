@@ -172,7 +172,14 @@ update_status ModuleRenderer3D::Update(float dt)
 	if (GL_Point)
 		glPolygonMode(GL_FRONT_AND_BACK, GL_POINT);
 
-	glColor3f(1.0f,1.0f,1.0f);
+	/*
+	//This is not fov, but shows the angle from you are looking the reference point, it's something...
+	float* viewmatrix = App->camera->GetViewMatrix();
+	float fov = 2.0f * atan(1.0f / viewmatrix[5]) * 180.0f / 3.1416f;
+	LOGP("FOV = %f", fov);
+	*/
+
+	//glColor3f(1.0f,1.0f,1.0f);
 
 	//draw line
 	/*

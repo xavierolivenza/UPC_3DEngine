@@ -33,10 +33,6 @@ public:
 private:
 	bool			Cam_move_LOG = true;
 	bool			Cam_move = false;
-	vec3			CameraPos;
-	vec3			ViewDirection;
-	vec3			VehiclePos;
-	PhysVehicle3D*  Target;
 	mat4x4			ViewMatrix;
 	mat4x4			ViewMatrixInverse;
 

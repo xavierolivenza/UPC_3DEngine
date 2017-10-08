@@ -14,10 +14,6 @@ ModuleCamera3D::ModuleCamera3D(Application* app, bool start_enabled) : Module(ap
 
 	Position = vec3(0.0f, 0.0f, 5.0f);
 	Reference = vec3(0.0f, 0.0f, 0.0f);
-
-	CameraPos = vec3(0.0f, 0.0f, 0.0f);
-	ViewDirection = vec3(0.0f, 0.0f, 0.0f);
-	Target = nullptr;
 }
 
 ModuleCamera3D::~ModuleCamera3D()
@@ -30,10 +26,6 @@ bool ModuleCamera3D::Start()
 {
 	LOGP("Setting up the camera");
 	bool ret = true;
-
-	CameraPos = vec3(0.0f, 10.0f, 0.0f);
-	ViewDirection = vec3(0.0f, 6.0f, 0.0f);
-
 	return ret;
 }
 
@@ -49,7 +41,7 @@ bool ModuleCamera3D::CleanUp()
 update_status ModuleCamera3D::Update(float dt)
 {
 	//TODO
-	//When load geometry, autocentre + auto resize cam(all geometry inside fov)
+	//When load geometry, auto resize cam(all geometry inside fov)
 
 	if (App->input->GetMouseButton(SDL_BUTTON_RIGHT) == KEY_DOWN)
 	{
@@ -209,6 +201,20 @@ void ModuleCamera3D::CenterCameraToGeometry(const AABB* meshAABB)
 		vec centre = meshAABB->CenterPoint();
 		Reference = vec3(centre.x, centre.y, centre.z);
 		LastCentreGeometry = meshAABB;
+		LookAt(Reference);
+		/*
+		//Set camerapos to see the hole geometry in view
+		vec3 newPos(0, 0, 0);
+
+		//float distance = MAX();
+
+
+
+		//newPos += Z * speed;
+		Position += newPos;
+		*/
+		// Recalculate matrix -------------
+		//CalculateViewMatrix();
 	}
 }
 
