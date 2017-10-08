@@ -236,6 +236,8 @@ void ModuleEngineUI::ImGuiDrawMenuBar()
 				ImGui::Text("MathGeoLib 1.5");
 				ImGui::Text("mmgr");
 				ImGui::Text("parson");
+				ImGui::Text("Assimp 3.3.1");
+				ImGui::Text("DevIl 1.8.0");
 				ImGui::EndMenu();
 			}
 			if (ImGui::BeginMenu("License"))
