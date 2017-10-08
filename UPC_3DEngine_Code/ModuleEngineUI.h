@@ -16,12 +16,7 @@ public:
 	bool CleanUp();
 
 	void DrawModuleImGui();
-	void ImGuiDrawMenuBar();
-	void ImGuiConfigurationWindow();
-	void ImGuiProfierWindow();
-	void ImGuiModuleVariablesWindow();
-	void ImGuiConsole();
-
+	
 	void PushNewConsoleLabel(std::string* newlabel);
 
 	void GetEvent(SDL_Event* event);
@@ -30,10 +25,15 @@ public:
 
 	void PushFPSandMSPlot(uint fps, uint ms, uint mem);
 
-	bool PlotsFreezed() const
-	{
-		return freezeplots;
-	}
+	bool PlotsFreezed() const;
+
+private:
+	void ImGuiDrawMenuBar();
+	void ImGuiConfigurationWindow();
+	void ImGuiProfierWindow();
+	void ImGuiModuleVariablesWindow();
+	void ImGuiConsole();
+	void ImGuiPropertiesWindow();
 
 private:
 	bool showTestWindow = false;
@@ -41,6 +41,8 @@ private:
 	bool showModuleVariablesWindow = true;
 	bool showConfigurationWindow = true;
 	bool showConsoleWindow = true;
+	bool firsttimeconsoleshown = true;
+	bool showPropertiesWindow = true;
 	bool freezeplots = false;
 	bool active = false;
 	std::list<std::string> console_logs;
