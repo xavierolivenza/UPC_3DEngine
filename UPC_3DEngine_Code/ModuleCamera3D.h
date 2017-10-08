@@ -19,6 +19,8 @@ public:
 	void LookAt(const vec3 &Spot);
 	void Move(const vec3 &Movement);
 	float* GetViewMatrix();
+	void CenterCameraToGeometry(const AABB* meshAABB);
+	void RecentreCameraToGeometry();
 
 private:
 
@@ -36,5 +38,7 @@ private:
 	PhysVehicle3D*  Target;
 	mat4x4			ViewMatrix;
 	mat4x4			ViewMatrixInverse;
+
+	const AABB*		LastCentreGeometry = nullptr;
 
 };

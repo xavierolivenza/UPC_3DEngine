@@ -49,8 +49,7 @@ bool ModuleCamera3D::CleanUp()
 update_status ModuleCamera3D::Update(float dt)
 {
 	//TODO
-	//Mouse wheel zoom in and out
-	//Pressing “f” should focus the camera around the geometry, use AABB
+	//When load geometry, autocentre + auto resize cam(all geometry inside fov)
 
 	if (App->input->GetMouseButton(SDL_BUTTON_RIGHT) == KEY_DOWN)
 		Cam_move = !Cam_move;
@@ -74,9 +73,17 @@ update_status ModuleCamera3D::Update(float dt)
 	if (App->input->GetKey(SDL_SCANCODE_Q) == KEY_REPEAT) newPos.y += speed;
 	if (App->input->GetKey(SDL_SCANCODE_E) == KEY_REPEAT) newPos.y -= speed;
 
+	bool zoomed = false;
+	if (App->input->GetMouseZ() != 0)
+	{
+		newPos += App->input->GetMouseZ() * Z * speed;
+		zoomed = true;
+	}
+
 	//Orbit the geometry in scene
 	Position += newPos;
-	Reference += newPos;
+	if(!zoomed)
+		Reference += newPos;
 
 	if((App->input->GetKey(SDL_SCANCODE_LALT) == KEY_REPEAT) && (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_REPEAT))
 	{
@@ -112,6 +119,9 @@ update_status ModuleCamera3D::Update(float dt)
 
 		Position = Reference + Z * length(Position);
 	}
+
+	if (App->input->GetKey(SDL_SCANCODE_F) == KEY_DOWN)
+		RecentreCameraToGeometry();
 
 	// Recalculate matrix -------------
 	CalculateViewMatrix();
@@ -170,4 +180,21 @@ void ModuleCamera3D::CalculateViewMatrix()
 {
 	ViewMatrix = mat4x4(X.x, Y.x, Z.x, 0.0f, X.y, Y.y, Z.y, 0.0f, X.z, Y.z, Z.z, 0.0f, -dot(X, Position), -dot(Y, Position), -dot(Z, Position), 1.0f);
 	ViewMatrixInverse = inverse(ViewMatrix);
+}
+
+void ModuleCamera3D::CenterCameraToGeometry(const AABB* meshAABB)
+{
+	if (meshAABB == nullptr)
+		Reference = vec3(0.0f, 0.0f, 0.0f);
+	else
+	{
+		vec centre = meshAABB->CenterPoint();
+		Reference = vec3(centre.x, centre.y, centre.z);
+		LastCentreGeometry = meshAABB;
+	}
+}
+
+void ModuleCamera3D::RecentreCameraToGeometry()
+{
+	CenterCameraToGeometry(LastCentreGeometry);
 }

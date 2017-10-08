@@ -56,7 +56,10 @@ update_status ModuleLoadMesh::PreUpdate(float dt)
 
 update_status ModuleLoadMesh::Update(float dt)
 {
-	Load(App->input->GetDroppedFile(), geomData);
+	bool loaded = Load(App->input->GetDroppedFile(), geomData);
+	//If you load an fbx with more than one mesh, this center the last one
+	if (loaded)
+		App->camera->CenterCameraToGeometry(&geomData.back().BoundBox);
 	if (geomLoaded)
 		App->renderer3D->Draw(&geomData);
 	return UPDATE_CONTINUE;
@@ -113,10 +116,8 @@ bool ModuleLoadMesh::Load(std::string* file, std::vector<GeometryData>& meshData
 				glDeleteBuffers(1, &item._Ptr->id_texture_coords);
 				RELEASE_ARRAY(item._Ptr->texture_coords);
 			}
-			/*
 			if (item._Ptr->texture_name != "")
-				glDeleteBuffers(1, &item._Ptr->id_texture);
-			*/
+				glDeleteTextures(1, &item._Ptr->id_texture);
 		}
 		meshDataOutput.clear();
 	}
