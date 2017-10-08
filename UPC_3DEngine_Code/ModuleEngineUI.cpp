@@ -390,7 +390,6 @@ void ModuleEngineUI::ImGuiConsole()
 		ImGui::SetScrollHere();
 		ScrollDownConsole = false;
 	}
-	//float MaxScrollY = ImGui::GetScrollMaxX();
 	ImGui::EndChild();
 	ImGui::Separator();
 	static char str0[128] = "";

@@ -52,10 +52,28 @@ update_status ModuleCamera3D::Update(float dt)
 	//When load geometry, autocentre + auto resize cam(all geometry inside fov)
 
 	if (App->input->GetMouseButton(SDL_BUTTON_RIGHT) == KEY_DOWN)
+	{
 		Cam_move = !Cam_move;
-	if(!Cam_move)
+		Cam_move_LOG = true;
+	}
+	if (Cam_move)
+	{
+		if (Cam_move_LOG)
+		{
+			LOGP("Camera movement: Active");
+			Cam_move_LOG = false;
+		}
+	}
+	else
+	{
+		if (Cam_move_LOG)
+		{
+			LOGP("Camera movement: Disabled");
+			Cam_move_LOG = false;
+		}
 		return UPDATE_CONTINUE;
-
+	}
+		
 	vec3 newPos(0,0,0);
 	float speed = 50.0f * dt;
 	

@@ -31,6 +31,7 @@ public:
 	vec3 X, Y, Z, Position, Reference;
 
 private:
+	bool			Cam_move_LOG = true;
 	bool			Cam_move = false;
 	vec3			CameraPos;
 	vec3			ViewDirection;

@@ -108,7 +108,7 @@ public:
     // Write womethink using your own functionality
     void write(const char* message)
     {
-        LOGP("PENE Assimp: %s", message);
+        LOGP("Assimp: %s", message);
     }
 };
 

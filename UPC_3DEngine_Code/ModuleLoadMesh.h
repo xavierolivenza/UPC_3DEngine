@@ -36,6 +36,7 @@ public:
 	uint Lenna_tex = 0;
 
 private:
+	std::string AssetsPath;
 	std::vector<GeometryData> geomData;
 	bool geomLoaded = false;
 };

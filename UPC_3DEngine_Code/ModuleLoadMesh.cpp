@@ -70,7 +70,7 @@ bool ModuleLoadMesh::Start()
 {
 	LOGP("LoadMesh Start");
 	bool ret = true;
-	Lenna_tex = LoadImageFromFile("Lenna.png");
+	Lenna_tex = LoadImageFromFile("Assets/Lenna.png");
 	return ret;
 }
 
@@ -209,7 +209,7 @@ bool ModuleLoadMesh::Load(std::string* file, std::vector<GeometryData>& meshData
 			{
 				aiString path;
 				scene->mMaterials[new_mesh->mMaterialIndex]->GetTexture(aiTextureType_DIFFUSE, 0, &path);
-				geomData.texture_name = path.C_Str();
+				geomData.texture_name = AssetsPath + path.C_Str();
 				int id_texture = LoadImageFromFile(geomData.texture_name.c_str());
 				if (id_texture < 0)
 				{
@@ -374,11 +374,13 @@ int ModuleLoadMesh::LoadImageFromFile(const char* theFileName)
 
 bool ModuleLoadMesh::SaveConf(JSON_Object* conf) const
 {
+	App->parsonjson->SetString(conf, "AssetsPath", AssetsPath.c_str());
 	return true;
 }
 
 bool ModuleLoadMesh::LoadConf(JSON_Object* conf)
 {
+	AssetsPath = App->parsonjson->GetString(conf, "AssetsPath", "Assets/");
 	return true;
 }
 
