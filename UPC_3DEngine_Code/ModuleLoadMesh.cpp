@@ -15,6 +15,12 @@
 #include "Assimp/include/scene.h"
 #include "Assimp/include/postprocess.h"
 #include "Assimp/include/cfileio.h"
+
+#include "Assimp/include/Logger.hpp"
+#include "Assimp/include/LogStream.hpp"
+//#include "Assimp/include/NullLogger.hpp"
+#include "Assimp/include/DefaultLogger.hpp"
+
 #pragma comment (lib, "Assimp/libx86/assimp.lib")
 
 ModuleLoadMesh::ModuleLoadMesh(Application* app, bool start_enabled) : Module(app, start_enabled)
@@ -33,9 +39,29 @@ bool ModuleLoadMesh::Init()
 	bool ret = true;
 
 	// Stream log messages to Debug window
+	/*
 	struct aiLogStream stream;
 	stream = aiGetPredefinedLogStream(aiDefaultLogStream_DEBUGGER, nullptr);
 	aiAttachLogStream(&stream);
+	*/
+
+	// Create a logger instance 
+	Assimp::DefaultLogger::create("", Assimp::Logger::VERBOSE);
+	// Now I am ready for logging my stuff
+	Assimp::DefaultLogger::get()->info("this is my info-call");
+	// Select the kinds of messages you want to receive on this log stream
+	const unsigned int severity = Assimp::Logger::Debugging | Assimp::Logger::Info | Assimp::Logger::Err | Assimp::Logger::Warn;
+	// Attaching it to the default logger
+	Assimp::DefaultLogger::get()->attachStream(new Assimp::myStream(), severity);
+
+	ilutRenderer(ILUT_OPENGL);
+	ilInit();
+	iluInit();
+	ilutInit();
+	ilClearColour(255, 255, 255, 000);
+	ILenum ilError = ilGetError();
+	if (ilError != IL_NO_ERROR)
+		ret = false;
 
 	return ret;
 }
@@ -75,8 +101,11 @@ update_status ModuleLoadMesh::PostUpdate(float dt)
 bool ModuleLoadMesh::CleanUp()
 {
 	LOGP("LoadMesh CleanUp");
+	// Kill it after the work is done
+	Assimp::DefaultLogger::kill();
+	ilShutDown();
 	// detach log stream
-	aiDetachAllLogStreams();
+	//aiDetachAllLogStreams();
 	return true;
 }
 

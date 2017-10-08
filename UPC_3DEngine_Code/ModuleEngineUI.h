@@ -41,10 +41,10 @@ private:
 	bool showModuleVariablesWindow = true;
 	bool showConfigurationWindow = true;
 	bool showConsoleWindow = true;
-	bool firsttimeconsoleshown = true;
 	bool showPropertiesWindow = true;
 	bool freezeplots = false;
 	bool active = false;
+	bool ScrollDownConsole = true;
 	std::list<std::string> console_logs;
 	std::vector<float> fpsPlotData;
 	std::vector<float> msPlotData;

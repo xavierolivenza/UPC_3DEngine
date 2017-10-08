@@ -385,10 +385,10 @@ void ModuleEngineUI::ImGuiConsole()
 	ImGui::BeginChild("ScrollingRegion", ImVec2(0, -ImGui::GetItemsLineHeightWithSpacing()), false, ImGuiWindowFlags_HorizontalScrollbar);
 	for (std::list<std::string>::iterator item = console_logs.begin(); item != console_logs.cend(); ++item)
 		ImGui::Text(item._Ptr->_Myval.c_str());
-	if (firsttimeconsoleshown)
+	if (ScrollDownConsole)
 	{
 		ImGui::SetScrollHere();
-		firsttimeconsoleshown = false;
+		ScrollDownConsole = false;
 	}
 	//float MaxScrollY = ImGui::GetScrollMaxX();
 	ImGui::EndChild();
@@ -399,13 +399,9 @@ void ModuleEngineUI::ImGuiConsole()
 		LOGP(str0);
 		strcpy(str0, "");
 	}
-	/*
 	ImGui::SameLine();
 	if (ImGui::Button("Scroll Down"))
-	{
-		ImGui::SetScrollY(MaxScrollY);
-	}
-	*/
+		ScrollDownConsole = true;
 	ImGui::End();
 }
 
@@ -490,6 +486,7 @@ void ModuleEngineUI::ImGuiPropertiesWindow()
 
 void ModuleEngineUI::PushNewConsoleLabel(std::string* newlabel)
 {
+	ScrollDownConsole = true;
 	console_logs.push_back(*newlabel);
 }
 

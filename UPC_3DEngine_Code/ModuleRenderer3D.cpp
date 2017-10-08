@@ -117,16 +117,6 @@ bool ModuleRenderer3D::Init()
 	// Projection matrix for
 	OnResize(SCREEN_WIDTH, SCREEN_HEIGHT);
 
-	ilutRenderer(ILUT_OPENGL);
-	ilInit();
-	iluInit();
-	ilutInit();
-	ilutRenderer(ILUT_OPENGL);
-	ilClearColour(255, 255, 255, 000);
-	ILenum ilError = ilGetError();
-	if (ilError != IL_NO_ERROR)
-		return false;
-
 	return ret;
 }
 

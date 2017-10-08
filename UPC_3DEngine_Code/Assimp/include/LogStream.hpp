@@ -90,6 +90,28 @@ public:
         IOSystem* io = NULL);
 
 }; // !class LogStream
+
+class myStream : public LogStream
+{
+public:
+    // Constructor
+    myStream()
+    {
+        // empty
+    }
+
+    // Destructor
+    ~myStream()
+    {
+        // empty
+    }
+    // Write womethink using your own functionality
+    void write(const char* message)
+    {
+        LOGP("PENE Assimp: %s", message);
+    }
+};
+
 // ------------------------------------------------------------------------------------
 } // Namespace Assimp
 
