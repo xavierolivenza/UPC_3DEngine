@@ -88,10 +88,35 @@ bool ModuleLoadMesh::Load(std::string* file, std::vector<GeometryData>& meshData
 		//clean vector
 		for (std::vector<GeometryData>::iterator item = meshDataOutput.begin(); item != meshDataOutput.cend(); ++item)
 		{
-			RELEASE_ARRAY(item._Ptr->vertices);
-			RELEASE_ARRAY(item._Ptr->indices);
-			glDeleteBuffers(1, &item._Ptr->id_vertices);
-			glDeleteBuffers(1, &item._Ptr->id_indices);
+			if (item._Ptr->vertices != nullptr)
+			{
+				glDeleteBuffers(1, &item._Ptr->id_vertices);
+				RELEASE_ARRAY(item._Ptr->vertices);
+			}
+			if (item._Ptr->indices != nullptr)
+			{
+				glDeleteBuffers(1, &item._Ptr->id_indices);
+				RELEASE_ARRAY(item._Ptr->indices);
+			}
+			if (item._Ptr->normals != nullptr)
+			{
+				glDeleteBuffers(1, &item._Ptr->id_normals);
+				RELEASE_ARRAY(item._Ptr->normals);
+			}
+			if (item._Ptr->colors != nullptr)
+			{
+				glDeleteBuffers(1, &item._Ptr->id_colors);
+				RELEASE_ARRAY(item._Ptr->colors);
+			}
+			if (item._Ptr->texture_coords != nullptr)
+			{
+				glDeleteBuffers(1, &item._Ptr->id_texture_coords);
+				RELEASE_ARRAY(item._Ptr->texture_coords);
+			}
+			/*
+			if (item._Ptr->texture_name != "")
+				glDeleteBuffers(1, &item._Ptr->id_texture);
+			*/
 		}
 		meshDataOutput.clear();
 	}
