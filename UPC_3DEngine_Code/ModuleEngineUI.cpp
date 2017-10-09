@@ -18,8 +18,6 @@ bool ModuleEngineUI::Init()
 	active = true;
 	strcpy(appnamestr, App->window->GetTitle()->c_str());
 
-	Modes3D;
-
 	if (SDL_Has3DNow()) Modes3D += std::string("3D Now Avalible \n");
 	else Modes3D += std::string("3D Now Unavalible \n");
 	if (SDL_HasAVX()) Modes3D += std::string("AVX Avalible \n");
@@ -148,12 +146,12 @@ void ModuleEngineUI::DrawModuleImGui()
 	//-----------------Menu Bar-----------------//
 	//------------------------------------------//
 	ImGuiDrawMenuBar();
-	if ((App->input->GetKey(SDL_SCANCODE_1) == KEY_DOWN) && (App->input->GetKey(SDL_SCANCODE_LALT) == KEY_DOWN)) showProfilerWindow = !showProfilerWindow;
-	if ((App->input->GetKey(SDL_SCANCODE_2) == KEY_DOWN) && (App->input->GetKey(SDL_SCANCODE_LALT) == KEY_DOWN)) showModuleVariablesWindow = !showModuleVariablesWindow;
-	if ((App->input->GetKey(SDL_SCANCODE_3) == KEY_DOWN) && (App->input->GetKey(SDL_SCANCODE_LALT) == KEY_DOWN)) showConfigurationWindow = !showConfigurationWindow;
-	if ((App->input->GetKey(SDL_SCANCODE_4) == KEY_DOWN) && (App->input->GetKey(SDL_SCANCODE_LALT) == KEY_DOWN)) showConsoleWindow = !showConsoleWindow;
-	if ((App->input->GetKey(SDL_SCANCODE_5) == KEY_DOWN) && (App->input->GetKey(SDL_SCANCODE_LALT) == KEY_DOWN)) showPropertiesWindow = !showPropertiesWindow;
-
+	if ((App->input->GetKey(SDL_SCANCODE_1) == KEY_DOWN) && (App->input->GetKey(SDL_SCANCODE_LALT) == KEY_REPEAT)) showProfilerWindow = !showProfilerWindow;
+	if ((App->input->GetKey(SDL_SCANCODE_2) == KEY_DOWN) && (App->input->GetKey(SDL_SCANCODE_LALT) == KEY_REPEAT)) showModuleVariablesWindow = !showModuleVariablesWindow;
+	if ((App->input->GetKey(SDL_SCANCODE_3) == KEY_DOWN) && (App->input->GetKey(SDL_SCANCODE_LALT) == KEY_REPEAT)) showConfigurationWindow = !showConfigurationWindow;
+	if ((App->input->GetKey(SDL_SCANCODE_4) == KEY_DOWN) && (App->input->GetKey(SDL_SCANCODE_LALT) == KEY_REPEAT)) showConsoleWindow = !showConsoleWindow;
+	if ((App->input->GetKey(SDL_SCANCODE_5) == KEY_DOWN) && (App->input->GetKey(SDL_SCANCODE_LALT) == KEY_REPEAT)) showPropertiesWindow = !showPropertiesWindow;
+	
 	//------------------------------------------//
 	//-------------GUI Test Window--------------//
 	//------------------------------------------//
@@ -486,67 +484,75 @@ void ModuleEngineUI::ImGuiPropertiesWindow()
 	//ImGui::Begin("Properties", false);
 	if (ImGui::CollapsingHeader("Transformation"))
 	{
-		char* data = nullptr;
-
-		ImGui::Text("Position");
-		data = "315434";
-		if (ImGui::InputText("PosX", data, 50, ImGuiInputTextFlags_EnterReturnsTrue | ImGuiInputTextFlags_CharsDecimal | ImGuiInputTextFlags_ReadOnly))
+		const std::vector<GeometryData>* vector = App->loadmesh->GetGeometryStructVector();
+		if (vector->size() > 0)
 		{
+			const GeometryData* geomdata = &vector->back();
 
-		}
-		data = "315434";
-		if (ImGui::InputText("PosY", data, 50, ImGuiInputTextFlags_EnterReturnsTrue | ImGuiInputTextFlags_CharsDecimal | ImGuiInputTextFlags_ReadOnly))
-		{
+			static char data[25] = "";
+			static char buffer[25] = "";
 
-		}
-		data = "315434";
-		if (ImGui::InputText("PosZ", data, 50, ImGuiInputTextFlags_EnterReturnsTrue | ImGuiInputTextFlags_CharsDecimal | ImGuiInputTextFlags_ReadOnly))
-		{
+			ImGui::Text("Position");
+			strcpy(data, itoa(geomdata->pos.x, buffer, 25));
+			if (ImGui::InputText("PosX", data, 50, ImGuiInputTextFlags_EnterReturnsTrue | ImGuiInputTextFlags_CharsDecimal | ImGuiInputTextFlags_ReadOnly))
+			{
 
-		}
+			}
+			strcpy(data, itoa(geomdata->pos.y, buffer, 25));
+			if (ImGui::InputText("PosY", data, 50, ImGuiInputTextFlags_EnterReturnsTrue | ImGuiInputTextFlags_CharsDecimal | ImGuiInputTextFlags_ReadOnly))
+			{
 
-		ImGui::Text("Rotation");
-		data = "315434";
-		if (ImGui::InputText("RotX", data, 50, ImGuiInputTextFlags_EnterReturnsTrue | ImGuiInputTextFlags_CharsDecimal | ImGuiInputTextFlags_ReadOnly))
-		{
+			}
+			strcpy(data, itoa(geomdata->pos.z, buffer, 25));
+			if (ImGui::InputText("PosZ", data, 50, ImGuiInputTextFlags_EnterReturnsTrue | ImGuiInputTextFlags_CharsDecimal | ImGuiInputTextFlags_ReadOnly))
+			{
 
-		}
-		data = "315434";
-		if (ImGui::InputText("RotY", data, 50, ImGuiInputTextFlags_EnterReturnsTrue | ImGuiInputTextFlags_CharsDecimal | ImGuiInputTextFlags_ReadOnly))
-		{
+			}
 
-		}
-		data = "315434";
-		if (ImGui::InputText("RotZ", data, 50, ImGuiInputTextFlags_EnterReturnsTrue | ImGuiInputTextFlags_CharsDecimal | ImGuiInputTextFlags_ReadOnly))
-		{
+			ImGui::Text("Rotation");
+			float3 rot = geomdata->rot.ToEulerXYZ();
+			strcpy(data, itoa(rot.x, buffer, 25));
+			if (ImGui::InputText("RotX", data, 50, ImGuiInputTextFlags_EnterReturnsTrue | ImGuiInputTextFlags_CharsDecimal | ImGuiInputTextFlags_ReadOnly))
+			{
 
-		}
+			}
+			strcpy(data, itoa(rot.y, buffer, 25));
+			if (ImGui::InputText("RotY", data, 50, ImGuiInputTextFlags_EnterReturnsTrue | ImGuiInputTextFlags_CharsDecimal | ImGuiInputTextFlags_ReadOnly))
+			{
 
-		ImGui::Text("Scale");
-		data = "315434";
-		if (ImGui::InputText("ScaX", data, 50, ImGuiInputTextFlags_EnterReturnsTrue | ImGuiInputTextFlags_CharsDecimal | ImGuiInputTextFlags_ReadOnly))
-		{
+			}
+			strcpy(data, itoa(rot.z, buffer, 25));
+			if (ImGui::InputText("RotZ", data, 50, ImGuiInputTextFlags_EnterReturnsTrue | ImGuiInputTextFlags_CharsDecimal | ImGuiInputTextFlags_ReadOnly))
+			{
 
-		}
-		data = "315434";
-		if (ImGui::InputText("ScaY", data, 50, ImGuiInputTextFlags_EnterReturnsTrue | ImGuiInputTextFlags_CharsDecimal | ImGuiInputTextFlags_ReadOnly))
-		{
+			}
 
-		}
-		data = "315434";
-		if (ImGui::InputText("ScaZ", data, 50, ImGuiInputTextFlags_EnterReturnsTrue | ImGuiInputTextFlags_CharsDecimal | ImGuiInputTextFlags_ReadOnly))
-		{
+			ImGui::Text("Scale");
+			strcpy(data, itoa(geomdata->scale.x, buffer, 25));
+			if (ImGui::InputText("ScaX", data, 50, ImGuiInputTextFlags_EnterReturnsTrue | ImGuiInputTextFlags_CharsDecimal | ImGuiInputTextFlags_ReadOnly))
+			{
 
-		}
+			}
+			strcpy(data, itoa(geomdata->scale.y, buffer, 25));
+			if (ImGui::InputText("ScaY", data, 50, ImGuiInputTextFlags_EnterReturnsTrue | ImGuiInputTextFlags_CharsDecimal | ImGuiInputTextFlags_ReadOnly))
+			{
 
-		/*
-		static char str0[50] = "";
-		static char str1[25] = "";
+			}
+			strcpy(data, itoa(geomdata->scale.z, buffer, 25));
+			if (ImGui::InputText("ScaZ", data, 50, ImGuiInputTextFlags_EnterReturnsTrue | ImGuiInputTextFlags_CharsDecimal | ImGuiInputTextFlags_ReadOnly))
+			{
 
-		strcpy(str0, itoa(w_width, str1, 10));
-		if (ImGui::InputText("w_width", str0, 50, ImGuiInputTextFlags_EnterReturnsTrue | ImGuiInputTextFlags_CharsDecimal))
+			}
+
+			/*
+			static char str0[50] = "";
+			static char str1[25] = "";
+
+			strcpy(str0, itoa(w_width, str1, 10));
+			if (ImGui::InputText("w_width", str0, 50, ImGuiInputTextFlags_EnterReturnsTrue | ImGuiInputTextFlags_CharsDecimal))
 			w_width = atoi(str0);
-		*/
+			*/
+		}
 	}
 	if (ImGui::CollapsingHeader("Geometry"))
 	{

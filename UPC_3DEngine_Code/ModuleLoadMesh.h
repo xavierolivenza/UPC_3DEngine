@@ -25,14 +25,14 @@ public:
 
 	void ImGuiModuleVariables();
 
-private:
-	bool CleanGeometryDataVector(std::vector<GeometryData>* meshDataVec);
-
 //TEST
 	const std::vector<GeometryData>* GetGeometryStructVector() const
 	{
 		return &geomData;
 	}
+
+private:
+	bool CleanGeometryDataVector(std::vector<GeometryData>* meshDataVec);
 
 private:
 	std::string AssetsPath;

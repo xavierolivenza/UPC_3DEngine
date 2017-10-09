@@ -160,6 +160,15 @@ bool ModuleLoadMesh::Load(std::string* file, std::vector<GeometryData>* meshData
 	//aiIsExtensionSupported (const char *szExtension)
 
 	const aiScene* scene = aiImportFile(file->c_str(), aiProcessPreset_TargetRealtime_MaxQuality);
+
+	aiVector3D translation;
+	aiVector3D scaling;
+	aiQuaternion rotation;
+	scene->mRootNode->mTransformation.Decompose(scaling, rotation, translation);
+	float3 pos(translation.x, translation.y, translation.z);
+	float3 scale(scaling.x, scaling.y, scaling.z);
+	Quat rot(rotation.x, rotation.y, rotation.z, rotation.w);
+
 	if (scene != nullptr && scene->HasMeshes())
 	{
 		// Use scene->mNumMeshes to iterate on scene->mMeshes array
@@ -234,6 +243,11 @@ bool ModuleLoadMesh::Load(std::string* file, std::vector<GeometryData>* meshData
 			// Generate AABB
 			geomData.BoundBox.SetNegativeInfinity();
 			geomData.BoundBox.Enclose((float3*)geomData.vertices, geomData.num_vertices);
+
+			//For first test, load pos/rot/scale
+			geomData.pos = pos;
+			geomData.rot = rot;
+			geomData.scale = scale;
 
 			// Buffer for vertices
 			glGenBuffers(1, (GLuint*) &(geomData.id_vertices));
