@@ -158,6 +158,8 @@ bool ModuleLoadMesh::Load(std::string* file, std::vector<GeometryData>* meshData
 	if (geomLoaded)
 		CleanGeometryDataVector(meshDataOutput);
 
+	//aiIsExtensionSupported (const char *szExtension)
+
 	const aiScene* scene = aiImportFile(file->c_str(), aiProcessPreset_TargetRealtime_MaxQuality);
 	if (scene != nullptr && scene->HasMeshes())
 	{
@@ -294,6 +296,7 @@ bool ModuleLoadMesh::Load(std::string* file, std::vector<GeometryData>* meshData
 	{
 		LOGP("Error loading scene %s", file->c_str());
 		LOGP("Error: %s", aiGetErrorString());
+		ret = false;
 	}
 
 	return ret;
