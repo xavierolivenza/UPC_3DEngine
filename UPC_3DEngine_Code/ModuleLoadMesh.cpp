@@ -82,7 +82,7 @@ update_status ModuleLoadMesh::PreUpdate(float dt)
 
 update_status ModuleLoadMesh::Update(float dt)
 {
-	bool loaded = Load(App->input->GetDroppedFile(), geomData);
+	bool loaded = Load(App->input->GetDroppedFile(), &geomData);
 	//If you load an fbx with more than one mesh, this center the last one
 	if (loaded)
 		App->camera->CenterCameraToGeometry(&geomData.back().BoundBox);
@@ -101,6 +101,8 @@ update_status ModuleLoadMesh::PostUpdate(float dt)
 bool ModuleLoadMesh::CleanUp()
 {
 	LOGP("LoadMesh CleanUp");
+	if (geomLoaded)
+		CleanGeometryDataVector(&geomData);
 	// Kill it after the work is done
 	Assimp::DefaultLogger::kill();
 	ilShutDown();
@@ -109,47 +111,52 @@ bool ModuleLoadMesh::CleanUp()
 	return true;
 }
 
-bool ModuleLoadMesh::Load(std::string* file, std::vector<GeometryData>& meshDataOutput)
+bool ModuleLoadMesh::CleanGeometryDataVector(std::vector<GeometryData>* meshDataVec)
+{
+	if (meshDataVec == nullptr)
+		return false;
+	for (std::vector<GeometryData>::iterator item = meshDataVec->begin(); item != meshDataVec->cend(); ++item)
+	{
+		if (item._Ptr->vertices != nullptr)
+		{
+			glDeleteBuffers(1, &item._Ptr->id_vertices);
+			RELEASE_ARRAY(item._Ptr->vertices);
+		}
+		if (item._Ptr->indices != nullptr)
+		{
+			glDeleteBuffers(1, &item._Ptr->id_indices);
+			RELEASE_ARRAY(item._Ptr->indices);
+		}
+		if (item._Ptr->normals != nullptr)
+		{
+			glDeleteBuffers(1, &item._Ptr->id_normals);
+			RELEASE_ARRAY(item._Ptr->normals);
+		}
+		if (item._Ptr->colors != nullptr)
+		{
+			glDeleteBuffers(1, &item._Ptr->id_colors);
+			RELEASE_ARRAY(item._Ptr->colors);
+		}
+		if (item._Ptr->texture_coords != nullptr)
+		{
+			glDeleteBuffers(1, &item._Ptr->id_texture_coords);
+			RELEASE_ARRAY(item._Ptr->texture_coords);
+		}
+		if (item._Ptr->texture_name != "")
+			glDeleteTextures(1, &item._Ptr->id_texture);
+	}
+	meshDataVec->clear();
+	return true;
+}
+
+bool ModuleLoadMesh::Load(std::string* file, std::vector<GeometryData>* meshDataOutput)
 {
 	bool ret = true;
 	if (file == nullptr)
 		return false;
 
 	if (geomLoaded)
-	{
-		//clean vector
-		for (std::vector<GeometryData>::iterator item = meshDataOutput.begin(); item != meshDataOutput.cend(); ++item)
-		{
-			if (item._Ptr->vertices != nullptr)
-			{
-				glDeleteBuffers(1, &item._Ptr->id_vertices);
-				RELEASE_ARRAY(item._Ptr->vertices);
-			}
-			if (item._Ptr->indices != nullptr)
-			{
-				glDeleteBuffers(1, &item._Ptr->id_indices);
-				RELEASE_ARRAY(item._Ptr->indices);
-			}
-			if (item._Ptr->normals != nullptr)
-			{
-				glDeleteBuffers(1, &item._Ptr->id_normals);
-				RELEASE_ARRAY(item._Ptr->normals);
-			}
-			if (item._Ptr->colors != nullptr)
-			{
-				glDeleteBuffers(1, &item._Ptr->id_colors);
-				RELEASE_ARRAY(item._Ptr->colors);
-			}
-			if (item._Ptr->texture_coords != nullptr)
-			{
-				glDeleteBuffers(1, &item._Ptr->id_texture_coords);
-				RELEASE_ARRAY(item._Ptr->texture_coords);
-			}
-			if (item._Ptr->texture_name != "")
-				glDeleteTextures(1, &item._Ptr->id_texture);
-		}
-		meshDataOutput.clear();
-	}
+		CleanGeometryDataVector(meshDataOutput);
 
 	const aiScene* scene = aiImportFile(file->c_str(), aiProcessPreset_TargetRealtime_MaxQuality);
 	if (scene != nullptr && scene->HasMeshes())
@@ -278,7 +285,7 @@ bool ModuleLoadMesh::Load(std::string* file, std::vector<GeometryData>& meshData
 			}
 			*/
 
-			meshDataOutput.push_back(geomData);
+			meshDataOutput->push_back(geomData);
 		}
 		aiReleaseImport(scene);
 		geomLoaded = true;

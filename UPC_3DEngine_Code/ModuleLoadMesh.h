@@ -17,7 +17,9 @@ public:
 	update_status PostUpdate(float dt);
 	bool CleanUp();
 
-	bool Load(std::string* file, std::vector<GeometryData>& meshDataOutput);
+	bool CleanGeometryDataVector(std::vector<GeometryData>* meshDataVec);
+
+	bool Load(std::string* file, std::vector<GeometryData>* meshDataOutput);
 	int LoadImageFromFile(const char* theFileName);
 
 	bool SaveConf(JSON_Object* conf) const;

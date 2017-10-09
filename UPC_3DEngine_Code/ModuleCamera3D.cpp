@@ -201,12 +201,17 @@ void ModuleCamera3D::CenterCameraToGeometry(const AABB* meshAABB)
 		vec centre = meshAABB->CenterPoint();
 		Reference = vec3(centre.x, centre.y, centre.z);
 		LastCentreGeometry = meshAABB;
-		LookAt(Reference);
-		/**/
+		
+		//Same as LookAt, but here we don't recalculate viewmatrix, this is not necessary now
+		Z = normalize(Position - Reference);
+		//For the math here, X,Y is not necesary
+		//X = normalize(cross(vec3(0.0f, 1.0f, 0.0f), Z));
+		//Y = cross(Z, X);
+
 		//Set camerapos to see the hole geometry in view
 		vec difference = meshAABB->maxPoint - meshAABB->minPoint;
-		float wide = MAX(difference.x, difference.y);
-		float FOVdistance = (wide * 0.5f) / tan(60.0f*0.5f); //FOV = 60.0f
+		float wide = MAX(MAX(difference.x, difference.y), difference.z); //Get max of the 3 sides of the AABB
+		float FOVdistance = (wide * 0.5f) / tan(60.0f*0.5f); //FOV = 60.0f, by now this remains as magic number, will change when we update camera
 
 		vec3 distance_CamToCentreAabb_vec3 = Position - Reference;
 		vec distance_CamToCentreAabb_vec(distance_CamToCentreAabb_vec3.x, distance_CamToCentreAabb_vec3.y, distance_CamToCentreAabb_vec3.z);
@@ -215,10 +220,10 @@ void ModuleCamera3D::CenterCameraToGeometry(const AABB* meshAABB)
 		float distance_diference = distance_CamToCentreAabb_magnitude - FOVdistance;
 		//float distance_diference = FOVdistance - distance_CamToCentreAabb_magnitude;
 
-		Position += Z * distance_diference;
+		Position = Z * distance_diference;
 
-		// Recalculate matrix -------------
-		CalculateViewMatrix();
+		// Recalculate matrix (CalculateViewMatrix is called inside LookAt)-------------
+		LookAt(Reference);
 		/**/
 	}
 }

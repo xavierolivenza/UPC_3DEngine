@@ -123,9 +123,23 @@ P2Cube::P2Cube(float sizeX, float sizeY, float sizeZ) : Primitive(), size(sizeX,
 	type = PrimitiveTypes::Primitive_Cube;
 }
 
+P2Cube::~P2Cube()
+{
+	glDeleteBuffers(1, &GeometryStruct.id_vertices);
+	RELEASE_ARRAY(GeometryStruct.vertices);
+
+	glDeleteBuffers(1, &GeometryStruct.id_indices);
+	RELEASE_ARRAY(GeometryStruct.indices);
+
+	glDeleteBuffers(1, &GeometryStruct.id_texture_coords);
+	RELEASE_ARRAY(GeometryStruct.texture_coords);
+}
+
 void P2Cube::InnerRender() const
 {	
-	if (newVertexBufferCreated)
+	if (buffersCreated)
+		App->renderer3D->Draw(&GeometryStruct);
+	else
 	{
 		//I do this here because if i put this in the GeneratePrimitiveWithNewData i get an error, i don't know why, so by now this stays here.
 
@@ -139,18 +153,14 @@ void P2Cube::InnerRender() const
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, GeometryStruct.id_indices);
 		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint) * GeometryStruct.num_indices, GeometryStruct.indices, GL_STATIC_DRAW);
 
-		/**/
+		// Buffer for texture coords
 		glGenBuffers(1, (GLuint*) &(GeometryStruct.id_texture_coords));
 		glBindBuffer(GL_ARRAY_BUFFER, GeometryStruct.id_texture_coords);
 		glBufferData(GL_ARRAY_BUFFER, sizeof(float) * GeometryStruct.num_indices * 2, GeometryStruct.texture_coords, GL_STATIC_DRAW);
-		/**/
 
 		//I don't like it and this can be dangerous, but i want to preserve InnerRender const, so by now i take the risk.
-		const_cast<bool&>(newVertexBufferCreated) = false;
+		const_cast<bool&>(buffersCreated) = true;
 	}
-	
-	if (buffersCreated)
-		App->renderer3D->Draw(&GeometryStruct);
 }
 
 void P2Cube::GeneratePrimitiveWithNewData()
@@ -159,6 +169,12 @@ void P2Cube::GeneratePrimitiveWithNewData()
 	{
 		glDeleteBuffers(1, &GeometryStruct.id_vertices);
 		RELEASE_ARRAY(GeometryStruct.vertices);
+
+		glDeleteBuffers(1, &GeometryStruct.id_indices);
+		RELEASE_ARRAY(GeometryStruct.indices);
+
+		glDeleteBuffers(1, &GeometryStruct.id_texture_coords);
+		RELEASE_ARRAY(GeometryStruct.texture_coords);
 	}
 
 	float sx = size.x * 0.5f;
@@ -191,60 +207,52 @@ void P2Cube::GeneratePrimitiveWithNewData()
 	};
 	memcpy(GeometryStruct.vertices, vertices, sizeof(float) * GeometryStruct.num_vertices * 3);
 
-	if (!buffersCreated)
+	GeometryStruct.num_indices = 36;
+	GeometryStruct.indices = new uint[GeometryStruct.num_indices];
+	uint indices[] =
 	{
-		GeometryStruct.num_indices = 36;
-		GeometryStruct.indices = new uint[GeometryStruct.num_indices];
-		uint indices[] =
-		{
-			2, 7, 6,
-			2, 3, 7,
-			11, 9, 10,
-			11, 8, 9,
-			1, 4, 0,
-			1, 5, 4,
-			15, 13, 12,
-			15, 14, 13,
-			1, 3, 2,
-			1, 0, 3,
-			7, 5, 6,
-			7, 4, 5
-		};
-		memcpy(GeometryStruct.indices, indices, sizeof(uint) * GeometryStruct.num_indices);
+		2, 7, 6,
+		2, 3, 7,
+		11, 9, 10,
+		11, 8, 9,
+		1, 4, 0,
+		1, 5, 4,
+		15, 13, 12,
+		15, 14, 13,
+		1, 3, 2,
+		1, 0, 3,
+		7, 5, 6,
+		7, 4, 5
+	};
+	memcpy(GeometryStruct.indices, indices, sizeof(uint) * GeometryStruct.num_indices);
 
-		//Texture
-		/**/
-		GeometryStruct.texture_coords = new float[GeometryStruct.num_indices * 3];
-		float texture_coords[] =
-		{
-			1.0f, 1.0f, 0.0f,
-			0.0f, 1.0f, 0.0f,
-			0.0f, 0.0f, 0.0f,
-			1.0f, 0.0f, 0.0f,
+	//Texture
+	GeometryStruct.texture_coords = new float[GeometryStruct.num_indices * 3];
+	float texture_coords[] =
+	{
+		1.0f, 1.0f, 0.0f,
+		0.0f, 1.0f, 0.0f,
+		0.0f, 0.0f, 0.0f,
+		1.0f, 0.0f, 0.0f,
 
-			1.0f, 0.0f, 0.0f,
-			0.0f, 0.0f, 0.0f,
-			0.0f, 1.0f, 0.0f,
-			1.0f, 1.0f, 0.0f,
+		1.0f, 0.0f, 0.0f,
+		0.0f, 0.0f, 0.0f,
+		0.0f, 1.0f, 0.0f,
+		1.0f, 1.0f, 0.0f,
 
-			1.0f, 1.0f, 0.0f,
-			0.0f, 1.0f, 0.0f,
-			0.0f, 0.0f, 0.0f,
-			1.0f, 0.0f, 0.0f,
+		1.0f, 1.0f, 0.0f,
+		0.0f, 1.0f, 0.0f,
+		0.0f, 0.0f, 0.0f,
+		1.0f, 0.0f, 0.0f,
 
-			0.0f, 1.0f, 0.0f,
-			1.0f, 1.0f, 0.0f,
-			1.0f, 0.0f, 0.0f,
-			0.0f, 0.0f, 0.0f
-		};
-		memcpy(GeometryStruct.texture_coords, texture_coords, sizeof(float) * GeometryStruct.num_indices * 3);
-		/**/
-	}
+		0.0f, 1.0f, 0.0f,
+		1.0f, 1.0f, 0.0f,
+		1.0f, 0.0f, 0.0f,
+		0.0f, 0.0f, 0.0f
+	};
+	memcpy(GeometryStruct.texture_coords, texture_coords, sizeof(float) * GeometryStruct.num_indices * 3);
 
 	GeometryStruct.BoundBox = AABB(vec(-sx, -sy, -sz), vec(sx, sy, sz));
-
-	buffersCreated = true;
-	newVertexBufferCreated = true;
 }
 
 // SPHERE ============================================

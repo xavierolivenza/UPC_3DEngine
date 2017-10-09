@@ -70,13 +70,13 @@ class P2Cube : public Primitive
 public :
 	P2Cube();
 	P2Cube(float sizeX, float sizeY, float sizeZ);
+	~P2Cube();
 	void InnerRender() const;
 	void GeneratePrimitiveWithNewData();
 public:
 	vec3 size;
 private:
 	bool buffersCreated = false;
-	bool newVertexBufferCreated = false;
 };
 
 // ============================================

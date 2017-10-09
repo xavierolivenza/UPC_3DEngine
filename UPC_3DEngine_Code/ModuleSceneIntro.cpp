@@ -111,6 +111,7 @@ bool ModuleSceneIntro::Start()
 	//cube1.color = Chocolate;
 	cube1.SetPos(0, 0, 0);
 	cube1.GeneratePrimitiveWithNewData();
+	/**/
 	/*
 	sphere1.radius = 1.0f;
 	sphere1.slices = 15;
