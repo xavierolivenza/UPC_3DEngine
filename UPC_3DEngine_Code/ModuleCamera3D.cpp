@@ -209,9 +209,14 @@ void ModuleCamera3D::CenterCameraToGeometry(const AABB* meshAABB)
 		//Y = cross(Z, X);
 
 		//Set camerapos to see the hole geometry in view
+		/*
 		vec difference = meshAABB->maxPoint - meshAABB->minPoint;
 		float wide = MAX(MAX(difference.x, difference.y), difference.z); //Get max of the 3 sides of the AABB
-		float FOVdistance = (wide * 0.5f) / tan(60.0f*0.5f*DEGTORAD); //FOV = 60.0f, by now this remains as magic number, will change when we update camera
+		*/
+
+		vec difference = meshAABB->maxPoint - meshAABB->minPoint;
+		float wide = difference.Length() + 2.0f; //This magic number is just to have some frame around geometry
+		float FOVdistance = (wide * 0.5f) / tan(60.0f * 0.5f * DEGTORAD); //FOV = 60.0f, by now this remains as magic number, will change when we update camera
 
 		/*
 		vec3 distance_CamToCentreAabb_vec3 = Position - Reference;
