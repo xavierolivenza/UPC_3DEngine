@@ -70,7 +70,6 @@ bool ModuleLoadMesh::Start()
 {
 	LOGP("LoadMesh Start");
 	bool ret = true;
-	Lenna_tex = LoadImageFromFile("Assets/Lenna.png");
 	return ret;
 }
 
@@ -367,6 +366,8 @@ int ModuleLoadMesh::LoadImageFromFile(const char* theFileName)
 			ilGetInteger(IL_IMAGE_FORMAT),	// Format of image pixel data
 			GL_UNSIGNED_BYTE,		// Image data type
 			ilGetData());			// The actual image data itself
+
+		glBindTexture(GL_TEXTURE_2D, 0);
 	}
 	else // If we failed to open the image file in the first place...
 	{

@@ -17,8 +17,6 @@ public:
 	update_status PostUpdate(float dt);
 	bool CleanUp();
 
-	bool CleanGeometryDataVector(std::vector<GeometryData>* meshDataVec);
-
 	bool Load(std::string* file, std::vector<GeometryData>* meshDataOutput);
 	int LoadImageFromFile(const char* theFileName);
 
@@ -27,15 +25,14 @@ public:
 
 	void ImGuiModuleVariables();
 
-	//TEST
+private:
+	bool CleanGeometryDataVector(std::vector<GeometryData>* meshDataVec);
 
+//TEST
 	const std::vector<GeometryData>* GetGeometryStructVector() const
 	{
 		return &geomData;
 	}
-
-public:
-	uint Lenna_tex = 0;
 
 private:
 	std::string AssetsPath;

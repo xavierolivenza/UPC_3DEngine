@@ -143,11 +143,40 @@ update_status ModuleSceneIntro::Update(float dt)
 		debugray.SetOrigin(App->camera->Position.x, App->camera->Position.y, App->camera->Position.z);
 		debugray.SetDirection(-App->camera->Z.x, -App->camera->Z.y, -App->camera->Z.z);
 
+		/*
+		//Some raycast math, shoot ray from click
+		int w = 0;
+		int h = 0;
+		App->window->GetWindowSize(w, h);
+		float x = (2.0f * App->input->GetMouseX()) / w - 1.0f;
+		float y = 1.0f - (2.0f *  App->input->GetMouseY()) / h;
+		float z = 1.0f;
+		float3 ray_nds = float3(x, y, z);
+		float4 ray_clip = float4(ray_nds.xy, -1.0, 1.0);
+
+		float* inverseviewmatrix = App->camera->GetInverseViewMatrix();
+		float4x4 inverse(inverseviewmatrix[0], inverseviewmatrix[4], inverseviewmatrix[8],  inverseviewmatrix[12],
+						 inverseviewmatrix[1], inverseviewmatrix[5], inverseviewmatrix[9],  inverseviewmatrix[13],
+						 inverseviewmatrix[2], inverseviewmatrix[6], inverseviewmatrix[10], inverseviewmatrix[14],
+						 inverseviewmatrix[3], inverseviewmatrix[7], inverseviewmatrix[11], inverseviewmatrix[15]);
+
+		float4 ray_eye = inverse * ray_clip;
+		ray_eye = float4(ray_eye.xy, -1.0, 0.0);
+		float3 ray_wor = (inverse * ray_eye).xyz;
+		// don't forget to normalise the vector at some point
+		ray_wor.Normalize();
+
+		debugray.SetOrigin(App->camera->Position.x, App->camera->Position.y, App->camera->Position.z);
+		debugray.SetDirection(ray_wor.x, ray_wor.y, ray_wor.z);
+		*/
+
+		/*
 		for (std::vector<GeometryData>::const_iterator item = App->loadmesh->GetGeometryStructVector()->begin(); item != App->loadmesh->GetGeometryStructVector()->cend(); ++item)
 			if (debugray.GetRay()->Intersects(item->BoundBox))
 			{
 				LOGP("hit");
 			}
+		*/
 	}
 	//debugray.Render();
 

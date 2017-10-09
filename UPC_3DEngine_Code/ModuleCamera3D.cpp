@@ -185,6 +185,11 @@ float* ModuleCamera3D::GetViewMatrix()
 	return &ViewMatrix;
 }
 
+float* ModuleCamera3D::GetInverseViewMatrix()
+{
+	return &ViewMatrixInverse;
+}
+
 // -----------------------------------------------------------------
 void ModuleCamera3D::CalculateViewMatrix()
 {

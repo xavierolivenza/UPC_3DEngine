@@ -141,9 +141,12 @@ bool ModuleRenderer3D::Start()
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, CHECKERS_WIDTH, CHECKERS_HEIGHT,
-		0, GL_RGBA, GL_UNSIGNED_BYTE, checkImage);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, CHECKERS_WIDTH, CHECKERS_HEIGHT, 0, GL_RGBA, GL_UNSIGNED_BYTE, checkImage);
+	glBindTexture(GL_TEXTURE_2D, 0);
 	/**/
+
+	Lenna_tex = App->loadmesh->LoadImageFromFile("Assets/Lenna.png");
+
 	return true;
 }
 
@@ -572,11 +575,11 @@ bool ModuleRenderer3D::Draw(const GeometryData* meshData) const
 
 	glEnable(GL_TEXTURE_2D);
 	if(meshData->texture_name != "")
-		glBindTexture(GL_TEXTURE, meshData->id_texture);
+		glBindTexture(GL_TEXTURE_2D, meshData->id_texture);
 	else
 	{
-		glBindTexture(GL_TEXTURE, id_checkImage);
-		//glBindTexture(GL_TEXTURE, App->loadmesh->Lenna_tex);
+		glBindTexture(GL_TEXTURE_2D, id_checkImage);
+		//glBindTexture(GL_TEXTURE_2D, Lenna_tex);
 	}
 	glEnableClientState(GL_VERTEX_ARRAY);
 	glBindBuffer(GL_ARRAY_BUFFER, meshData->id_vertices);
@@ -602,7 +605,7 @@ bool ModuleRenderer3D::Draw(const GeometryData* meshData) const
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, meshData->id_indices);
 	glDrawElements(GL_TRIANGLES, meshData->num_indices, GL_UNSIGNED_INT, NULL);
 
-	glBindTexture(GL_TEXTURE, 0);
+	glBindTexture(GL_TEXTURE_2D, 0);
 
 	glDisableClientState(GL_VERTEX_ARRAY);
 	glDisableClientState(GL_NORMAL_ARRAY);
