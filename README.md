@@ -3,6 +3,15 @@ The main objective is to create a simple 3D game editor.
 
 CHANGELOG
 
+v0.4:
+
+	-Amera autocentre + autoframe to loaded geometry
+	-DevIL library added to load textures
+	-FBX load their own textures from Assets folder
+	-New stryle for the GUI(WIP, may will change)
+	-Camera log "hit" if looking to the loaded geometry
+	-Cube primitive texure coords added
+
 v0.3:
 
 	-Profiler window
