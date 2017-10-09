@@ -49,7 +49,6 @@ public:
 private:
 	int w_width = 0;
 	int w_height = 0;
-	int MaxFPSValue = 0;
 	bool fullscreen = false;
 	bool resizable = false;
 	bool borderless = false;

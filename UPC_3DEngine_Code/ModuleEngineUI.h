@@ -37,6 +37,7 @@ private:
 	void ImGuiPropertiesWindow();
 
 private:
+	std::string Modes3D;
 	bool showTestWindow = false;
 	bool showProfilerWindow = true;
 	bool showModuleVariablesWindow = true;

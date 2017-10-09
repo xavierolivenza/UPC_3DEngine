@@ -99,6 +99,13 @@ void Application::FinishUpdate()
 	performance.frames_last_second = prev_last_sec_frame_count;
 	performance.average_framerate = (float)performance.frame_count / ((float)startup_timer.Read() / 1000.0f);
 	performance.miliseconds_per_frame = ms_timer.Read();
+
+	if (performance.capped_frames > 0)
+	{
+		uint cap = 1000 / performance.capped_frames;
+		if (performance.miliseconds_per_frame < cap)
+			SDL_Delay(cap - performance.miliseconds_per_frame);
+	}
 }
 
 // Call PreUpdate, Update and PostUpdate on all modules

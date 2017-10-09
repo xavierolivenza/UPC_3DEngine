@@ -17,6 +17,32 @@ bool ModuleEngineUI::Init()
 {
 	active = true;
 	strcpy(appnamestr, App->window->GetTitle()->c_str());
+
+	Modes3D;
+
+	if (SDL_Has3DNow()) Modes3D += std::string("3D Now Avalible \n");
+	else Modes3D += std::string("3D Now Unavalible \n");
+	if (SDL_HasAVX()) Modes3D += std::string("AVX Avalible \n");
+	else Modes3D += std::string("AVX Unavalible \n");
+	//if (SDL_HasAVX2()) Modes3D += std::string("AVX2 Avalible \n");
+	//else Modes3D += std::string("AVX2 Unavalible \n");
+	if (SDL_HasAltiVec()) Modes3D += std::string("AltiVec Avalible \n");
+	else Modes3D += std::string("AltiVec Unavalible \n");
+	if (SDL_HasMMX()) Modes3D += std::string("MMX Avalible \n");
+	else Modes3D += std::string("MMX Unavalible \n");
+	if (SDL_HasRDTSC()) Modes3D += std::string("RDTSC Avalible \n");
+	else Modes3D += std::string("RDTSC Unavalible \n");
+	if (SDL_HasSSE()) Modes3D += std::string("SSE Avalible \n");
+	else Modes3D += std::string("SSE Unavalible \n");
+	if (SDL_HasSSE2()) Modes3D += std::string("SSE2 Avalible \n");
+	else Modes3D += std::string("SSE2 Unavalible \n");
+	if (SDL_HasSSE3()) Modes3D += std::string("SSE3 Avalible \n");
+	else Modes3D += std::string("SSE3 Unavalible \n");
+	if (SDL_HasSSE41()) Modes3D += std::string("SSE41 Avalible \n");
+	else Modes3D += std::string("SSE41 Unavalible \n");
+	if (SDL_HasSSE42()) Modes3D += std::string("SSE42 Avalible \n");
+	else Modes3D += std::string("SSE42 Unavalible \n");
+
 	return true;
 }
 
@@ -122,11 +148,11 @@ void ModuleEngineUI::DrawModuleImGui()
 	//-----------------Menu Bar-----------------//
 	//------------------------------------------//
 	ImGuiDrawMenuBar();
-	if (App->input->GetKey(SDL_SCANCODE_1) == KEY_DOWN) showProfilerWindow = !showProfilerWindow;
-	if (App->input->GetKey(SDL_SCANCODE_2) == KEY_DOWN) showModuleVariablesWindow = !showModuleVariablesWindow;
-	if (App->input->GetKey(SDL_SCANCODE_3) == KEY_DOWN) showConfigurationWindow = !showConfigurationWindow;
-	if (App->input->GetKey(SDL_SCANCODE_4) == KEY_DOWN) showConsoleWindow = !showConsoleWindow;
-	if (App->input->GetKey(SDL_SCANCODE_5) == KEY_DOWN) showPropertiesWindow = !showPropertiesWindow;
+	if ((App->input->GetKey(SDL_SCANCODE_1) == KEY_DOWN) && (App->input->GetKey(SDL_SCANCODE_LALT) == KEY_DOWN)) showProfilerWindow = !showProfilerWindow;
+	if ((App->input->GetKey(SDL_SCANCODE_2) == KEY_DOWN) && (App->input->GetKey(SDL_SCANCODE_LALT) == KEY_DOWN)) showModuleVariablesWindow = !showModuleVariablesWindow;
+	if ((App->input->GetKey(SDL_SCANCODE_3) == KEY_DOWN) && (App->input->GetKey(SDL_SCANCODE_LALT) == KEY_DOWN)) showConfigurationWindow = !showConfigurationWindow;
+	if ((App->input->GetKey(SDL_SCANCODE_4) == KEY_DOWN) && (App->input->GetKey(SDL_SCANCODE_LALT) == KEY_DOWN)) showConsoleWindow = !showConsoleWindow;
+	if ((App->input->GetKey(SDL_SCANCODE_5) == KEY_DOWN) && (App->input->GetKey(SDL_SCANCODE_LALT) == KEY_DOWN)) showPropertiesWindow = !showPropertiesWindow;
 
 	//------------------------------------------//
 	//-------------GUI Test Window--------------//
@@ -272,7 +298,13 @@ void ModuleEngineUI::ImGuiConfigurationWindow()
 			App->window->SetTitle(appnamestr);
 
 		//Max FPS Slider
-		ImGui::SliderInt("Max FPS", &App->window->MaxFPSValue, 0, 144);
+		static char str0[50] = "";
+		static char str1[10] = "";
+		strcpy(str0, itoa(App->GetFramerateCapModif(), str1, 10));
+		if (ImGui::InputText("MaxFPSValue", str0, 50, ImGuiInputTextFlags_EnterReturnsTrue | ImGuiInputTextFlags_CharsDecimal))
+		{
+			App->GetFramerateCapModif() = atoi(str0);
+		}
 
 		ImGui::Separator();
 
@@ -336,9 +368,9 @@ void ModuleEngineUI::ImGuiConfigurationWindow()
 		SDL_version SDLVersion;
 
 		SDL_GetVersion(&SDLVersion);
-		sprintf_s(title, title_size, "SDL Minor Version: %i", SDLVersion.minor);
-		ImGui::Text(title);
 		sprintf_s(title, title_size, "SDL Major Version: %i", SDLVersion.major);
+		ImGui::Text(title);
+		sprintf_s(title, title_size, "SDL Minor Version: %i", SDLVersion.minor);
 		ImGui::Text(title);
 		sprintf_s(title, title_size, "SDL Patch Version: %i", SDLVersion.patch);
 		ImGui::Text(title);
@@ -351,28 +383,8 @@ void ModuleEngineUI::ImGuiConfigurationWindow()
 		ImGui::Text(title);
 		sprintf_s(title, title_size, "CPU Cores: %i", SDL_GetCPUCount());
 		ImGui::Text(title);
-		if (SDL_Has3DNow()) ImGui::Text("3D Now Avalible");
-		else ImGui::Text("3D Now Unavalible");
-		if (SDL_HasAVX()) ImGui::Text("AVX Avalible");
-		else ImGui::Text("AVX Unavalible");
-		//if (SDL_HasAVX2()) ImGui::Text("AVX2 Avalible");
-		//else ImGui::Text("AVX2 Unavalible");
-		if (SDL_HasAltiVec()) ImGui::Text("AltiVec Avalible");
-		else ImGui::Text("AltiVec Unavalible");
-		if (SDL_HasMMX()) ImGui::Text("MMX Avalible");
-		else ImGui::Text("MMX Unavalible");
-		if (SDL_HasRDTSC()) ImGui::Text("RDTSC Avalible");
-		else ImGui::Text("RDTSC Unavalible");
-		if (SDL_HasSSE()) ImGui::Text("SSE Avalible");
-		else ImGui::Text("SSE Unavalible");
-		if (SDL_HasSSE2()) ImGui::Text("SSE2 Avalible");
-		else ImGui::Text("SSE2 Unavalible");
-		if (SDL_HasSSE3()) ImGui::Text("SSE3 Avalible");
-		else ImGui::Text("SSE3 Unavalible");
-		if (SDL_HasSSE41()) ImGui::Text("SSE41 Avalible");
-		else ImGui::Text("SSE41 Unavalible");
-		if (SDL_HasSSE42()) ImGui::Text("SSE42 Avalible");
-		else ImGui::Text("SSE42 Unavalible");
+
+		ImGui::Text(Modes3D.c_str());
 
 		ImGui::Separator();
 

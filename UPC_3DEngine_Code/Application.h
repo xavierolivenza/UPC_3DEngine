@@ -31,6 +31,7 @@ struct PerformanceStruct
 	uint average_framerate = 0;
 	uint frames_last_second = 0;
 	uint miliseconds_per_frame = 0;
+	uint capped_frames = 0;
 };
 
 class Application
@@ -81,6 +82,11 @@ public:
 	const std::list<Module*>* GetModuleList() const
 	{
 		return &list_modules;
+	}
+
+	uint& GetFramerateCapModif()
+	{
+		return performance.capped_frames;
 	}
 
 private:

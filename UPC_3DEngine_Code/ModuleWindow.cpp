@@ -99,7 +99,7 @@ bool ModuleWindow::CleanUp()
 
 bool ModuleWindow::SaveConf(JSON_Object* conf) const
 {
-	App->parsonjson->SetInt(conf, "Max FPS Value", MaxFPSValue);
+	App->parsonjson->SetUInt(conf, "Max FPS Value", App->GetFramerateCapModif());
 	App->parsonjson->SetInt(conf, "width", w_width);
 	App->parsonjson->SetInt(conf, "height", w_height);
 	App->parsonjson->SetString(conf, "title", title.c_str());
@@ -112,7 +112,7 @@ bool ModuleWindow::SaveConf(JSON_Object* conf) const
 
 bool ModuleWindow::LoadConf(JSON_Object* conf)
 {
-	MaxFPSValue = App->parsonjson->GetInt(conf, "Max FPS Value", 0);
+	App->GetFramerateCapModif() = App->parsonjson->GetUInt(conf, "Max FPS Value", 0);
 	w_width = App->parsonjson->GetInt(conf, "width", 1280);
 	w_height = App->parsonjson->GetInt(conf, "height", 720);
 	title = App->parsonjson->GetString(conf, "title", "Default Title");
@@ -149,7 +149,7 @@ void ModuleWindow::SetFullscreen(bool set)
 void ModuleWindow::ImGuiModuleVariables()
 {
 	static char str0[50] = "";
-	static char str1[25] = "";
+	static char str1[10] = "";
 
 	strcpy(str0, itoa(w_width, str1, 10));
 	if (ImGui::InputText("w_width", str0, 50, ImGuiInputTextFlags_EnterReturnsTrue | ImGuiInputTextFlags_CharsDecimal))
@@ -157,7 +157,9 @@ void ModuleWindow::ImGuiModuleVariables()
 	strcpy(str0, itoa(w_height, str1, 10));
 	if (ImGui::InputText("w_height", str0, 50, ImGuiInputTextFlags_EnterReturnsTrue | ImGuiInputTextFlags_CharsDecimal))
 		w_height = atoi(str0);
-	strcpy(str0, itoa(MaxFPSValue, str1, 10));
+	strcpy(str0, itoa(App->GetFramerateCapModif(), str1, 10));
 	if (ImGui::InputText("MaxFPSValue", str0, 50, ImGuiInputTextFlags_EnterReturnsTrue | ImGuiInputTextFlags_CharsDecimal))
-		MaxFPSValue = atoi(str0);
+	{
+		App->GetFramerateCapModif() = atoi(str0);
+	}
 }
