@@ -241,10 +241,14 @@ bool ModuleLoadMesh::Load(std::string* file, std::vector<GeometryData>* meshData
 			Quat rot = { 0.0f,0.0f,0.0f,0.0f };
 			if ((scene->mRootNode != nullptr) && (scene->mRootNode->mNumChildren > 0))
 			{
+				aiNode* node = nullptr;
+				aiMatrix4x4 transform;
+				for (node = scene->mRootNode->mChildren[0]; node->mNumChildren > 0; node = node->mChildren[0])
+					transform *= node->mTransformation;
 				aiVector3D translation;
 				aiVector3D scaling;
 				aiQuaternion rotation;
-				scene->mRootNode->mChildren[0]->mTransformation.Decompose(scaling, rotation, translation);
+				transform.Decompose(scaling, rotation, translation);
 				pos = { translation.x, translation.y, translation.z };
 				scale = { scaling.x, scaling.y, scaling.z };
 				rot = { rotation.x, rotation.y, rotation.z, rotation.w };

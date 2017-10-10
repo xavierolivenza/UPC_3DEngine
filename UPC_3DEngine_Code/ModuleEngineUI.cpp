@@ -492,56 +492,57 @@ void ModuleEngineUI::ImGuiPropertiesWindow()
 			const GeometryData* geomdata = &vector->back();
 
 			static char data[25] = "";
-			static char buffer[25] = "";
+			uint data_size = 25;
 
 			ImGui::Text("Position");
-			strcpy(data, itoa(geomdata->pos.x, buffer, 25));
-			if (ImGui::InputText("PosX", data, 50, ImGuiInputTextFlags_EnterReturnsTrue | ImGuiInputTextFlags_CharsDecimal | ImGuiInputTextFlags_ReadOnly))
+			sprintf_s(data, data_size, "%f", geomdata->pos.x);
+			if (ImGui::InputText("PosX", data, data_size, ImGuiInputTextFlags_EnterReturnsTrue | ImGuiInputTextFlags_CharsDecimal | ImGuiInputTextFlags_ReadOnly))
 			{
 
 			}
-			strcpy(data, itoa(geomdata->pos.y, buffer, 25));
-			if (ImGui::InputText("PosY", data, 50, ImGuiInputTextFlags_EnterReturnsTrue | ImGuiInputTextFlags_CharsDecimal | ImGuiInputTextFlags_ReadOnly))
+			sprintf_s(data, data_size, "%f", geomdata->pos.y);
+			if (ImGui::InputText("PosY", data, data_size, ImGuiInputTextFlags_EnterReturnsTrue | ImGuiInputTextFlags_CharsDecimal | ImGuiInputTextFlags_ReadOnly))
 			{
 
 			}
-			strcpy(data, itoa(geomdata->pos.z, buffer, 25));
-			if (ImGui::InputText("PosZ", data, 50, ImGuiInputTextFlags_EnterReturnsTrue | ImGuiInputTextFlags_CharsDecimal | ImGuiInputTextFlags_ReadOnly))
+			sprintf_s(data, data_size, "%f", geomdata->pos.z);
+			if (ImGui::InputText("PosZ", data, data_size, ImGuiInputTextFlags_EnterReturnsTrue | ImGuiInputTextFlags_CharsDecimal | ImGuiInputTextFlags_ReadOnly))
 			{
 
 			}
 
 			ImGui::Text("Rotation");
 			float3 rot = geomdata->rot.ToEulerXYZ();
-			strcpy(data, itoa(rot.x, buffer, 25));
-			if (ImGui::InputText("RotX", data, 50, ImGuiInputTextFlags_EnterReturnsTrue | ImGuiInputTextFlags_CharsDecimal | ImGuiInputTextFlags_ReadOnly))
+			rot *= RADTODEG;
+			sprintf_s(data, data_size, "%f", rot.x);
+			if (ImGui::InputText("RotX", data, data_size, ImGuiInputTextFlags_EnterReturnsTrue | ImGuiInputTextFlags_CharsDecimal | ImGuiInputTextFlags_ReadOnly))
 			{
 
 			}
-			strcpy(data, itoa(rot.y, buffer, 25));
-			if (ImGui::InputText("RotY", data, 50, ImGuiInputTextFlags_EnterReturnsTrue | ImGuiInputTextFlags_CharsDecimal | ImGuiInputTextFlags_ReadOnly))
+			sprintf_s(data, data_size, "%f", rot.y);
+			if (ImGui::InputText("RotY", data, data_size, ImGuiInputTextFlags_EnterReturnsTrue | ImGuiInputTextFlags_CharsDecimal | ImGuiInputTextFlags_ReadOnly))
 			{
 
 			}
-			strcpy(data, itoa(rot.z, buffer, 25));
-			if (ImGui::InputText("RotZ", data, 50, ImGuiInputTextFlags_EnterReturnsTrue | ImGuiInputTextFlags_CharsDecimal | ImGuiInputTextFlags_ReadOnly))
+			sprintf_s(data, data_size, "%f", rot.z);
+			if (ImGui::InputText("RotZ", data, data_size, ImGuiInputTextFlags_EnterReturnsTrue | ImGuiInputTextFlags_CharsDecimal | ImGuiInputTextFlags_ReadOnly))
 			{
 
 			}
 
 			ImGui::Text("Scale");
-			strcpy(data, itoa(geomdata->scale.x, buffer, 25));
-			if (ImGui::InputText("ScaX", data, 50, ImGuiInputTextFlags_EnterReturnsTrue | ImGuiInputTextFlags_CharsDecimal | ImGuiInputTextFlags_ReadOnly))
+			sprintf_s(data, data_size, "%f", geomdata->scale.x);
+			if (ImGui::InputText("ScaX", data, data_size, ImGuiInputTextFlags_EnterReturnsTrue | ImGuiInputTextFlags_CharsDecimal | ImGuiInputTextFlags_ReadOnly))
 			{
 
 			}
-			strcpy(data, itoa(geomdata->scale.y, buffer, 25));
-			if (ImGui::InputText("ScaY", data, 50, ImGuiInputTextFlags_EnterReturnsTrue | ImGuiInputTextFlags_CharsDecimal | ImGuiInputTextFlags_ReadOnly))
+			sprintf_s(data, data_size, "%f", geomdata->scale.y);
+			if (ImGui::InputText("ScaY", data, data_size, ImGuiInputTextFlags_EnterReturnsTrue | ImGuiInputTextFlags_CharsDecimal | ImGuiInputTextFlags_ReadOnly))
 			{
 
 			}
-			strcpy(data, itoa(geomdata->scale.z, buffer, 25));
-			if (ImGui::InputText("ScaZ", data, 50, ImGuiInputTextFlags_EnterReturnsTrue | ImGuiInputTextFlags_CharsDecimal | ImGuiInputTextFlags_ReadOnly))
+			sprintf_s(data, data_size, "%f", geomdata->scale.z);
+			if (ImGui::InputText("ScaZ", data, data_size, ImGuiInputTextFlags_EnterReturnsTrue | ImGuiInputTextFlags_CharsDecimal | ImGuiInputTextFlags_ReadOnly))
 			{
 
 			}
