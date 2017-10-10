@@ -571,14 +571,18 @@ bool ModuleRenderer3D::Draw(const GeometryData* meshData) const
 			glColor3f(1.0f, 1.0f, 1.0f);
 		}
 
-	glEnable(GL_TEXTURE_2D);
-	if(meshData->texture_name != "")
-		glBindTexture(GL_TEXTURE_2D, meshData->id_texture);
-	else
+	//glEnable(GL_TEXTURE_2D);
+	if (glIsEnabled(GL_TEXTURE_2D))
 	{
-		glBindTexture(GL_TEXTURE_2D, id_checkImage);
-		//glBindTexture(GL_TEXTURE_2D, Lenna_tex);
+		if (meshData->texture_name != "")
+			glBindTexture(GL_TEXTURE_2D, meshData->id_texture);
+		else
+		{
+			glBindTexture(GL_TEXTURE_2D, id_checkImage);
+			//glBindTexture(GL_TEXTURE_2D, Lenna_tex);
+		}
 	}
+	
 	glEnableClientState(GL_VERTEX_ARRAY);
 	glBindBuffer(GL_ARRAY_BUFFER, meshData->id_vertices);
 	glVertexPointer(3, GL_FLOAT, 0, NULL);
@@ -609,7 +613,7 @@ bool ModuleRenderer3D::Draw(const GeometryData* meshData) const
 	glDisableClientState(GL_NORMAL_ARRAY);
 	glDisableClientState(GL_COLOR_ARRAY);
 	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
-	glDisable(GL_TEXTURE_2D);
+	//glDisable(GL_TEXTURE_2D);
 
 	if (GL_Wireframe | GL_Point)
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
@@ -657,7 +661,7 @@ bool ModuleRenderer3D::LoadConf(JSON_Object* conf)
 	LightModelAmbient[2] = App->parsonjson->GetFloat(conf, "Blue", 0.0f);
 	LightModelAmbient[3] = App->parsonjson->GetFloat(conf, "Alpha", 1.0f);
 	GL_ColorMaterial = App->parsonjson->GetBool(conf, "GL_ColorMaterial", true);
-	GL_Texture2D = App->parsonjson->GetBool(conf, "GL_Texture2D", false);
+	GL_Texture2D = App->parsonjson->GetBool(conf, "GL_Texture2D", true);
 	GL_Fog = App->parsonjson->GetBool(conf, "GL_Fog", false);
 	GL_Diffuse = App->parsonjson->GetBool(conf, "GL_Diffuse", false);
 	GL_Specular = App->parsonjson->GetBool(conf, "GL_Specular", false);
