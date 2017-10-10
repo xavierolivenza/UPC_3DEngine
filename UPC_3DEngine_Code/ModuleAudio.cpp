@@ -176,7 +176,7 @@ bool ModuleAudio::PlayFx(unsigned int id, int repeat)
 
 void ModuleAudio::VolumeMusic(int volume)
 {
-	if (music != NULL)
+	if ((music != NULL) && (volume >= 0) && (volume <= 100))
 	{
 		LOGP("volume was    : %d\n", Mix_VolumeMusic(MIX_MAX_VOLUME / 2));
 		Mix_VolumeMusic(volume);
