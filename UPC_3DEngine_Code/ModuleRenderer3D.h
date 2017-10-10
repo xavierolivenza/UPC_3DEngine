@@ -42,7 +42,7 @@ public:
 		return GL_Point;
 	}
 
-public:
+private:
 
 	Light lights[MAX_LIGHTS];
 	SDL_GLContext context;
@@ -60,8 +60,8 @@ public:
 	bool GL_Wireframe = false;
 	bool GL_Point = false;
 	bool DebugVNormals = false;
+	uint NormalLength = 1;
 
-private:
 	uint Lenna_tex = 0;
 	uint id_checkImage = 0;
 	unsigned char checkImage[CHECKERS_HEIGHT][CHECKERS_WIDTH][4];

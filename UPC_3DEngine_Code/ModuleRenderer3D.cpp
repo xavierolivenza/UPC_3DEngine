@@ -564,7 +564,7 @@ bool ModuleRenderer3D::Draw(const GeometryData* meshData) const
 
 			glBegin(GL_LINES);
 			glVertex3f(meshData->vertices[i], meshData->vertices[i + 1], meshData->vertices[i + 2]);
-			glVertex3f(meshData->vertices[i] + meshData->normals[i] * 10, meshData->vertices[i + 1] + meshData->normals[i + 1] * 10, meshData->vertices[i + 2] + meshData->normals[i + 2] * 10);
+			glVertex3f(meshData->vertices[i] + meshData->normals[i] * (float)NormalLength, meshData->vertices[i + 1] + meshData->normals[i + 1] * (float)NormalLength, meshData->vertices[i + 2] + meshData->normals[i + 2] * (float)NormalLength);
 			glEnd();
 
 			glLineWidth(1.0f);
@@ -648,6 +648,7 @@ bool ModuleRenderer3D::SaveConf(JSON_Object* conf) const
 	App->parsonjson->SetBool(conf, "GL_Wireframe", GL_Wireframe);
 	App->parsonjson->SetBool(conf, "GL_Point", GL_Point);
 	App->parsonjson->SetBool(conf, "DebugVNormals", DebugVNormals);
+	App->parsonjson->SetUInt(conf, "NormalLength", NormalLength);
 	return true;
 }
 
@@ -668,6 +669,7 @@ bool ModuleRenderer3D::LoadConf(JSON_Object* conf)
 	GL_Wireframe = App->parsonjson->GetBool(conf, "GL_Wireframe", false);
 	GL_Point = App->parsonjson->GetBool(conf, "GL_Point", false);
 	DebugVNormals = App->parsonjson->GetBool(conf, "DebugVNormals", false);
+	NormalLength = App->parsonjson->GetUInt(conf, "NormalLength", 1);
 	return true;
 }
 
@@ -731,4 +733,9 @@ void ModuleRenderer3D::ImGuiModuleVariables()
 	ImGui::Checkbox("GL_Wireframe", &GL_Wireframe);
 	ImGui::Checkbox("GL_Point", &GL_Point);
 	ImGui::Checkbox("DebugVNormals", &DebugVNormals);
+	static char str0[10] = "";
+	static char str1[10] = "";
+	strcpy(str0, itoa(NormalLength, str1, 10));
+	if (ImGui::InputText("Normal Length", str0, 10, ImGuiInputTextFlags_EnterReturnsTrue | ImGuiInputTextFlags_CharsDecimal))
+		NormalLength = atoi(str0);
 }
