@@ -250,7 +250,20 @@ bool ModuleLoadMesh::Load(std::string* file, std::vector<GeometryData>* meshData
 				aiString path;
 				scene->mMaterials[new_mesh->mMaterialIndex]->GetTexture(aiTextureType_DIFFUSE, 0, &path);
 				geomData.texture_name = AssetsPath + path.C_Str();
-				int id_texture = LoadImageFromFile(geomData.texture_name.c_str());
+				//Check if this texture is already loaded
+				int id_texture = 0;
+				bool tex_alraedyLoaded = false;
+				for (std::vector<GeometryData>::iterator item = this->geomData.begin(); item != this->geomData.cend(); ++item)
+					if (item._Ptr->texture_name == geomData.texture_name)
+					{
+						//if the texture is already loaded just assign the same ID
+						id_texture = item._Ptr->id_texture;
+						tex_alraedyLoaded = true;
+						break;
+					}
+				//If the texture is new, load it
+				if(!tex_alraedyLoaded)
+					id_texture = LoadImageFromFile(geomData.texture_name.c_str());
 				if (id_texture < 0)
 				{
 					LOGP("Error loading texture with path: %s", geomData.texture_name.c_str());
