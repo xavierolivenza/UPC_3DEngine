@@ -18,6 +18,7 @@ public:
 
 	// Play a music file
 	bool PlayMusic(const char* path, float fade_time = DEFAULT_MUSIC_FADE_TIME);
+	void VolumeMusic(int volume);
 
 	// Load a WAV in memory
 	unsigned int LoadFx(const char* path);
@@ -25,10 +26,17 @@ public:
 	// Play a previously loaded WAV
 	bool PlayFx(unsigned int fx, int repeat = 0);
 
+	bool SaveConf(JSON_Object* conf) const;
+	bool LoadConf(JSON_Object* conf);
+
+	void ImGuiModuleVariables();
+
 private:
 
 	Mix_Music*			music;
 	std::list<Mix_Chunk*>	fx;
+
+	int volume = 0;
 };
 
 #endif // __ModuleAudio_H__

@@ -173,3 +173,30 @@ bool ModuleAudio::PlayFx(unsigned int id, int repeat)
 
 	return ret;
 }
+
+void ModuleAudio::VolumeMusic(int volume)
+{
+	if (music != NULL)
+	{
+		LOGP("volume was    : %d\n", Mix_VolumeMusic(MIX_MAX_VOLUME / 2));
+		Mix_VolumeMusic(volume);
+		LOGP("volume is now : %d\n", Mix_VolumeMusic(-1));
+	}
+}
+
+bool ModuleAudio::SaveConf(JSON_Object * conf) const
+{
+	App->parsonjson->SetInt(conf, "Volume", volume);
+	return true;
+}
+
+bool ModuleAudio::LoadConf(JSON_Object * conf)
+{
+	volume = App->parsonjson->GetInt(conf, "Volume", 100);
+	return true;
+}
+
+void ModuleAudio::ImGuiModuleVariables()
+{
+	ImGui::SliderInt("Volume", &volume, 0, 100);
+}
