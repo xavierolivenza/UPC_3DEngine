@@ -213,27 +213,23 @@ void ModuleEngineUI::ImGuiDrawMenuBar()
 	}
 	if (ImGui::BeginMenu("View"))
 	{
-		ImGui::MenuItem("Profiler", "1", &showProfilerWindow);
-		ImGui::MenuItem("Module Variables", "2", &showModuleVariablesWindow);
-		ImGui::MenuItem("Configuration", "3", &showConfigurationWindow);
-		ImGui::MenuItem("Console", "4", &showConsoleWindow);
-		ImGui::MenuItem("Properties", "5", &showPropertiesWindow);
+		ImGui::MenuItem("Profiler", "LALT + 1", &showProfilerWindow);
+		ImGui::MenuItem("Module Variables", "LALT + 2", &showModuleVariablesWindow);
+		ImGui::MenuItem("Configuration", "LALT + 3", &showConfigurationWindow);
+		ImGui::MenuItem("Console", "LALT + 4", &showConsoleWindow);
+		ImGui::MenuItem("Properties", "LALT + 5", &showPropertiesWindow);
 		ImGui::EndMenu();
 	}
 	if (ImGui::BeginMenu("Help"))
 	{
 		if (ImGui::MenuItem("Show Gui Demo Window"))
 			showTestWindow = !showTestWindow;
-		if (ImGui::MenuItem("Documentation"))
-		{
-			//App->OpenLink();
-		}
+		if (ImGui::MenuItem("Documentation/README"))
+			App->OpenLink("https://github.com/xavierolivenza/UPC_3DEngine/blob/master/README.md");
 		if (ImGui::MenuItem("Download latest"))
 			App->OpenLink("https://github.com/xavierolivenza/UPC_3DEngine/releases");
 		if (ImGui::MenuItem("Report Bug"))
-		{
-			//App->OpenLink();
-		}
+			App->OpenLink("https://github.com/xavierolivenza/UPC_3DEngine/issues");
 		if (ImGui::BeginMenu("About"))
 		{
 			if (ImGui::BeginMenu("Name"))
