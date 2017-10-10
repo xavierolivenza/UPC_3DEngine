@@ -482,6 +482,8 @@ void ModuleEngineUI::ImGuiPropertiesWindow()
 {
 	ImGui::Begin("Properties", false, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize);
 	//ImGui::Begin("Properties", false);
+	ImGui::Text("If you can not open a header, it means\nthat you have not loaded any geometry.");
+	ImGui::Text("If one of the IDs/Paths below is zero/null,\nit means that it does not have\nthat characteristic.");
 	if (ImGui::CollapsingHeader("Transformation"))
 	{
 		const std::vector<GeometryData>* vector = App->loadmesh->GetGeometryStructVector();
@@ -556,11 +558,45 @@ void ModuleEngineUI::ImGuiPropertiesWindow()
 	}
 	if (ImGui::CollapsingHeader("Geometry"))
 	{
+		const std::vector<GeometryData>* vector = App->loadmesh->GetGeometryStructVector();
+		if (vector->size() > 0)
+		{
+			const GeometryData* geomdata = &vector->back();
+			uint title_size = 25;
+			char title[25];
 
+			sprintf_s(title, title_size, "Num Vertices: %i", geomdata->num_vertices);
+			ImGui::Text(title);
+			sprintf_s(title, title_size, "Num Indices: %i", geomdata->num_indices);
+			ImGui::Text(title);
+			sprintf_s(title, title_size, "ID Vertices: %i", geomdata->id_vertices);
+			ImGui::Text(title);
+			sprintf_s(title, title_size, "ID Indices: %i", geomdata->id_indices);
+			ImGui::Text(title);
+			sprintf_s(title, title_size, "ID Normals: %i", geomdata->id_normals);
+			ImGui::Text(title);
+			sprintf_s(title, title_size, "ID Colors: %i", geomdata->id_colors);
+			ImGui::Text(title);
+			sprintf_s(title, title_size, "ID Texture Coords: %i", geomdata->id_texture_coords);
+			ImGui::Text(title);
+		}
 	}
 	if (ImGui::CollapsingHeader("Texture"))
 	{
-
+		const std::vector<GeometryData>* vector = App->loadmesh->GetGeometryStructVector();
+		if (vector->size() > 0)
+		{
+			const GeometryData* geomdata = &vector->back();
+			uint title_size = 25;
+			char title[25];
+			std::string path;
+			ImGui::Separator();
+			path = "Texture Path: ";
+			path += geomdata->texture_name;
+			ImGui::Text(path.c_str());
+			sprintf_s(title, title_size, "Texture ID: %i", geomdata->id_texture);
+			ImGui::Text(title);
+		}
 	}
 	ImGui::End();
 }
