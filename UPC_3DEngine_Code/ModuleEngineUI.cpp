@@ -566,7 +566,7 @@ void ModuleEngineUI::ImGuiPropertiesWindow()
 			uint title_size = 25;
 			char title[25];
 
-			sprintf_s(title, title_size, "Num Tris: %i", geomdata->num_vertices / 3);
+			sprintf_s(title, title_size, "Num Faces: %i", geomdata->num_faces);
 			ImGui::Text(title);
 			sprintf_s(title, title_size, "Num Vertices: %i", geomdata->num_vertices);
 			ImGui::Text(title);

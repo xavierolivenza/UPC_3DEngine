@@ -209,6 +209,7 @@ bool ModuleLoadMesh::Load(std::string* file, std::vector<GeometryData>* meshData
 			// copy faces
 			if (new_mesh->HasFaces())
 			{
+				geomData.num_faces = new_mesh->mNumFaces;
 				geomData.num_indices = new_mesh->mNumFaces * 3;
 				geomData.indices = new uint[geomData.num_indices]; // assume each face is a triangle
 				for (uint i = 0; i < new_mesh->mNumFaces; ++i)
