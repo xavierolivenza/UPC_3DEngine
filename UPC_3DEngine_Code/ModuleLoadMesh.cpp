@@ -81,10 +81,41 @@ update_status ModuleLoadMesh::PreUpdate(float dt)
 
 update_status ModuleLoadMesh::Update(float dt)
 {
-	bool loaded = Load(App->input->GetDroppedFile(), &geomData);
-	//If you load an fbx with more than one mesh, this center the last one
-	if (loaded)
-		App->camera->CenterCameraToGeometry(&geomData.back().BoundBox);
+	std::string* DroppedFile = App->input->GetDroppedFile();
+	if (DroppedFile != nullptr)
+	{
+		bool loaded = Load(DroppedFile, &geomData);
+		//If you load an fbx with more than one mesh, this center the last one
+		if (loaded)
+			App->camera->CenterCameraToGeometry(&geomData.back().BoundBox);
+		else
+		{
+			LOGP("The file you dropped is being processed as a texture...");
+			//Load texture?
+			if (geomData.size() > 0)
+			{
+				int tex_id = LoadImageFromFile(DroppedFile->c_str());
+				if (tex_id < 0)
+				{
+					LOGP("Error loading texture with path: %s", DroppedFile->c_str());
+					LOGP("The file you dropped is not a texture / supported extension.");
+				}
+				else
+				{
+					LOGP("Texture loaded with path: %s", DroppedFile->c_str());
+					for (std::vector<GeometryData>::iterator item = geomData.begin(); item != geomData.cend(); ++item)
+					{
+						glDeleteTextures(1, &item._Ptr->id_texture);
+						item._Ptr->id_texture = tex_id;
+						item._Ptr->texture_name = DroppedFile->c_str();
+					}
+					LOGP("Texture aplied to geometry.");
+				}
+			}
+			else
+				LOGP("The dropped file has aborted loading process because there is no geometry to aply texture, in case that the dropped file was a texture.");
+		}
+	}
 	if (geomLoaded)
 		App->renderer3D->Draw(&geomData);
 	return UPDATE_CONTINUE;
@@ -154,14 +185,14 @@ bool ModuleLoadMesh::Load(std::string* file, std::vector<GeometryData>* meshData
 	if (file == nullptr)
 		return false;
 
-	if (geomLoaded)
-		CleanGeometryDataVector(meshDataOutput);
-
 	//aiIsExtensionSupported (const char *szExtension)
 
 	const aiScene* scene = aiImportFile(file->c_str(), aiProcessPreset_TargetRealtime_MaxQuality);
 	if (scene != nullptr && scene->HasMeshes())
 	{
+		if (geomLoaded)
+			CleanGeometryDataVector(meshDataOutput);
+
 		// Use scene->mNumMeshes to iterate on scene->mMeshes array
 		for (uint i = 0; i < scene->mNumMeshes; ++i)
 		{
@@ -237,7 +268,7 @@ bool ModuleLoadMesh::Load(std::string* file, std::vector<GeometryData>* meshData
 
 			//For first test, load pos/rot/scale
 			float3 pos = { 0.0f,0.0f,0.0f };
-			float3 scale = { 0.0f,0.0f,0.0f };
+			float3 scale = { 1.0f,1.0f,1.0f };
 			Quat rot = { 0.0f,0.0f,0.0f,0.0f };
 			if ((scene->mRootNode != nullptr) && (scene->mRootNode->mNumChildren > 0))
 			{

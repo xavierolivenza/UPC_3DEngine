@@ -399,7 +399,7 @@ void ModuleEngineUI::ImGuiConfigurationWindow()
 		sprintf_s(title, title_size, "GL_Renderer: %s", GPUData);
 		ImGui::Text(title);
 		GPUData = glGetString(GL_VERSION);
-		sprintf_s(title, title_size, "GL_Versions: %s", GPUData);
+		sprintf_s(title, title_size, "GL_Version: %s", GPUData);
 		ImGui::Text(title);
 
 		/*
@@ -566,6 +566,8 @@ void ModuleEngineUI::ImGuiPropertiesWindow()
 			uint title_size = 25;
 			char title[25];
 
+			sprintf_s(title, title_size, "Num Tris: %i", geomdata->num_vertices / 3);
+			ImGui::Text(title);
 			sprintf_s(title, title_size, "Num Vertices: %i", geomdata->num_vertices);
 			ImGui::Text(title);
 			sprintf_s(title, title_size, "Num Indices: %i", geomdata->num_indices);
