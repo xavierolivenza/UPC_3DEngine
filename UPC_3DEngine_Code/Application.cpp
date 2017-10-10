@@ -15,6 +15,7 @@ Application::Application()
 	player = new ModulePlayer(this);
 	engineUI = new ModuleEngineUI(this);
 	loadmesh = new ModuleLoadMesh(this);
+	scene = new ModuleScene(this);
 
 	// The order of calls is very important!
 	// Modules will Init() Start() and Update in this order
@@ -29,6 +30,7 @@ Application::Application()
 	AddModule(loadmesh);
 
 	// Scenes
+	AddModule(scene);
 	AddModule(scene_intro);
 	AddModule(player);
 	

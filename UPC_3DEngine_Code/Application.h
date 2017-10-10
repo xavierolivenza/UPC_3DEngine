@@ -19,6 +19,7 @@
 #include "ModuleEngineUI.h"
 #include "ModuleParson.h"
 #include "ModuleLoadMesh.h"
+#include "ModuleScene.h"
 #include "p2Log.h"
 
 #include "Glew\include\glew.h"
@@ -46,10 +47,11 @@ public:
 	ModulePhysics3D* physics;
 	ModulePlayer* player;
 	ModuleEngineUI* engineUI;
+	ModuleLoadMesh* loadmesh;
+	ModuleScene* scene;
 
 	ParsonJSON* parsonjson;
-	ModuleLoadMesh* loadmesh;
-
+	
 private:
 
 	Timer	ms_timer;
