@@ -22,6 +22,7 @@ public:
 	void OnCollision(PhysBody3D* body1, PhysBody3D* body2);
 
 private:
+	/*
 	Sphere* shere1;
 	Sphere* shere2;
 	Sphere* shere3;
@@ -34,4 +35,5 @@ private:
 	P2Cube cube1;
 	//P2Sphere sphere1;
 	P2Ray debugray;
+	*/
 };

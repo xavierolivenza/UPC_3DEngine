@@ -488,8 +488,8 @@ void ModuleEngineUI::ImGuiPropertiesWindow()
 			if (ImGui::CollapsingHeader(data))
 			{
 				//This all are input text, ready to be edited in future updates, by now, read only.
-				sprintf_s(data, data_size, "Position##%s", item._Ptr->name.c_str());
-				ImGui::Text(data);
+				//sprintf_s(data, data_size, "Position##%s", item._Ptr->name.c_str());
+				ImGui::Text("Position");
 				sprintf_s(data, data_size, "%f", item._Ptr->pos.x);
 				if (ImGui::InputText("PosX", data, data_size, ImGuiInputTextFlags_EnterReturnsTrue | ImGuiInputTextFlags_CharsDecimal | ImGuiInputTextFlags_ReadOnly))
 				{
@@ -505,8 +505,8 @@ void ModuleEngineUI::ImGuiPropertiesWindow()
 				{
 
 				}
-				sprintf_s(data, data_size, "Rotation##%s", item._Ptr->name.c_str());
-				ImGui::Text(data);
+				//sprintf_s(data, data_size, "Rotation##%s", item._Ptr->name.c_str());
+				ImGui::Text("Rotation");
 				float3 rot = item._Ptr->rot.ToEulerXYZ();
 				rot *= RADTODEG;
 				sprintf_s(data, data_size, "%f", rot.x);
@@ -524,8 +524,8 @@ void ModuleEngineUI::ImGuiPropertiesWindow()
 				{
 
 				}
-				sprintf_s(data, data_size, "Scale##%s", item._Ptr->name.c_str());
-				ImGui::Text(data);
+				//sprintf_s(data, data_size, "Scale##%s", item._Ptr->name.c_str());
+				ImGui::Text("Scale");
 				sprintf_s(data, data_size, "%f", item._Ptr->scale.x);
 				if (ImGui::InputText("ScaX", data, data_size, ImGuiInputTextFlags_EnterReturnsTrue | ImGuiInputTextFlags_CharsDecimal | ImGuiInputTextFlags_ReadOnly))
 				{

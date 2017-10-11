@@ -211,9 +211,12 @@ bool ModuleLoadMesh::Load(std::string* file, std::vector<GeometryData>* meshData
 
 			//This is necessary to load the transform of this node, we do here now to get the name of the node
 			aiNode* MeshNode = SearchForMesh(scene->mRootNode, i);
-			aiString name = MeshNode->mName;
-			geomData.name = name.C_Str();
-
+			if (MeshNode != nullptr)
+			{
+				aiString name = MeshNode->mName;
+				geomData.name = name.C_Str();
+			}
+			
 			// copy vertices
 			geomData.num_vertices = new_mesh->mNumVertices;
 			geomData.vertices = new float[geomData.num_vertices * 3];
@@ -305,7 +308,7 @@ bool ModuleLoadMesh::Load(std::string* file, std::vector<GeometryData>* meshData
 			{
 				//Sum up all transformations from root node to the node where the mesh is stored
 				aiMatrix4x4 transform;
-				if(MeshNode!= nullptr)
+				if(MeshNode != nullptr)
 				{
 					for (aiNode* iterator = MeshNode; iterator->mParent != nullptr; iterator = iterator->mParent)
 						transform *= iterator->mTransformation;

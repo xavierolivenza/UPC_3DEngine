@@ -62,7 +62,7 @@ private:
 	bool DebugVNormals = false;
 	float NormalLength = 1.0f;
 
-	uint Lenna_tex = 0;
+	//uint Lenna_tex = 0;
 	uint id_checkImage = 0;
 	unsigned char checkImage[CHECKERS_HEIGHT][CHECKERS_WIDTH][4];
 };

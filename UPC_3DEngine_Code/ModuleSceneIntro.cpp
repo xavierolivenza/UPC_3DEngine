@@ -25,9 +25,9 @@ bool ModuleSceneIntro::Start()
 	LOGP("Loading Intro assets");
 	bool ret = true;
 
-	LOGP("/-----------------------------------------/");
+	//LOGP("/-----------------------------------------/");
 
-	/**/
+	/*
 	vec shere1_centre = { 0,0,0 };
 	shere1 = new Sphere(shere1_centre, 2.0f);
 	LOGP("Sphere 1 centre (0,0,0), radius 2.0f");
@@ -39,9 +39,9 @@ bool ModuleSceneIntro::Start()
 		LOGP("Spheres 1-2 intersect");
 	else
 		LOGP("Spheres 1-2 don't intersect");
-	/**/
+	*/
 
-	/**/
+	/*
 	vec shere3_centre = { 0,0,0 };
 	shere3 = new Sphere(shere3_centre, 2.0f);
 	LOGP("Sphere 3 centre (0,0,0), radius 2.0f");
@@ -53,11 +53,11 @@ bool ModuleSceneIntro::Start()
 		LOGP("Spheres 3-4 intersect");
 	else
 		LOGP("Spheres 3-4 don't intersect");
-	/**/
+	*/
 
-	LOGP("/-----------------------------------------/");
+	//LOGP("/-----------------------------------------/");
 
-	/**/
+	/*
 	vec capsule1_bot = { 0,0,0 };
 	vec capsule1_top = { 0,1,0 };
 	capsule1 = new Capsule(capsule1_bot, capsule1_top,2.0f);
@@ -71,9 +71,9 @@ bool ModuleSceneIntro::Start()
 		LOGP("Capsule 1-2 intersect");
 	else
 		LOGP("Capsule 1-2 don't intersect");
-	/**/
+	*/
 
-	/**/
+	/*
 	vec capsule3_bot = { 0,0,0 };
 	vec capsule3_top = { 0,1,0 };
 	capsule3 = new Capsule(capsule3_bot, capsule3_top, 2.0f);
@@ -87,31 +87,31 @@ bool ModuleSceneIntro::Start()
 		LOGP("Capsule 3-4 intersect");
 	else
 		LOGP("Capsule 3-4 don't intersect");
-	/**/
+	*/
 
-	LOGP("/-----------------------------------------/");
-	/**/
+	//LOGP("/-----------------------------------------/");
+	/*
 	for (int i = 0; i < 10; i++)
 	{
 		LCG rand_test;
 		LOGP("Random generator Flo: %f", rand_test.Float(0.0f, 1.0f));
 		LOGP("Random generator Int: %i", rand_test.Int(0, 100));
 	}
-	/**/
+	*/
 
-	LOGP("/-----------------------------------------/");
+	//LOGP("/-----------------------------------------/");
 	
-	App->camera->Move(vec3(1.0f, 0.0f, 0.0f));
+	//App->camera->Move(vec3(1.0f, 0.0f, 0.0f));
 	App->camera->LookAt(vec3(0, 0, 0));
 	
-	/**/
+	/*
 	cube1.size.x = 1;
 	cube1.size.y = 1;
 	cube1.size.z = 1;
 	//cube1.color = Chocolate;
 	cube1.SetPos(0, 0, 0);
 	cube1.GeneratePrimitiveWithNewData();
-	/**/
+	*/
 	/*
 	sphere1.radius = 1.0f;
 	sphere1.slices = 15;
@@ -140,8 +140,11 @@ update_status ModuleSceneIntro::Update(float dt)
 		LOGP("view %f", -App->camera->Z.y);
 		LOGP("view %f", -App->camera->Z.z);
 		*/
+
+		/*
 		debugray.SetOrigin(App->camera->Position.x, App->camera->Position.y, App->camera->Position.z);
 		debugray.SetDirection(-App->camera->Z.x, -App->camera->Z.y, -App->camera->Z.z);
+		*/
 
 		/*
 		//Some raycast math, shoot ray from click
@@ -180,7 +183,7 @@ update_status ModuleSceneIntro::Update(float dt)
 	}
 	//debugray.Render();
 
-	cube1.Render();
+	//cube1.Render();
 	//sphere1.Render();
 	return UPDATE_CONTINUE;
 }
@@ -194,6 +197,7 @@ update_status ModuleSceneIntro::PostUpdate(float dt)
 bool ModuleSceneIntro::CleanUp()
 {
 	LOGP("Unloading Intro scene");
+	/*
 	RELEASE(shere1);
 	RELEASE(shere2);
 	RELEASE(shere3);
@@ -202,7 +206,7 @@ bool ModuleSceneIntro::CleanUp()
 	RELEASE(capsule2);
 	RELEASE(capsule3);
 	RELEASE(capsule4);
-	
+	*/
 	return true;
 }
 
