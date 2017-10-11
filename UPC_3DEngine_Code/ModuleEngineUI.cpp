@@ -474,10 +474,9 @@ void ModuleEngineUI::ImGuiPropertiesWindow()
 {
 	ImGui::Begin("Properties", false, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize);
 	//ImGui::Begin("Properties", false);
-	ImGui::Text("If you can not open a header, it means\nthat you have not loaded any geometry.");
-	ImGui::Text("If one of the IDs/Paths below is zero/null,\nit means that it does not have\nthat characteristic.");
 	ImGui::Text("If ther is geometry loaded, here will appear\nPosition/Rotation/Scale of the loaded meshes.");
-
+	ImGui::Text("If one of the IDs/Paths below is zero/null,\nit means that it does not have\nthat characteristic.");
+	
 	char data[100] = "";
 	uint data_size = sizeof data;
 
