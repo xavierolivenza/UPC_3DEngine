@@ -292,19 +292,16 @@ void ModuleEngineUI::ImGuiConfigurationWindow()
 			App->window->SetTitle(appnamestr);
 
 		//Max FPS Slider
-		static char str0[50] = "";
-		static char str1[10] = "";
-		strcpy(str0, itoa(App->GetFramerateCapModif(), str1, 10));
-		if (ImGui::InputText("MaxFPSValue", str0, 50, ImGuiInputTextFlags_EnterReturnsTrue | ImGuiInputTextFlags_CharsDecimal))
-		{
-			App->GetFramerateCapModif() = atoi(str0);
-		}
+		char buffer[10];
+		snprintf(buffer, sizeof buffer, "%if", App->GetFramerateCapModif());
+		if (ImGui::InputText("MaxFPSValue", buffer, sizeof buffer, ImGuiInputTextFlags_EnterReturnsTrue | ImGuiInputTextFlags_CharsDecimal))
+			App->GetFramerateCapModif() = atoi(buffer);
 
 		ImGui::Separator();
 
 		//Some useful variables
-		uint title_size = 50;
 		char title[50];
+		uint title_size = sizeof title;
 
 		//Freeze plots
 		ImGui::Checkbox("FrezePlotData", &freezeplots);
@@ -486,8 +483,8 @@ void ModuleEngineUI::ImGuiPropertiesWindow()
 		{
 			const GeometryData* geomdata = &vector->back();
 
-			static char data[25] = "";
-			uint data_size = 25;
+			char data[25] = "";
+			uint data_size = sizeof data;
 
 			ImGui::Text("Position");
 			sprintf_s(data, data_size, "%f", geomdata->pos.x);
@@ -541,15 +538,6 @@ void ModuleEngineUI::ImGuiPropertiesWindow()
 			{
 
 			}
-
-			/*
-			static char str0[50] = "";
-			static char str1[25] = "";
-
-			strcpy(str0, itoa(w_width, str1, 10));
-			if (ImGui::InputText("w_width", str0, 50, ImGuiInputTextFlags_EnterReturnsTrue | ImGuiInputTextFlags_CharsDecimal))
-			w_width = atoi(str0);
-			*/
 		}
 	}
 	if (ImGui::CollapsingHeader("Geometry"))
@@ -558,8 +546,8 @@ void ModuleEngineUI::ImGuiPropertiesWindow()
 		if (vector->size() > 0)
 		{
 			const GeometryData* geomdata = &vector->back();
-			uint title_size = 25;
 			char title[25];
+			uint title_size = sizeof title;
 
 			sprintf_s(title, title_size, "Num Faces: %i", geomdata->num_faces);
 			ImGui::Text(title);

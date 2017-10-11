@@ -145,19 +145,19 @@ bool ModuleInput::CleanUp()
 void ModuleInput::ImGuiModuleVariables()
 {
 	char buffer[10];
-	snprintf(buffer, sizeof buffer, "%.2f", mouse_x);
+	snprintf(buffer, sizeof buffer, "%if", mouse_x);
 	if (ImGui::InputText("mouse_x", buffer, sizeof buffer, ImGuiInputTextFlags_EnterReturnsTrue | ImGuiInputTextFlags_CharsDecimal))
 		mouse_x = atoi(buffer);
-	snprintf(buffer, sizeof buffer, "%.2f", mouse_y);
+	snprintf(buffer, sizeof buffer, "%if", mouse_y);
 	if (ImGui::InputText("mouse_y", buffer, sizeof buffer, ImGuiInputTextFlags_EnterReturnsTrue | ImGuiInputTextFlags_CharsDecimal))
 		mouse_y = atoi(buffer);
-	snprintf(buffer, sizeof buffer, "%.2f", mouse_z);
+	snprintf(buffer, sizeof buffer, "%if", mouse_z);
 	if (ImGui::InputText("mouse_z", buffer, sizeof buffer, ImGuiInputTextFlags_EnterReturnsTrue | ImGuiInputTextFlags_CharsDecimal))
 		mouse_z = atoi(buffer);
-	snprintf(buffer, sizeof buffer, "%.2f", mouse_x_motion);
+	snprintf(buffer, sizeof buffer, "%if", mouse_x_motion);
 	if (ImGui::InputText("mouse_x_motion", buffer, sizeof buffer, ImGuiInputTextFlags_EnterReturnsTrue | ImGuiInputTextFlags_CharsDecimal))
 		mouse_x_motion = atoi(buffer);
-	snprintf(buffer, sizeof buffer, "%.2f", mouse_y_motion);
+	snprintf(buffer, sizeof buffer, "%if", mouse_y_motion);
 	if (ImGui::InputText("mouse_y_motion", buffer, sizeof buffer, ImGuiInputTextFlags_EnterReturnsTrue | ImGuiInputTextFlags_CharsDecimal))
 		mouse_y_motion = atoi(buffer);
 }
