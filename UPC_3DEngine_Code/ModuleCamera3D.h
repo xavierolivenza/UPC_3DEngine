@@ -28,6 +28,7 @@ public:
 private:
 
 	void CalculateViewMatrix();
+	void NormalizeVec(float* vector);
 
 public:
 	

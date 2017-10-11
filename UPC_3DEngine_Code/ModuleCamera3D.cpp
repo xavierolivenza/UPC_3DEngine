@@ -259,6 +259,7 @@ void ModuleCamera3D::ImGuiModuleVariables()
 	snprintf(buffer, sizeof buffer, "%.3f", X.z);
 	if (ImGui::InputText("X_z", buffer, 10, ImGuiInputTextFlags_EnterReturnsTrue | ImGuiInputTextFlags_CharsDecimal))
 		X.z = atof(buffer);
+	NormalizeVec(&X);
 	snprintf(buffer, sizeof buffer, "%.3f", Y.x);
 	if (ImGui::InputText("Y_x", buffer, 10, ImGuiInputTextFlags_EnterReturnsTrue | ImGuiInputTextFlags_CharsDecimal))
 		Y.x = atof(buffer);
@@ -268,6 +269,7 @@ void ModuleCamera3D::ImGuiModuleVariables()
 	snprintf(buffer, sizeof buffer, "%.3f", Y.z);
 	if (ImGui::InputText("Y_z", buffer, 10, ImGuiInputTextFlags_EnterReturnsTrue | ImGuiInputTextFlags_CharsDecimal))
 		Y.z = atof(buffer);
+	NormalizeVec(&Y);
 	snprintf(buffer, sizeof buffer, "%.3f", Z.x);
 	if (ImGui::InputText("Z_x", buffer, 10, ImGuiInputTextFlags_EnterReturnsTrue | ImGuiInputTextFlags_CharsDecimal))
 		Z.x = atof(buffer);
@@ -277,6 +279,7 @@ void ModuleCamera3D::ImGuiModuleVariables()
 	snprintf(buffer, sizeof buffer, "%.3f", Z.z);
 	if (ImGui::InputText("Z_z", buffer, 10, ImGuiInputTextFlags_EnterReturnsTrue | ImGuiInputTextFlags_CharsDecimal))
 		Z.z = atof(buffer);
+	NormalizeVec(&Z);
 	snprintf(buffer, sizeof buffer, "%.3f", Position.x);
 	if (ImGui::InputText("Position_x", buffer, 10, ImGuiInputTextFlags_EnterReturnsTrue | ImGuiInputTextFlags_CharsDecimal))
 		Position.x = atof(buffer);
@@ -295,4 +298,13 @@ void ModuleCamera3D::ImGuiModuleVariables()
 	snprintf(buffer, sizeof buffer, "%.3f", Reference.z);
 	if (ImGui::InputText("Reference_z", buffer, 10, ImGuiInputTextFlags_EnterReturnsTrue | ImGuiInputTextFlags_CharsDecimal))
 		Reference.z = atof(buffer);
+}
+
+void ModuleCamera3D::NormalizeVec(float* vector)
+{
+	vec temp = { vector[0] ,vector[1] ,vector[2] };
+	temp.Normalize();
+	vector[0] = temp.x;
+	vector[1] = temp.y;
+	vector[2] = temp.z;
 }
