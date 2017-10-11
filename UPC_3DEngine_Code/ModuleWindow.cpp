@@ -149,13 +149,13 @@ void ModuleWindow::SetFullscreen(bool set)
 void ModuleWindow::ImGuiModuleVariables()
 {
 	char buffer[10];
-	snprintf(buffer, sizeof buffer, "%if", w_width);
+	snprintf(buffer, sizeof buffer, "%i", w_width);
 	if (ImGui::InputText("w_width", buffer, sizeof buffer, ImGuiInputTextFlags_EnterReturnsTrue | ImGuiInputTextFlags_CharsDecimal))
 		w_width = atoi(buffer);
-	snprintf(buffer, sizeof buffer, "%if", w_height);
+	snprintf(buffer, sizeof buffer, "%i", w_height);
 	if (ImGui::InputText("w_height", buffer, sizeof buffer, ImGuiInputTextFlags_EnterReturnsTrue | ImGuiInputTextFlags_CharsDecimal))
 		w_height = atoi(buffer);
-	snprintf(buffer, sizeof buffer, "%if", App->GetFramerateCapModif());
+	snprintf(buffer, sizeof buffer, "%i", App->GetFramerateCapModif());
 	if (ImGui::InputText("MaxFPSValue", buffer, sizeof buffer, ImGuiInputTextFlags_EnterReturnsTrue | ImGuiInputTextFlags_CharsDecimal))
 		App->GetFramerateCapModif() = atoi(buffer);
 }
