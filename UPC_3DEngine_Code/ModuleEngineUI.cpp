@@ -476,118 +476,111 @@ void ModuleEngineUI::ImGuiPropertiesWindow()
 	//ImGui::Begin("Properties", false);
 	ImGui::Text("If you can not open a header, it means\nthat you have not loaded any geometry.");
 	ImGui::Text("If one of the IDs/Paths below is zero/null,\nit means that it does not have\nthat characteristic.");
-	if (ImGui::CollapsingHeader("Transformation"))
+	ImGui::Text("If ther is geometry loaded, here will appear\nPosition/Rotation/Scale of the loaded meshes.");
+
+	char data[100] = "";
+	uint data_size = sizeof data;
+
+	for (std::vector<GeometryData>::const_iterator item = App->loadmesh->GetGeometryStructVector()->cbegin(); item != App->loadmesh->GetGeometryStructVector()->cend(); ++item)
 	{
-		const std::vector<GeometryData>* vector = App->loadmesh->GetGeometryStructVector();
-		if (vector->size() > 0)
+		if (ImGui::CollapsingHeader(item._Ptr->name.c_str()))
 		{
-			const GeometryData* geomdata = &vector->back();
-
-			char data[25] = "";
-			uint data_size = sizeof data;
-
-			ImGui::Text("Position");
-			sprintf_s(data, data_size, "%f", geomdata->pos.x);
-			if (ImGui::InputText("PosX", data, data_size, ImGuiInputTextFlags_EnterReturnsTrue | ImGuiInputTextFlags_CharsDecimal | ImGuiInputTextFlags_ReadOnly))
+			sprintf_s(data, data_size, "Transformation##%s", item._Ptr->name.c_str());
+			if (ImGui::CollapsingHeader(data))
 			{
+				//This all are input text, ready to be edited in future updates, by now, read only.
+				sprintf_s(data, data_size, "Position##%s", item._Ptr->name.c_str());
+				ImGui::Text(data);
+				sprintf_s(data, data_size, "%f", item._Ptr->pos.x);
+				if (ImGui::InputText("PosX", data, data_size, ImGuiInputTextFlags_EnterReturnsTrue | ImGuiInputTextFlags_CharsDecimal | ImGuiInputTextFlags_ReadOnly))
+				{
 
+				}
+				sprintf_s(data, data_size, "%f", item._Ptr->pos.y);
+				if (ImGui::InputText("PosY", data, data_size, ImGuiInputTextFlags_EnterReturnsTrue | ImGuiInputTextFlags_CharsDecimal | ImGuiInputTextFlags_ReadOnly))
+				{
+
+				}
+				sprintf_s(data, data_size, "%f", item._Ptr->pos.z);
+				if (ImGui::InputText("PosZ", data, data_size, ImGuiInputTextFlags_EnterReturnsTrue | ImGuiInputTextFlags_CharsDecimal | ImGuiInputTextFlags_ReadOnly))
+				{
+
+				}
+				sprintf_s(data, data_size, "Rotation##%s", item._Ptr->name.c_str());
+				ImGui::Text(data);
+				float3 rot = item._Ptr->rot.ToEulerXYZ();
+				rot *= RADTODEG;
+				sprintf_s(data, data_size, "%f", rot.x);
+				if (ImGui::InputText("RotX", data, data_size, ImGuiInputTextFlags_EnterReturnsTrue | ImGuiInputTextFlags_CharsDecimal | ImGuiInputTextFlags_ReadOnly))
+				{
+
+				}
+				sprintf_s(data, data_size, "%f", rot.y);
+				if (ImGui::InputText("RotY", data, data_size, ImGuiInputTextFlags_EnterReturnsTrue | ImGuiInputTextFlags_CharsDecimal | ImGuiInputTextFlags_ReadOnly))
+				{
+
+				}
+				sprintf_s(data, data_size, "%f", rot.z);
+				if (ImGui::InputText("RotZ", data, data_size, ImGuiInputTextFlags_EnterReturnsTrue | ImGuiInputTextFlags_CharsDecimal | ImGuiInputTextFlags_ReadOnly))
+				{
+
+				}
+				sprintf_s(data, data_size, "Scale##%s", item._Ptr->name.c_str());
+				ImGui::Text(data);
+				sprintf_s(data, data_size, "%f", item._Ptr->scale.x);
+				if (ImGui::InputText("ScaX", data, data_size, ImGuiInputTextFlags_EnterReturnsTrue | ImGuiInputTextFlags_CharsDecimal | ImGuiInputTextFlags_ReadOnly))
+				{
+
+				}
+				sprintf_s(data, data_size, "%f", item._Ptr->scale.y);
+				if (ImGui::InputText("ScaY", data, data_size, ImGuiInputTextFlags_EnterReturnsTrue | ImGuiInputTextFlags_CharsDecimal | ImGuiInputTextFlags_ReadOnly))
+				{
+
+				}
+				sprintf_s(data, data_size, "%f", item._Ptr->scale.z);
+				if (ImGui::InputText("ScaZ", data, data_size, ImGuiInputTextFlags_EnterReturnsTrue | ImGuiInputTextFlags_CharsDecimal | ImGuiInputTextFlags_ReadOnly))
+				{
+
+				}
 			}
-			sprintf_s(data, data_size, "%f", geomdata->pos.y);
-			if (ImGui::InputText("PosY", data, data_size, ImGuiInputTextFlags_EnterReturnsTrue | ImGuiInputTextFlags_CharsDecimal | ImGuiInputTextFlags_ReadOnly))
+			sprintf_s(data, data_size, "Geometry##%s", item._Ptr->name.c_str());
+			if (ImGui::CollapsingHeader(data))
 			{
-
+				sprintf_s(data, data_size, "Num Faces: %i", item._Ptr->num_faces);
+				ImGui::Text(data);
+				sprintf_s(data, data_size, "Num Vertices: %i", item._Ptr->num_vertices);
+				ImGui::Text(data);
+				sprintf_s(data, data_size, "Num Indices: %i", item._Ptr->num_indices);
+				ImGui::Text(data);
+				sprintf_s(data, data_size, "ID Vertices: %i", item._Ptr->id_vertices);
+				ImGui::Text(data);
+				sprintf_s(data, data_size, "ID Indices: %i", item._Ptr->id_indices);
+				ImGui::Text(data);
+				sprintf_s(data, data_size, "ID Normals: %i", item._Ptr->id_normals);
+				ImGui::Text(data);
+				sprintf_s(data, data_size, "ID Colors: %i", item._Ptr->id_colors);
+				ImGui::Text(data);
+				sprintf_s(data, data_size, "ID Texture Coords: %i", item._Ptr->id_texture_coords);
+				ImGui::Text(data);
 			}
-			sprintf_s(data, data_size, "%f", geomdata->pos.z);
-			if (ImGui::InputText("PosZ", data, data_size, ImGuiInputTextFlags_EnterReturnsTrue | ImGuiInputTextFlags_CharsDecimal | ImGuiInputTextFlags_ReadOnly))
+			sprintf_s(data, data_size, "Texture##%s", item._Ptr->name.c_str());
+			if (ImGui::CollapsingHeader(data))
 			{
-
-			}
-
-			ImGui::Text("Rotation");
-			float3 rot = geomdata->rot.ToEulerXYZ();
-			rot *= RADTODEG;
-			sprintf_s(data, data_size, "%f", rot.x);
-			if (ImGui::InputText("RotX", data, data_size, ImGuiInputTextFlags_EnterReturnsTrue | ImGuiInputTextFlags_CharsDecimal | ImGuiInputTextFlags_ReadOnly))
-			{
-
-			}
-			sprintf_s(data, data_size, "%f", rot.y);
-			if (ImGui::InputText("RotY", data, data_size, ImGuiInputTextFlags_EnterReturnsTrue | ImGuiInputTextFlags_CharsDecimal | ImGuiInputTextFlags_ReadOnly))
-			{
-
-			}
-			sprintf_s(data, data_size, "%f", rot.z);
-			if (ImGui::InputText("RotZ", data, data_size, ImGuiInputTextFlags_EnterReturnsTrue | ImGuiInputTextFlags_CharsDecimal | ImGuiInputTextFlags_ReadOnly))
-			{
-
-			}
-
-			ImGui::Text("Scale");
-			sprintf_s(data, data_size, "%f", geomdata->scale.x);
-			if (ImGui::InputText("ScaX", data, data_size, ImGuiInputTextFlags_EnterReturnsTrue | ImGuiInputTextFlags_CharsDecimal | ImGuiInputTextFlags_ReadOnly))
-			{
-
-			}
-			sprintf_s(data, data_size, "%f", geomdata->scale.y);
-			if (ImGui::InputText("ScaY", data, data_size, ImGuiInputTextFlags_EnterReturnsTrue | ImGuiInputTextFlags_CharsDecimal | ImGuiInputTextFlags_ReadOnly))
-			{
-
-			}
-			sprintf_s(data, data_size, "%f", geomdata->scale.z);
-			if (ImGui::InputText("ScaZ", data, data_size, ImGuiInputTextFlags_EnterReturnsTrue | ImGuiInputTextFlags_CharsDecimal | ImGuiInputTextFlags_ReadOnly))
-			{
-
+				std::string path;
+				ImGui::Separator();
+				path = "Texture Path: ";
+				path += item._Ptr->texture_name;
+				ImGui::Text(path.c_str());
+				sprintf_s(data, data_size, "Texture ID: %i", item._Ptr->id_texture);
+				ImGui::Text(data);
+				sprintf_s(data, data_size, "Texture Width: %i", item._Ptr->texture_w);
+				ImGui::Text(data);
+				sprintf_s(data, data_size, "Texture Height: %i", item._Ptr->texture_h);
+				ImGui::Text(data);
 			}
 		}
 	}
-	if (ImGui::CollapsingHeader("Geometry"))
-	{
-		const std::vector<GeometryData>* vector = App->loadmesh->GetGeometryStructVector();
-		if (vector->size() > 0)
-		{
-			const GeometryData* geomdata = &vector->back();
-			char title[25];
-			uint title_size = sizeof title;
 
-			sprintf_s(title, title_size, "Num Faces: %i", geomdata->num_faces);
-			ImGui::Text(title);
-			sprintf_s(title, title_size, "Num Vertices: %i", geomdata->num_vertices);
-			ImGui::Text(title);
-			sprintf_s(title, title_size, "Num Indices: %i", geomdata->num_indices);
-			ImGui::Text(title);
-			sprintf_s(title, title_size, "ID Vertices: %i", geomdata->id_vertices);
-			ImGui::Text(title);
-			sprintf_s(title, title_size, "ID Indices: %i", geomdata->id_indices);
-			ImGui::Text(title);
-			sprintf_s(title, title_size, "ID Normals: %i", geomdata->id_normals);
-			ImGui::Text(title);
-			sprintf_s(title, title_size, "ID Colors: %i", geomdata->id_colors);
-			ImGui::Text(title);
-			sprintf_s(title, title_size, "ID Texture Coords: %i", geomdata->id_texture_coords);
-			ImGui::Text(title);
-		}
-	}
-	if (ImGui::CollapsingHeader("Texture"))
-	{
-		const std::vector<GeometryData>* vector = App->loadmesh->GetGeometryStructVector();
-		if (vector->size() > 0)
-		{
-			const GeometryData* geomdata = &vector->back();
-			char title[25];
-			uint title_size = sizeof title;
-			std::string path;
-			ImGui::Separator();
-			path = "Texture Path: ";
-			path += geomdata->texture_name;
-			ImGui::Text(path.c_str());
-			sprintf_s(title, title_size, "Texture ID: %i", geomdata->id_texture);
-			ImGui::Text(title);
-			sprintf_s(title, title_size, "Texture Width: %i", geomdata->texture_w);
-			ImGui::Text(title);
-			sprintf_s(title, title_size, "Texture Height: %i", geomdata->texture_h);
-			ImGui::Text(title);
-		}
-	}
 	ImGui::End();
 }
 

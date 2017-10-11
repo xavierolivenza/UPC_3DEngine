@@ -197,12 +197,22 @@ bool ModuleLoadMesh::Load(std::string* file, std::vector<GeometryData>* meshData
 		if (geomLoaded)
 			CleanGeometryDataVector(meshDataOutput);
 
+		//Get the working path to load textures from it
+		std::size_t lastPos = file->rfind("\\");
+		std::string WorkingPath = file->substr(0, lastPos);
+		WorkingPath += "\\";
+
 		// Use scene->mNumMeshes to iterate on scene->mMeshes array
 		for (uint i = 0; i < scene->mNumMeshes; ++i)
 		{
 			const aiMesh* new_mesh = scene->mMeshes[i];
 
 			GeometryData geomData;
+
+			//This is necessary to load the transform of this node, we do here now to get the name of the node
+			aiNode* MeshNode = SearchForMesh(scene->mRootNode, i);
+			aiString name = MeshNode->mName;
+			geomData.name = name.C_Str();
 
 			// copy vertices
 			geomData.num_vertices = new_mesh->mNumVertices;
@@ -251,9 +261,10 @@ bool ModuleLoadMesh::Load(std::string* file, std::vector<GeometryData>* meshData
 			//This can load fbx from any directory (desktop dor example), but textures are loaded from Game folder
 			if (scene->HasMaterials())
 			{
-				aiString path;
-				scene->mMaterials[new_mesh->mMaterialIndex]->GetTexture(aiTextureType_DIFFUSE, 0, &path);
-				geomData.texture_name = AssetsPath + path.C_Str();
+				aiString material_path;
+				scene->mMaterials[new_mesh->mMaterialIndex]->GetTexture(aiTextureType_DIFFUSE, 0, &material_path);
+				//geomData.texture_name = AssetsPath + material_path.C_Str();
+				geomData.texture_name = WorkingPath + material_path.C_Str();
 				//Check if this texture is already loaded
 				int id_texture = 0;
 				bool tex_alraedyLoaded = false;
@@ -292,16 +303,20 @@ bool ModuleLoadMesh::Load(std::string* file, std::vector<GeometryData>* meshData
 			Quat rot = { 0.0f,0.0f,0.0f,0.0f };
 			if ((scene->mRootNode != nullptr) && (scene->mRootNode->mNumChildren > 0))
 			{
+				//Sum up all transformations from root node to the node where the mesh is stored
 				aiMatrix4x4 transform;
-				for (aiNode* node = scene->mRootNode->mChildren[0]; node->mNumChildren > 0; node = node->mChildren[0])
-					transform *= node->mTransformation;
-				aiVector3D translation;
-				aiVector3D scaling;
-				aiQuaternion rotation;
-				transform.Decompose(scaling, rotation, translation);
-				pos = { translation.x, translation.y, translation.z };
-				scale = { scaling.x, scaling.y, scaling.z };
-				rot = { rotation.x, rotation.y, rotation.z, rotation.w };
+				if(MeshNode!= nullptr)
+				{
+					for (aiNode* iterator = MeshNode; iterator->mParent != nullptr; iterator = iterator->mParent)
+						transform *= iterator->mTransformation;
+					aiVector3D translation;
+					aiVector3D scaling;
+					aiQuaternion rotation;
+					transform.Decompose(scaling, rotation, translation);
+					pos = { translation.x, translation.y, translation.z };
+					scale = { scaling.x, scaling.y, scaling.z };
+					rot = { rotation.x, rotation.y, rotation.z, rotation.w };
+				}
 			}
 			geomData.pos = pos;
 			geomData.rot = rot;
@@ -437,6 +452,36 @@ int ModuleLoadMesh::LoadImageFromFile(const char* theFileName, uint& tex_w, uint
 	LOGP("Texture creation successful.");
 
 	return textureID; // Return the GLuint to the texture so you can use it!
+}
+
+aiNode* ModuleLoadMesh::SearchForMesh(aiNode* root, uint mesh_id)
+{
+	aiNode* node = nullptr;
+	if ((root != nullptr) && (root->mNumChildren > 0))
+	{
+		node = SearchForMeshIterator(root, mesh_id);
+	}
+	return node;
+}
+
+aiNode* ModuleLoadMesh::SearchForMeshIterator(aiNode* root, uint mesh_id)
+{
+	aiNode* node = nullptr;
+	uint child = 0;
+	for (node = root->mChildren[child]; child < root->mNumChildren; node = root->mChildren[++child])
+	{
+		if (node->mNumMeshes > 0)
+			for (int i = 0; i < node->mNumMeshes; i++)
+				if (node->mMeshes[i] == mesh_id)
+					return node;
+		if (node->mNumChildren > 0)
+		{
+			node = SearchForMeshIterator(root->mChildren[child], mesh_id);
+			if (node != nullptr)
+				return node;
+		}
+	}
+	return nullptr;
 }
 
 bool ModuleLoadMesh::SaveConf(JSON_Object* conf) const

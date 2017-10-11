@@ -21,6 +21,8 @@ enum PrimitiveTypes
 
 struct GeometryData
 {
+	std::string name = "";
+
 	AABB BoundBox;
 
 	int num_faces = 0;
