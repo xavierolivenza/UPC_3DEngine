@@ -648,7 +648,7 @@ bool ModuleRenderer3D::SaveConf(JSON_Object* conf) const
 	App->parsonjson->SetBool(conf, "GL_Wireframe", GL_Wireframe);
 	App->parsonjson->SetBool(conf, "GL_Point", GL_Point);
 	App->parsonjson->SetBool(conf, "DebugVNormals", DebugVNormals);
-	App->parsonjson->SetUInt(conf, "NormalLength", NormalLength);
+	App->parsonjson->SetFloat(conf, "NormalLength", NormalLength);
 	return true;
 }
 
@@ -669,7 +669,7 @@ bool ModuleRenderer3D::LoadConf(JSON_Object* conf)
 	GL_Wireframe = App->parsonjson->GetBool(conf, "GL_Wireframe", false);
 	GL_Point = App->parsonjson->GetBool(conf, "GL_Point", false);
 	DebugVNormals = App->parsonjson->GetBool(conf, "DebugVNormals", false);
-	NormalLength = App->parsonjson->GetUInt(conf, "NormalLength", 1);
+	NormalLength = App->parsonjson->GetFloat(conf, "NormalLength", 1);
 	return true;
 }
 
@@ -733,9 +733,13 @@ void ModuleRenderer3D::ImGuiModuleVariables()
 	ImGui::Checkbox("GL_Wireframe", &GL_Wireframe);
 	ImGui::Checkbox("GL_Point", &GL_Point);
 	ImGui::Checkbox("DebugVNormals", &DebugVNormals);
-	static char str0[10] = "";
-	static char str1[10] = "";
-	strcpy(str0, itoa(NormalLength, str1, 10));
-	if (ImGui::InputText("Normal Length", str0, 10, ImGuiInputTextFlags_EnterReturnsTrue | ImGuiInputTextFlags_CharsDecimal))
-		NormalLength = atoi(str0);
+
+	//Warning here, const_cast, this may become a problem, or not...
+	char* value = const_cast<char*>(std::to_string(NormalLength).c_str());
+
+
+	char buffer[10];
+	snprintf(buffer, sizeof buffer, "%.2f", NormalLength);
+	if (ImGui::InputText("Normal Length", buffer, 10, ImGuiInputTextFlags_EnterReturnsTrue | ImGuiInputTextFlags_CharsDecimal))
+		NormalLength = atof(buffer);
 }

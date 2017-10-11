@@ -60,7 +60,7 @@ private:
 	bool GL_Wireframe = false;
 	bool GL_Point = false;
 	bool DebugVNormals = false;
-	uint NormalLength = 1;
+	float NormalLength = 1.0f;
 
 	uint Lenna_tex = 0;
 	uint id_checkImage = 0;
