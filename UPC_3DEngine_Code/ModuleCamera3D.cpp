@@ -244,3 +244,55 @@ void ModuleCamera3D::RecentreCameraToGeometry()
 {
 	CenterCameraToGeometry(LastCentreGeometry);
 }
+
+void ModuleCamera3D::ImGuiModuleVariables()
+{
+	//TODO: We have to store every component in a vec and then normalize it
+	char buffer[10];
+
+	snprintf(buffer, sizeof buffer, "%.3f", X.x);
+	if (ImGui::InputText("X_x", buffer, 10, ImGuiInputTextFlags_EnterReturnsTrue | ImGuiInputTextFlags_CharsDecimal))
+		X.x = atof(buffer);
+	snprintf(buffer, sizeof buffer, "%.3f", X.y);
+	if (ImGui::InputText("X_y", buffer, 10, ImGuiInputTextFlags_EnterReturnsTrue | ImGuiInputTextFlags_CharsDecimal))
+		X.y = atof(buffer);
+	snprintf(buffer, sizeof buffer, "%.3f", X.z);
+	if (ImGui::InputText("X_z", buffer, 10, ImGuiInputTextFlags_EnterReturnsTrue | ImGuiInputTextFlags_CharsDecimal))
+		X.z = atof(buffer);
+	snprintf(buffer, sizeof buffer, "%.3f", Y.x);
+	if (ImGui::InputText("Y_x", buffer, 10, ImGuiInputTextFlags_EnterReturnsTrue | ImGuiInputTextFlags_CharsDecimal))
+		Y.x = atof(buffer);
+	snprintf(buffer, sizeof buffer, "%.3f", Y.y);
+	if (ImGui::InputText("Y_y", buffer, 10, ImGuiInputTextFlags_EnterReturnsTrue | ImGuiInputTextFlags_CharsDecimal))
+		Y.y = atof(buffer);
+	snprintf(buffer, sizeof buffer, "%.3f", Y.z);
+	if (ImGui::InputText("Y_z", buffer, 10, ImGuiInputTextFlags_EnterReturnsTrue | ImGuiInputTextFlags_CharsDecimal))
+		Y.z = atof(buffer);
+	snprintf(buffer, sizeof buffer, "%.3f", Z.x);
+	if (ImGui::InputText("Z_x", buffer, 10, ImGuiInputTextFlags_EnterReturnsTrue | ImGuiInputTextFlags_CharsDecimal))
+		Z.x = atof(buffer);
+	snprintf(buffer, sizeof buffer, "%.3f", Z.y);
+	if (ImGui::InputText("Z_y", buffer, 10, ImGuiInputTextFlags_EnterReturnsTrue | ImGuiInputTextFlags_CharsDecimal))
+		Z.y = atof(buffer);
+	snprintf(buffer, sizeof buffer, "%.3f", Z.z);
+	if (ImGui::InputText("Z_z", buffer, 10, ImGuiInputTextFlags_EnterReturnsTrue | ImGuiInputTextFlags_CharsDecimal))
+		Z.z = atof(buffer);
+	snprintf(buffer, sizeof buffer, "%.3f", Position.x);
+	if (ImGui::InputText("Position_x", buffer, 10, ImGuiInputTextFlags_EnterReturnsTrue | ImGuiInputTextFlags_CharsDecimal))
+		Position.x = atof(buffer);
+	snprintf(buffer, sizeof buffer, "%.3f", Position.y);
+	if (ImGui::InputText("Position_y", buffer, 10, ImGuiInputTextFlags_EnterReturnsTrue | ImGuiInputTextFlags_CharsDecimal))
+		Position.y = atof(buffer);
+	snprintf(buffer, sizeof buffer, "%.3f", Position.z);
+	if (ImGui::InputText("Position_z", buffer, 10, ImGuiInputTextFlags_EnterReturnsTrue | ImGuiInputTextFlags_CharsDecimal))
+		Position.z = atof(buffer);
+	snprintf(buffer, sizeof buffer, "%.3f", Reference.x);
+	if (ImGui::InputText("Reference_x", buffer, 10, ImGuiInputTextFlags_EnterReturnsTrue | ImGuiInputTextFlags_CharsDecimal))
+		Reference.x = atof(buffer);
+	snprintf(buffer, sizeof buffer, "%.3f", Reference.y);
+	if (ImGui::InputText("Reference_y", buffer, 10, ImGuiInputTextFlags_EnterReturnsTrue | ImGuiInputTextFlags_CharsDecimal))
+		Reference.y = atof(buffer);
+	snprintf(buffer, sizeof buffer, "%.3f", Reference.z);
+	if (ImGui::InputText("Reference_z", buffer, 10, ImGuiInputTextFlags_EnterReturnsTrue | ImGuiInputTextFlags_CharsDecimal))
+		Reference.z = atof(buffer);
+}

@@ -23,6 +23,8 @@ public:
 	void CenterCameraToGeometry(const AABB* meshAABB);
 	void RecentreCameraToGeometry();
 
+	void ImGuiModuleVariables();
+
 private:
 
 	void CalculateViewMatrix();
