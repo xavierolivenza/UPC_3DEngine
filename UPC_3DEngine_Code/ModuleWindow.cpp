@@ -148,18 +148,14 @@ void ModuleWindow::SetFullscreen(bool set)
 
 void ModuleWindow::ImGuiModuleVariables()
 {
-	static char str0[50] = "";
-	static char str1[10] = "";
-
-	strcpy(str0, itoa(w_width, str1, 10));
-	if (ImGui::InputText("w_width", str0, 50, ImGuiInputTextFlags_EnterReturnsTrue | ImGuiInputTextFlags_CharsDecimal))
-		w_width = atoi(str0);
-	strcpy(str0, itoa(w_height, str1, 10));
-	if (ImGui::InputText("w_height", str0, 50, ImGuiInputTextFlags_EnterReturnsTrue | ImGuiInputTextFlags_CharsDecimal))
-		w_height = atoi(str0);
-	strcpy(str0, itoa(App->GetFramerateCapModif(), str1, 10));
-	if (ImGui::InputText("MaxFPSValue", str0, 50, ImGuiInputTextFlags_EnterReturnsTrue | ImGuiInputTextFlags_CharsDecimal))
-	{
-		App->GetFramerateCapModif() = atoi(str0);
-	}
+	char buffer[10];
+	snprintf(buffer, sizeof buffer, "%.2f", w_width);
+	if (ImGui::InputText("w_width", buffer, sizeof buffer, ImGuiInputTextFlags_EnterReturnsTrue | ImGuiInputTextFlags_CharsDecimal))
+		w_width = atoi(buffer);
+	snprintf(buffer, sizeof buffer, "%.2f", w_height);
+	if (ImGui::InputText("w_height", buffer, sizeof buffer, ImGuiInputTextFlags_EnterReturnsTrue | ImGuiInputTextFlags_CharsDecimal))
+		w_height = atoi(buffer);
+	snprintf(buffer, sizeof buffer, "%.2f", App->GetFramerateCapModif());
+	if (ImGui::InputText("MaxFPSValue", buffer, sizeof buffer, ImGuiInputTextFlags_EnterReturnsTrue | ImGuiInputTextFlags_CharsDecimal))
+		App->GetFramerateCapModif() = atoi(buffer);
 }

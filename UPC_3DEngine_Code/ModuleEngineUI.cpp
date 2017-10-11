@@ -436,12 +436,11 @@ void ModuleEngineUI::ImGuiModuleVariablesWindow()
 {
 	ImGui::Begin("Module Variables", false, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize);
 	//ImGui::Begin("Module Variables", false);
-	uint title_size = 50;
 	char title[50];
 
 	for (std::list<Module*>::const_iterator item = App->GetModuleList()->begin(); item != App->GetModuleList()->cend(); ++item)
 	{
-		sprintf_s(title, title_size, "Module: %s", item._Ptr->_Myval->name.c_str());
+		sprintf_s(title, sizeof title, "Module: %s", item._Ptr->_Myval->name.c_str());
 		if (ImGui::CollapsingHeader(title))
 			item._Ptr->_Myval->ImGuiModuleVariables();
 	}

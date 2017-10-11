@@ -734,10 +734,6 @@ void ModuleRenderer3D::ImGuiModuleVariables()
 	ImGui::Checkbox("GL_Point", &GL_Point);
 	ImGui::Checkbox("DebugVNormals", &DebugVNormals);
 
-	//Warning here, const_cast, this may become a problem, or not...
-	char* value = const_cast<char*>(std::to_string(NormalLength).c_str());
-
-
 	char buffer[10];
 	snprintf(buffer, sizeof buffer, "%.2f", NormalLength);
 	if (ImGui::InputText("Normal Length", buffer, 10, ImGuiInputTextFlags_EnterReturnsTrue | ImGuiInputTextFlags_CharsDecimal))
