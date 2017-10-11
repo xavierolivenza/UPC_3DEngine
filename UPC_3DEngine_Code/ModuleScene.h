@@ -1,5 +1,8 @@
 #pragma once
 #include "Module.h"
+//#include "GameObject.h"
+
+class GameObject;
 
 class ModuleScene : public Module
 {
@@ -19,4 +22,8 @@ public:
 
 	void ImGuiModuleVariables();
 
+	//Functions to create different components
+
+private:
+	GameObject* root = nullptr;
 };
