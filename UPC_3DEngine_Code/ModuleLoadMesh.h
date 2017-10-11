@@ -18,7 +18,7 @@ public:
 	bool CleanUp();
 
 	bool Load(std::string* file, std::vector<GeometryData>* meshDataOutput);
-	int LoadImageFromFile(const char* theFileName);
+	int LoadImageFromFile(const char* theFileName, uint& tex_w, uint& tex_h);
 
 	bool SaveConf(JSON_Object* conf) const;
 	bool LoadConf(JSON_Object* conf);

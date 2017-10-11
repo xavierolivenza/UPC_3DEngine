@@ -143,7 +143,9 @@ bool ModuleRenderer3D::Start()
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, CHECKERS_WIDTH, CHECKERS_HEIGHT, 0, GL_RGBA, GL_UNSIGNED_BYTE, checkImage);
 	glBindTexture(GL_TEXTURE_2D, 0);
 
-	Lenna_tex = App->loadmesh->LoadImageFromFile("Assets/Lenna.png");
+	uint w = 0;
+	uint h = 0;
+	Lenna_tex = App->loadmesh->LoadImageFromFile("Assets/Lenna.png", w, h);
 
 	return true;
 }

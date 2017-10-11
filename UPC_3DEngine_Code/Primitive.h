@@ -39,6 +39,8 @@ struct GeometryData
 	float* texture_coords = nullptr;
 	uint id_texture = 0; // id in VRAM
 	std::string texture_name = "";
+	uint texture_w = 0;
+	uint texture_h = 0;
 
 	float3 pos = { 0.0f, 0.0f, 0.0f };
 	float3 scale = { 0.0f, 0.0f, 0.0f };

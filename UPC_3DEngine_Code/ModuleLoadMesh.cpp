@@ -94,7 +94,9 @@ update_status ModuleLoadMesh::Update(float dt)
 			//Load texture?
 			if (geomData.size() > 0)
 			{
-				int tex_id = LoadImageFromFile(DroppedFile->c_str());
+				uint tex_w = 0;
+				uint tex_h = 0;
+				int tex_id = LoadImageFromFile(DroppedFile->c_str(), tex_w, tex_h);
 				if (tex_id < 0)
 				{
 					LOGP("Error loading texture with path: %s", DroppedFile->c_str());
@@ -108,6 +110,8 @@ update_status ModuleLoadMesh::Update(float dt)
 						glDeleteTextures(1, &item._Ptr->id_texture);
 						item._Ptr->id_texture = tex_id;
 						item._Ptr->texture_name = DroppedFile->c_str();
+						item._Ptr->texture_w = tex_w;
+						item._Ptr->texture_h = tex_h;
 					}
 					LOGP("Texture aplied to geometry.");
 				}
@@ -258,12 +262,14 @@ bool ModuleLoadMesh::Load(std::string* file, std::vector<GeometryData>* meshData
 					{
 						//if the texture is already loaded just assign the same ID
 						id_texture = item._Ptr->id_texture;
+						geomData.texture_w = item._Ptr->texture_w;
+						geomData.texture_h = item._Ptr->texture_h;
 						tex_alraedyLoaded = true;
 						break;
 					}
 				//If the texture is new, load it
 				if(!tex_alraedyLoaded)
-					id_texture = LoadImageFromFile(geomData.texture_name.c_str());
+					id_texture = LoadImageFromFile(geomData.texture_name.c_str(), geomData.texture_w, geomData.texture_h);
 				if (id_texture < 0)
 				{
 					LOGP("Error loading texture with path: %s", geomData.texture_name.c_str());
@@ -350,7 +356,7 @@ bool ModuleLoadMesh::Load(std::string* file, std::vector<GeometryData>* meshData
 }
 
 // Function load a image, turn it into a texture, and return the texture ID as a GLuint for use
-int ModuleLoadMesh::LoadImageFromFile(const char* theFileName)
+int ModuleLoadMesh::LoadImageFromFile(const char* theFileName, uint& tex_w, uint& tex_h)
 {
 	// Create an image ID as a ULuint
 	ILuint imageID;
@@ -373,6 +379,8 @@ int ModuleLoadMesh::LoadImageFromFile(const char* theFileName)
 		// If the image is flipped (i.e. upside-down and mirrored, flip it the right way up!)
 		ILinfo ImageInfo;
 		iluGetImageInfo(&ImageInfo);
+		tex_w = ImageInfo.Width;
+		tex_h = ImageInfo.Height;
 		if (ImageInfo.Origin == IL_ORIGIN_UPPER_LEFT)
 		{
 			iluFlipImage();

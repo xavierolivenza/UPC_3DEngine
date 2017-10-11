@@ -293,7 +293,7 @@ void ModuleEngineUI::ImGuiConfigurationWindow()
 
 		//Max FPS Slider
 		char buffer[10];
-		snprintf(buffer, sizeof buffer, "%if", App->GetFramerateCapModif());
+		snprintf(buffer, sizeof buffer, "%i", App->GetFramerateCapModif());
 		if (ImGui::InputText("MaxFPSValue", buffer, sizeof buffer, ImGuiInputTextFlags_EnterReturnsTrue | ImGuiInputTextFlags_CharsDecimal))
 			App->GetFramerateCapModif() = atoi(buffer);
 
@@ -573,14 +573,18 @@ void ModuleEngineUI::ImGuiPropertiesWindow()
 		if (vector->size() > 0)
 		{
 			const GeometryData* geomdata = &vector->back();
-			uint title_size = 25;
 			char title[25];
+			uint title_size = sizeof title;
 			std::string path;
 			ImGui::Separator();
 			path = "Texture Path: ";
 			path += geomdata->texture_name;
 			ImGui::Text(path.c_str());
 			sprintf_s(title, title_size, "Texture ID: %i", geomdata->id_texture);
+			ImGui::Text(title);
+			sprintf_s(title, title_size, "Texture Width: %i", geomdata->texture_w);
+			ImGui::Text(title);
+			sprintf_s(title, title_size, "Texture Height: %i", geomdata->texture_h);
 			ImGui::Text(title);
 		}
 	}
