@@ -87,7 +87,13 @@ update_status ModuleLoadMesh::Update(float dt)
 		bool loaded = Load(DroppedFile, &geomData);
 		//If you load an fbx with more than one mesh, this center the last one
 		if (loaded)
-			App->camera->CenterCameraToGeometry(&geomData.back().BoundBox);
+		{
+			//Compute SceneAABB
+			SceneAABB.SetNegativeInfinity();
+			for (std::vector<GeometryData>::iterator item = geomData.begin(); item != geomData.cend(); ++item)
+				SceneAABB.Enclose((float3*)item->vertices, item->num_vertices);
+			App->camera->CenterCameraToGeometry(&SceneAABB);
+		}
 		else
 		{
 			LOGP("The file you dropped is being processed as a texture...");

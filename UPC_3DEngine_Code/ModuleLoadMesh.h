@@ -38,6 +38,7 @@ private:
 	bool CleanGeometryDataVector(std::vector<GeometryData>* meshDataVec);
 
 private:
+	AABB SceneAABB;
 	std::string AssetsPath;
 	std::vector<GeometryData> geomData;
 	bool geomLoaded = false;
