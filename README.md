@@ -18,21 +18,21 @@ Unzip the realese folder and execute the .exe file.
 	-Alt+Left click to orbit the object
 	-F focus the camera around the geometry
 -Drag any FBX and drop it into the executable to load it
--Drag any texture and drop it into the executable to load it
+-Drag any texture and drop it into the executable to apply it to loaded geometry
 
 ### WINDOWS
 
 -Profiler: This window shows the ms wasted in every module
--Properties: This window shows useful informattion about the 	loaded geometry
+-Properties: This window shows useful informattion about the loaded geometry
 -Console: A console that LOGS all the engine process
 -Configuration:
-	-Application: This window shows useful information of the 		app, FPS, memory usage, etc... It also allows the 		user to cap FPS, change app name, etc...
-	-Window: This window shows different window information 		and allows the user to modify some window variables
+	-Application: This window shows useful information of the app, FPS, memory usage, etc... It also allows the user to cap FPS, change app name, etc...
+	-Window: This window shows different window information and allows the user to modify some window variables
 	-Hardware: This window shows useful hardware information
--Module Variables: This window shows useful information about 		every module. And allows the user to modifiy some 		variables in some of them
+-Module Variables: This window shows useful information about every module. And allows the user to modifiy some variables in some of them
 -File: At the moment does nothing
--View: This window let the user choose which windows 			visualize. It can also be done with LAlt + number
--Help: This window has the options to download latest release, 	report bug, and show the documentation. It also has 	about, which is a window with useful information like 	license, libraries used, authors, etc...
+-View: This window let the user choose which windows visualize. It can also be done with LAlt + number (1 to 5 by now)
+-Help: This window has the options to download latest release, report bug, and show the documentation. It also has about, which is a window with useful information like license, libraries used, authors, etc...
 -Close: Closes the engine
 
 ## CHANGELOG
@@ -40,11 +40,11 @@ Unzip the realese folder and execute the .exe file.
 v0.5(First Assignment):
 
 	-Framerate cap implemented
-	-Implemented properties window which shows useful data 		about loaded geometry
+	-Implemented properties window which shows useful data about loaded geometry
 	-Now normal length can be modified
-	-If there's charged geometry now multiples textures can 		be loaded
-	-Added new variables in some modules in module variables 		window
-	-The camera now is centred in the centre of the 				scene when charging geometry, not in the mesh 			centre. The user can force it manually by 				pressing f
+	-If there's charged geometry now multiples textures can be loaded
+	-Added new variables in some modules in module variables window
+	-The camera now is centred in the centre of the scene when charging geometry, not in the mesh centre. The user can force it manually by pressing f
 	-Added more debug data about CPU and VRAM
 
 v0.4:
@@ -72,7 +72,7 @@ v0.2:
 
 	-Added Console
 	-OpenGl totally operative
-	-Added geometry options: Fog, Wireframe, Lightning, 			Culling, etc...
+	-Added geometry options: Fog, Wireframe, Lightning, Culling, etc...
 	-All modules frame, ms, memory usage plot
 	-First triangles printed on screen
 	-Random generator feature added
@@ -101,5 +101,8 @@ Xavier Olivenza's Github account
 
  - Github: https://github.com/xavierolivenza
 
+## LICENSE
+
+ GNU GENERAL PUBLIC LICENSE Version 3, 29 June 2007
 
 CITM Terrassa 2016-2017
