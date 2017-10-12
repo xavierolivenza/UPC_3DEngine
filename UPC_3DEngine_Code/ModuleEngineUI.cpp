@@ -383,6 +383,13 @@ void ModuleEngineUI::ImGuiConfigurationWindow()
 
 		ImGui::Separator();
 
+		std::string cpubrand;
+		std::string cpuvendor;
+		getCPUInfo(&cpubrand, &cpuvendor);
+		sprintf_s(title, title_size, "CPU Vendor: %s", cpuvendor.c_str());
+		ImGui::Text(title);
+		sprintf_s(title, title_size, "CPU Brand: %s", cpubrand.c_str());
+		ImGui::Text(title);
 		sprintf_s(title, title_size, "CPU Cache Line Size: %i", SDL_GetCPUCacheLineSize());
 		ImGui::Text(title);
 		sprintf_s(title, title_size, "CPU Cores: %i", SDL_GetCPUCount());
@@ -392,7 +399,7 @@ void ModuleEngineUI::ImGuiConfigurationWindow()
 
 		ImGui::Separator();
 
-		sprintf_s(title, title_size, "RAM: %i Gb", (float)SDL_GetSystemRAM() / (1024.f));
+		sprintf_s(title, title_size, "RAM: %i Mb", SDL_GetSystemRAM());
 		ImGui::Text(title);
 
 		ImGui::Separator();
