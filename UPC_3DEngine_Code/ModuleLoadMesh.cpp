@@ -113,7 +113,8 @@ update_status ModuleLoadMesh::Update(float dt)
 					LOGP("Texture loaded with path: %s", DroppedFile->c_str());
 					for (std::vector<GeometryData>::iterator item = geomData.begin(); item != geomData.cend(); ++item)
 					{
-						glDeleteTextures(1, &item._Ptr->id_texture);
+						if(item._Ptr->texture_name != "")
+							glDeleteTextures(1, &item._Ptr->id_texture);
 						item._Ptr->id_texture = tex_id;
 						item._Ptr->texture_name = DroppedFile->c_str();
 						item._Ptr->texture_w = tex_w;
