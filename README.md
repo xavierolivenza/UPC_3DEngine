@@ -23,16 +23,27 @@ Unzip the realese folder and execute the .exe file.
 ### WINDOWS
 
 -Profiler: This window shows the ms wasted in every module
+
 -Properties: This window shows useful informattion about the loaded geometry
+
 -Console: A console that LOGS all the engine process
+
 -Configuration:
+
 	-Application: This window shows useful information of the app, FPS, memory usage, etc... It also allows the user to cap FPS, change app name, etc...
+	
 	-Window: This window shows different window information and allows the user to modify some window variables
+	
 	-Hardware: This window shows useful hardware information
+	
 -Module Variables: This window shows useful information about every module. And allows the user to modifiy some variables in some of them
+
 -File: At the moment does nothing
+
 -View: This window let the user choose which windows visualize. It can also be done with LAlt + number (1 to 5 by now)
+
 -Help: This window has the options to download latest release, report bug, and show the documentation. It also has about, which is a window with useful information like license, libraries used, authors, etc...
+
 -Close: Closes the engine
 
 ## CHANGELOG
