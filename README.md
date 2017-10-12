@@ -29,20 +29,30 @@ Unzip the realese folder and execute the .exe file.
 	-Application: This window shows useful information of the 		app, FPS, memory usage, etc... It also allows the 		user to cap FPS, change app name, etc...
 	-Window: This window shows different window information 		and allows the user to modify some window variables
 	-Hardware: This window shows useful hardware information
--Module Variables:
+-Module Variables: This window shows useful information about 		every module. And allows the user to modifiy some 		variables in some of them
+-File: At the moment does nothing
+-View: This window let the user choose which windows 			visualize. It can also be done with LAlt + number
+-Help: This window has the options to download latest release, 	report bug, and show the documentation. It also has 	about, which is a window with useful information like 	license, libraries used, authors, etc...
+-Close: Closes the engine
 
 ## CHANGELOG
 
 v0.5(First Assignment):
 
-	-
+	-Framerate cap implemented
+	-Implemented properties window which shows useful data 		about loaded geometry
+	-Now normal length can be modified
+	-If there's charged geometry now multiples textures can 		be loaded
+	-Added new variables in some modules in module variables 		window
+	-The camera now is centred in the centre of the 				scene when charging geometry, not in the mesh 			centre. The user can force it manually by 				pressing f
+	-Added more debug data about CPU and VRAM
 
 v0.4:
 
 	-Camera autocentre + autoframe to loaded geometry
 	-DevIL library added to load textures
 	-FBX load their own textures from Assets folder
-	-New stryle for the GUI(WIP, may will change)
+	-New style for the GUI(WIP, may will change)
 	-Camera log "hit" if looking to the loaded geometry
 	-Cube primitive texure coords added
 	-Camera controls changed to be Unity-like
