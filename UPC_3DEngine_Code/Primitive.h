@@ -133,6 +133,7 @@ public:
 	P2Line(float x, float y, float z);
 	void InnerRender() const;
 public:
+	float thickness = 2.0f;
 	vec3 origin;
 	vec3 destination;
 };

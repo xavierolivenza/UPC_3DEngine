@@ -80,4 +80,5 @@ public:
 	bool DrawAxis = true;
 	uint GridSize = 20;
 	float AxisLength = 2.0f;
+	float LineThickness = 2.0f;
 };

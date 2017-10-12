@@ -352,15 +352,16 @@ void DebugDrawer::drawAxis(float axislen)
 	btVector3 line_color = { 255, 255 ,255 };
 	btVector3 origin = { 0.0f ,0.01f ,0.0f };
 	btVector3 axis = { axislen ,0.01f ,0.0f };
+	LineThickness = 4.0f;
 	line_color = { 255 ,0 ,0 };
 	drawLine(origin, axis, line_color);
-	axis = { 0.0f ,axislen + 0.1f,0.0f };
+	axis = { 0.0f ,axislen + 0.01f,0.0f };
 	line_color = { 0 ,255 ,0 };
 	drawLine(origin, axis, line_color);
 	axis = { 0.0f ,0.01f ,axislen };
 	line_color = { 0 ,0 ,255 };
 	drawLine(origin, axis, line_color);
-	glColor3f(1.0f, 1.0f, 1.0f);
+	LineThickness = 2.0f;
 }
 
 void DebugDrawer::drawLine(const btVector3& from, const btVector3& to, const btVector3& color)
@@ -368,6 +369,7 @@ void DebugDrawer::drawLine(const btVector3& from, const btVector3& to, const btV
 	line.origin.Set(from.getX(), from.getY(), from.getZ());
 	line.destination.Set(to.getX(), to.getY(), to.getZ());
 	line.color.Set(color.getX(), color.getY(), color.getZ());
+	line.thickness = LineThickness;
 	line.Render();
 }
 

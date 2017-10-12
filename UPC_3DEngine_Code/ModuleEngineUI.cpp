@@ -2,6 +2,9 @@
 #include "Application.h"
 #include "ModuleEngineUI.h"
 
+#include "Assimp\include\version.h"
+#include "DevIL\include\il.h"
+
 ModuleEngineUI::ModuleEngineUI(Application* app, bool start_enabled) : Module(app, start_enabled),
 	fpsPlotData(FPS_AND_MS_PLOT_DATA_LENGTH), msPlotData(FPS_AND_MS_PLOT_DATA_LENGTH), memPlotData(FPS_AND_MS_PLOT_DATA_LENGTH)
 {
@@ -251,13 +254,20 @@ void ModuleEngineUI::ImGuiDrawMenuBar()
 			}
 			if (ImGui::BeginMenu("Libraries"))
 			{
-				ImGui::Text("SDL 2.0.3");
-				ImGui::Text("ImGui 1.51");
+				char title[50];
+				uint title_size = sizeof title;
+				SDL_version SDLVersion;
+				SDL_GetVersion(&SDLVersion);
+				sprintf_s(title, title_size, "SDL: %i.%i.%i", SDLVersion.major, SDLVersion.minor, SDLVersion.patch);
+				ImGui::Text(title);sprintf_s(title, title_size, "ImGui: %s", IMGUI_VERSION);
+				ImGui::Text(title);
 				ImGui::Text("MathGeoLib 1.5");
 				ImGui::Text("mmgr");
 				ImGui::Text("parson");
-				ImGui::Text("Assimp 3.3.1");
-				ImGui::Text("DevIl 1.8.0");
+				sprintf_s(title, title_size, "Assimp: %i.%i.%i", aiGetVersionMajor(), aiGetVersionMinor(), aiGetVersionRevision());
+				ImGui::Text(title);
+				sprintf_s(title, title_size, "DevIl: %i", IL_VERSION);
+				ImGui::Text(title);
 				ImGui::EndMenu();
 			}
 			if (ImGui::BeginMenu("License"))

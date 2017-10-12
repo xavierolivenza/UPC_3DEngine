@@ -72,6 +72,8 @@ void Primitive::Render() const
 	if (App->renderer3D->GL_Wireframe_Active() | App->renderer3D->GL_Point_Active())
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
+	glColor3f(1.0f, 1.0f, 1.0f);
+
 	glPopMatrix();
 }
 
@@ -441,15 +443,13 @@ P2Line::P2Line(float x, float y, float z) : Primitive(), origin(0, 0, 0), destin
 
 void P2Line::InnerRender() const
 {
-	glLineWidth(2.0f);
-
+	glLineWidth(thickness);
 	glBegin(GL_LINES);
 
 	glVertex3f(origin.x, origin.y, origin.z);
 	glVertex3f(destination.x, destination.y, destination.z);
 
 	glEnd();
-
 	glLineWidth(1.0f);
 }
 
