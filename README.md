@@ -13,11 +13,17 @@ Unzip the realese folder and execute the .exe file.
 ### CONTROLS
 
 -Camera controls
+
 	-Right click turns on “WASD” fps-like movement
+	
 	-Mouse wheel zooms in and out
+	
 	-Alt+Left click to orbit the object
+	
 	-F focus the camera around the geometry
+	
 -Drag any FBX and drop it into the executable to load it
+
 -Drag any texture and drop it into the executable to apply it to loaded geometry
 
 ### WINDOWS
