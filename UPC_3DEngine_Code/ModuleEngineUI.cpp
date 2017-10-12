@@ -283,7 +283,7 @@ void ModuleEngineUI::ImGuiConfigurationWindow()
 	const PerformanceStruct* PerformanceData = App->GetPerformanceStruct();
 	sMStats MemoryStats = m_getMemoryStatistics();
 	PushFPSandMSPlot(PerformanceData->frames_last_second, PerformanceData->miliseconds_per_frame, MemoryStats.totalReportedMemory);
-	ImGui::Begin("Configuration", false, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize);
+	ImGui::Begin("Configuration", false, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_HorizontalScrollbar);
 	//ImGui::Begin("Configuration", false);
 	if (ImGui::CollapsingHeader("Application"))
 	{
@@ -472,7 +472,7 @@ void ModuleEngineUI::ImGuiConsole()
 
 void ModuleEngineUI::ImGuiPropertiesWindow()
 {
-	ImGui::Begin("Properties", false, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize);
+	ImGui::Begin("Properties", false, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_HorizontalScrollbar);
 	//ImGui::Begin("Properties", false);
 	ImGui::Text("If ther is geometry loaded, here will appear\nPosition/Rotation/Scale of the loaded meshes.");
 	ImGui::Text("If one of the IDs/Paths below is zero/null,\nit means that it does not have\nthat characteristic.");
