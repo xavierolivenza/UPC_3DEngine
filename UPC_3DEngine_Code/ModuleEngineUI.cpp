@@ -5,6 +5,8 @@
 #include "Assimp\include\version.h"
 #include "DevIL\include\il.h"
 
+#include "DeviceId\DeviceId.h"
+
 ModuleEngineUI::ModuleEngineUI(Application* app, bool start_enabled) : Module(app, start_enabled),
 	fpsPlotData(FPS_AND_MS_PLOT_DATA_LENGTH), msPlotData(FPS_AND_MS_PLOT_DATA_LENGTH), memPlotData(FPS_AND_MS_PLOT_DATA_LENGTH)
 {
@@ -310,7 +312,7 @@ void ModuleEngineUI::ImGuiConfigurationWindow()
 		ImGui::Separator();
 
 		//Some useful variables
-		char title[50];
+		char title[100];
 		uint title_size = sizeof title;
 
 		//Freeze plots
@@ -364,8 +366,9 @@ void ModuleEngineUI::ImGuiConfigurationWindow()
 	}
 	if (ImGui::CollapsingHeader("Hardware"))
 	{
-		uint title_size = 50;
-		char title[50];
+		char title[100];
+		uint title_size = sizeof title;
+		
 		SDL_version SDLVersion;
 
 		SDL_GetVersion(&SDLVersion);
@@ -389,7 +392,7 @@ void ModuleEngineUI::ImGuiConfigurationWindow()
 
 		ImGui::Separator();
 
-		sprintf_s(title, title_size, "RAM: %i", SDL_GetSystemRAM());
+		sprintf_s(title, title_size, "RAM: %i Gb", (float)SDL_GetSystemRAM() / (1024.f));
 		ImGui::Text(title);
 
 		ImGui::Separator();
@@ -412,6 +415,32 @@ void ModuleEngineUI::ImGuiConfigurationWindow()
 		sprintf_s(title2, 1000, "GL_Extensions: %s", GPUData);
 		ImGui::Text(title2);
 		*/
+
+		char title2[250];
+		uint title2_size = sizeof title2;
+
+		uint vendor, device_id;
+		std::wstring brand;
+		unsigned __int64 video_mem_budget;
+		unsigned __int64 video_mem_usage;
+		unsigned __int64 video_mem_available;
+		unsigned __int64 video_mem_reserved;
+
+		if (getGraphicsDeviceInfo(&vendor, &device_id, &brand, &video_mem_budget, &video_mem_usage, &video_mem_available, &video_mem_reserved))
+		{
+			sprintf_s(title2, title2_size, "GPU: vendor %u device %u", vendor, device_id);
+			ImGui::Text(title2);
+			sprintf_s(title2, title2_size, "Brand: %S", brand.c_str());
+			ImGui::Text(title2);
+			sprintf_s(title2, title2_size, "VRAM Budget: %.3f Mb", float(video_mem_budget) / 1073741824.0f);
+			ImGui::Text(title2);
+			sprintf_s(title2, title2_size, "VRAM Usage: %.3f Mb", float(video_mem_usage) / 1073741824.0f);
+			ImGui::Text(title2);
+			sprintf_s(title2, title2_size, "VRAM Available: %.3f Mb", float(video_mem_available) / 1073741824.0f);
+			ImGui::Text(title2);
+			sprintf_s(title2, title2_size, "VRAM Reserved: %.3f Mb", float(video_mem_reserved) / 1073741824.0f);
+			ImGui::Text(title2);
+		}
 	}
 	ImGui::End();
 }
@@ -420,8 +449,8 @@ void  ModuleEngineUI::ImGuiProfierWindow()
 {
 	ImGui::Begin("Profiler", false, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize);
 	//ImGui::Begin("Profiler", false);
-	uint title_size = 50;
-	char title[50];
+	char title[100];
+	uint title_size = sizeof title;
 	//Module Miliseconds PlotHistogram
 	for (std::list<Module*>::const_iterator item = App->GetModuleList()->begin(); item != App->GetModuleList()->cend(); ++item)
 	{
@@ -484,7 +513,7 @@ void ModuleEngineUI::ImGuiPropertiesWindow()
 {
 	ImGui::Begin("Properties", false, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_HorizontalScrollbar);
 	//ImGui::Begin("Properties", false);
-	ImGui::Text("If ther is geometry loaded, here will appear\nPosition/Rotation/Scale of the loaded meshes.");
+	ImGui::Text("If there is geometry loaded, here will appear\nPosition/Rotation/Scale of the loaded meshes.");
 	ImGui::Text("If one of the IDs/Paths below is zero/null,\nit means that it does not have\nthat characteristic.");
 	
 	char data[100] = "";

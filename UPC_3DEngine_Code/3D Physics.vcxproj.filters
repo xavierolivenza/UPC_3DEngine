@@ -61,6 +61,9 @@
     <Filter Include="Sources\GameObject\Components">
       <UniqueIdentifier>{369f26e8-cd69-4ec6-b393-b81d06523a6e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Sources\Tools\DeviceID">
+      <UniqueIdentifier>{d1995eb6-6ac3-446b-9486-9ad0affe635b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Module.h">
@@ -471,6 +474,12 @@
     <ClInclude Include="Component.h">
       <Filter>Sources\GameObject\Components</Filter>
     </ClInclude>
+    <ClInclude Include="DeviceId\DeviceId.h">
+      <Filter>Sources\Tools\DeviceID</Filter>
+    </ClInclude>
+    <ClInclude Include="DeviceId\dxgi1_4.h">
+      <Filter>Sources\Tools\DeviceID</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ModuleAudio.cpp">
@@ -667,6 +676,9 @@
     </ClCompile>
     <ClCompile Include="Component.cpp">
       <Filter>Sources\GameObject\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="DeviceId\DeviceId.cpp">
+      <Filter>Sources\Tools\DeviceID</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
