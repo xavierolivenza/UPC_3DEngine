@@ -214,156 +214,8 @@ bool ModuleLoadMesh::Load(std::string* file, std::vector<GeometryData>* meshData
 			const aiMesh* new_mesh = scene->mMeshes[i];
 
 			GeometryData geomData;
-
-			//This is necessary to load the transform of this node, we do here now to get the name of the node
-			aiNode* MeshNode = SearchForMesh(scene->mRootNode, i);
-			if (MeshNode != nullptr)
-			{
-				aiString name = MeshNode->mName;
-				geomData.name = name.C_Str();
-			}
-			
-			// copy vertices
-			geomData.num_vertices = new_mesh->mNumVertices;
-			geomData.vertices = new float[geomData.num_vertices * 3];
-			memcpy(geomData.vertices, new_mesh->mVertices, sizeof(float) * geomData.num_vertices * 3);
-			LOGP("New mesh with %d vertices", geomData.num_vertices);
-
-			// copy faces
-			if (new_mesh->HasFaces())
-			{
-				geomData.num_faces = new_mesh->mNumFaces;
-				geomData.num_indices = new_mesh->mNumFaces * 3;
-				geomData.indices = new uint[geomData.num_indices]; // assume each face is a triangle
-				for (uint i = 0; i < new_mesh->mNumFaces; ++i)
-				{
-					if (new_mesh->mFaces[i].mNumIndices != 3)
-						LOGP("WARNING, geometry face with != 3 indices!");
-					else
-						memcpy(&geomData.indices[i * 3], new_mesh->mFaces[i].mIndices, 3 * sizeof(uint));
-				}
-			}
-
-			// normals
-			if (new_mesh->HasNormals())
-			{
-				geomData.normals = new float[geomData.num_vertices * 3];
-				memcpy(geomData.normals, new_mesh->mNormals, sizeof(float) * geomData.num_vertices * 3);
-			}
-
-			// colors
-			if (new_mesh->HasVertexColors(0))
-			{
-				geomData.colors = new float[geomData.num_vertices * 3];
-				memcpy(geomData.colors, new_mesh->mColors, sizeof(float) * geomData.num_vertices * 3);
-			}
-
-			// texture coords (only one texture for now)
-			if (new_mesh->HasTextureCoords(0))
-			{
-				geomData.texture_coords = new float[geomData.num_vertices * 3];
-				memcpy(geomData.texture_coords, new_mesh->mTextureCoords[0], sizeof(float) * geomData.num_vertices * 3);
-			}
-
-			//loadmeshtexture
-			//Textures need to be inside Game folder
-			//This can load fbx from any directory (desktop dor example), but textures are loaded from Game folder
-			if (scene->HasMaterials())
-			{
-				aiString material_path;
-				scene->mMaterials[new_mesh->mMaterialIndex]->GetTexture(aiTextureType_DIFFUSE, 0, &material_path);
-				//geomData.texture_name = AssetsPath + material_path.C_Str();
-				geomData.texture_name = WorkingPath + material_path.C_Str();
-				//Check if this texture is already loaded
-				int id_texture = 0;
-				bool tex_alraedyLoaded = false;
-				for (std::vector<GeometryData>::iterator item = this->geomData.begin(); item != this->geomData.cend(); ++item)
-					if (item._Ptr->texture_name == geomData.texture_name)
-					{
-						//if the texture is already loaded just assign the same ID
-						id_texture = item._Ptr->id_texture;
-						geomData.texture_w = item._Ptr->texture_w;
-						geomData.texture_h = item._Ptr->texture_h;
-						tex_alraedyLoaded = true;
-						break;
-					}
-				//If the texture is new, load it
-				if(!tex_alraedyLoaded)
-					id_texture = LoadImageFromFile(geomData.texture_name.c_str(), geomData.texture_w, geomData.texture_h);
-				if (id_texture < 0)
-				{
-					LOGP("Error loading texture with path: %s", geomData.texture_name.c_str());
-					geomData.texture_name = "";
-				}
-				else
-				{
-					LOGP("Texture loaded with path: %s", geomData.texture_name.c_str());
-					geomData.id_texture = id_texture;
-				}
-			}
-
-			// Generate AABB
-			geomData.BoundBox.SetNegativeInfinity();
-			geomData.BoundBox.Enclose((float3*)geomData.vertices, geomData.num_vertices);
-
-			//For first test, load pos/rot/scale
-			float3 pos = { 0.0f,0.0f,0.0f };
-			float3 scale = { 1.0f,1.0f,1.0f };
-			Quat rot = { 0.0f,0.0f,0.0f,0.0f };
-			if ((scene->mRootNode != nullptr) && (scene->mRootNode->mNumChildren > 0))
-			{
-				//Sum up all transformations from root node to the node where the mesh is stored
-				aiMatrix4x4 transform;
-				if(MeshNode != nullptr)
-				{
-					for (aiNode* iterator = MeshNode; iterator->mParent != nullptr; iterator = iterator->mParent)
-						transform *= iterator->mTransformation;
-					aiVector3D translation;
-					aiVector3D scaling;
-					aiQuaternion rotation;
-					transform.Decompose(scaling, rotation, translation);
-					pos = { translation.x, translation.y, translation.z };
-					scale = { scaling.x, scaling.y, scaling.z };
-					rot = { rotation.x, rotation.y, rotation.z, rotation.w };
-				}
-			}
-			geomData.pos = pos;
-			geomData.rot = rot;
-			geomData.scale = scale;
-
-			// Buffer for vertices
-			glGenBuffers(1, (GLuint*) &(geomData.id_vertices));
-			glBindBuffer(GL_ARRAY_BUFFER, geomData.id_vertices);
-			glBufferData(GL_ARRAY_BUFFER, sizeof(float) * geomData.num_vertices * 3, geomData.vertices, GL_STATIC_DRAW);
-
-			// Buffer for indices
-			glGenBuffers(1, (GLuint*) &(geomData.id_indices));
-			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, geomData.id_indices);
-			glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint) * geomData.num_indices, geomData.indices, GL_STATIC_DRAW);
-
-			// Buffer for normals
-			if (geomData.normals != nullptr)
-			{
-				glGenBuffers(1, (GLuint*) &(geomData.id_normals));
-				glBindBuffer(GL_ARRAY_BUFFER, geomData.id_normals);
-				glBufferData(GL_ARRAY_BUFFER, sizeof(float) * geomData.num_vertices * 3, geomData.normals, GL_STATIC_DRAW);
-			}
-
-			// Buffer for vertex colors
-			if (geomData.colors != nullptr)
-			{
-				glGenBuffers(1, (GLuint*) &(geomData.id_colors));
-				glBindBuffer(GL_ARRAY_BUFFER, geomData.id_colors);
-				glBufferData(GL_ARRAY_BUFFER, sizeof(float) * geomData.num_vertices * 3, geomData.colors, GL_STATIC_DRAW);
-			}
-
-			// Buffer for texture coords
-			if (geomData.texture_coords != nullptr)
-			{
-				glGenBuffers(1, (GLuint*) &(geomData.id_texture_coords));
-				glBindBuffer(GL_ARRAY_BUFFER, geomData.id_texture_coords);
-				glBufferData(GL_ARRAY_BUFFER, sizeof(float) * geomData.num_vertices * 3, geomData.texture_coords, GL_STATIC_DRAW);
-			}
+			LoadMeshGeometry(geomData, scene, new_mesh, i, WorkingPath);
+			LoadMeshBuffers(geomData);
 			meshDataOutput->push_back(geomData);
 		}
 		aiReleaseImport(scene);
@@ -377,6 +229,162 @@ bool ModuleLoadMesh::Load(std::string* file, std::vector<GeometryData>* meshData
 	}
 
 	return ret;
+}
+
+void ModuleLoadMesh::LoadMeshGeometry(GeometryData& geomData, const aiScene* scene, const aiMesh* new_mesh, uint meshID, std::string& WorkingPath)
+{
+	//This is necessary to load the transform of this node, we do here now to get the name of the node
+	aiNode* MeshNode = SearchForMesh(scene->mRootNode, meshID);
+	if (MeshNode != nullptr)
+	{
+		aiString name = MeshNode->mName;
+		geomData.name = name.C_Str();
+	}
+
+	// copy vertices
+	geomData.num_vertices = new_mesh->mNumVertices;
+	geomData.vertices = new float[geomData.num_vertices * 3];
+	memcpy(geomData.vertices, new_mesh->mVertices, sizeof(float) * geomData.num_vertices * 3);
+	LOGP("New mesh with %d vertices", geomData.num_vertices);
+
+	// copy faces
+	if (new_mesh->HasFaces())
+	{
+		geomData.num_faces = new_mesh->mNumFaces;
+		geomData.num_indices = new_mesh->mNumFaces * 3;
+		geomData.indices = new uint[geomData.num_indices]; // assume each face is a triangle
+		for (uint i = 0; i < new_mesh->mNumFaces; ++i)
+		{
+			if (new_mesh->mFaces[i].mNumIndices != 3)
+				LOGP("WARNING, geometry face with != 3 indices!");
+			else
+				memcpy(&geomData.indices[i * 3], new_mesh->mFaces[i].mIndices, 3 * sizeof(uint));
+		}
+	}
+
+	// normals
+	if (new_mesh->HasNormals())
+	{
+		geomData.normals = new float[geomData.num_vertices * 3];
+		memcpy(geomData.normals, new_mesh->mNormals, sizeof(float) * geomData.num_vertices * 3);
+	}
+
+	// colors
+	if (new_mesh->HasVertexColors(0))
+	{
+		geomData.colors = new float[geomData.num_vertices * 3];
+		memcpy(geomData.colors, new_mesh->mColors, sizeof(float) * geomData.num_vertices * 3);
+	}
+
+	// texture coords (only one texture for now)
+	if (new_mesh->HasTextureCoords(0))
+	{
+		geomData.texture_coords = new float[geomData.num_vertices * 3];
+		memcpy(geomData.texture_coords, new_mesh->mTextureCoords[0], sizeof(float) * geomData.num_vertices * 3);
+	}
+
+	//loadmeshtexture
+	//Textures need to be inside Game folder
+	//This can load fbx from any directory (desktop dor example), but textures are loaded from Game folder
+	if (scene->HasMaterials())
+	{
+		aiString material_path;
+		scene->mMaterials[new_mesh->mMaterialIndex]->GetTexture(aiTextureType_DIFFUSE, 0, &material_path);
+		//geomData.texture_name = AssetsPath + material_path.C_Str();
+		geomData.texture_name = WorkingPath + material_path.C_Str();
+		//Check if this texture is already loaded
+		int id_texture = 0;
+		bool tex_alraedyLoaded = false;
+		for (std::vector<GeometryData>::iterator item = this->geomData.begin(); item != this->geomData.cend(); ++item)
+			if (item._Ptr->texture_name == geomData.texture_name)
+			{
+				//if the texture is already loaded just assign the same ID
+				id_texture = item._Ptr->id_texture;
+				geomData.texture_w = item._Ptr->texture_w;
+				geomData.texture_h = item._Ptr->texture_h;
+				tex_alraedyLoaded = true;
+				break;
+			}
+		//If the texture is new, load it
+		if (!tex_alraedyLoaded)
+			id_texture = LoadImageFromFile(geomData.texture_name.c_str(), geomData.texture_w, geomData.texture_h);
+		if (id_texture < 0)
+		{
+			LOGP("Error loading texture with path: %s", geomData.texture_name.c_str());
+			geomData.texture_name = "";
+		}
+		else
+		{
+			LOGP("Texture loaded with path: %s", geomData.texture_name.c_str());
+			geomData.id_texture = id_texture;
+		}
+	}
+
+	// Generate AABB
+	geomData.BoundBox.SetNegativeInfinity();
+	geomData.BoundBox.Enclose((float3*)geomData.vertices, geomData.num_vertices);
+
+	//For first test, load pos/rot/scale
+	float3 pos = { 0.0f,0.0f,0.0f };
+	float3 scale = { 1.0f,1.0f,1.0f };
+	Quat rot = { 0.0f,0.0f,0.0f,0.0f };
+	if ((scene->mRootNode != nullptr) && (scene->mRootNode->mNumChildren > 0))
+	{
+		//Sum up all transformations from root node to the node where the mesh is stored
+		aiMatrix4x4 transform;
+		if (MeshNode != nullptr)
+		{
+			for (aiNode* iterator = MeshNode; iterator->mParent != nullptr; iterator = iterator->mParent)
+				transform *= iterator->mTransformation;
+			aiVector3D translation;
+			aiVector3D scaling;
+			aiQuaternion rotation;
+			transform.Decompose(scaling, rotation, translation);
+			pos = { translation.x, translation.y, translation.z };
+			scale = { scaling.x, scaling.y, scaling.z };
+			rot = { rotation.x, rotation.y, rotation.z, rotation.w };
+		}
+	}
+	geomData.pos = pos;
+	geomData.rot = rot;
+	geomData.scale = scale;
+}
+
+void ModuleLoadMesh::LoadMeshBuffers(GeometryData& geomData)
+{
+	// Buffer for vertices
+	glGenBuffers(1, (GLuint*) &(geomData.id_vertices));
+	glBindBuffer(GL_ARRAY_BUFFER, geomData.id_vertices);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * geomData.num_vertices * 3, geomData.vertices, GL_STATIC_DRAW);
+
+	// Buffer for indices
+	glGenBuffers(1, (GLuint*) &(geomData.id_indices));
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, geomData.id_indices);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint) * geomData.num_indices, geomData.indices, GL_STATIC_DRAW);
+
+	// Buffer for normals
+	if (geomData.normals != nullptr)
+	{
+		glGenBuffers(1, (GLuint*) &(geomData.id_normals));
+		glBindBuffer(GL_ARRAY_BUFFER, geomData.id_normals);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(float) * geomData.num_vertices * 3, geomData.normals, GL_STATIC_DRAW);
+	}
+
+	// Buffer for vertex colors
+	if (geomData.colors != nullptr)
+	{
+		glGenBuffers(1, (GLuint*) &(geomData.id_colors));
+		glBindBuffer(GL_ARRAY_BUFFER, geomData.id_colors);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(float) * geomData.num_vertices * 3, geomData.colors, GL_STATIC_DRAW);
+	}
+
+	// Buffer for texture coords
+	if (geomData.texture_coords != nullptr)
+	{
+		glGenBuffers(1, (GLuint*) &(geomData.id_texture_coords));
+		glBindBuffer(GL_ARRAY_BUFFER, geomData.id_texture_coords);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(float) * geomData.num_vertices * 3, geomData.texture_coords, GL_STATIC_DRAW);
+	}
 }
 
 // Function load a image, turn it into a texture, and return the texture ID as a GLuint for use

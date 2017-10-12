@@ -3,7 +3,9 @@
 #include "Globals.h"
 
 struct GeometryData;
+struct aiScene;
 struct aiNode;
+struct aiMesh;
 
 class ModuleLoadMesh : public Module
 {
@@ -33,6 +35,10 @@ public:
 	}
 
 private:
+	void LoadMeshGeometry(GeometryData& geomData, const aiScene* scene, const aiMesh* new_mesh, uint meshID, std::string& WorkingPath);
+	void LoadMeshBuffers(GeometryData& geomData);
+
+
 	aiNode* SearchForMesh(aiNode* root, uint mesh_id);
 	aiNode* SearchForMeshIterator(aiNode* root, uint mesh_id);
 	bool CleanGeometryDataVector(std::vector<GeometryData>* meshDataVec);

@@ -8,6 +8,9 @@
 #include "ModuleParson.h"
 #include "Timer.h"
 
+#include "Fluid_Studios_Memory_Manager\mmgr.h"
+#include "Fluid_Studios_Memory_Manager\nommgr.h"
+
 #include "MathGeoLib\MathGeoLib.h"
 #include "MathGeoLib\MathBuildConfig.h"
 
