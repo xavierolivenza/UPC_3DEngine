@@ -7,6 +7,8 @@ The main objective is to create a simple 3D game editor.
 
 Unzip the realese folder and execute the .exe file.
 
+In assets folder, you can find some models to test the engine.
+
 
 ## USAGE
 
