@@ -145,7 +145,8 @@ bool ModuleRenderer3D::Start()
 
 	//uint w = 0;
 	//uint h = 0;
-	//Lenna_tex = App->loadmesh->LoadImageFromFile("Assets/Lenna.png", w, h);
+	//uint d = 0;
+	//Lenna_tex = App->loadmesh->LoadImageFromFile("Assets/Lenna.png", w, h, d);
 
 	return true;
 }

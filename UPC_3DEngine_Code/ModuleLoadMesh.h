@@ -21,7 +21,7 @@ public:
 	bool CleanUp();
 
 	bool Load(std::string* file, std::vector<GeometryData>* meshDataOutput);
-	int LoadImageFromFile(const char* theFileName, uint& tex_w, uint& tex_h);
+	int LoadImageFromFile(const char* theFileName, uint& tex_w, uint& tex_h, uint& tex_d);
 
 	bool SaveConf(JSON_Object* conf) const;
 	bool LoadConf(JSON_Object* conf);
@@ -37,8 +37,6 @@ public:
 private:
 	void LoadMeshGeometry(GeometryData& geomData, const aiScene* scene, const aiMesh* new_mesh, uint meshID, std::string& WorkingPath);
 	void LoadMeshBuffers(GeometryData& geomData);
-
-
 	aiNode* SearchForMesh(aiNode* root, uint mesh_id);
 	aiNode* SearchForMeshIterator(aiNode* root, uint mesh_id);
 	bool CleanGeometryDataVector(std::vector<GeometryData>* meshDataVec);

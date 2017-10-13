@@ -623,6 +623,8 @@ void ModuleEngineUI::ImGuiPropertiesWindow()
 				ImGui::Text(data);
 				sprintf_s(data, data_size, "Texture Height: %i", item._Ptr->texture_h);
 				ImGui::Text(data);
+				sprintf_s(data, data_size, "Texture Depth: %i", item._Ptr->texture_d);
+				ImGui::Text(data);
 			}
 		}
 	}

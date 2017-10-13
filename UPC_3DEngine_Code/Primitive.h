@@ -43,6 +43,7 @@ struct GeometryData
 	std::string texture_name = "";
 	uint texture_w = 0;
 	uint texture_h = 0;
+	uint texture_d = 0;
 
 	float3 pos = { 0.0f, 0.0f, 0.0f };
 	float3 scale = { 0.0f, 0.0f, 0.0f };

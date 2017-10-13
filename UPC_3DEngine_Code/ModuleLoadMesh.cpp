@@ -102,7 +102,8 @@ update_status ModuleLoadMesh::Update(float dt)
 			{
 				uint tex_w = 0;
 				uint tex_h = 0;
-				int tex_id = LoadImageFromFile(DroppedFile->c_str(), tex_w, tex_h);
+				uint tex_d = 0;
+				int tex_id = LoadImageFromFile(DroppedFile->c_str(), tex_w, tex_h, tex_d);
 				if (tex_id < 0)
 				{
 					LOGP("Error loading texture with path: %s", DroppedFile->c_str());
@@ -119,6 +120,7 @@ update_status ModuleLoadMesh::Update(float dt)
 						item._Ptr->texture_name = DroppedFile->c_str();
 						item._Ptr->texture_w = tex_w;
 						item._Ptr->texture_h = tex_h;
+						item._Ptr->texture_d = tex_d;
 					}
 					LOGP("Texture aplied to geometry.");
 				}
@@ -303,12 +305,13 @@ void ModuleLoadMesh::LoadMeshGeometry(GeometryData& geomData, const aiScene* sce
 				id_texture = item._Ptr->id_texture;
 				geomData.texture_w = item._Ptr->texture_w;
 				geomData.texture_h = item._Ptr->texture_h;
+				geomData.texture_d = item._Ptr->texture_d;
 				tex_alraedyLoaded = true;
 				break;
 			}
 		//If the texture is new, load it
 		if (!tex_alraedyLoaded)
-			id_texture = LoadImageFromFile(geomData.texture_name.c_str(), geomData.texture_w, geomData.texture_h);
+			id_texture = LoadImageFromFile(geomData.texture_name.c_str(), geomData.texture_w, geomData.texture_h, geomData.texture_d);
 		if (id_texture < 0)
 		{
 			LOGP("Error loading texture with path: %s", geomData.texture_name.c_str());
@@ -389,7 +392,7 @@ void ModuleLoadMesh::LoadMeshBuffers(GeometryData& geomData)
 }
 
 // Function load a image, turn it into a texture, and return the texture ID as a GLuint for use
-int ModuleLoadMesh::LoadImageFromFile(const char* theFileName, uint& tex_w, uint& tex_h)
+int ModuleLoadMesh::LoadImageFromFile(const char* theFileName, uint& tex_w, uint& tex_h, uint& tex_d)
 {
 	// Create an image ID as a ULuint
 	ILuint imageID;
@@ -414,6 +417,7 @@ int ModuleLoadMesh::LoadImageFromFile(const char* theFileName, uint& tex_w, uint
 		iluGetImageInfo(&ImageInfo);
 		tex_w = ImageInfo.Width;
 		tex_h = ImageInfo.Height;
+		tex_d = ImageInfo.Depth;
 		if (ImageInfo.Origin == IL_ORIGIN_UPPER_LEFT)
 		{
 			iluFlipImage();
