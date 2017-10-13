@@ -9,8 +9,13 @@ Unzip the realese folder and execute the .exe file.
 
 In assets folder, you can find some models to test the engine.
 
-
 ## USAGE
+
+WARNING: 
+
+-If you charge a huge model or a model that has errors, the camera is moved to a far distance without sight of the plane and the axis. Charging a new smaller/correct one will make the camera return to a normal position. You can also open camera options and change position and reference variables to force the camera move where you want.
+
+-When you charge a new module without texture it will automatically charge checkers texture, the objective of that is to see if the UV are correct if you want the model without texture just go to render options and disable GL_TEXTURE_2D.
 
 ### CONTROLS
 
