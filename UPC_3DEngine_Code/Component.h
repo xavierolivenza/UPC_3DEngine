@@ -22,6 +22,7 @@ public:
 	virtual bool Disable();
 	virtual bool CleanUp();
 	void SetActive(bool active);
+	ComponentType GetType();
 
 protected:
 	bool Active = true;

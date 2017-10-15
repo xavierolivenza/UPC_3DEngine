@@ -23,28 +23,28 @@ bool ModuleEngineUI::Init()
 	active = true;
 	strcpy(appnamestr, App->window->GetTitle()->c_str());
 
-	if (SDL_Has3DNow()) Modes3D += std::string("3D Now Avalible \n");
-	else Modes3D += std::string("3D Now Unavalible \n");
-	if (SDL_HasAVX()) Modes3D += std::string("AVX Avalible \n");
-	else Modes3D += std::string("AVX Unavalible \n");
-	//if (SDL_HasAVX2()) Modes3D += std::string("AVX2 Avalible \n");
-	//else Modes3D += std::string("AVX2 Unavalible \n");
-	if (SDL_HasAltiVec()) Modes3D += std::string("AltiVec Avalible \n");
-	else Modes3D += std::string("AltiVec Unavalible \n");
-	if (SDL_HasMMX()) Modes3D += std::string("MMX Avalible \n");
-	else Modes3D += std::string("MMX Unavalible \n");
-	if (SDL_HasRDTSC()) Modes3D += std::string("RDTSC Avalible \n");
-	else Modes3D += std::string("RDTSC Unavalible \n");
-	if (SDL_HasSSE()) Modes3D += std::string("SSE Avalible \n");
-	else Modes3D += std::string("SSE Unavalible \n");
-	if (SDL_HasSSE2()) Modes3D += std::string("SSE2 Avalible \n");
-	else Modes3D += std::string("SSE2 Unavalible \n");
-	if (SDL_HasSSE3()) Modes3D += std::string("SSE3 Avalible \n");
-	else Modes3D += std::string("SSE3 Unavalible \n");
-	if (SDL_HasSSE41()) Modes3D += std::string("SSE41 Avalible \n");
-	else Modes3D += std::string("SSE41 Unavalible \n");
-	if (SDL_HasSSE42()) Modes3D += std::string("SSE42 Avalible \n");
-	else Modes3D += std::string("SSE42 Unavalible \n");
+	if (SDL_Has3DNow()) Modes3D += "3D Now Avalible \n";
+	else Modes3D += "3D Now Unavalible \n";
+	if (SDL_HasAVX()) Modes3D += "AVX Avalible \n";
+	else Modes3D += "AVX Unavalible \n";
+	//if (SDL_HasAVX2()) Modes3D += "AVX2 Avalible \n";
+	//else Modes3D += "AVX2 Unavalible \n";
+	if (SDL_HasAltiVec()) Modes3D += "AltiVec Avalible \n";
+	else Modes3D += "AltiVec Unavalible \n";
+	if (SDL_HasMMX()) Modes3D += "MMX Avalible \n";
+	else Modes3D += "MMX Unavalible \n";
+	if (SDL_HasRDTSC()) Modes3D += "RDTSC Avalible \n";
+	else Modes3D += "RDTSC Unavalible \n";
+	if (SDL_HasSSE()) Modes3D += "SSE Avalible \n";
+	else Modes3D += "SSE Unavalible \n";
+	if (SDL_HasSSE2()) Modes3D += "SSE2 Avalible \n";
+	else Modes3D += "SSE2 Unavalible \n";
+	if (SDL_HasSSE3()) Modes3D += "SSE3 Avalible \n";
+	else Modes3D += "SSE3 Unavalible \n";
+	if (SDL_HasSSE41()) Modes3D += "SSE41 Avalible \n";
+	else Modes3D += "SSE41 Unavalible \n";
+	if (SDL_HasSSE42()) Modes3D += "SSE42 Avalible \n";
+	else Modes3D += "SSE42 Unavalible \n";
 
 	return true;
 }
@@ -367,10 +367,10 @@ void ModuleEngineUI::ImGuiConfigurationWindow()
 	}
 	if (ImGui::CollapsingHeader("Hardware"))
 	{
-		char title[100];
-		uint title_size = sizeof title;
+		static char title[100];
+		static uint title_size = sizeof title;
 		
-		SDL_version SDLVersion;
+		static SDL_version SDLVersion;
 
 		SDL_GetVersion(&SDLVersion);
 		sprintf_s(title, title_size, "SDL Major Version: %i", SDLVersion.major);
@@ -381,11 +381,11 @@ void ModuleEngineUI::ImGuiConfigurationWindow()
 		ImGui::Text(title);
 		sprintf_s(title, title_size, "SDL Compiled Version: %i", SDL_COMPILEDVERSION);
 		ImGui::Text(title);
-
+		
 		ImGui::Separator();
 
-		std::string cpubrand;
-		std::string cpuvendor;
+		static std::string cpubrand;
+		static std::string cpuvendor;
 		getCPUInfo(&cpubrand, &cpuvendor);
 		sprintf_s(title, title_size, "CPU Vendor: %s", cpuvendor.c_str());
 		ImGui::Text(title);
@@ -395,9 +395,9 @@ void ModuleEngineUI::ImGuiConfigurationWindow()
 		ImGui::Text(title);
 		sprintf_s(title, title_size, "CPU Cores: %i", SDL_GetCPUCount());
 		ImGui::Text(title);
-
+		
 		ImGui::Text(Modes3D.c_str());
-
+		
 		ImGui::Separator();
 
 		sprintf_s(title, title_size, "RAM: %i Mb", SDL_GetSystemRAM());
@@ -415,7 +415,7 @@ void ModuleEngineUI::ImGuiConfigurationWindow()
 		GPUData = glGetString(GL_VERSION);
 		sprintf_s(title, title_size, "GL_Version: %s", GPUData);
 		ImGui::Text(title);
-
+		
 		/*
 		//Huge str buffer>1000
 		char title2[1000];
@@ -424,11 +424,11 @@ void ModuleEngineUI::ImGuiConfigurationWindow()
 		ImGui::Text(title2);
 		*/
 
-		char title2[250];
-		uint title2_size = sizeof title2;
+		static char title2[250];
+		static uint title2_size = sizeof title2;
 
 		uint vendor, device_id;
-		std::wstring brand;
+		static std::wstring brand;
 		unsigned __int64 video_mem_budget;
 		unsigned __int64 video_mem_usage;
 		unsigned __int64 video_mem_available;
@@ -612,7 +612,7 @@ void ModuleEngineUI::ImGuiPropertiesWindow()
 			sprintf_s(data, data_size, "Texture##%s", item._Ptr->name.c_str());
 			if (ImGui::CollapsingHeader(data))
 			{
-				std::string path;
+				static std::string path;
 				ImGui::Separator();
 				path = "Texture Path: ";
 				path += item._Ptr->texture_name;

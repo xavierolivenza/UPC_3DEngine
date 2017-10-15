@@ -96,7 +96,7 @@ update_status ModuleLoadMesh::Update(float dt)
 		}
 		else
 		{
-			LOGP("The file you dropped is being processed as a texture...");
+			LOGP("The file you dropped is being processed as a texture... Press Scroll Down");
 			//Load texture?
 			if (geomData.size() > 0)
 			{
@@ -160,6 +160,7 @@ bool ModuleLoadMesh::CleanGeometryDataVector(std::vector<GeometryData>* meshData
 		return false;
 	for (std::vector<GeometryData>::iterator item = meshDataVec->begin(); item != meshDataVec->cend(); ++item)
 	{
+		item._Ptr->name.clear();
 		if (item._Ptr->vertices != nullptr)
 		{
 			glDeleteBuffers(1, &item._Ptr->id_vertices);
@@ -187,6 +188,7 @@ bool ModuleLoadMesh::CleanGeometryDataVector(std::vector<GeometryData>* meshData
 		}
 		if (item._Ptr->texture_name != "")
 			glDeleteTextures(1, &item._Ptr->id_texture);
+		item._Ptr->texture_name.clear();
 	}
 	meshDataVec->clear();
 	return true;
@@ -221,6 +223,7 @@ bool ModuleLoadMesh::Load(std::string* file, std::vector<GeometryData>* meshData
 			LoadMeshBuffers(geomData);
 			meshDataOutput->push_back(geomData);
 		}
+		WorkingPath.clear();
 		aiReleaseImport(scene);
 		geomLoaded = true;
 	}
@@ -239,10 +242,7 @@ void ModuleLoadMesh::LoadMeshGeometry(GeometryData& geomData, const aiScene* sce
 	//This is necessary to load the transform of this node, we do here now to get the name of the node
 	aiNode* MeshNode = SearchForMesh(scene->mRootNode, meshID);
 	if (MeshNode != nullptr)
-	{
-		aiString name = MeshNode->mName;
-		geomData.name = name.C_Str();
-	}
+		geomData.name = MeshNode->mName.C_Str();
 
 	// copy vertices
 	geomData.num_vertices = new_mesh->mNumVertices;
@@ -272,12 +272,15 @@ void ModuleLoadMesh::LoadMeshGeometry(GeometryData& geomData, const aiScene* sce
 		memcpy(geomData.normals, new_mesh->mNormals, sizeof(float) * geomData.num_vertices * 3);
 	}
 
+	//this causes some problems sometimes, so as this is a feature we don't use, we comment it and avoid crashes
+	/*
 	// colors
 	if (new_mesh->HasVertexColors(0))
 	{
 		geomData.colors = new float[geomData.num_vertices * 3];
 		memcpy(geomData.colors, new_mesh->mColors, sizeof(float) * geomData.num_vertices * 3);
 	}
+	*/
 
 	// texture coords (only one texture for now)
 	if (new_mesh->HasTextureCoords(0))
@@ -315,13 +318,14 @@ void ModuleLoadMesh::LoadMeshGeometry(GeometryData& geomData, const aiScene* sce
 		if (id_texture < 0)
 		{
 			LOGP("Error loading texture with path: %s", geomData.texture_name.c_str());
-			geomData.texture_name = "";
+			geomData.texture_name.clear();
 		}
 		else
 		{
 			LOGP("Texture loaded with path: %s", geomData.texture_name.c_str());
 			geomData.id_texture = id_texture;
 		}
+		material_path.Clear();
 	}
 
 	// Generate AABB
@@ -480,9 +484,7 @@ aiNode* ModuleLoadMesh::SearchForMesh(aiNode* root, uint mesh_id)
 {
 	aiNode* node = nullptr;
 	if ((root != nullptr) && (root->mNumChildren > 0))
-	{
 		node = SearchForMeshIterator(root, mesh_id);
-	}
 	return node;
 }
 

@@ -1,9 +1,9 @@
 #pragma once
 #include "Globals.h"
 #include "Application.h"
-//#include "Component.h"
 
 class Component;
+enum ComponentType;
 
 class GameObject
 {
@@ -19,6 +19,9 @@ public:
 	void SetActive(bool active);
 
 	//Find Component
+	const Component* FindComponentFirst(ComponentType type) const;
+	const Component* FindComponentLast(ComponentType type) const;
+	void FindComponentVec(std::vector<Component*>& vec, ComponentType type) const;
 
 private:
 	bool Active = true;

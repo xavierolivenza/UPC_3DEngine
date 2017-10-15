@@ -47,3 +47,8 @@ void Component::SetActive(bool active)
 		else Disable();
 	}
 }
+
+ComponentType Component::GetType()
+{
+	return type;
+}
