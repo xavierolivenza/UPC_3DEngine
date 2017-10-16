@@ -37,3 +37,8 @@ bool ComponentTransform::CleanUp()
 {
 	return true;
 }
+
+void ComponentTransform::DrawComponentImGui()
+{
+
+}

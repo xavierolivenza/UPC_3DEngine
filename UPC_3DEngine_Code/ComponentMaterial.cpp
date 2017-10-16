@@ -37,3 +37,8 @@ bool ComponentMaterial::CleanUp()
 {
 	return true;
 }
+
+void ComponentMaterial::DrawComponentImGui()
+{
+
+}

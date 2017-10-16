@@ -13,4 +13,5 @@ public:
 	bool PostUpdate(float dt);
 	bool Disable();
 	bool CleanUp();
+	void DrawComponentImGui();
 };

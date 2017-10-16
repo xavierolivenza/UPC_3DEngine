@@ -38,6 +38,11 @@ bool Component::CleanUp()
 	return true;
 }
 
+void Component::DrawComponentImGui()
+{
+
+}
+
 void Component::SetActive(bool active)
 {
 	if (Active != active)

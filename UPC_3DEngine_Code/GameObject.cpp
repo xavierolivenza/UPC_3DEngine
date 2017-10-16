@@ -72,6 +72,12 @@ const std::vector<Component*>* GameObject::GetComponents() const
 	return &components;
 }
 
+void GameObject::DrawComponentImGui()
+{
+	for (std::vector<Component*>::iterator item = components.begin(); item != components.cend(); ++item)
+		(*item)->DrawComponentImGui();
+}
+
 void GameObject::AddChild(GameObject* child)
 {
 	children.push_back(child);

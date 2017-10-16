@@ -37,3 +37,8 @@ bool ComponentMesh::CleanUp()
 {
 	return true;
 }
+
+void ComponentMesh::DrawComponentImGui()
+{
+
+}

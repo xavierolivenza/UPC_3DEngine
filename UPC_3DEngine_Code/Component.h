@@ -21,6 +21,7 @@ public:
 	virtual bool PostUpdate(float dt);
 	virtual bool Disable();
 	virtual bool CleanUp();
+	virtual void DrawComponentImGui();
 	void SetActive(bool active);
 	ComponentType GetType();
 

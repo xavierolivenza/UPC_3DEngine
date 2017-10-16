@@ -21,6 +21,8 @@ public:
 	const std::vector<GameObject*>* GetChildren() const;
 	const std::vector<Component*>* GetComponents() const;
 
+	void DrawComponentImGui();
+
 	void AddChild(GameObject* child);
 	bool RemoveChild(GameObject* child);
 
