@@ -8,7 +8,7 @@ enum ComponentType;
 class GameObject
 {
 public:
-	GameObject();
+	GameObject(const char* name, bool active);
 	~GameObject();
 
 	bool PreUpdate(float dt);

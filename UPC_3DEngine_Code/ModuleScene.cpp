@@ -17,6 +17,7 @@ bool ModuleScene::Init()
 {
 	LOGP("Creating Module Scene");
 	bool ret = true;
+	root = new GameObject("Root", true);
 	return ret;
 }
 
@@ -49,7 +50,8 @@ update_status ModuleScene::PostUpdate(float dt)
 bool ModuleScene::CleanUp()
 {
 	LOGP("Destroying Module Scene");
-	//root->CleanUp();
+	root->CleanUp();
+	RELEASE(root);
 	return true;
 }
 

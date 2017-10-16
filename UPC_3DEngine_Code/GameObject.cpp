@@ -1,7 +1,7 @@
 #include "GameObject.h"
 #include "Component.h"
 
-GameObject::GameObject()
+GameObject::GameObject(const char* name, bool active): name(name), Active(active)
 {
 	
 }
@@ -40,10 +40,13 @@ bool GameObject::CleanUp()
 {
 	for (std::vector<Component*>::const_iterator item = components.cbegin(); item != components.cend(); ++item)
 		(*item)->CleanUp();
-	/*
 	for (std::vector<GameObject*>::const_iterator item = children.cbegin(); item != children.cend(); ++item)
 		(*item)->CleanUp();
-	*/
+	if (children.size() == 0)
+	{
+		//Release memory here
+
+	}
 	return true;
 }
 
