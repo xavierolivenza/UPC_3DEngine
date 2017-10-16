@@ -69,3 +69,8 @@ void ModuleScene::ImGuiModuleVariables()
 {
 	
 }
+
+const GameObject* ModuleScene::GetRoot() const
+{
+	return root;
+}

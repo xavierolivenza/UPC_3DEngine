@@ -647,10 +647,12 @@ void ModuleEngineUI::ImGuiHierarchyWindow()
 	ImGui::Begin("Hierarchy", false, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_HorizontalScrollbar);
 	//ImGui::Begin("Hierarchy", false);
 
+	RecursiveDrawHierarchy(App->scene->GetRoot());
+
 	ImGui::End();
 }
 
-void ModuleEngineUI::RecursiveDrawHierarchy(GameObject* node)
+void ModuleEngineUI::RecursiveDrawHierarchy(const GameObject* node) const
 {
 	uint flags = 0;
 	const std::vector<GameObject*>* children = node->GetChildren();

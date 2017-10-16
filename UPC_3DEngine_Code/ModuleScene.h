@@ -21,7 +21,9 @@ public:
 
 	void ImGuiModuleVariables();
 
-	//Functions to create different components
+	const GameObject* GetRoot() const;
+
+	//Functions to create GameObjects
 
 private:
 	GameObject* root = nullptr;

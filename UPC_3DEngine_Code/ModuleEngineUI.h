@@ -38,7 +38,7 @@ private:
 	void ImGuiConsole();
 	void ImGuiInspectorWindow();
 	void ImGuiHierarchyWindow();
-	void RecursiveDrawHierarchy(GameObject* node);
+	void RecursiveDrawHierarchy(const GameObject* node) const;
 
 private:
 	std::string Modes3D;
