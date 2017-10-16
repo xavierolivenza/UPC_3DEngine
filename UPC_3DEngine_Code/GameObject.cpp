@@ -72,6 +72,35 @@ const std::vector<Component*>* GameObject::GetComponents() const
 	return &components;
 }
 
+void GameObject::AddChild(GameObject* child)
+{
+	children.push_back(child);
+}
+
+bool GameObject::RemoveChild(GameObject* child)
+{
+	for (std::vector<GameObject*>::iterator item = children.begin(); item != children.cend(); ++item)
+		if ((*item) == child)
+		{
+			(*item)->CleanUp();
+			RELEASE(*item);
+			return true;
+		}
+	return false;
+}
+
+bool GameObject::RemoveComponent(Component* component)
+{
+	for (std::vector<Component*>::iterator item = components.begin(); item != components.cend(); ++item)
+		if ((*item) == component)
+		{
+			(*item)->CleanUp();
+			RELEASE(*item);
+			return true;
+		}
+	return false;
+}
+
 const Component* GameObject::FindComponentFirst(ComponentType type) const
 {
 	Component* ret = nullptr;

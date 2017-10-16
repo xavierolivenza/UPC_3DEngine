@@ -110,6 +110,9 @@
     <ClInclude Include="Assimp\include\version.h" />
     <ClInclude Include="Color.h" />
     <ClInclude Include="Component.h" />
+    <ClInclude Include="ComponentMaterial.h" />
+    <ClInclude Include="ComponentMesh.h" />
+    <ClInclude Include="ComponentTransform.h" />
     <ClInclude Include="DeviceId\DeviceId.h" />
     <ClInclude Include="DeviceId\dxgi1_4.h" />
     <ClInclude Include="Devil\include\config.h" />
@@ -217,6 +220,9 @@
     <ClCompile Include="Application.cpp" />
     <ClCompile Include="Color.cpp" />
     <ClCompile Include="Component.cpp" />
+    <ClCompile Include="ComponentMaterial.cpp" />
+    <ClCompile Include="ComponentMesh.cpp" />
+    <ClCompile Include="ComponentTransform.cpp" />
     <ClCompile Include="DeviceId\DeviceId.cpp" />
     <ClCompile Include="Fluid_Studios_Memory_Manager\mmgr.cpp" />
     <ClCompile Include="GameObject.cpp" />

@@ -21,6 +21,12 @@ public:
 	const std::vector<GameObject*>* GetChildren() const;
 	const std::vector<Component*>* GetComponents() const;
 
+	void AddChild(GameObject* child);
+	bool RemoveChild(GameObject* child);
+
+	//TODO Create Different Components
+	bool RemoveComponent(Component* component);
+
 	//Find Component
 	const Component* FindComponentFirst(ComponentType type) const;
 	const Component* FindComponentLast(ComponentType type) const;

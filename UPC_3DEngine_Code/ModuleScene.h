@@ -22,8 +22,11 @@ public:
 	void ImGuiModuleVariables();
 
 	const GameObject* GetRoot() const;
+	void AddChildToRoot(GameObject* child);
+	bool RemoveChildFromRoot(GameObject* child);
 
 	//Functions to create GameObjects
+	GameObject* CreateGameObject(const char* name, bool active = true);
 
 private:
 	GameObject* root = nullptr;

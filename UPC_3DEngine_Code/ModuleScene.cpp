@@ -74,3 +74,18 @@ const GameObject* ModuleScene::GetRoot() const
 {
 	return root;
 }
+
+void ModuleScene::AddChildToRoot(GameObject* child)
+{
+	root->AddChild(child);
+}
+
+bool ModuleScene::RemoveChildFromRoot(GameObject* child)
+{
+	return root->RemoveChild(child);
+}
+
+GameObject* ModuleScene::CreateGameObject(const char* name, bool active)
+{
+	return new GameObject(name, active);
+}
