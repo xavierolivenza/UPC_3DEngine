@@ -36,17 +36,19 @@ private:
 	void ImGuiProfierWindow();
 	void ImGuiModuleVariablesWindow();
 	void ImGuiConsole();
-	void ImGuiPropertiesWindow();
+	void ImGuiInspectorWindow();
+	void ImGuiHierarchyWindow();
 	void RecursiveDrawHierarchy(GameObject* node);
 
 private:
 	std::string Modes3D;
 	bool showTestWindow = false;
-	bool showProfilerWindow = true;
+	bool showProfilerWindow = false;
 	bool showModuleVariablesWindow = true;
-	bool showConfigurationWindow = true;
+	bool showConfigurationWindow = false;
 	bool showConsoleWindow = true;
-	bool showPropertiesWindow = true;
+	bool showInspectorWindow = true;
+	bool showHierarchyWindow = true;
 	bool freezeplots = false;
 	bool active = false;
 	bool ScrollDownConsole = true;

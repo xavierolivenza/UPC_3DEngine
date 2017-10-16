@@ -153,12 +153,13 @@ void ModuleEngineUI::DrawModuleImGui()
 	//-----------------Menu Bar-----------------//
 	//------------------------------------------//
 	ImGuiDrawMenuBar();
-	if ((App->input->GetKey(SDL_SCANCODE_1) == KEY_DOWN) && (App->input->GetKey(SDL_SCANCODE_LALT) == KEY_REPEAT)) showProfilerWindow = !showProfilerWindow;
+	if ((App->input->GetKey(SDL_SCANCODE_1) == KEY_DOWN) && (App->input->GetKey(SDL_SCANCODE_LALT) == KEY_REPEAT)) showHierarchyWindow = !showHierarchyWindow;
 	if ((App->input->GetKey(SDL_SCANCODE_2) == KEY_DOWN) && (App->input->GetKey(SDL_SCANCODE_LALT) == KEY_REPEAT)) showModuleVariablesWindow = !showModuleVariablesWindow;
-	if ((App->input->GetKey(SDL_SCANCODE_3) == KEY_DOWN) && (App->input->GetKey(SDL_SCANCODE_LALT) == KEY_REPEAT)) showConfigurationWindow = !showConfigurationWindow;
+	if ((App->input->GetKey(SDL_SCANCODE_3) == KEY_DOWN) && (App->input->GetKey(SDL_SCANCODE_LALT) == KEY_REPEAT)) showInspectorWindow = !showInspectorWindow;
 	if ((App->input->GetKey(SDL_SCANCODE_4) == KEY_DOWN) && (App->input->GetKey(SDL_SCANCODE_LALT) == KEY_REPEAT)) showConsoleWindow = !showConsoleWindow;
-	if ((App->input->GetKey(SDL_SCANCODE_5) == KEY_DOWN) && (App->input->GetKey(SDL_SCANCODE_LALT) == KEY_REPEAT)) showPropertiesWindow = !showPropertiesWindow;
-	
+	if ((App->input->GetKey(SDL_SCANCODE_5) == KEY_DOWN) && (App->input->GetKey(SDL_SCANCODE_LALT) == KEY_REPEAT)) showConfigurationWindow = !showConfigurationWindow;
+	if ((App->input->GetKey(SDL_SCANCODE_6) == KEY_DOWN) && (App->input->GetKey(SDL_SCANCODE_LALT) == KEY_REPEAT)) showProfilerWindow = !showProfilerWindow;
+
 	//------------------------------------------//
 	//-------------GUI Test Window--------------//
 	//------------------------------------------//
@@ -190,10 +191,16 @@ void ModuleEngineUI::DrawModuleImGui()
 		ImGuiConsole();
 
 	//------------------------------------------//
-	//------------Properties Window-------------//
+	//------------Inspector Window--------------//
 	//------------------------------------------//
-	if (showPropertiesWindow)
-		ImGuiPropertiesWindow();
+	if (showInspectorWindow)
+		ImGuiInspectorWindow();
+
+	//------------------------------------------//
+	//-------------Hierarchy Window-------------//
+	//------------------------------------------//
+	if (showHierarchyWindow)
+		ImGuiHierarchyWindow();
 
 	//------------------------------------------//
 	//-----------------Rand Gen-----------------//
@@ -220,11 +227,12 @@ void ModuleEngineUI::ImGuiDrawMenuBar()
 	}
 	if (ImGui::BeginMenu("View"))
 	{
-		ImGui::MenuItem("Profiler", "LALT + 1", &showProfilerWindow);
+		ImGui::MenuItem("Hierarchy", "LALT + 1", &showHierarchyWindow);
 		ImGui::MenuItem("Module Variables", "LALT + 2", &showModuleVariablesWindow);
-		ImGui::MenuItem("Configuration", "LALT + 3", &showConfigurationWindow);
+		ImGui::MenuItem("Inspector", "LALT + 3", &showInspectorWindow);
 		ImGui::MenuItem("Console", "LALT + 4", &showConsoleWindow);
-		ImGui::MenuItem("Properties", "LALT + 5", &showPropertiesWindow);
+		ImGui::MenuItem("Configuration", "LALT + 5", &showConfigurationWindow);
+		ImGui::MenuItem("Profiler", "LALT + 6", &showProfilerWindow);
 		ImGui::EndMenu();
 	}
 	if (ImGui::BeginMenu("Help"))
@@ -299,7 +307,7 @@ void ModuleEngineUI::ImGuiConfigurationWindow()
 	sMStats MemoryStats = m_getMemoryStatistics();
 	PushFPSandMSPlot(PerformanceData->frames_last_second, PerformanceData->miliseconds_per_frame, MemoryStats.totalReportedMemory);
 	ImGui::Begin("Configuration", false, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_HorizontalScrollbar);
-	//ImGui::Begin("Configuration", false);
+	//ImGui::Begin("Configuration", false, ImGuiWindowFlags_HorizontalScrollbar);
 	if (ImGui::CollapsingHeader("Application"))
 	{
 		//App name
@@ -519,10 +527,10 @@ void ModuleEngineUI::ImGuiConsole()
 	ImGui::End();
 }
 
-void ModuleEngineUI::ImGuiPropertiesWindow()
+void ModuleEngineUI::ImGuiInspectorWindow()
 {
-	ImGui::Begin("Properties", false, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_HorizontalScrollbar);
-	//ImGui::Begin("Properties", false);
+	ImGui::Begin("Inspector", false, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_HorizontalScrollbar);
+	//ImGui::Begin("Inspector", false);
 	ImGui::Text("If there is geometry loaded, here will appear\nPosition/Rotation/Scale of the loaded meshes.");
 	ImGui::Text("If one of the IDs/Paths below is zero/null,\nit means that it does not have\nthat characteristic.");
 	
@@ -630,6 +638,14 @@ void ModuleEngineUI::ImGuiPropertiesWindow()
 			}
 		}
 	}
+
+	ImGui::End();
+}
+
+void ModuleEngineUI::ImGuiHierarchyWindow()
+{
+	ImGui::Begin("Hierarchy", false, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_HorizontalScrollbar);
+	//ImGui::Begin("Hierarchy", false);
 
 	ImGui::End();
 }
