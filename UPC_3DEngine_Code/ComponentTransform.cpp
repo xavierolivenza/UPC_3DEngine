@@ -3,11 +3,11 @@
 ComponentTransform::ComponentTransform()
 {
 	pos_array = new float[3];
-	pos_array[0] = pos_array[1] = pos_array[2] = 0.0f;
+	SetPos({ 0.0f,0.0f,0.0f });
 	scale_array = new float[3];
-	scale_array[0] = scale_array[1] = scale_array[2] = 0.0f;
+	SetScale({ 1.0f,1.0f,1.0f });
 	rot_euler_array = new float[3];
-	rot_euler_array[0] = rot_euler_array[1] = rot_euler_array[2] = 0.0f;
+	SetRot({ 0.0f,0.0f,0.0f,1.0f });
 }
 
 ComponentTransform::~ComponentTransform()
@@ -48,9 +48,12 @@ bool ComponentTransform::CleanUp()
 
 void ComponentTransform::DrawComponentImGui()
 {
-	ImGui::InputFloat3("Position", pos_array);
-	ImGui::InputFloat3("Rotation", rot_euler_array);
-	ImGui::InputFloat3("Scale", scale_array);
+	if (ImGui::CollapsingHeader("Transform Component", ImGuiTreeNodeFlags_DefaultOpen))
+	{
+		ImGui::InputFloat3("Position", pos_array);
+		ImGui::InputFloat3("Rotation", rot_euler_array);
+		ImGui::InputFloat3("Scale", scale_array);
+	}
 }
 
 void ComponentTransform::SetPos(float3& new_pos)
