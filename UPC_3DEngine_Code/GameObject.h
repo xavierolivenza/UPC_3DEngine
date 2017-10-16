@@ -18,15 +18,20 @@ public:
 
 	void SetActive(bool active);
 
+	const std::vector<GameObject*>* GetChildren() const;
+	const std::vector<Component*>* GetComponents() const;
+
 	//Find Component
 	const Component* FindComponentFirst(ComponentType type) const;
 	const Component* FindComponentLast(ComponentType type) const;
 	void FindComponentVec(std::vector<Component*>& vec, ComponentType type) const;
 
+public:
+	std::string name;
+
 private:
 	bool Active = true;
 	GameObject* parent = nullptr;
-	std::string name;
 	std::vector<GameObject*> children;
 	std::vector<Component*> components;
 };

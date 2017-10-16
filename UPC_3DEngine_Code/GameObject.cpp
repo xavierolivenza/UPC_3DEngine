@@ -62,6 +62,16 @@ void GameObject::SetActive(bool active)
 	}
 }
 
+const std::vector<GameObject*>* GameObject::GetChildren() const
+{
+	return &children;
+}
+
+const std::vector<Component*>* GameObject::GetComponents() const
+{
+	return &components;
+}
+
 const Component* GameObject::FindComponentFirst(ComponentType type) const
 {
 	Component* ret = nullptr;

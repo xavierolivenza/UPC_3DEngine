@@ -7,6 +7,8 @@
 
 #include "DeviceId\DeviceId.h"
 
+#include "GameObject.h"
+
 ModuleEngineUI::ModuleEngineUI(Application* app, bool start_enabled) : Module(app, start_enabled),
 	fpsPlotData(FPS_AND_MS_PLOT_DATA_LENGTH), msPlotData(FPS_AND_MS_PLOT_DATA_LENGTH), memPlotData(FPS_AND_MS_PLOT_DATA_LENGTH)
 {
@@ -630,6 +632,24 @@ void ModuleEngineUI::ImGuiPropertiesWindow()
 	}
 
 	ImGui::End();
+}
+
+void ModuleEngineUI::RecursiveDrawHierarchy(GameObject* node)
+{
+	uint flags = 0;
+	const std::vector<GameObject*>* children = node->GetChildren();
+
+	if (children->empty())
+		flags |= ImGuiTreeNodeFlags_Leaf;
+	if (ImGui::TreeNodeEx(node, flags, "Node"))
+	{
+		for (std::vector<GameObject*>::const_iterator item = children->cbegin(); item != children->cend(); ++item)
+		{
+			ImGui::Text("%s", (*item)->name.c_str());
+			RecursiveDrawHierarchy(*item);
+		}
+		ImGui::TreePop();
+	}
 }
 
 void ModuleEngineUI::PushNewConsoleLabel(std::string* newlabel)

@@ -3,6 +3,8 @@
 #include "Globals.h"
 #include "imgui-1.51\imgui.h"
 
+class GameObject;
+
 class ModuleEngineUI : public Module
 {
 public:
@@ -35,6 +37,7 @@ private:
 	void ImGuiModuleVariablesWindow();
 	void ImGuiConsole();
 	void ImGuiPropertiesWindow();
+	void RecursiveDrawHierarchy(GameObject* node);
 
 private:
 	std::string Modes3D;
