@@ -531,9 +531,15 @@ void ModuleEngineUI::ImGuiInspectorWindow()
 {
 	ImGui::Begin("Inspector", false, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_HorizontalScrollbar);
 	//ImGui::Begin("Inspector", false);
-	ImGui::Text("If there is geometry loaded, here will appear\nPosition/Rotation/Scale of the loaded meshes.");
+	ImGui::Text("Click one GameObject to see its components.");
 	ImGui::Text("If one of the IDs/Paths below is zero/null,\nit means that it does not have\nthat characteristic.");
 	
+	if (GameObjectSelected)
+		GameObjectSelected->DrawComponentImGui();
+
+
+
+	/*
 	char data[100] = "";
 	uint data_size = sizeof data;
 
@@ -638,7 +644,7 @@ void ModuleEngineUI::ImGuiInspectorWindow()
 			}
 		}
 	}
-
+	*/
 	ImGui::End();
 }
 

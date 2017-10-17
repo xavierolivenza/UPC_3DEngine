@@ -41,6 +41,7 @@ private:
 	void RecursiveDrawHierarchy(const GameObject* node) const;
 
 private:
+	GameObject* GameObjectSelected = nullptr;
 	std::string Modes3D;
 	bool showTestWindow = false;
 	bool showProfilerWindow = false;
