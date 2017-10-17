@@ -53,6 +53,11 @@ void Component::SetActive(bool active)
 	}
 }
 
+bool Component::IsActive()
+{
+	return Active;
+}
+
 ComponentType Component::GetType()
 {
 	return type;

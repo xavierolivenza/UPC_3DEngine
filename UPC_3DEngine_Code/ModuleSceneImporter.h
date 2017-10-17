@@ -2,12 +2,14 @@
 
 #include "Module.h"
 
-class ModuleImporter : public Module
+struct MeshData;
+
+class ModuleSceneImporter : public Module
 {
 public:
 
-	ModuleImporter(Application* parent, bool start_enabled = true);
-	~ModuleImporter();
+	ModuleSceneImporter(Application* parent, bool start_enabled = true);
+	~ModuleSceneImporter();
 
 	bool Init();
 	bool Start();
@@ -18,6 +20,8 @@ public:
 
 	void DrawModuleImGui();
 	void ImGuiModuleVariables();
+
+	bool SaveBinary(const char* file_name, MeshData* mesh);
 
 	bool SaveConf(JSON_Object* conf) const;
 	bool LoadConf(JSON_Object* conf);

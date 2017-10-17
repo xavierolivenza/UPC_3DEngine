@@ -6,7 +6,18 @@ ComponentMesh::ComponentMesh(bool Active) : Component(Active, 1, ComponentType::
 }
 
 ComponentMesh::~ComponentMesh()
-{}
+{
+	if (DebugDrawAABB_vertices != nullptr)
+	{
+		glDeleteBuffers(1, &DebugDrawAABB_id_vertices);
+		RELEASE_ARRAY(DebugDrawAABB_vertices);
+	}
+	if (DebugDrawAABB_indices != nullptr)
+	{
+		glDeleteBuffers(1, &DebugDrawAABB_id_indices);
+		RELEASE_ARRAY(DebugDrawAABB_indices);
+	}
+}
 
 bool ComponentMesh::Enable()
 {
@@ -20,6 +31,18 @@ bool ComponentMesh::PreUpdate(float dt)
 
 bool ComponentMesh::Update(float dt)
 {
+	if (DebugDrawAABB)
+	{
+		glColor3f(1.0f, 1.0f, 0.0f);
+		glLineWidth(2.0f);
+		glEnableClientState(GL_VERTEX_ARRAY);
+		glBindBuffer(GL_ARRAY_BUFFER, DebugDrawAABB_id_vertices);
+		glVertexPointer(3, GL_FLOAT, 0, NULL);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, DebugDrawAABB_id_indices);
+		glDrawElements(GL_LINES, 24, GL_UNSIGNED_INT, NULL);
+		glColor3f(1.0f, 1.0f, 1.0f);
+		glLineWidth(1.0f);
+	}
 	return true;
 }
 
@@ -64,5 +87,65 @@ void ComponentMesh::DrawComponentImGui()
 
 		ImGui::InputFloat3("AABB Max Point", &MeshDataStruct.BoundBox.maxPoint[0], 3, ImGuiInputTextFlags_CharsDecimal | ImGuiInputTextFlags_ReadOnly);
 		ImGui::InputFloat3("AABB Min Point", &MeshDataStruct.BoundBox.minPoint[0], 3, ImGuiInputTextFlags_CharsDecimal | ImGuiInputTextFlags_ReadOnly);
+
+		ImGui::Checkbox("Debug Draw AABB", &DebugDrawAABB);
 	}
+}
+
+void ComponentMesh::GenerateAABBDraw()
+{
+	//Clean if there is another aabb allocated
+	if (DebugDrawAABB_vertices != nullptr)
+	{
+		glDeleteBuffers(1, &DebugDrawAABB_id_vertices);
+		RELEASE_ARRAY(DebugDrawAABB_vertices);
+	}
+	if (DebugDrawAABB_indices != nullptr)
+	{
+		glDeleteBuffers(1, &DebugDrawAABB_id_indices);
+		RELEASE_ARRAY(DebugDrawAABB_indices);
+	}
+
+	//Box math
+	DebugDrawAABB_vertices = new float[24];
+	float vertices[] =
+	{ 
+		MeshDataStruct.BoundBox.CornerPoint(0).x,MeshDataStruct.BoundBox.CornerPoint(0).y,MeshDataStruct.BoundBox.CornerPoint(0).z,
+		MeshDataStruct.BoundBox.CornerPoint(1).x,MeshDataStruct.BoundBox.CornerPoint(1).y,MeshDataStruct.BoundBox.CornerPoint(1).z,
+		MeshDataStruct.BoundBox.CornerPoint(2).x,MeshDataStruct.BoundBox.CornerPoint(2).y,MeshDataStruct.BoundBox.CornerPoint(2).z,
+		MeshDataStruct.BoundBox.CornerPoint(3).x,MeshDataStruct.BoundBox.CornerPoint(3).y,MeshDataStruct.BoundBox.CornerPoint(3).z,
+		MeshDataStruct.BoundBox.CornerPoint(4).x,MeshDataStruct.BoundBox.CornerPoint(4).y,MeshDataStruct.BoundBox.CornerPoint(4).z,
+		MeshDataStruct.BoundBox.CornerPoint(5).x,MeshDataStruct.BoundBox.CornerPoint(5).y,MeshDataStruct.BoundBox.CornerPoint(5).z,
+		MeshDataStruct.BoundBox.CornerPoint(6).x,MeshDataStruct.BoundBox.CornerPoint(6).y,MeshDataStruct.BoundBox.CornerPoint(6).z,
+		MeshDataStruct.BoundBox.CornerPoint(7).x,MeshDataStruct.BoundBox.CornerPoint(7).y,MeshDataStruct.BoundBox.CornerPoint(7).z
+	};
+	memcpy(DebugDrawAABB_vertices, vertices, sizeof(float) * 24);
+
+	DebugDrawAABB_indices = new uint[24];
+	uint indices[] =
+	{
+		0,2,
+		0,4,
+		0,1,
+		7,6,
+		7,3,
+		7,5,
+		5,1,
+		5,4,
+		2,3,
+		2,6,
+		6,4,
+		3,1
+	};
+	memcpy(DebugDrawAABB_indices, indices, sizeof(uint) * 24);
+
+	//Buffer for vertex
+	glGenBuffers(1, (GLuint*) &DebugDrawAABB_id_vertices);
+	glBindBuffer(GL_ARRAY_BUFFER, DebugDrawAABB_id_vertices);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 24, DebugDrawAABB_vertices, GL_STATIC_DRAW);
+
+	// Buffer for indices
+	glGenBuffers(1, (GLuint*) &DebugDrawAABB_id_indices);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, DebugDrawAABB_id_indices);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint) * 24, DebugDrawAABB_indices, GL_STATIC_DRAW);
 }

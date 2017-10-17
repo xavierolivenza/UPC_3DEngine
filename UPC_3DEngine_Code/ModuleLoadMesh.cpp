@@ -276,6 +276,7 @@ void ModuleLoadMesh::LoadGeometry(const aiScene* scene, GameObject* gameObject, 
 	// Generate AABB
 	meshComponent->MeshDataStruct.BoundBox.SetNegativeInfinity();
 	meshComponent->MeshDataStruct.BoundBox.Enclose((float3*)meshComponent->MeshDataStruct.vertices, meshComponent->MeshDataStruct.num_vertices);
+	meshComponent->GenerateAABBDraw();
 
 	//------------------------------------------//
 	//-------------Load Material----------------//

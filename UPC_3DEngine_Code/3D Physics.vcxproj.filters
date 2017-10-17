@@ -492,7 +492,7 @@
     <ClInclude Include="ComponentMesh.h">
       <Filter>Sources\GameObject\Components</Filter>
     </ClInclude>
-    <ClInclude Include="ModuleImporter.h">
+    <ClInclude Include="ModuleSceneImporter.h">
       <Filter>Sources\Modules\Importers</Filter>
     </ClInclude>
   </ItemGroup>
@@ -704,7 +704,7 @@
     <ClCompile Include="ComponentMesh.cpp">
       <Filter>Sources\GameObject\Components</Filter>
     </ClCompile>
-    <ClCompile Include="ModuleImporter.cpp">
+    <ClCompile Include="ModuleSceneImporter.cpp">
       <Filter>Sources\Modules\Importers</Filter>
     </ClCompile>
   </ItemGroup>

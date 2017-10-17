@@ -25,6 +25,7 @@ public:
 	virtual bool CleanUp();
 	virtual void DrawComponentImGui();
 	void SetActive(bool active);
+	bool IsActive();
 	ComponentType GetType();
 
 protected:

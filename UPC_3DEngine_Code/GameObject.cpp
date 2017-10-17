@@ -14,29 +14,41 @@ GameObject::~GameObject()
 
 bool GameObject::PreUpdate(float dt)
 {
-	for (std::vector<Component*>::const_iterator item = components.cbegin(); item != components.cend(); ++item)
-		(*item)->PreUpdate(dt);
-	for (std::vector<GameObject*>::const_iterator item = children.cbegin(); item != children.cend(); ++item)
-		(*item)->PreUpdate(dt);
+	if (Active)
+	{
+		for (std::vector<Component*>::const_iterator item = components.cbegin(); item != components.cend(); ++item)
+			if ((*item)->IsActive())
+				(*item)->PreUpdate(dt);
+		for (std::vector<GameObject*>::const_iterator item = children.cbegin(); item != children.cend(); ++item)
+			(*item)->PreUpdate(dt);
+	}
 	return true;
 }
 
 bool GameObject::Update(float dt)
 {
-	for (std::vector<Component*>::const_iterator item = components.cbegin(); item != components.cend(); ++item)
-		(*item)->Update(dt);
-	for (std::vector<GameObject*>::const_iterator item = children.cbegin(); item != children.cend(); ++item)
-		(*item)->Update(dt);
-	DrawGameObject();
+	if (Active)
+	{
+		for (std::vector<Component*>::const_iterator item = components.cbegin(); item != components.cend(); ++item)
+			if ((*item)->IsActive())
+				(*item)->Update(dt);
+		for (std::vector<GameObject*>::const_iterator item = children.cbegin(); item != children.cend(); ++item)
+			(*item)->Update(dt);
+		DrawGameObject();
+	}
 	return true;
 }
 
 bool GameObject::PostUpdate(float dt)
 {
-	for (std::vector<Component*>::const_iterator item = components.cbegin(); item != components.cend(); ++item)
-		(*item)->PostUpdate(dt);
-	for (std::vector<GameObject*>::const_iterator item = children.cbegin(); item != children.cend(); ++item)
-		(*item)->PostUpdate(dt);
+	if (Active)
+	{
+		for (std::vector<Component*>::const_iterator item = components.cbegin(); item != components.cend(); ++item)
+			if ((*item)->IsActive())
+				(*item)->PostUpdate(dt);
+		for (std::vector<GameObject*>::const_iterator item = children.cbegin(); item != children.cend(); ++item)
+			(*item)->PostUpdate(dt);
+	}
 	return true;
 }
 

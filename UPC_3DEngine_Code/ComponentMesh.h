@@ -68,7 +68,15 @@ public:
 	bool CleanUp();
 	void DrawComponentImGui();
 
+	void GenerateAABBDraw();
+
 public:
 	MeshData MeshDataStruct;
 
+private:
+	bool DebugDrawAABB = false;
+	uint DebugDrawAABB_id_vertices = 0; // id in VRAM
+	float* DebugDrawAABB_vertices = nullptr;
+	uint DebugDrawAABB_id_indices = 0; // id in VRAM
+	uint* DebugDrawAABB_indices = nullptr;
 };
