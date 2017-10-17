@@ -3,6 +3,7 @@
 #include "Globals.h"
 
 struct GeometryData;
+struct MaterialData;
 struct aiScene;
 struct aiNode;
 struct aiMesh;
@@ -26,7 +27,7 @@ public:
 	//This will be deleted
 	bool Load(std::string* file, std::vector<GeometryData>* meshDataOutput);
 	//This will be deleted
-	int LoadImageFromFile(const char* theFileName, uint& tex_w, uint& tex_h, uint& tex_d);
+	int LoadImageFromFile(const char* theFileName, MaterialData* MaterailDataStruct);
 
 	bool SaveConf(JSON_Object* conf) const;
 	bool LoadConf(JSON_Object* conf);
@@ -41,7 +42,7 @@ public:
 
 private:
 	void LoadGeometry(const aiScene* scene, GameObject* gameObject, const aiNode* MeshNode, const aiMesh* MeshInstance);
-	//void LoadBuffers(Gameobject/components mesh+material);
+	void LoadBuffers(ComponentMesh* meshComponent, ComponentMaterial* materialComponent);
 
 	aiNode* SearchForMesh(aiNode* root, uint mesh_id);
 	aiNode* SearchForMeshIterator(aiNode* root, uint mesh_id);

@@ -89,6 +89,10 @@ update_status ModuleLoadMesh::Update(float dt)
 {
 	std::string* DroppedFile = App->input->GetDroppedFile();
 	if (DroppedFile != nullptr)
+		LoadGeometryFromModelFile(DroppedFile);
+
+	/*
+	if (DroppedFile != nullptr)
 	{
 		bool loaded = Load(DroppedFile, &geomData);
 		//If you load an fbx with more than one mesh, this center the last one
@@ -137,6 +141,7 @@ update_status ModuleLoadMesh::Update(float dt)
 	}
 	if (geomLoaded)
 		App->renderer3D->Draw(&geomData);
+	*/
 	return UPDATE_CONTINUE;
 }
 
@@ -293,10 +298,27 @@ void ModuleLoadMesh::LoadGeometry(const aiScene* scene, GameObject* gameObject, 
 	//load texture
 	if (scene->HasMaterials())
 	{
-		/*
 		aiString material_path;
-		scene->mMaterials[new_mesh->mMaterialIndex]->GetTexture(aiTextureType_DIFFUSE, 0, &material_path);
-		geomData.texture_name = WorkingPath + material_path.C_Str();
+		scene->mMaterials[MeshInstance->mMaterialIndex]->GetTexture(aiTextureType_DIFFUSE, 0, &material_path);
+		materialComponent->MaterialDataStruct.texture_name = WorkingPath + material_path.C_Str();
+
+		//TODO Iterate GameObject tree searching for material component with same texture, if we find it, copy data, with this we don't reload the same texture and allocate 2x memory
+		
+		int id_texture = LoadImageFromFile(materialComponent->MaterialDataStruct.texture_name.c_str(), &materialComponent->MaterialDataStruct);
+		if (id_texture < 0)
+		{
+			LOGP("Error loading texture with path: %s", materialComponent->MaterialDataStruct.texture_name.c_str());
+			materialComponent->MaterialDataStruct.texture_name.clear();
+		}
+		else
+		{
+			LOGP("Texture loaded with path: %s", materialComponent->MaterialDataStruct.texture_name.c_str());
+			materialComponent->MaterialDataStruct.id_texture = id_texture;
+		}
+		material_path.Clear();
+
+		/*
+		//Old code, just commented here for reference, will be deleted
 		//Check if this texture is already loaded
 		int id_texture = 0;
 		bool tex_alraedyLoaded = false;
@@ -328,10 +350,60 @@ void ModuleLoadMesh::LoadGeometry(const aiScene* scene, GameObject* gameObject, 
 		*/
 	}
 
-
 	//Load Buffers
-	//LoadBuffers();
+	LoadBuffers(meshComponent, materialComponent);
+}
 
+void ModuleLoadMesh::LoadBuffers(ComponentMesh* meshComponent, ComponentMaterial* materialComponent)
+{
+	if (meshComponent != nullptr)
+	{
+		// Buffer for vertices
+		LOGP("Loading Buffers Vertex.");
+		glGenBuffers(1, (GLuint*) &(meshComponent->MeshDataStruct.id_vertices));
+		glBindBuffer(GL_ARRAY_BUFFER, meshComponent->MeshDataStruct.id_vertices);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(float) * meshComponent->MeshDataStruct.num_vertices * 3, meshComponent->MeshDataStruct.vertices, GL_STATIC_DRAW);
+
+		// Buffer for indices
+		LOGP("Loading Buffers Index.");
+		glGenBuffers(1, (GLuint*) &(meshComponent->MeshDataStruct.id_indices));
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, meshComponent->MeshDataStruct.id_indices);
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint) * meshComponent->MeshDataStruct.num_indices, meshComponent->MeshDataStruct.indices, GL_STATIC_DRAW);
+
+		// Buffer for normals
+		if (meshComponent->MeshDataStruct.normals != nullptr)
+		{
+			LOGP("Loading Buffers Normals.");
+			glGenBuffers(1, (GLuint*) &(meshComponent->MeshDataStruct.id_normals));
+			glBindBuffer(GL_ARRAY_BUFFER, meshComponent->MeshDataStruct.id_normals);
+			glBufferData(GL_ARRAY_BUFFER, sizeof(float) * meshComponent->MeshDataStruct.num_vertices * 3, meshComponent->MeshDataStruct.normals, GL_STATIC_DRAW);
+		}
+
+		// Buffer for texture coords
+		if (meshComponent->MeshDataStruct.texture_coords != nullptr)
+		{
+			LOGP("Loading Buffers Texture Coords.");
+			glGenBuffers(1, (GLuint*) &(meshComponent->MeshDataStruct.id_texture_coords));
+			glBindBuffer(GL_ARRAY_BUFFER, meshComponent->MeshDataStruct.id_texture_coords);
+			glBufferData(GL_ARRAY_BUFFER, sizeof(float) * meshComponent->MeshDataStruct.num_vertices * 3, meshComponent->MeshDataStruct.texture_coords, GL_STATIC_DRAW);
+		}
+	}
+	else
+		LOGP("Loading Buffers meshComponent was nullptr.");
+
+	if ((meshComponent != nullptr) && (materialComponent != nullptr))
+	{
+		// Buffer for vertex colors
+		if (materialComponent->MaterialDataStruct.colors != nullptr)
+		{
+			LOGP("Loading Buffers Colors.");
+			glGenBuffers(1, (GLuint*) &(materialComponent->MaterialDataStruct.id_colors));
+			glBindBuffer(GL_ARRAY_BUFFER, materialComponent->MaterialDataStruct.id_colors);
+			glBufferData(GL_ARRAY_BUFFER, sizeof(float) *  meshComponent->MeshDataStruct.num_vertices * 3, materialComponent->MaterialDataStruct.colors, GL_STATIC_DRAW);
+		}
+	}
+	else
+		LOGP("Loading Buffers materialComponent was nullptr.");
 }
 
 bool ModuleLoadMesh::CleanGeometryDataVector(std::vector<GeometryData>* meshDataVec)
@@ -472,6 +544,7 @@ void ModuleLoadMesh::LoadMeshGeometry(GeometryData& geomData, const aiScene* sce
 	//loadmeshtexture
 	//Textures need to be inside Game folder
 	//This can load fbx from any directory (desktop dor example), but textures are loaded from Game folder
+	/*
 	if (scene->HasMaterials())
 	{
 		aiString material_path;
@@ -507,7 +580,7 @@ void ModuleLoadMesh::LoadMeshGeometry(GeometryData& geomData, const aiScene* sce
 		}
 		material_path.Clear();
 	}
-
+	*/
 	// Generate AABB
 	geomData.BoundBox.SetNegativeInfinity();
 	geomData.BoundBox.Enclose((float3*)geomData.vertices, geomData.num_vertices);
@@ -576,7 +649,7 @@ void ModuleLoadMesh::LoadMeshBuffers(GeometryData& geomData)
 }
 
 // Function load a image, turn it into a texture, and return the texture ID as a GLuint for use
-int ModuleLoadMesh::LoadImageFromFile(const char* theFileName, uint& tex_w, uint& tex_h, uint& tex_d)
+int ModuleLoadMesh::LoadImageFromFile(const char* theFileName, MaterialData* MaterailDataStruct)
 {
 	// Create an image ID as a ULuint
 	ILuint imageID;
@@ -599,13 +672,14 @@ int ModuleLoadMesh::LoadImageFromFile(const char* theFileName, uint& tex_w, uint
 		// If the image is flipped (i.e. upside-down and mirrored, flip it the right way up!)
 		ILinfo ImageInfo;
 		iluGetImageInfo(&ImageInfo);
-		tex_w = ImageInfo.Width;
-		tex_h = ImageInfo.Height;
-		tex_d = ImageInfo.Depth;
-		if (ImageInfo.Origin == IL_ORIGIN_UPPER_LEFT)
+		if (MaterailDataStruct != nullptr)
 		{
-			iluFlipImage();
+			MaterailDataStruct->texture_w = ImageInfo.Width;
+			MaterailDataStruct->texture_h = ImageInfo.Height;
+			MaterailDataStruct->texture_d = ImageInfo.Depth;
 		}
+		if (ImageInfo.Origin == IL_ORIGIN_UPPER_LEFT)
+			iluFlipImage();
 
 		// Convert the image into a suitable format to work with
 		// NOTE: If your image contains alpha channel you can replace IL_RGB with IL_RGBA
