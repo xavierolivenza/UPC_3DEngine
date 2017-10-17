@@ -154,6 +154,49 @@ bool ModuleLoadMesh::CleanUp()
 	return true;
 }
 
+bool ModuleLoadMesh::LoadGeometryFromModelFile(std::string* file)
+{
+	bool ret = true;
+	if (file == nullptr)
+		return false;
+
+	const aiScene* scene = aiImportFile(file->c_str(), aiProcessPreset_TargetRealtime_MaxQuality);
+	if (scene != nullptr && scene->HasMeshes())
+	{
+		//Get the working path to load textures from it
+		std::size_t lastPos = file->rfind("\\");
+		WorkingPath = file->substr(0, lastPos);
+		WorkingPath += "\\";
+
+		// Use scene->mNumMeshes to iterate on scene->mMeshes array
+		for (uint i = 0; i < scene->mNumMeshes; ++i)
+			LoadGeometry(scene, i);
+
+		WorkingPath.clear();
+		aiReleaseImport(scene);
+	}
+	else
+	{
+		LOGP("Error loading scene %s", file->c_str());
+		LOGP("Error: %s", aiGetErrorString());
+		ret = false;
+	}
+
+	return ret;
+}
+
+void ModuleLoadMesh::LoadGeometry(const aiScene* scene, uint mesh_id)
+{
+	aiMesh* MeshInstance = scene->mMeshes[mesh_id];
+	aiNode* MeshNode = SearchForMesh(scene->mRootNode, mesh_id);
+
+	//Load Buffers
+	//LoadBuffers();
+
+	//Create GameObjects&Components and add them to root as child App->scene->AddChildToRoot
+
+}
+
 bool ModuleLoadMesh::CleanGeometryDataVector(std::vector<GeometryData>* meshDataVec)
 {
 	if (meshDataVec == nullptr)
