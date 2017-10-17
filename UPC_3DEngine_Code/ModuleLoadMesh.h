@@ -40,7 +40,7 @@ public:
 	}
 
 private:
-	void LoadGeometry(const aiScene* scene, uint mesh_id);
+	void LoadGeometry(const aiScene* scene, GameObject* gameObject, const aiNode* MeshNode, const aiMesh* MeshInstance);
 	//void LoadBuffers(Gameobject/components mesh+material);
 
 	aiNode* SearchForMesh(aiNode* root, uint mesh_id);

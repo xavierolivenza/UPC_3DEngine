@@ -4,6 +4,9 @@
 
 class Component;
 enum ComponentType;
+class ComponentTransform;
+class ComponentMesh;
+class ComponentMaterial;
 
 class GameObject
 {
@@ -26,7 +29,10 @@ public:
 	void AddChild(GameObject* child);
 	bool RemoveChild(GameObject* child);
 
-	//TODO Create Different Components
+	//Create/Remove Component
+	ComponentTransform* CreateTransformComponent(bool active);
+	ComponentMesh* CreateMeshComponent(bool active);
+	ComponentMaterial* CreateMaterialComponent(bool active);
 	bool RemoveComponent(Component* component);
 
 	//Find Component

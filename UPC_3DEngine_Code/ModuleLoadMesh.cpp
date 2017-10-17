@@ -4,6 +4,12 @@
 #include "p2Log.h"
 #include "Primitive.h"
 
+#include "GameObject.h"
+#include "Component.h"
+#include "ComponentTransform.h"
+#include "ComponentMesh.h"
+#include "ComponentMaterial.h"
+
 #include "DevIL\include\il.h"
 #include "DevIL\include\ilu.h"
 #include "DevIL\include\ilut.h"
@@ -164,13 +170,19 @@ bool ModuleLoadMesh::LoadGeometryFromModelFile(std::string* file)
 	if (scene != nullptr && scene->HasMeshes())
 	{
 		//Get the working path to load textures from it
-		std::size_t lastPos = file->rfind("\\");
-		WorkingPath = file->substr(0, lastPos);
+		WorkingPath = file->substr(0, file->rfind("\\"));
 		WorkingPath += "\\";
 
 		// Use scene->mNumMeshes to iterate on scene->mMeshes array
 		for (uint i = 0; i < scene->mNumMeshes; ++i)
-			LoadGeometry(scene, i);
+		{
+			aiNode* MeshNode = SearchForMesh(scene->mRootNode, i);
+			aiMesh* MeshInstance = scene->mMeshes[i];
+			GameObject* gameObject = new GameObject(MeshNode->mName.C_Str(), true);
+			LoadGeometry(scene, gameObject, MeshNode, MeshInstance);
+			App->scene->AddChildToRoot(gameObject);
+		}
+			
 
 		WorkingPath.clear();
 		aiReleaseImport(scene);
@@ -185,15 +197,140 @@ bool ModuleLoadMesh::LoadGeometryFromModelFile(std::string* file)
 	return ret;
 }
 
-void ModuleLoadMesh::LoadGeometry(const aiScene* scene, uint mesh_id)
+void ModuleLoadMesh::LoadGeometry(const aiScene* scene, GameObject* gameObject, const aiNode* MeshNode, const aiMesh* MeshInstance)
 {
-	aiMesh* MeshInstance = scene->mMeshes[mesh_id];
-	aiNode* MeshNode = SearchForMesh(scene->mRootNode, mesh_id);
+	if ((scene == nullptr) || (gameObject == nullptr) || (MeshNode == nullptr) || (MeshInstance == nullptr))
+		return;
+
+	//------------------------------------------//
+	//-------------Load Transform---------------//
+	//------------------------------------------//
+	ComponentTransform* transformComponent = gameObject->CreateTransformComponent(true);
+	
+	float3 pos = { 0.0f,0.0f,0.0f };
+	float3 scale = { 1.0f,1.0f,1.0f };
+	Quat rot = { 0.0f,0.0f,0.0f,1.0f };
+	if ((scene->mRootNode != nullptr) && (scene->mRootNode->mNumChildren > 0))
+	{
+		//Sum up all transformations from root node to the node where the mesh is stored
+		aiMatrix4x4 transform;
+		if (MeshNode != nullptr)
+		{
+			for (const aiNode* iterator = MeshNode; iterator->mParent != nullptr; iterator = iterator->mParent)
+				transform *= iterator->mTransformation;
+			aiVector3D translation;
+			aiVector3D scaling;
+			aiQuaternion rotation;
+			transform.Decompose(scaling, rotation, translation);
+			pos = { translation.x, translation.y, translation.z };
+			scale = { scaling.x, scaling.y, scaling.z };
+			rot = { rotation.x, rotation.y, rotation.z, rotation.w };
+		}
+	}
+	transformComponent->SetPos(pos);
+	transformComponent->SetRot(rot);
+	transformComponent->SetScale(scale);
+
+	//------------------------------------------//
+	//---------------Load Mesh------------------//
+	//------------------------------------------//
+	ComponentMesh* meshComponent = gameObject->CreateMeshComponent(true);
+
+	// copy vertices
+	meshComponent->MeshDataStruct.num_vertices = MeshInstance->mNumVertices;
+	meshComponent->MeshDataStruct.vertices = new float[meshComponent->MeshDataStruct.num_vertices * 3];
+	memcpy(meshComponent->MeshDataStruct.vertices, MeshInstance->mVertices, sizeof(float) * meshComponent->MeshDataStruct.num_vertices * 3);
+	LOGP("New mesh with %d vertices", meshComponent->MeshDataStruct.num_vertices);
+
+	// copy faces
+	if (MeshInstance->HasFaces())
+	{
+		meshComponent->MeshDataStruct.num_faces = MeshInstance->mNumFaces;
+		meshComponent->MeshDataStruct.num_indices = MeshInstance->mNumFaces * 3;
+		meshComponent->MeshDataStruct.indices = new uint[meshComponent->MeshDataStruct.num_indices]; // assume each face is a triangle
+		for (uint i = 0; i < MeshInstance->mNumFaces; ++i)
+		{
+			if (MeshInstance->mFaces[i].mNumIndices != 3)
+				LOGP("WARNING, geometry face with != 3 indices!");
+			else
+				memcpy(&meshComponent->MeshDataStruct.indices[i * 3], MeshInstance->mFaces[i].mIndices, 3 * sizeof(uint));
+		}
+	}
+
+	// normals
+	if (MeshInstance->HasNormals())
+	{
+		meshComponent->MeshDataStruct.normals = new float[meshComponent->MeshDataStruct.num_vertices * 3];
+		memcpy(meshComponent->MeshDataStruct.normals, MeshInstance->mNormals, sizeof(float) * meshComponent->MeshDataStruct.num_vertices * 3);
+	}
+
+	// texture coords (only one texture for now)
+	if (MeshInstance->HasTextureCoords(0))
+	{
+		meshComponent->MeshDataStruct.texture_coords = new float[meshComponent->MeshDataStruct.num_vertices * 3];
+		memcpy(meshComponent->MeshDataStruct.texture_coords, MeshInstance->mTextureCoords[0], sizeof(float) * meshComponent->MeshDataStruct.num_vertices * 3);
+	}
+
+	// Generate AABB
+	meshComponent->MeshDataStruct.BoundBox.SetNegativeInfinity();
+	meshComponent->MeshDataStruct.BoundBox.Enclose((float3*)meshComponent->MeshDataStruct.vertices, meshComponent->MeshDataStruct.num_vertices);
+
+	//------------------------------------------//
+	//-------------Load Material----------------//
+	//------------------------------------------//
+	ComponentMaterial* materialComponent = gameObject->CreateMaterialComponent(true);
+
+	//this causes some problems sometimes, so as this is a feature we don't use, we comment it and avoid crashes
+	// colors
+	/*
+	if (MeshInstance->HasVertexColors(0))
+	{
+		materialComponent->MaterialDataStruct.colors = new float[meshComponent->MeshDataStruct.num_vertices * 3];
+		memcpy(materialComponent->MaterialDataStruct.colors, MeshInstance->mColors, sizeof(float) * meshComponent->MeshDataStruct.num_vertices * 3);
+	}
+	*/
+
+	//load texture
+	if (scene->HasMaterials())
+	{
+		/*
+		aiString material_path;
+		scene->mMaterials[new_mesh->mMaterialIndex]->GetTexture(aiTextureType_DIFFUSE, 0, &material_path);
+		geomData.texture_name = WorkingPath + material_path.C_Str();
+		//Check if this texture is already loaded
+		int id_texture = 0;
+		bool tex_alraedyLoaded = false;
+		for (std::vector<GeometryData>::iterator item = this->geomData.begin(); item != this->geomData.cend(); ++item)
+			if (item._Ptr->texture_name == geomData.texture_name)
+			{
+				//if the texture is already loaded just assign the same ID
+				id_texture = item._Ptr->id_texture;
+				geomData.texture_w = item._Ptr->texture_w;
+				geomData.texture_h = item._Ptr->texture_h;
+				geomData.texture_d = item._Ptr->texture_d;
+				tex_alraedyLoaded = true;
+				break;
+			}
+		//If the texture is new, load it
+		if (!tex_alraedyLoaded)
+			id_texture = LoadImageFromFile(geomData.texture_name.c_str(), geomData.texture_w, geomData.texture_h, geomData.texture_d);
+		if (id_texture < 0)
+		{
+			LOGP("Error loading texture with path: %s", geomData.texture_name.c_str());
+			geomData.texture_name.clear();
+		}
+		else
+		{
+			LOGP("Texture loaded with path: %s", geomData.texture_name.c_str());
+			geomData.id_texture = id_texture;
+		}
+		material_path.Clear();
+		*/
+	}
+
 
 	//Load Buffers
 	//LoadBuffers();
-
-	//Create GameObjects&Components and add them to root as child App->scene->AddChildToRoot
 
 }
 

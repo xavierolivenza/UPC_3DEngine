@@ -1,6 +1,6 @@
 #include "ComponentMaterial.h"
 
-ComponentMaterial::ComponentMaterial(bool Active, uint replica_limit, ComponentType type) : Component(Active, replica_limit, type)
+ComponentMaterial::ComponentMaterial(bool Active) : Component(Active, 1, ComponentType::Material_Component)
 {
 
 }

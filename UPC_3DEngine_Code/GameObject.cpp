@@ -1,5 +1,8 @@
 #include "GameObject.h"
 #include "Component.h"
+#include "ComponentTransform.h"
+#include "ComponentMesh.h"
+#include "ComponentMaterial.h"
 
 GameObject::GameObject(const char* name, bool active): name(name), Active(active)
 {
@@ -101,6 +104,27 @@ bool GameObject::RemoveChild(GameObject* child)
 			return true;
 		}
 	return false;
+}
+
+ComponentTransform* GameObject::CreateTransformComponent(bool active)
+{
+	ComponentTransform* transform = new ComponentTransform(active);
+	components.push_back((Component*)transform);
+	return transform;
+}
+
+ComponentMesh* GameObject::CreateMeshComponent(bool active)
+{
+	ComponentMesh* mesh = new ComponentMesh(active);
+	components.push_back((Component*)mesh);
+	return mesh;
+}
+
+ComponentMaterial* GameObject::CreateMaterialComponent(bool active)
+{
+	ComponentMaterial* material = new ComponentMaterial(active);
+	components.push_back((Component*)material);
+	return material;
 }
 
 bool GameObject::RemoveComponent(Component* component)

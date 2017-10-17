@@ -1,6 +1,6 @@
 #include "ComponentTransform.h"
 
-ComponentTransform::ComponentTransform(bool Active, uint replica_limit, ComponentType type) : Component(Active, replica_limit, type)
+ComponentTransform::ComponentTransform(bool Active) : Component(Active, 1, ComponentType::Transform_Component)
 {
 	pos_array = new float[3];
 	SetPos(float3(0.0f, 0.0f, 0.0f));

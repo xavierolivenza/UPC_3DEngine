@@ -4,7 +4,7 @@
 class ComponentTransform : public Component
 {
 public:
-	ComponentTransform(bool Active, uint replica_limit, ComponentType type);
+	ComponentTransform(bool Active);
 	~ComponentTransform();
 
 	bool Enable();
