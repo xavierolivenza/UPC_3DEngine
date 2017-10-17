@@ -278,6 +278,16 @@ void ModuleLoadMesh::LoadGeometry(const aiScene* scene, GameObject* gameObject, 
 	meshComponent->MeshDataStruct.BoundBox.Enclose((float3*)meshComponent->MeshDataStruct.vertices, meshComponent->MeshDataStruct.num_vertices);
 	meshComponent->GenerateAABBDraw();
 
+	meshComponent->MeshDataStruct.BoundSphere.SetNegativeInfinity();
+	meshComponent->MeshDataStruct.BoundSphere.Enclose(meshComponent->MeshDataStruct.BoundBox);
+
+	/*
+	meshComponent->MeshDataStruct.BoundOBox.SetNegativeInfinity();
+	for (uint i = 0; i < meshComponent->MeshDataStruct.num_vertices * 3; i += 3)
+		meshComponent->MeshDataStruct.BoundOBox.Enclose(vec(meshComponent->MeshDataStruct.vertices[i], meshComponent->MeshDataStruct.vertices[i + 1], meshComponent->MeshDataStruct.vertices[i + 2]));
+	meshComponent->GenerateOBBDraw();
+	*/
+	
 	//------------------------------------------//
 	//-------------Load Material----------------//
 	//------------------------------------------//
