@@ -686,9 +686,9 @@ bool ModuleRenderer3D::DrawComponentMeshMaterial(const ComponentMesh* mesh, cons
 		glBindBuffer(GL_ARRAY_BUFFER, meshData->id_normals);
 		glNormalPointer(GL_FLOAT, 0, NULL);
 	}
-	if ((materialData != nullptr) && (materialData->colors != nullptr)) {
+	if ((materialData != nullptr) && (meshData->colors != nullptr)) {
 		glEnableClientState(GL_COLOR_ARRAY);
-		glBindBuffer(GL_ARRAY_BUFFER, materialData->id_colors);
+		glBindBuffer(GL_ARRAY_BUFFER, meshData->id_colors);
 		glColorPointer(3, GL_FLOAT, 0, NULL);
 	}
 	if (meshData->texture_coords != nullptr) {

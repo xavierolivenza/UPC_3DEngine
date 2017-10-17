@@ -44,13 +44,6 @@ bool ModuleLoadMesh::Init()
 	LOGP("LoadMesh Init");
 	bool ret = true;
 
-	// Stream log messages to Debug window
-	/*
-	struct aiLogStream stream;
-	stream = aiGetPredefinedLogStream(aiDefaultLogStream_DEBUGGER, nullptr);
-	aiAttachLogStream(&stream);
-	*/
-
 	// Create a logger instance 
 	Assimp::DefaultLogger::create("", Assimp::Logger::VERBOSE);
 	// Now I am ready for logging my stuff
@@ -155,13 +148,9 @@ update_status ModuleLoadMesh::PostUpdate(float dt)
 bool ModuleLoadMesh::CleanUp()
 {
 	LOGP("LoadMesh CleanUp");
-	if (geomLoaded)
-		CleanGeometryDataVector(&geomData);
 	// Kill it after the work is done
 	Assimp::DefaultLogger::kill();
 	ilShutDown();
-	// detach log stream
-	//aiDetachAllLogStreams();
 	return true;
 }
 
@@ -187,8 +176,7 @@ bool ModuleLoadMesh::LoadGeometryFromModelFile(std::string* file)
 			LoadGeometry(scene, gameObject, MeshNode, MeshInstance);
 			App->scene->AddChildToRoot(gameObject);
 		}
-			
-
+		
 		WorkingPath.clear();
 		aiReleaseImport(scene);
 	}
@@ -275,6 +263,15 @@ void ModuleLoadMesh::LoadGeometry(const aiScene* scene, GameObject* gameObject, 
 		meshComponent->MeshDataStruct.texture_coords = new float[meshComponent->MeshDataStruct.num_vertices * 3];
 		memcpy(meshComponent->MeshDataStruct.texture_coords, MeshInstance->mTextureCoords[0], sizeof(float) * meshComponent->MeshDataStruct.num_vertices * 3);
 	}
+	//this causes some problems sometimes, so as this is a feature we don't use, we comment it and avoid crashes
+	// colors
+	/*
+	if (MeshInstance->HasVertexColors(0))
+	{
+		meshComponent->MeshDataStruct.colors = new float[meshComponent->MeshDataStruct.num_vertices * 3];
+		memcpy(meshComponent->MeshDataStruct.colors, MeshInstance->mColors, sizeof(float) * meshComponent->MeshDataStruct.num_vertices * 3);
+	}
+	*/
 
 	// Generate AABB
 	meshComponent->MeshDataStruct.BoundBox.SetNegativeInfinity();
@@ -285,16 +282,6 @@ void ModuleLoadMesh::LoadGeometry(const aiScene* scene, GameObject* gameObject, 
 	//------------------------------------------//
 	ComponentMaterial* materialComponent = gameObject->CreateMaterialComponent(true);
 
-	//this causes some problems sometimes, so as this is a feature we don't use, we comment it and avoid crashes
-	// colors
-	/*
-	if (MeshInstance->HasVertexColors(0))
-	{
-		materialComponent->MaterialDataStruct.colors = new float[meshComponent->MeshDataStruct.num_vertices * 3];
-		memcpy(materialComponent->MaterialDataStruct.colors, MeshInstance->mColors, sizeof(float) * meshComponent->MeshDataStruct.num_vertices * 3);
-	}
-	*/
-
 	//load texture
 	if (scene->HasMaterials())
 	{
@@ -302,59 +289,37 @@ void ModuleLoadMesh::LoadGeometry(const aiScene* scene, GameObject* gameObject, 
 		scene->mMaterials[MeshInstance->mMaterialIndex]->GetTexture(aiTextureType_DIFFUSE, 0, &material_path);
 		materialComponent->MaterialDataStruct.texture_name = WorkingPath + material_path.C_Str();
 
-		//TODO Iterate GameObject tree searching for material component with same texture, if we find it, copy data, with this we don't reload the same texture and allocate 2x memory
-		
-		int id_texture = LoadImageFromFile(materialComponent->MaterialDataStruct.texture_name.c_str(), &materialComponent->MaterialDataStruct);
-		if (id_texture < 0)
-		{
-			LOGP("Error loading texture with path: %s", materialComponent->MaterialDataStruct.texture_name.c_str());
-			materialComponent->MaterialDataStruct.texture_name.clear();
-		}
-		else
-		{
-			LOGP("Texture loaded with path: %s", materialComponent->MaterialDataStruct.texture_name.c_str());
-			materialComponent->MaterialDataStruct.id_texture = id_texture;
-		}
-		material_path.Clear();
-
-		/*
-		//Old code, just commented here for reference, will be deleted
-		//Check if this texture is already loaded
 		int id_texture = 0;
-		bool tex_alraedyLoaded = false;
-		for (std::vector<GeometryData>::iterator item = this->geomData.begin(); item != this->geomData.cend(); ++item)
-			if (item._Ptr->texture_name == geomData.texture_name)
-			{
-				//if the texture is already loaded just assign the same ID
-				id_texture = item._Ptr->id_texture;
-				geomData.texture_w = item._Ptr->texture_w;
-				geomData.texture_h = item._Ptr->texture_h;
-				geomData.texture_d = item._Ptr->texture_d;
-				tex_alraedyLoaded = true;
-				break;
-			}
+		ComponentMaterial* AlreadyLoaded = SearchForTexture(materialComponent, App->scene->GetRoot(), &materialComponent->MaterialDataStruct.texture_name);
 		//If the texture is new, load it
-		if (!tex_alraedyLoaded)
-			id_texture = LoadImageFromFile(geomData.texture_name.c_str(), geomData.texture_w, geomData.texture_h, geomData.texture_d);
-		if (id_texture < 0)
+		if (AlreadyLoaded == nullptr)
 		{
-			LOGP("Error loading texture with path: %s", geomData.texture_name.c_str());
-			geomData.texture_name.clear();
+			id_texture = LoadImageFromFile(materialComponent->MaterialDataStruct.texture_name.c_str(), &materialComponent->MaterialDataStruct);
+			if (id_texture < 0)
+			{
+				LOGP("Error loading texture with path: %s", materialComponent->MaterialDataStruct.texture_name.c_str());
+				materialComponent->MaterialDataStruct.texture_name.clear();
+			}
+			else
+			{
+				LOGP("Texture loaded with path: %s", materialComponent->MaterialDataStruct.texture_name.c_str());
+				materialComponent->MaterialDataStruct.id_texture = id_texture;
+			}
 		}
+		//if not, copy data
 		else
 		{
-			LOGP("Texture loaded with path: %s", geomData.texture_name.c_str());
-			geomData.id_texture = id_texture;
+			materialComponent->MaterialDataStruct = AlreadyLoaded->MaterialDataStruct;
+			LOGP("Texture copied from other GameObject");
+			LOGP("Texture path: %s", materialComponent->MaterialDataStruct.texture_name.c_str());
 		}
-		material_path.Clear();
-		*/
 	}
 
 	//Load Buffers
-	LoadBuffers(meshComponent, materialComponent);
+	LoadBuffers(meshComponent);
 }
 
-void ModuleLoadMesh::LoadBuffers(ComponentMesh* meshComponent, ComponentMaterial* materialComponent)
+void ModuleLoadMesh::LoadBuffers(ComponentMesh* meshComponent)
 {
 	if (meshComponent != nullptr)
 	{
@@ -387,265 +352,18 @@ void ModuleLoadMesh::LoadBuffers(ComponentMesh* meshComponent, ComponentMaterial
 			glBindBuffer(GL_ARRAY_BUFFER, meshComponent->MeshDataStruct.id_texture_coords);
 			glBufferData(GL_ARRAY_BUFFER, sizeof(float) * meshComponent->MeshDataStruct.num_vertices * 3, meshComponent->MeshDataStruct.texture_coords, GL_STATIC_DRAW);
 		}
+
+		// Buffer for vertex colors
+		if (meshComponent->MeshDataStruct.colors != nullptr)
+		{
+			LOGP("Loading Buffers Colors.");
+			glGenBuffers(1, (GLuint*) &(meshComponent->MeshDataStruct.id_colors));
+			glBindBuffer(GL_ARRAY_BUFFER, meshComponent->MeshDataStruct.id_colors);
+			glBufferData(GL_ARRAY_BUFFER, sizeof(float) *  meshComponent->MeshDataStruct.num_vertices * 3, meshComponent->MeshDataStruct.colors, GL_STATIC_DRAW);
+		}
 	}
 	else
 		LOGP("Loading Buffers meshComponent was nullptr.");
-
-	if ((meshComponent != nullptr) && (materialComponent != nullptr))
-	{
-		// Buffer for vertex colors
-		if (materialComponent->MaterialDataStruct.colors != nullptr)
-		{
-			LOGP("Loading Buffers Colors.");
-			glGenBuffers(1, (GLuint*) &(materialComponent->MaterialDataStruct.id_colors));
-			glBindBuffer(GL_ARRAY_BUFFER, materialComponent->MaterialDataStruct.id_colors);
-			glBufferData(GL_ARRAY_BUFFER, sizeof(float) *  meshComponent->MeshDataStruct.num_vertices * 3, materialComponent->MaterialDataStruct.colors, GL_STATIC_DRAW);
-		}
-	}
-	else
-		LOGP("Loading Buffers materialComponent was nullptr.");
-}
-
-bool ModuleLoadMesh::CleanGeometryDataVector(std::vector<GeometryData>* meshDataVec)
-{
-	if (meshDataVec == nullptr)
-		return false;
-	for (std::vector<GeometryData>::iterator item = meshDataVec->begin(); item != meshDataVec->cend(); ++item)
-	{
-		item._Ptr->name.clear();
-		if (item._Ptr->vertices != nullptr)
-		{
-			glDeleteBuffers(1, &item._Ptr->id_vertices);
-			RELEASE_ARRAY(item._Ptr->vertices);
-		}
-		if (item._Ptr->indices != nullptr)
-		{
-			glDeleteBuffers(1, &item._Ptr->id_indices);
-			RELEASE_ARRAY(item._Ptr->indices);
-		}
-		if (item._Ptr->normals != nullptr)
-		{
-			glDeleteBuffers(1, &item._Ptr->id_normals);
-			RELEASE_ARRAY(item._Ptr->normals);
-		}
-		if (item._Ptr->colors != nullptr)
-		{
-			glDeleteBuffers(1, &item._Ptr->id_colors);
-			RELEASE_ARRAY(item._Ptr->colors);
-		}
-		if (item._Ptr->texture_coords != nullptr)
-		{
-			glDeleteBuffers(1, &item._Ptr->id_texture_coords);
-			RELEASE_ARRAY(item._Ptr->texture_coords);
-		}
-		if (item._Ptr->texture_name != "")
-			glDeleteTextures(1, &item._Ptr->id_texture);
-		item._Ptr->texture_name.clear();
-	}
-	meshDataVec->clear();
-	return true;
-}
-
-bool ModuleLoadMesh::Load(std::string* file, std::vector<GeometryData>* meshDataOutput)
-{
-	bool ret = true;
-	if (file == nullptr)
-		return false;
-
-	//aiIsExtensionSupported (const char *szExtension)
-
-	const aiScene* scene = aiImportFile(file->c_str(), aiProcessPreset_TargetRealtime_MaxQuality);
-	if (scene != nullptr && scene->HasMeshes())
-	{
-		if (geomLoaded)
-			CleanGeometryDataVector(meshDataOutput);
-
-		//Get the working path to load textures from it
-		std::size_t lastPos = file->rfind("\\");
-		std::string WorkingPath = file->substr(0, lastPos);
-		WorkingPath += "\\";
-
-		// Use scene->mNumMeshes to iterate on scene->mMeshes array
-		for (uint i = 0; i < scene->mNumMeshes; ++i)
-		{
-			const aiMesh* new_mesh = scene->mMeshes[i];
-
-			GeometryData geomData;
-			LoadMeshGeometry(geomData, scene, new_mesh, i, WorkingPath);
-			LoadMeshBuffers(geomData);
-			meshDataOutput->push_back(geomData);
-		}
-		WorkingPath.clear();
-		aiReleaseImport(scene);
-		geomLoaded = true;
-	}
-	else
-	{
-		LOGP("Error loading scene %s", file->c_str());
-		LOGP("Error: %s", aiGetErrorString());
-		ret = false;
-	}
-
-	return ret;
-}
-
-void ModuleLoadMesh::LoadMeshGeometry(GeometryData& geomData, const aiScene* scene, const aiMesh* new_mesh, uint meshID, std::string& WorkingPath)
-{
-	//This is necessary to load the transform of this node, we do here now to get the name of the node
-	aiNode* MeshNode = SearchForMesh(scene->mRootNode, meshID);
-	if (MeshNode != nullptr)
-		geomData.name = MeshNode->mName.C_Str();
-
-	// copy vertices
-	geomData.num_vertices = new_mesh->mNumVertices;
-	geomData.vertices = new float[geomData.num_vertices * 3];
-	memcpy(geomData.vertices, new_mesh->mVertices, sizeof(float) * geomData.num_vertices * 3);
-	LOGP("New mesh with %d vertices", geomData.num_vertices);
-
-	// copy faces
-	if (new_mesh->HasFaces())
-	{
-		geomData.num_faces = new_mesh->mNumFaces;
-		geomData.num_indices = new_mesh->mNumFaces * 3;
-		geomData.indices = new uint[geomData.num_indices]; // assume each face is a triangle
-		for (uint i = 0; i < new_mesh->mNumFaces; ++i)
-		{
-			if (new_mesh->mFaces[i].mNumIndices != 3)
-				LOGP("WARNING, geometry face with != 3 indices!");
-			else
-				memcpy(&geomData.indices[i * 3], new_mesh->mFaces[i].mIndices, 3 * sizeof(uint));
-		}
-	}
-
-	// normals
-	if (new_mesh->HasNormals())
-	{
-		geomData.normals = new float[geomData.num_vertices * 3];
-		memcpy(geomData.normals, new_mesh->mNormals, sizeof(float) * geomData.num_vertices * 3);
-	}
-
-	//this causes some problems sometimes, so as this is a feature we don't use, we comment it and avoid crashes
-	/*
-	// colors
-	if (new_mesh->HasVertexColors(0))
-	{
-		geomData.colors = new float[geomData.num_vertices * 3];
-		memcpy(geomData.colors, new_mesh->mColors, sizeof(float) * geomData.num_vertices * 3);
-	}
-	*/
-
-	// texture coords (only one texture for now)
-	if (new_mesh->HasTextureCoords(0))
-	{
-		geomData.texture_coords = new float[geomData.num_vertices * 3];
-		memcpy(geomData.texture_coords, new_mesh->mTextureCoords[0], sizeof(float) * geomData.num_vertices * 3);
-	}
-
-	//loadmeshtexture
-	//Textures need to be inside Game folder
-	//This can load fbx from any directory (desktop dor example), but textures are loaded from Game folder
-	/*
-	if (scene->HasMaterials())
-	{
-		aiString material_path;
-		scene->mMaterials[new_mesh->mMaterialIndex]->GetTexture(aiTextureType_DIFFUSE, 0, &material_path);
-		//geomData.texture_name = AssetsPath + material_path.C_Str();
-		geomData.texture_name = WorkingPath + material_path.C_Str();
-		//Check if this texture is already loaded
-		int id_texture = 0;
-		bool tex_alraedyLoaded = false;
-		for (std::vector<GeometryData>::iterator item = this->geomData.begin(); item != this->geomData.cend(); ++item)
-			if (item._Ptr->texture_name == geomData.texture_name)
-			{
-				//if the texture is already loaded just assign the same ID
-				id_texture = item._Ptr->id_texture;
-				geomData.texture_w = item._Ptr->texture_w;
-				geomData.texture_h = item._Ptr->texture_h;
-				geomData.texture_d = item._Ptr->texture_d;
-				tex_alraedyLoaded = true;
-				break;
-			}
-		//If the texture is new, load it
-		if (!tex_alraedyLoaded)
-			id_texture = LoadImageFromFile(geomData.texture_name.c_str(), geomData.texture_w, geomData.texture_h, geomData.texture_d);
-		if (id_texture < 0)
-		{
-			LOGP("Error loading texture with path: %s", geomData.texture_name.c_str());
-			geomData.texture_name.clear();
-		}
-		else
-		{
-			LOGP("Texture loaded with path: %s", geomData.texture_name.c_str());
-			geomData.id_texture = id_texture;
-		}
-		material_path.Clear();
-	}
-	*/
-	// Generate AABB
-	geomData.BoundBox.SetNegativeInfinity();
-	geomData.BoundBox.Enclose((float3*)geomData.vertices, geomData.num_vertices);
-
-	//For first test, load pos/rot/scale
-	float3 pos = { 0.0f,0.0f,0.0f };
-	float3 scale = { 1.0f,1.0f,1.0f };
-	Quat rot = { 0.0f,0.0f,0.0f,0.0f };
-	if ((scene->mRootNode != nullptr) && (scene->mRootNode->mNumChildren > 0))
-	{
-		//Sum up all transformations from root node to the node where the mesh is stored
-		aiMatrix4x4 transform;
-		if (MeshNode != nullptr)
-		{
-			for (aiNode* iterator = MeshNode; iterator->mParent != nullptr; iterator = iterator->mParent)
-				transform *= iterator->mTransformation;
-			aiVector3D translation;
-			aiVector3D scaling;
-			aiQuaternion rotation;
-			transform.Decompose(scaling, rotation, translation);
-			pos = { translation.x, translation.y, translation.z };
-			scale = { scaling.x, scaling.y, scaling.z };
-			rot = { rotation.x, rotation.y, rotation.z, rotation.w };
-		}
-	}
-	geomData.pos = pos;
-	geomData.rot = rot;
-	geomData.scale = scale;
-}
-
-void ModuleLoadMesh::LoadMeshBuffers(GeometryData& geomData)
-{
-	// Buffer for vertices
-	glGenBuffers(1, (GLuint*) &(geomData.id_vertices));
-	glBindBuffer(GL_ARRAY_BUFFER, geomData.id_vertices);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * geomData.num_vertices * 3, geomData.vertices, GL_STATIC_DRAW);
-
-	// Buffer for indices
-	glGenBuffers(1, (GLuint*) &(geomData.id_indices));
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, geomData.id_indices);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint) * geomData.num_indices, geomData.indices, GL_STATIC_DRAW);
-
-	// Buffer for normals
-	if (geomData.normals != nullptr)
-	{
-		glGenBuffers(1, (GLuint*) &(geomData.id_normals));
-		glBindBuffer(GL_ARRAY_BUFFER, geomData.id_normals);
-		glBufferData(GL_ARRAY_BUFFER, sizeof(float) * geomData.num_vertices * 3, geomData.normals, GL_STATIC_DRAW);
-	}
-
-	// Buffer for vertex colors
-	if (geomData.colors != nullptr)
-	{
-		glGenBuffers(1, (GLuint*) &(geomData.id_colors));
-		glBindBuffer(GL_ARRAY_BUFFER, geomData.id_colors);
-		glBufferData(GL_ARRAY_BUFFER, sizeof(float) * geomData.num_vertices * 3, geomData.colors, GL_STATIC_DRAW);
-	}
-
-	// Buffer for texture coords
-	if (geomData.texture_coords != nullptr)
-	{
-		glGenBuffers(1, (GLuint*) &(geomData.id_texture_coords));
-		glBindBuffer(GL_ARRAY_BUFFER, geomData.id_texture_coords);
-		glBufferData(GL_ARRAY_BUFFER, sizeof(float) * geomData.num_vertices * 3, geomData.texture_coords, GL_STATIC_DRAW);
-	}
 }
 
 // Function load a image, turn it into a texture, and return the texture ID as a GLuint for use
@@ -734,7 +452,7 @@ int ModuleLoadMesh::LoadImageFromFile(const char* theFileName, MaterialData* Mat
 	return textureID; // Return the GLuint to the texture so you can use it!
 }
 
-aiNode* ModuleLoadMesh::SearchForMesh(aiNode* root, uint mesh_id)
+aiNode* ModuleLoadMesh::SearchForMesh(const aiNode* root, uint mesh_id) const
 {
 	aiNode* node = nullptr;
 	if ((root != nullptr) && (root->mNumChildren > 0))
@@ -742,7 +460,7 @@ aiNode* ModuleLoadMesh::SearchForMesh(aiNode* root, uint mesh_id)
 	return node;
 }
 
-aiNode* ModuleLoadMesh::SearchForMeshIterator(aiNode* root, uint mesh_id)
+aiNode* ModuleLoadMesh::SearchForMeshIterator(const aiNode* root, uint mesh_id) const
 {
 	aiNode* node = nullptr;
 	uint child = 0;
@@ -762,15 +480,42 @@ aiNode* ModuleLoadMesh::SearchForMeshIterator(aiNode* root, uint mesh_id)
 	return nullptr;
 }
 
+ComponentMaterial* ModuleLoadMesh::SearchForTexture(const ComponentMaterial* materialComponent, const GameObject* root, std::string* texture_name) const
+{
+	ComponentMaterial* ComponentMaterial_ret = nullptr;
+	if ((root != nullptr) && (root->GetChildren()->size() > 0))
+		ComponentMaterial_ret = SearchForTextureIterator(materialComponent, root, texture_name);
+	return ComponentMaterial_ret;
+}
+
+ComponentMaterial* ModuleLoadMesh::SearchForTextureIterator(const ComponentMaterial* materialComponent, const GameObject* root, std::string* texture_name) const
+{
+	ComponentMaterial* ComponentMaterial_ret = nullptr;
+
+	uint child = 0;
+	for (std::vector<GameObject*>::const_iterator item = root->GetChildren()->cbegin(); item != root->GetChildren()->cend(); ++item, ++child)
+	{
+		const Component* material_comp = (*item)->FindComponentFirst(ComponentType::Material_Component);
+		if ((material_comp != nullptr) && (material_comp != materialComponent))
+			if (((ComponentMaterial*)material_comp)->MaterialDataStruct.texture_name == *texture_name)
+				return (ComponentMaterial*)material_comp;
+		if ((*item)->GetChildren()->size() > 0)
+		{
+			ComponentMaterial_ret = SearchForTextureIterator(materialComponent, (*item), texture_name);
+			if (ComponentMaterial_ret != nullptr)
+				return ComponentMaterial_ret;
+		}
+	}
+	return nullptr;
+}
+
 bool ModuleLoadMesh::SaveConf(JSON_Object* conf) const
 {
-	App->parsonjson->SetString(conf, "AssetsPath", AssetsPath.c_str());
 	return true;
 }
 
 bool ModuleLoadMesh::LoadConf(JSON_Object* conf)
 {
-	AssetsPath = App->parsonjson->GetString(conf, "AssetsPath", "Assets/");
 	return true;
 }
 

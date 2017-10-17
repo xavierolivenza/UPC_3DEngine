@@ -24,9 +24,6 @@ public:
 	bool LoadGeometryFromModelFile(std::string* file);
 	//bool LoadGeometryFromInternalBianryFile();
 
-	//This will be deleted
-	bool Load(std::string* file, std::vector<GeometryData>* meshDataOutput);
-	//This will be deleted
 	int LoadImageFromFile(const char* theFileName, MaterialData* MaterailDataStruct);
 
 	bool SaveConf(JSON_Object* conf) const;
@@ -34,33 +31,15 @@ public:
 
 	void ImGuiModuleVariables();
 
-	//This will be deleted
-	const std::vector<GeometryData>* GetGeometryStructVector() const
-	{
-		return &geomData;
-	}
-
 private:
 	void LoadGeometry(const aiScene* scene, GameObject* gameObject, const aiNode* MeshNode, const aiMesh* MeshInstance);
-	void LoadBuffers(ComponentMesh* meshComponent, ComponentMaterial* materialComponent);
+	void LoadBuffers(ComponentMesh* meshComponent);
 
-	aiNode* SearchForMesh(aiNode* root, uint mesh_id);
-	aiNode* SearchForMeshIterator(aiNode* root, uint mesh_id);
-	//This will be deleted
-	void LoadMeshGeometry(GeometryData& geomData, const aiScene* scene, const aiMesh* new_mesh, uint meshID, std::string& WorkingPath);
-	//This will be deleted
-	void LoadMeshBuffers(GeometryData& geomData);
-	//This will be deleted
-	bool CleanGeometryDataVector(std::vector<GeometryData>* meshDataVec);
+	aiNode* SearchForMesh(const aiNode* root, uint mesh_id) const;
+	aiNode* SearchForMeshIterator(const aiNode* root, uint mesh_id) const;
+	ComponentMaterial* SearchForTexture(const ComponentMaterial* materialComponent, const GameObject* root, std::string* texture_name) const;
+	ComponentMaterial* SearchForTextureIterator(const ComponentMaterial* materialComponent, const GameObject* root, std::string* texture_name) const;
 
 private:
 	std::string WorkingPath;
-	//This will be deleted
-	AABB SceneAABB;
-	//This will be deleted
-	std::string AssetsPath;
-	//This will be deleted
-	std::vector<GeometryData> geomData;
-	//This will be deleted
-	bool geomLoaded = false;
 };

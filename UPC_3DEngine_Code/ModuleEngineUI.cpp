@@ -536,27 +536,7 @@ void ModuleEngineUI::ImGuiInspectorWindow()
 	
 	if (GameObjectSelected)
 		GameObjectSelected->DrawComponentImGui();
-	/*
-			sprintf_s(data, data_size, "Texture##%s", item._Ptr->name.c_str());
-			if (ImGui::CollapsingHeader(data))
-			{
-				static std::string path;
-				ImGui::Separator();
-				path = "Texture Path: ";
-				path += item._Ptr->texture_name;
-				ImGui::Text(path.c_str());
-				sprintf_s(data, data_size, "Texture ID: %i", item._Ptr->id_texture);
-				ImGui::Text(data);
-				sprintf_s(data, data_size, "Texture Width: %i", item._Ptr->texture_w);
-				ImGui::Text(data);
-				sprintf_s(data, data_size, "Texture Height: %i", item._Ptr->texture_h);
-				ImGui::Text(data);
-				sprintf_s(data, data_size, "Texture Depth: %i", item._Ptr->texture_d);
-				ImGui::Text(data);
-			}
-		}
-	}
-	*/
+
 	ImGui::End();
 }
 

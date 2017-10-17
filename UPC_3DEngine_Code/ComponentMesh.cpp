@@ -59,6 +59,8 @@ void ComponentMesh::DrawComponentImGui()
 		ImGui::Text(data);
 		sprintf_s(data, data_size, "Texture Coords ID: %i", MeshDataStruct.id_texture_coords);
 		ImGui::Text(data);
+		sprintf_s(data, data_size, "Colors ID: %i", MeshDataStruct.id_colors);
+		ImGui::Text(data);
 
 		ImGui::InputFloat3("AABB Max Point", &MeshDataStruct.BoundBox.maxPoint[0], 3, ImGuiInputTextFlags_CharsDecimal | ImGuiInputTextFlags_ReadOnly);
 		ImGui::InputFloat3("AABB Min Point", &MeshDataStruct.BoundBox.minPoint[0], 3, ImGuiInputTextFlags_CharsDecimal | ImGuiInputTextFlags_ReadOnly);

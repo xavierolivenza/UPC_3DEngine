@@ -45,8 +45,6 @@ void ComponentMaterial::DrawComponentImGui()
 		char data[100] = "";
 		uint data_size = sizeof data;
 
-		sprintf_s(data, data_size, "Colors ID: %i", MaterialDataStruct.id_colors);
-		ImGui::Text(data);
 		sprintf_s(data, data_size, "Texture ID: %i", MaterialDataStruct.id_texture);
 		ImGui::Text(data);
 		if (MaterialDataStruct.id_texture > 0)
@@ -55,8 +53,9 @@ void ComponentMaterial::DrawComponentImGui()
 			ImGui::SliderFloat("Image Preview Size", &texSize, 0.0f, 1.0f, "%.2f");
 			ImGui::Image((void*)MaterialDataStruct.id_texture, ImVec2(MaterialDataStruct.texture_w * texSize, MaterialDataStruct.texture_h * texSize), ImVec2(1, 1), ImVec2(0, 0));
 		}
-		sprintf_s(data, data_size, "Texture path: %s", MaterialDataStruct.texture_name.c_str());
-		ImGui::Text(data);
+		char title[1000] = "";
+		sprintf_s(title, 1000, "Texture path: %s", MaterialDataStruct.texture_name.c_str());
+		ImGui::Text(title);
 		sprintf_s(data, data_size, "Texture W: %i", MaterialDataStruct.texture_w);
 		ImGui::Text(data);
 		sprintf_s(data, data_size, "Texture H: %i", MaterialDataStruct.texture_h);

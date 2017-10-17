@@ -15,6 +15,8 @@ struct MeshData
 	float* normals = nullptr;
 	uint id_texture_coords = 0; // id in VRAM
 	float* texture_coords = nullptr;
+	uint id_colors = 0; // id in VRAM
+	float* colors = nullptr;
 
 	MeshData()
 	{
@@ -43,6 +45,11 @@ struct MeshData
 		{
 			glDeleteBuffers(1, &id_texture_coords);
 			RELEASE_ARRAY(texture_coords);
+		}
+		if (colors != nullptr)
+		{
+			glDeleteBuffers(1, &id_colors);
+			RELEASE_ARRAY(colors);
 		}
 	}
 };
