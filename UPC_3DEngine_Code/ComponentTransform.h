@@ -30,10 +30,7 @@ public:
 
 private:
 	float3 pos = { 0.0f,0.0f,0.0f };
-	float* pos_array = nullptr;
 	float3 scale = { 1.0f,1.0f,1.0f };
-	float* scale_array = nullptr;
 	Quat rot = { 0.0f,0.0f,0.0f,1.0f };
 	float3 rot_euler = { 0.0f,0.0f,0.0f };
-	float* rot_euler_array = nullptr;
 };

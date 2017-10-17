@@ -536,95 +536,7 @@ void ModuleEngineUI::ImGuiInspectorWindow()
 	
 	if (GameObjectSelected)
 		GameObjectSelected->DrawComponentImGui();
-
-
-
 	/*
-	char data[100] = "";
-	uint data_size = sizeof data;
-
-	for (std::vector<GeometryData>::const_iterator item = App->loadmesh->GetGeometryStructVector()->cbegin(); item != App->loadmesh->GetGeometryStructVector()->cend(); ++item)
-	{
-		if (ImGui::CollapsingHeader(item._Ptr->name.c_str()))
-		{
-			sprintf_s(data, data_size, "Transformation##%s", item._Ptr->name.c_str());
-			if (ImGui::CollapsingHeader(data))
-			{
-				//This all are input text, ready to be edited in future updates, by now, read only.
-				//sprintf_s(data, data_size, "Position##%s", item._Ptr->name.c_str());
-				ImGui::Text("Position");
-				sprintf_s(data, data_size, "%f", item._Ptr->pos.x);
-				if (ImGui::InputText("PosX", data, data_size, ImGuiInputTextFlags_EnterReturnsTrue | ImGuiInputTextFlags_CharsDecimal | ImGuiInputTextFlags_ReadOnly))
-				{
-
-				}
-				sprintf_s(data, data_size, "%f", item._Ptr->pos.y);
-				if (ImGui::InputText("PosY", data, data_size, ImGuiInputTextFlags_EnterReturnsTrue | ImGuiInputTextFlags_CharsDecimal | ImGuiInputTextFlags_ReadOnly))
-				{
-
-				}
-				sprintf_s(data, data_size, "%f", item._Ptr->pos.z);
-				if (ImGui::InputText("PosZ", data, data_size, ImGuiInputTextFlags_EnterReturnsTrue | ImGuiInputTextFlags_CharsDecimal | ImGuiInputTextFlags_ReadOnly))
-				{
-
-				}
-				//sprintf_s(data, data_size, "Rotation##%s", item._Ptr->name.c_str());
-				ImGui::Text("Rotation");
-				float3 rot = item._Ptr->rot.ToEulerXYZ();
-				rot *= RADTODEG;
-				sprintf_s(data, data_size, "%f", rot.x);
-				if (ImGui::InputText("RotX", data, data_size, ImGuiInputTextFlags_EnterReturnsTrue | ImGuiInputTextFlags_CharsDecimal | ImGuiInputTextFlags_ReadOnly))
-				{
-
-				}
-				sprintf_s(data, data_size, "%f", rot.y);
-				if (ImGui::InputText("RotY", data, data_size, ImGuiInputTextFlags_EnterReturnsTrue | ImGuiInputTextFlags_CharsDecimal | ImGuiInputTextFlags_ReadOnly))
-				{
-
-				}
-				sprintf_s(data, data_size, "%f", rot.z);
-				if (ImGui::InputText("RotZ", data, data_size, ImGuiInputTextFlags_EnterReturnsTrue | ImGuiInputTextFlags_CharsDecimal | ImGuiInputTextFlags_ReadOnly))
-				{
-
-				}
-				//sprintf_s(data, data_size, "Scale##%s", item._Ptr->name.c_str());
-				ImGui::Text("Scale");
-				sprintf_s(data, data_size, "%f", item._Ptr->scale.x);
-				if (ImGui::InputText("ScaX", data, data_size, ImGuiInputTextFlags_EnterReturnsTrue | ImGuiInputTextFlags_CharsDecimal | ImGuiInputTextFlags_ReadOnly))
-				{
-
-				}
-				sprintf_s(data, data_size, "%f", item._Ptr->scale.y);
-				if (ImGui::InputText("ScaY", data, data_size, ImGuiInputTextFlags_EnterReturnsTrue | ImGuiInputTextFlags_CharsDecimal | ImGuiInputTextFlags_ReadOnly))
-				{
-
-				}
-				sprintf_s(data, data_size, "%f", item._Ptr->scale.z);
-				if (ImGui::InputText("ScaZ", data, data_size, ImGuiInputTextFlags_EnterReturnsTrue | ImGuiInputTextFlags_CharsDecimal | ImGuiInputTextFlags_ReadOnly))
-				{
-
-				}
-			}
-			sprintf_s(data, data_size, "Geometry##%s", item._Ptr->name.c_str());
-			if (ImGui::CollapsingHeader(data))
-			{
-				sprintf_s(data, data_size, "Num Faces: %i", item._Ptr->num_faces);
-				ImGui::Text(data);
-				sprintf_s(data, data_size, "Num Vertices: %i", item._Ptr->num_vertices);
-				ImGui::Text(data);
-				sprintf_s(data, data_size, "Num Indices: %i", item._Ptr->num_indices);
-				ImGui::Text(data);
-				sprintf_s(data, data_size, "ID Vertices: %i", item._Ptr->id_vertices);
-				ImGui::Text(data);
-				sprintf_s(data, data_size, "ID Indices: %i", item._Ptr->id_indices);
-				ImGui::Text(data);
-				sprintf_s(data, data_size, "ID Normals: %i", item._Ptr->id_normals);
-				ImGui::Text(data);
-				sprintf_s(data, data_size, "ID Colors: %i", item._Ptr->id_colors);
-				ImGui::Text(data);
-				sprintf_s(data, data_size, "ID Texture Coords: %i", item._Ptr->id_texture_coords);
-				ImGui::Text(data);
-			}
 			sprintf_s(data, data_size, "Texture##%s", item._Ptr->name.c_str());
 			if (ImGui::CollapsingHeader(data))
 			{
@@ -658,7 +570,7 @@ void ModuleEngineUI::ImGuiHierarchyWindow()
 	ImGui::End();
 }
 
-void ModuleEngineUI::RecursiveDrawHierarchy(const GameObject* node) const
+void ModuleEngineUI::RecursiveDrawHierarchy(const GameObject* node)
 {
 	uint flags = 0;
 	const std::vector<GameObject*>* children = node->GetChildren();
@@ -669,7 +581,9 @@ void ModuleEngineUI::RecursiveDrawHierarchy(const GameObject* node) const
 	{
 		for (std::vector<GameObject*>::const_iterator item = children->cbegin(); item != children->cend(); ++item)
 		{
-			ImGui::Text("%s", (*item)->name.c_str());
+			//ImGui::Text("%s", (*item)->name.c_str());
+			if (ImGui::SmallButton((*item)->name.c_str()))
+				GameObjectSelected = *item;
 			RecursiveDrawHierarchy(*item);
 		}
 		ImGui::TreePop();

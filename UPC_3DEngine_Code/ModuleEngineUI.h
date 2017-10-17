@@ -38,7 +38,7 @@ private:
 	void ImGuiConsole();
 	void ImGuiInspectorWindow();
 	void ImGuiHierarchyWindow();
-	void RecursiveDrawHierarchy(const GameObject* node) const;
+	void RecursiveDrawHierarchy(const GameObject* node);
 
 private:
 	GameObject* GameObjectSelected = nullptr;

@@ -2,12 +2,7 @@
 
 ComponentTransform::ComponentTransform(bool Active) : Component(Active, 1, ComponentType::Transform_Component)
 {
-	pos_array = new float[3];
-	SetPos(float3(0.0f, 0.0f, 0.0f));
-	scale_array = new float[3];
-	SetScale(float3(1.0f, 1.0f, 1.0f));
-	rot_euler_array = new float[3];
-	SetRot(Quat(0.0f, 0.0f, 0.0f, 1.0f));
+
 }
 
 ComponentTransform::~ComponentTransform()
@@ -40,9 +35,6 @@ bool ComponentTransform::Disable()
 
 bool ComponentTransform::CleanUp()
 {
-	RELEASE_ARRAY(pos_array);
-	RELEASE_ARRAY(scale_array);
-	RELEASE_ARRAY(rot_euler_array);
 	return true;
 }
 
@@ -50,18 +42,15 @@ void ComponentTransform::DrawComponentImGui()
 {
 	if (ImGui::CollapsingHeader("Transform Component", ImGuiTreeNodeFlags_DefaultOpen))
 	{
-		ImGui::InputFloat3("Position", pos_array);
-		ImGui::InputFloat3("Rotation", rot_euler_array);
-		ImGui::InputFloat3("Scale", scale_array);
+		ImGui::InputFloat3("Position", &pos[0], 3, ImGuiInputTextFlags_CharsDecimal | ImGuiInputTextFlags_ReadOnly);
+		ImGui::InputFloat3("Rotation", &rot_euler[0], 3, ImGuiInputTextFlags_CharsDecimal | ImGuiInputTextFlags_ReadOnly);
+		ImGui::InputFloat3("Scale", &scale[0], 3, ImGuiInputTextFlags_CharsDecimal | ImGuiInputTextFlags_ReadOnly);
 	}
 }
 
 void ComponentTransform::SetPos(float3& new_pos)
 {
 	pos = new_pos;
-	pos_array[0] = pos.x;
-	pos_array[1] = pos.y;
-	pos_array[2] = pos.z;
 }
 
 float3 ComponentTransform::GetPos()
@@ -72,9 +61,6 @@ float3 ComponentTransform::GetPos()
 void ComponentTransform::SetScale(float3& new_scale)
 {
 	scale = new_scale;
-	scale_array[0] = scale.x;
-	scale_array[1] = scale.y;
-	scale_array[2] = scale.z;
 }
 
 float3 ComponentTransform::GetScale()
@@ -85,10 +71,7 @@ float3 ComponentTransform::GetScale()
 void ComponentTransform::SetRot(Quat& new_rot)
 {
 	rot = new_rot;
-	rot_euler = rot.ToEulerXYZ();
-	rot_euler_array[0] = rot_euler.x;
-	rot_euler_array[1] = rot_euler.y;
-	rot_euler_array[2] = rot_euler.z;
+	rot_euler = rot.ToEulerXYZ() * RADTODEG;
 }
 
 Quat ComponentTransform::GetRot()
