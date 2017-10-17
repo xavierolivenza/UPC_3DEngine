@@ -34,6 +34,9 @@ public:
 	const Component* FindComponentLast(ComponentType type) const;
 	void FindComponentVec(std::vector<Component*>& vec, ComponentType type) const;
 
+private:
+	void DrawGameObject();
+
 public:
 	std::string name;
 

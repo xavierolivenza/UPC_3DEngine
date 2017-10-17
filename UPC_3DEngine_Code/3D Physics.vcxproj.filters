@@ -64,6 +64,9 @@
     <Filter Include="Sources\Tools\DeviceID">
       <UniqueIdentifier>{d1995eb6-6ac3-446b-9486-9ad0affe635b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Sources\Modules\Importers">
+      <UniqueIdentifier>{f6e748c1-2789-4cde-933d-6ba629321e27}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Module.h">

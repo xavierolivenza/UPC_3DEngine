@@ -50,7 +50,7 @@ struct MeshData
 class ComponentMesh : public Component
 {
 public:
-	ComponentMesh();
+	ComponentMesh(bool Active, uint replica_limit, ComponentType type);
 	~ComponentMesh();
 
 	bool Enable();

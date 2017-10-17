@@ -5,6 +5,9 @@
 #include <gl/GL.h>
 #include <gl/GLU.h>
 
+#include "ComponentMesh.h"
+#include "ComponentMaterial.h"
+
 #include "DevIL\include\il.h"
 #include "DevIL\include\ilu.h"
 #include "DevIL\include\ilut.h"
@@ -624,7 +627,7 @@ bool ModuleRenderer3D::Draw(const GeometryData* meshData) const
 	return ret;
 }
 
-bool  ModuleRenderer3D::Draw(const std::vector<GeometryData>* meshData) const
+bool ModuleRenderer3D::Draw(const std::vector<GeometryData>* meshData) const
 {
 	bool ret = true;
 
@@ -632,6 +635,82 @@ bool  ModuleRenderer3D::Draw(const std::vector<GeometryData>* meshData) const
 		ret = Draw(item._Ptr);
 
 	return ret;
+}
+
+bool ModuleRenderer3D::DrawComponentMeshMaterial(const ComponentMesh* mesh, const ComponentMaterial* material) const
+{
+	if (((mesh == nullptr) && (material == nullptr)) || ((mesh->MeshDataStruct.vertices == nullptr) || (mesh->MeshDataStruct.indices == nullptr)))
+		return false;
+
+	const MeshData* meshData = &mesh->MeshDataStruct;
+	const MaterialData* materialData = &material->MaterialDataStruct;
+
+	if (GL_Wireframe)
+		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	if (GL_Point)
+		glPolygonMode(GL_FRONT_AND_BACK, GL_POINT);
+
+	if (DebugVNormals && (meshData->normals != nullptr))
+		for (uint i = 0; i < meshData->num_vertices * 3; i += 3)
+		{
+			glLineWidth(2.0f);
+			glColor3f(1.0f, 0.0f, 0.0f);
+
+			glBegin(GL_LINES);
+			glVertex3f(meshData->vertices[i], meshData->vertices[i + 1], meshData->vertices[i + 2]);
+			glVertex3f(meshData->vertices[i] + meshData->normals[i] * (float)NormalLength, meshData->vertices[i + 1] + meshData->normals[i + 1] * (float)NormalLength, meshData->vertices[i + 2] + meshData->normals[i + 2] * (float)NormalLength);
+			glEnd();
+
+			glLineWidth(1.0f);
+			glColor3f(1.0f, 1.0f, 1.0f);
+		}
+
+	if ((materialData != nullptr) && glIsEnabled(GL_TEXTURE_2D))
+	{
+		if (materialData->texture_name != "")
+			glBindTexture(GL_TEXTURE_2D, materialData->id_texture);
+		else
+		{
+			glBindTexture(GL_TEXTURE_2D, id_checkImage);
+			//glBindTexture(GL_TEXTURE_2D, Lenna_tex);
+		}
+	}
+
+	glEnableClientState(GL_VERTEX_ARRAY);
+	glBindBuffer(GL_ARRAY_BUFFER, meshData->id_vertices);
+	glVertexPointer(3, GL_FLOAT, 0, NULL);
+
+	if (meshData->normals != nullptr)
+	{
+		glEnableClientState(GL_NORMAL_ARRAY);
+		glBindBuffer(GL_ARRAY_BUFFER, meshData->id_normals);
+		glNormalPointer(GL_FLOAT, 0, NULL);
+	}
+	if ((materialData != nullptr) && (materialData->colors != nullptr)) {
+		glEnableClientState(GL_COLOR_ARRAY);
+		glBindBuffer(GL_ARRAY_BUFFER, materialData->id_colors);
+		glColorPointer(3, GL_FLOAT, 0, NULL);
+	}
+	if (meshData->texture_coords != nullptr) {
+		glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+		glBindBuffer(GL_ARRAY_BUFFER, meshData->id_texture_coords);
+		glTexCoordPointer(3, GL_FLOAT, 0, NULL);
+	}
+
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, meshData->id_indices);
+	glDrawElements(GL_TRIANGLES, meshData->num_indices, GL_UNSIGNED_INT, NULL);
+
+	glBindTexture(GL_TEXTURE_2D, 0);
+
+	glDisableClientState(GL_VERTEX_ARRAY);
+	glDisableClientState(GL_NORMAL_ARRAY);
+	glDisableClientState(GL_COLOR_ARRAY);
+	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+
+	if (GL_Wireframe | GL_Point)
+		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+
+	return true;
 }
 
 bool ModuleRenderer3D::SaveConf(JSON_Object* conf) const

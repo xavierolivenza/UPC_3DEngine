@@ -24,6 +24,7 @@ bool GameObject::Update(float dt)
 		(*item)->Update(dt);
 	for (std::vector<GameObject*>::const_iterator item = children.cbegin(); item != children.cend(); ++item)
 		(*item)->Update(dt);
+	DrawGameObject();
 	return true;
 }
 
@@ -42,11 +43,8 @@ bool GameObject::CleanUp()
 		(*item)->CleanUp();
 	for (std::vector<GameObject*>::const_iterator item = children.cbegin(); item != children.cend(); ++item)
 		(*item)->CleanUp();
-	if (children.size() == 0)
-	{
-		//Release memory here
-
-	}
+	//Release memory here
+	//Cleanup loop need improvement iterate all the tree and from leaf nodes iterate backwards to clenaup memory
 	return true;
 }
 
@@ -76,6 +74,16 @@ void GameObject::DrawComponentImGui()
 {
 	for (std::vector<Component*>::iterator item = components.begin(); item != components.cend(); ++item)
 		(*item)->DrawComponentImGui();
+}
+
+void GameObject::DrawGameObject()
+{
+	const Component* MeshComponent = FindComponentFirst(ComponentType::Mesh_Component);
+	if (MeshComponent != nullptr)
+	{
+		const Component* MaterialComponent = FindComponentFirst(ComponentType::Material_Component);
+		App->renderer3D->DrawComponentMeshMaterial((ComponentMesh*)MeshComponent, (ComponentMaterial*)MaterialComponent);
+	}
 }
 
 void GameObject::AddChild(GameObject* child)

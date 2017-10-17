@@ -14,7 +14,7 @@ enum ComponentType
 class Component
 {
 public:
-	Component();
+	Component(bool Active, uint replica_limit, ComponentType type);
 	~Component();
 
 	virtual bool Enable();
@@ -29,5 +29,6 @@ public:
 
 protected:
 	bool Active = true;
+	uint replica_limit = 0; // 0 for no limit
 	ComponentType type = ComponentType::Null_ComponentType;
 };

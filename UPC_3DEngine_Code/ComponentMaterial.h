@@ -32,7 +32,7 @@ struct MaterialData
 class ComponentMaterial : public Component
 {
 public:
-	ComponentMaterial();
+	ComponentMaterial(bool Active, uint replica_limit, ComponentType type);
 	~ComponentMaterial();
 
 	bool Enable();

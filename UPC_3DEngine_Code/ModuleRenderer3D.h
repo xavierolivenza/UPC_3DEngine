@@ -9,6 +9,9 @@
 #define CHECKERS_HEIGHT 128
 #define CHECKERS_WIDTH 128
 
+class ComponentMesh;
+class ComponentMaterial;
+
 class ModuleRenderer3D : public Module
 {
 public:
@@ -24,6 +27,8 @@ public:
 
 	bool Draw(const GeometryData* meshData) const;
 	bool Draw(const std::vector<GeometryData>* meshData) const;
+
+	bool DrawComponentMeshMaterial(const ComponentMesh* mesh, const ComponentMaterial* material) const;
 
 	bool SaveConf(JSON_Object* conf) const;
 	bool LoadConf(JSON_Object* conf);

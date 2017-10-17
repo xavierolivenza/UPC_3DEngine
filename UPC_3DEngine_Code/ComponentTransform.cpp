@@ -1,13 +1,13 @@
 #include "ComponentTransform.h"
 
-ComponentTransform::ComponentTransform()
+ComponentTransform::ComponentTransform(bool Active, uint replica_limit, ComponentType type) : Component(Active, replica_limit, type)
 {
 	pos_array = new float[3];
-	SetPos({ 0.0f,0.0f,0.0f });
+	SetPos(float3(0.0f, 0.0f, 0.0f));
 	scale_array = new float[3];
-	SetScale({ 1.0f,1.0f,1.0f });
+	SetScale(float3(1.0f, 1.0f, 1.0f));
 	rot_euler_array = new float[3];
-	SetRot({ 0.0f,0.0f,0.0f,1.0f });
+	SetRot(Quat(0.0f, 0.0f, 0.0f, 1.0f));
 }
 
 ComponentTransform::~ComponentTransform()

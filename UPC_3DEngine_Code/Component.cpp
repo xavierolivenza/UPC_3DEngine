@@ -1,6 +1,6 @@
 #include "Component.h"
 
-Component::Component()
+Component::Component(bool Active, uint replica_limit, ComponentType type) : Active(Active), replica_limit(replica_limit), type(type)
 {
 
 }

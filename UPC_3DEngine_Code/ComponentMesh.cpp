@@ -1,6 +1,6 @@
 #include "ComponentMesh.h"
 
-ComponentMesh::ComponentMesh()
+ComponentMesh::ComponentMesh(bool Active, uint replica_limit, ComponentType type) : Component(Active, replica_limit, type)
 {
 
 }
