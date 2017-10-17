@@ -17,6 +17,7 @@
 #include "ModuleParson.h"
 #include "ModuleLoadMesh.h"
 #include "ModuleScene.h"
+#include "ModuleImporter.h"
 #include "p2Log.h"
 
 #include "Glew\include\glew.h"
@@ -46,6 +47,7 @@ public:
 	ModuleEngineUI* engineUI;
 	ModuleLoadMesh* loadmesh;
 	ModuleScene* scene;
+	ModuleImporter* importer;
 
 	ParsonJSON* parsonjson;
 	

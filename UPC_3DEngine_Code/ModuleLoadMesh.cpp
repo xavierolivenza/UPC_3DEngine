@@ -491,7 +491,6 @@ ComponentMaterial* ModuleLoadMesh::SearchForTexture(const ComponentMaterial* mat
 ComponentMaterial* ModuleLoadMesh::SearchForTextureIterator(const ComponentMaterial* materialComponent, const GameObject* root, std::string* texture_name) const
 {
 	ComponentMaterial* ComponentMaterial_ret = nullptr;
-
 	uint child = 0;
 	for (std::vector<GameObject*>::const_iterator item = root->GetChildren()->cbegin(); item != root->GetChildren()->cend(); ++item, ++child)
 	{

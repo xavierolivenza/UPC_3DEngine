@@ -492,6 +492,9 @@
     <ClInclude Include="ComponentMesh.h">
       <Filter>Sources\GameObject\Components</Filter>
     </ClInclude>
+    <ClInclude Include="ModuleImporter.h">
+      <Filter>Sources\Modules\Importers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ModuleAudio.cpp">
@@ -700,6 +703,9 @@
     </ClCompile>
     <ClCompile Include="ComponentMesh.cpp">
       <Filter>Sources\GameObject\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="ModuleImporter.cpp">
+      <Filter>Sources\Modules\Importers</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
