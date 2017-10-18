@@ -557,6 +557,15 @@ void ModuleEngineUI::RecursiveDrawHierarchy(const GameObject* node)
 
 	if (children->empty())
 		flags |= ImGuiTreeNodeFlags_Leaf;
+	if (ImGui::TreeNodeEx(node, flags, node->name.c_str()))
+	{
+		if (ImGui::IsItemClicked())
+			GameObjectSelected = const_cast<GameObject*>(node); //Warning const cast
+		for (std::vector<GameObject*>::const_iterator item = children->cbegin(); item != children->cend(); ++item)
+			RecursiveDrawHierarchy(*item);
+		ImGui::TreePop();
+	}
+	/*
 	if (ImGui::TreeNodeEx(node, flags, "Node"))
 	{
 		for (std::vector<GameObject*>::const_iterator item = children->cbegin(); item != children->cend(); ++item)
@@ -568,6 +577,7 @@ void ModuleEngineUI::RecursiveDrawHierarchy(const GameObject* node)
 		}
 		ImGui::TreePop();
 	}
+	*/
 }
 
 void ModuleEngineUI::PushNewConsoleLabel(std::string* newlabel)
