@@ -17,7 +17,7 @@ struct MaterialData
 	~MaterialData()
 	{
 		texture_name.clear();
-		if (texture_name != "")
+		if ((texture_name != "") && (id_texture > 0))
 			glDeleteTextures(1, &id_texture);
 	}
 };

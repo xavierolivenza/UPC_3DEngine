@@ -111,7 +111,140 @@ bool ModuleSceneImporter::Import(std::string* file_to_import, std::string& outpu
 	}
 	*/
 
-	//TODO something like in ModuleLoadMesh but allong importers
+	if (file_to_import == nullptr)
+		return false;
+
+	const aiScene* scene = aiImportFile(file_to_import->c_str(), aiProcessPreset_TargetRealtime_MaxQuality);
+	if (scene != nullptr && scene->HasMeshes())
+	{
+		//Get the working path to load textures from it
+		WorkingPath = file_to_import->substr(0, file_to_import->rfind("\\"));
+		WorkingPath += "\\";
+
+		// Use scene->mNumMeshes to iterate on scene->mMeshes array
+		for (uint i = 0; i < scene->mNumMeshes; ++i)
+		{
+			aiNode* MeshNode = SearchForMesh(scene->mRootNode, i);
+			aiMesh* MeshInstance = scene->mMeshes[i];
+			
+			//------------------------------------------//
+			//---------------Load Mesh------------------//
+			//------------------------------------------//
+			MeshData MeshDataStruct;
+
+			// copy vertices
+			MeshDataStruct.num_vertices = MeshInstance->mNumVertices;
+			MeshDataStruct.vertices = new float[MeshDataStruct.num_vertices * 3];
+			memcpy(MeshDataStruct.vertices, MeshInstance->mVertices, sizeof(float) * MeshDataStruct.num_vertices * 3);
+			LOGP("New mesh with %d vertices importing process...", MeshDataStruct.num_vertices);
+
+			// copy faces
+			if (MeshInstance->HasFaces())
+			{
+				MeshDataStruct.num_faces = MeshInstance->mNumFaces;
+				MeshDataStruct.num_indices = MeshInstance->mNumFaces * 3;
+				MeshDataStruct.indices = new uint[MeshDataStruct.num_indices]; // assume each face is a triangle
+				for (uint i = 0; i < MeshInstance->mNumFaces; ++i)
+				{
+					if (MeshInstance->mFaces[i].mNumIndices != 3)
+						LOGP("WARNING, geometry face with != 3 indices!");
+					else
+						memcpy(&MeshDataStruct.indices[i * 3], MeshInstance->mFaces[i].mIndices, 3 * sizeof(uint));
+				}
+			}
+
+			// normals
+			if (MeshInstance->HasNormals())
+			{
+				MeshDataStruct.normals = new float[MeshDataStruct.num_vertices * 3];
+				memcpy(MeshDataStruct.normals, MeshInstance->mNormals, sizeof(float) * MeshDataStruct.num_vertices * 3);
+			}
+
+			// texture coords (only one texture for now)
+			if (MeshInstance->HasTextureCoords(0))
+			{
+				MeshDataStruct.texture_coords = new float[MeshDataStruct.num_vertices * 3];
+				memcpy(MeshDataStruct.texture_coords, MeshInstance->mTextureCoords[0], sizeof(float) * MeshDataStruct.num_vertices * 3);
+			}
+			//this causes some problems sometimes, so as this is a feature we don't use, we comment it and avoid crashes
+			// colors
+			/*
+			if (MeshInstance->HasVertexColors(0))
+			{
+			meshComponent->MeshDataStruct.colors = new float[meshComponent->MeshDataStruct.num_vertices * 3];
+			memcpy(meshComponent->MeshDataStruct.colors, MeshInstance->mColors, sizeof(float) * meshComponent->MeshDataStruct.num_vertices * 3);
+			}
+			*/
+
+			// Generate AABB
+			MeshDataStruct.BoundBox.SetNegativeInfinity();
+			MeshDataStruct.BoundBox.Enclose((float3*)MeshDataStruct.vertices,MeshDataStruct.num_vertices);
+			
+			MeshDataStruct.BoundSphere.SetNegativeInfinity();
+			MeshDataStruct.BoundSphere.Enclose(MeshDataStruct.BoundBox);
+
+			/*
+			meshComponent->MeshDataStruct.BoundOBox.SetNegativeInfinity();
+			for (uint i = 0; i < meshComponent->MeshDataStruct.num_vertices * 3; i += 3)
+			meshComponent->MeshDataStruct.BoundOBox.Enclose(vec(meshComponent->MeshDataStruct.vertices[i], meshComponent->MeshDataStruct.vertices[i + 1], meshComponent->MeshDataStruct.vertices[i + 2]));
+			meshComponent->GenerateOBBDraw();
+			*/
+
+			//All mesh allocated, serialize it to our own file
+			std::string output = MeshNode->mName.C_Str();
+			MeshImporter->Save(&MeshDataStruct, &output);
+
+
+			//------------------------------------------//
+			//-------------Load Material----------------//
+			//------------------------------------------//
+			/*
+			ComponentMaterial* materialComponent = gameObject->CreateMaterialComponent(true);
+
+			//load texture
+			if (scene->HasMaterials())
+			{
+				aiString material_path;
+				scene->mMaterials[MeshInstance->mMaterialIndex]->GetTexture(aiTextureType_DIFFUSE, 0, &material_path);
+				materialComponent->MaterialDataStruct.texture_name = WorkingPath + material_path.C_Str();
+
+				int id_texture = 0;
+				ComponentMaterial* AlreadyLoaded = SearchForTexture(materialComponent, App->scene->GetRoot(), &materialComponent->MaterialDataStruct.texture_name);
+				//If the texture is new, load it
+				if (AlreadyLoaded == nullptr)
+				{
+					id_texture = LoadImageFromFile(materialComponent->MaterialDataStruct.texture_name.c_str(), &materialComponent->MaterialDataStruct);
+					if (id_texture < 0)
+					{
+						LOGP("Error loading texture with path: %s", materialComponent->MaterialDataStruct.texture_name.c_str());
+						materialComponent->MaterialDataStruct.texture_name.clear();
+					}
+					else
+					{
+						LOGP("Texture loaded with path: %s", materialComponent->MaterialDataStruct.texture_name.c_str());
+						materialComponent->MaterialDataStruct.id_texture = id_texture;
+					}
+				}
+				//if not, copy data
+				else
+				{
+					materialComponent->MaterialDataStruct = AlreadyLoaded->MaterialDataStruct;
+					LOGP("Texture copied from other GameObject");
+					LOGP("Texture path: %s", materialComponent->MaterialDataStruct.texture_name.c_str());
+				}
+			}
+			*/
+		}
+
+		WorkingPath.clear();
+		aiReleaseImport(scene);
+	}
+	else
+	{
+		LOGP("While importing process. Error loading scene %s", file_to_import->c_str());
+		LOGP("While importing process. Error: %s", aiGetErrorString());
+		ret = false;
+	}
 
 
 	return ret;
@@ -130,4 +263,32 @@ bool ModuleSceneImporter::SaveConf(JSON_Object* conf) const
 bool ModuleSceneImporter::LoadConf(JSON_Object* conf)
 {
 	return true;
+}
+
+aiNode* ModuleSceneImporter::SearchForMesh(const aiNode* root, uint mesh_id) const
+{
+	aiNode* node = nullptr;
+	if ((root != nullptr) && (root->mNumChildren > 0))
+		node = SearchForMeshIterator(root, mesh_id);
+	return node;
+}
+
+aiNode* ModuleSceneImporter::SearchForMeshIterator(const aiNode* root, uint mesh_id) const
+{
+	aiNode* node = nullptr;
+	uint child = 0;
+	for (node = root->mChildren[child]; child < root->mNumChildren; node = root->mChildren[++child])
+	{
+		if (node->mNumMeshes > 0)
+			for (int i = 0; i < node->mNumMeshes; i++)
+				if (node->mMeshes[i] == mesh_id)
+					return node;
+		if (node->mNumChildren > 0)
+		{
+			node = SearchForMeshIterator(root->mChildren[child], mesh_id);
+			if (node != nullptr)
+				return node;
+		}
+	}
+	return nullptr;
 }

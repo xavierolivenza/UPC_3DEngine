@@ -30,27 +30,32 @@ struct MeshData
 		BoundBox.SetNegativeInfinity();
 		if (vertices != nullptr)
 		{
-			glDeleteBuffers(1, &id_vertices);
+			if (id_vertices > 0)
+				glDeleteBuffers(1, &id_vertices);
 			RELEASE_ARRAY(vertices);
 		}
 		if (indices != nullptr)
 		{
-			glDeleteBuffers(1, &id_indices);
+			if (id_indices > 0)
+				glDeleteBuffers(1, &id_indices);
 			RELEASE_ARRAY(indices);
 		}
 		if (normals != nullptr)
 		{
-			glDeleteBuffers(1, &id_normals);
+			if (id_normals > 0)
+				glDeleteBuffers(1, &id_normals);
 			RELEASE_ARRAY(normals);
 		}
 		if (texture_coords != nullptr)
 		{
-			glDeleteBuffers(1, &id_texture_coords);
+			if (id_texture_coords > 0)
+				glDeleteBuffers(1, &id_texture_coords);
 			RELEASE_ARRAY(texture_coords);
 		}
 		if (colors != nullptr)
 		{
-			glDeleteBuffers(1, &id_colors);
+			if (id_colors > 0)
+				glDeleteBuffers(1, &id_colors);
 			RELEASE_ARRAY(colors);
 		}
 	}

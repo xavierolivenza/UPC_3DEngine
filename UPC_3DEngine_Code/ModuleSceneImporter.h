@@ -5,6 +5,7 @@
 class Component;
 class ImporterMesh;
 class ImporterMaterial;
+struct aiNode;
 
 class ModuleSceneImporter : public Module
 {
@@ -30,6 +31,11 @@ public:
 	bool LoadConf(JSON_Object* conf);
 
 private:
+	aiNode* SearchForMesh(const aiNode* root, uint mesh_id) const;
+	aiNode* SearchForMeshIterator(const aiNode* root, uint mesh_id) const;
+
+private:
+	std::string WorkingPath; //Used to load textures from same path as fbx
 	std::string Assets_path = "..\\Game\\Assets";
 	std::string Library_path = "..\\Game\\Library";
 	std::string Library_mesh_path = "..\\Game\\Library\\Mesh";

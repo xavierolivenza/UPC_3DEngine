@@ -39,6 +39,8 @@ bool ImporterMesh::Save(const MeshData* DataMesh, std::string* file_to_save)
 	if ((DataMesh == nullptr) || (file_to_save == nullptr) || file_to_save->empty())
 		return false;
 
+	LOGP("Importing process start, to file: %s", file_to_save->c_str());
+
 	//Serialize MeshData to file
 
 	return false;
