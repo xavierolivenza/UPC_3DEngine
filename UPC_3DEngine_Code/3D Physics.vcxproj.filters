@@ -495,6 +495,15 @@
     <ClInclude Include="ModuleSceneImporter.h">
       <Filter>Sources\Modules\Importers</Filter>
     </ClInclude>
+    <ClInclude Include="Importer.h">
+      <Filter>Sources\Modules\Importers</Filter>
+    </ClInclude>
+    <ClInclude Include="ImporterMaterial.h">
+      <Filter>Sources\Modules\Importers</Filter>
+    </ClInclude>
+    <ClInclude Include="ImporterMesh.h">
+      <Filter>Sources\Modules\Importers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ModuleAudio.cpp">
@@ -705,6 +714,15 @@
       <Filter>Sources\GameObject\Components</Filter>
     </ClCompile>
     <ClCompile Include="ModuleSceneImporter.cpp">
+      <Filter>Sources\Modules\Importers</Filter>
+    </ClCompile>
+    <ClCompile Include="Importer.cpp">
+      <Filter>Sources\Modules\Importers</Filter>
+    </ClCompile>
+    <ClCompile Include="ImporterMaterial.cpp">
+      <Filter>Sources\Modules\Importers</Filter>
+    </ClCompile>
+    <ClCompile Include="ImporterMesh.cpp">
       <Filter>Sources\Modules\Importers</Filter>
     </ClCompile>
   </ItemGroup>

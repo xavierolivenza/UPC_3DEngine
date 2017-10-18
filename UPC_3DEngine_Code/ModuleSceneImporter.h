@@ -2,7 +2,9 @@
 
 #include "Module.h"
 
-struct MeshData;
+class Component;
+class ImporterMesh;
+class ImporterMaterial;
 
 class ModuleSceneImporter : public Module
 {
@@ -21,8 +23,13 @@ public:
 	void DrawModuleImGui();
 	void ImGuiModuleVariables();
 
-	bool SaveBinary(const char* file_name, MeshData* mesh);
+	bool Import(std::string* file_to_import, std::string& output_file);
+	Component* Load(std::string* file_to_load);
 
 	bool SaveConf(JSON_Object* conf) const;
 	bool LoadConf(JSON_Object* conf);
+
+private:
+	ImporterMesh* MeshImporter = nullptr;
+	ImporterMaterial* MaterialImporter = nullptr;
 };

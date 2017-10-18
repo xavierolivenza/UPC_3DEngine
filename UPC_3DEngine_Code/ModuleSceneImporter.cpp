@@ -1,10 +1,12 @@
 #include "ModuleSceneImporter.h"
 
-#include "ComponentMesh.h"
+#include "Importer.h"
+#include "ImporterMesh.h"
+#include "ImporterMaterial.h"
 
 ModuleSceneImporter::ModuleSceneImporter(Application* parent, bool start_enabled) : Module(parent, start_enabled)
 {
-
+	name = "scene_importer";
 }
 
 ModuleSceneImporter::~ModuleSceneImporter()
@@ -14,6 +16,8 @@ ModuleSceneImporter::~ModuleSceneImporter()
 
 bool ModuleSceneImporter::Init()
 {
+	MeshImporter = new ImporterMesh();
+	MaterialImporter = new ImporterMaterial();
 	return true;
 }
 
@@ -39,6 +43,8 @@ update_status ModuleSceneImporter::PostUpdate(float dt)
 
 bool ModuleSceneImporter::CleanUp()
 {
+	RELEASE(MeshImporter);
+	RELEASE(MaterialImporter);
 	return true;
 }
 
@@ -52,9 +58,14 @@ void ModuleSceneImporter::ImGuiModuleVariables()
 
 }
 
-bool ModuleSceneImporter::SaveBinary(const char* file_name, MeshData* mesh)
+bool ModuleSceneImporter::Import(std::string* file_to_import, std::string& output_file)
 {
 	return true;
+}
+
+Component* ModuleSceneImporter::Load(std::string* file_to_load)
+{
+	return nullptr;
 }
 
 bool ModuleSceneImporter::SaveConf(JSON_Object* conf) const
