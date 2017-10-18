@@ -561,8 +561,8 @@ void ModuleEngineUI::RecursiveDrawHierarchy(const GameObject* node)
 	{
 		for (std::vector<GameObject*>::const_iterator item = children->cbegin(); item != children->cend(); ++item)
 		{
-			//ImGui::Text("%s", (*item)->name.c_str());
-			if (ImGui::SmallButton((*item)->name.c_str()))
+			ImGui::Text("%s", (*item)->name.c_str());
+			if(ImGui::IsItemClicked())
 				GameObjectSelected = *item;
 			RecursiveDrawHierarchy(*item);
 		}
