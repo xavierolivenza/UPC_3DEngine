@@ -1,15 +1,8 @@
 #include "ImporterMesh.h"
 
-#include "Assimp/include/cimport.h"
-#include "Assimp/include/scene.h"
-#include "Assimp/include/postprocess.h"
-#include "Assimp/include/cfileio.h"
-
 #include "Assimp/include/Logger.hpp"
 #include "Assimp/include/LogStream.hpp"
 #include "Assimp/include/DefaultLogger.hpp"
-
-#pragma comment (lib, "Assimp/libx86/assimp.lib")
 
 ImporterMesh::ImporterMesh()
 {
@@ -41,29 +34,17 @@ bool ImporterMesh::CleanUp()
 	return true;
 }
 
-bool ImporterMesh::Import(std::string* file_to_import, std::string& output_file)
+bool ImporterMesh::Save(const MeshData* DataMesh, std::string* file_to_save)
 {
-	if((file_to_import == nullptr) || file_to_import->empty())
+	if ((DataMesh == nullptr) || (file_to_save == nullptr) || file_to_save->empty())
 		return false;
 
-	//TODO Generate ComponentMesh here, send to Save
+	//Serialize MeshData to file
 
 	return false;
 }
 
-bool ImporterMesh::Save(const Component* component, std::string* file_to_save)
+bool ImporterMesh::Load(MeshData& DataMesh, std::string* file_to_load)
 {
-	if ((component == nullptr) || (file_to_save == nullptr) || file_to_save->empty())
-		return false;
-
-	ComponentMesh* meshComponent = (ComponentMesh*)component;
-
-	//Serialize ComponentMesh to file
-
 	return false;
-}
-
-Component* ImporterMesh::Load(std::string* file_to_load)
-{
-	return nullptr;
 }

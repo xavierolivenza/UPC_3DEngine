@@ -1,7 +1,8 @@
 #pragma once
-#include "Importer.h"
 
-class ImporterMesh : public Importer
+#include "ComponentMesh.h"
+
+class ImporterMesh
 {
 public:
 	ImporterMesh();
@@ -10,7 +11,6 @@ public:
 	bool Init();
 	bool CleanUp();
 
-	bool Import(std::string* file_to_import, std::string& output_file);
-	bool Save(const Component* component, std::string* file_to_save);
-	Component* Load(std::string* file_to_load);
+	bool Save(const MeshData* DataMesh, std::string* file_to_save);
+	bool Load(MeshData& DataMesh, std::string* file_to_load);
 };

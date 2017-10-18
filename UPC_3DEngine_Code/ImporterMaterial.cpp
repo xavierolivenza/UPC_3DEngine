@@ -37,29 +37,17 @@ bool ImporterMaterial::CleanUp()
 	return true;
 }
 
-bool ImporterMaterial::Import(std::string* file_to_import, std::string& output_file)
+bool ImporterMaterial::Save(const MaterialData* DataMaterial, std::string* file_to_save)
 {
-	if ((file_to_import == nullptr) || file_to_import->empty())
+	if ((DataMaterial == nullptr) || (file_to_save == nullptr) || file_to_save->empty())
 		return false;
 
-	//TODO Generate ComponentMesh here, send to Save
+	//Serialize MaterialData to file
 
 	return false;
 }
 
-bool ImporterMaterial::Save(const Component* component, std::string* file_to_save)
+bool ImporterMaterial::Load(MaterialData& DataMaterial, std::string* file_to_load)
 {
-	if ((component == nullptr) || (file_to_save == nullptr) || file_to_save->empty())
-		return false;
-
-	ComponentMaterial* materialComponent = (ComponentMaterial*)component;
-
-	//Serialize ComponentMaterial to file
-
 	return false;
-}
-
-Component* ImporterMaterial::Load(std::string* file_to_load)
-{
-	return nullptr;
 }

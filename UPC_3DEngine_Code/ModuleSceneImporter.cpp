@@ -1,9 +1,16 @@
 #include <experimental\filesystem>
 
 #include "ModuleSceneImporter.h"
-
 #include "ImporterMesh.h"
 #include "ImporterMaterial.h"
+
+//Assimp includes here because the main core of 3dmodel file read action is done here
+#include "Assimp/include/cimport.h"
+#include "Assimp/include/scene.h"
+#include "Assimp/include/postprocess.h"
+#include "Assimp/include/cfileio.h"
+
+#pragma comment (lib, "Assimp/libx86/assimp.lib")
 
 ModuleSceneImporter::ModuleSceneImporter(Application* parent, bool start_enabled) : Module(parent, start_enabled)
 {
@@ -104,7 +111,7 @@ bool ModuleSceneImporter::Import(std::string* file_to_import, std::string& outpu
 	}
 	*/
 
-
+	//TODO something like in ModuleLoadMesh but allong importers
 
 
 	return ret;
