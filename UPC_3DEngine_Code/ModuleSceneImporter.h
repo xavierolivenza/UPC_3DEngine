@@ -30,6 +30,11 @@ public:
 	bool LoadConf(JSON_Object* conf);
 
 private:
+	std::string Assets_path = "..\\Game\\Assets";
+	std::string Library_path = "..\\Game\\Library";
+	std::string Library_mesh_path = "..\\Game\\Library\\Mesh";
+	std::string Library_material_path = "..\\Game\\Library\\Material";
+
 	ImporterMesh* MeshImporter = nullptr;
 	ImporterMaterial* MaterialImporter = nullptr;
 };

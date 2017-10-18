@@ -1,3 +1,5 @@
+#include <experimental\filesystem>
+
 #include "ModuleSceneImporter.h"
 
 #include "Importer.h"
@@ -18,6 +20,32 @@ bool ModuleSceneImporter::Init()
 {
 	MeshImporter = new ImporterMesh();
 	MaterialImporter = new ImporterMaterial();
+	
+	//Create Assets folder, this just fails if the folder is already created
+	if (std::experimental::filesystem::create_directory(Assets_path.c_str())) LOGP("Assets folder created");
+	else LOGP("Assets folder already exists");
+
+	//Create Library folder, this just fails if the folder is already created
+	if (std::experimental::filesystem::create_directory(Library_path.c_str())) LOGP("Library folder created");
+	else LOGP("Library folder already exists");
+
+	//Create Library/Mesh folder, this just fails if the folder is already created
+	if (std::experimental::filesystem::create_directory(Library_mesh_path.c_str())) LOGP("Mesh folder created");
+	else LOGP("Mesh folder already exists");
+
+	//Create Library/Material folder, this just fails if the folder is already created
+	if (std::experimental::filesystem::create_directory(Library_material_path.c_str())) LOGP("Material folder created");
+	else LOGP("Material folder already exists");
+
+	//Iterate all Assets folder including files and directories
+	for (auto& file_in_path : std::experimental::filesystem::recursive_directory_iterator(Assets_path.c_str()))
+	{
+		LOGP("%S", file_in_path.path().c_str());
+	}
+
+
+
+
 	return true;
 }
 
