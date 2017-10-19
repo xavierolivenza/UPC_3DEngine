@@ -18,6 +18,9 @@ bool ModuleScene::Init()
 	LOGP("Creating Module Scene");
 	bool ret = true;
 	root = new GameObject("Root", true);
+	TestCamera = new GameObject("Camera", true);
+	TestCamera->CreateCameraComponent(true);
+	AddChildToRoot(TestCamera);
 	return ret;
 }
 
@@ -52,6 +55,8 @@ bool ModuleScene::CleanUp()
 	LOGP("Destroying Module Scene");
 	root->CleanUp();
 	RELEASE(root);
+	TestCamera->CleanUp();
+	RELEASE(TestCamera);
 	return true;
 }
 

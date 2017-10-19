@@ -3,6 +3,7 @@
 #include "ComponentTransform.h"
 #include "ComponentMesh.h"
 #include "ComponentMaterial.h"
+#include "ComponentCamera.h"
 
 GameObject::GameObject(const char* name, bool active): name(name), Active(active)
 {
@@ -137,6 +138,13 @@ ComponentMaterial* GameObject::CreateMaterialComponent(bool active)
 	ComponentMaterial* material = new ComponentMaterial(active);
 	components.push_back((Component*)material);
 	return material;
+}
+
+ComponentCamera* GameObject::CreateCameraComponent(bool active)
+{
+	ComponentCamera* camera = new ComponentCamera(active);
+	components.push_back((Component*)camera);
+	return camera;
 }
 
 bool GameObject::RemoveComponent(Component* component)

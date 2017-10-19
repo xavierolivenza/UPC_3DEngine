@@ -30,4 +30,6 @@ public:
 
 private:
 	GameObject* root = nullptr;
+	GameObject* TestCamera = nullptr;
+
 };

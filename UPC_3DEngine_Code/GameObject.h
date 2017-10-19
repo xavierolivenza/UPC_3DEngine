@@ -7,6 +7,7 @@ enum ComponentType;
 class ComponentTransform;
 class ComponentMesh;
 class ComponentMaterial;
+class ComponentCamera;
 
 class GameObject
 {
@@ -33,6 +34,7 @@ public:
 	ComponentTransform* CreateTransformComponent(bool active);
 	ComponentMesh* CreateMeshComponent(bool active);
 	ComponentMaterial* CreateMaterialComponent(bool active);
+	ComponentCamera* CreateCameraComponent(bool active);
 	bool RemoveComponent(Component* component);
 
 	//Find Component
