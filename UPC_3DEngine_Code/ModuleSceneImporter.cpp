@@ -218,42 +218,20 @@ bool ModuleSceneImporter::Import(std::string* file_to_import, std::string& outpu
 			//------------------------------------------//
 			//-------------Load Material----------------//
 			//------------------------------------------//
-			/*
-			ComponentMaterial* materialComponent = gameObject->CreateMaterialComponent(true);
-
+			
 			//load texture
 			if (scene->HasMaterials())
 			{
 				aiString material_path;
 				scene->mMaterials[MeshInstance->mMaterialIndex]->GetTexture(aiTextureType_DIFFUSE, 0, &material_path);
-				materialComponent->MaterialDataStruct.texture_name = WorkingPath + material_path.C_Str();
+				std::string texture_name = WorkingPath + material_path.C_Str();
 
-				int id_texture = 0;
-				ComponentMaterial* AlreadyLoaded = SearchForTexture(materialComponent, App->scene->GetRoot(), &materialComponent->MaterialDataStruct.texture_name);
-				//If the texture is new, load it
-				if (AlreadyLoaded == nullptr)
-				{
-					id_texture = LoadImageFromFile(materialComponent->MaterialDataStruct.texture_name.c_str(), &materialComponent->MaterialDataStruct);
-					if (id_texture < 0)
-					{
-						LOGP("Error loading texture with path: %s", materialComponent->MaterialDataStruct.texture_name.c_str());
-						materialComponent->MaterialDataStruct.texture_name.clear();
-					}
-					else
-					{
-						LOGP("Texture loaded with path: %s", materialComponent->MaterialDataStruct.texture_name.c_str());
-						materialComponent->MaterialDataStruct.id_texture = id_texture;
-					}
-				}
-				//if not, copy data
-				else
-				{
-					materialComponent->MaterialDataStruct = AlreadyLoaded->MaterialDataStruct;
-					LOGP("Texture copied from other GameObject");
-					LOGP("Texture path: %s", materialComponent->MaterialDataStruct.texture_name.c_str());
-				}
+				//------------------------------------------//
+				//-------Serialize Mesh To Own Format-------//
+				//------------------------------------------//
+				std::string output = MeshNode->mName.C_Str();
+				MaterialImporter->Save(&texture_name, &output);
 			}
-			*/
 		}
 
 		WorkingPath.clear();
@@ -311,4 +289,24 @@ aiNode* ModuleSceneImporter::SearchForMeshIterator(const aiNode* root, uint mesh
 		}
 	}
 	return nullptr;
+}
+
+const std::string* ModuleSceneImporter::Get_Assets_path() const
+{
+	return &Assets_path;
+}
+
+const std::string* ModuleSceneImporter::Get_Library_path() const
+{
+	return &Library_path;
+}
+
+const std::string* ModuleSceneImporter::Get_Library_mesh_path() const
+{
+	return &Library_mesh_path;
+}
+
+const std::string* ModuleSceneImporter::Get_Library_material_path() const
+{
+	return &Library_material_path;
 }

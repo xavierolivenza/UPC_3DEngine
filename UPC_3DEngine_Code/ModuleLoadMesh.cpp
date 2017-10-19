@@ -53,6 +53,7 @@ bool ModuleLoadMesh::Init()
 	// Attaching it to the default logger
 	Assimp::DefaultLogger::get()->attachStream(new Assimp::myStream(), severity);
 
+	/*
 	ilutRenderer(ILUT_OPENGL);
 	ilInit();
 	iluInit();
@@ -61,7 +62,7 @@ bool ModuleLoadMesh::Init()
 	ILenum ilError = ilGetError();
 	if (ilError != IL_NO_ERROR)
 		ret = false;
-
+	*/
 	return ret;
 }
 

@@ -1,3 +1,5 @@
+#include <fstream>
+
 #include "ImporterMaterial.h"
 
 #include "DevIL\include\il.h"
@@ -37,12 +39,44 @@ bool ImporterMaterial::CleanUp()
 	return true;
 }
 
-bool ImporterMaterial::Save(const MaterialData* DataMaterial, std::string* file_to_save)
+bool ImporterMaterial::Save(const std::string* texture_name, std::string* file_to_save)
 {
-	if ((DataMaterial == nullptr) || (file_to_save == nullptr) || file_to_save->empty())
+	if ((texture_name == nullptr) || (file_to_save == nullptr) || file_to_save->empty())
 		return false;
 
 	//Serialize MaterialData to file
+
+	uint imgID = 0;
+	ilGenImages(1, &imgID);
+	ilBindImage(imgID);
+	ILboolean success = ilLoadImage(texture_name->c_str());
+	if (success == IL_TRUE)
+	{
+		ILuint size;
+		ILubyte *data;
+		ilSetInteger(IL_DXTC_FORMAT, IL_DXT5); // To pick a specific DXT compression use
+		size = ilSaveL(IL_DDS, NULL, 0); // Get the size of the data buffer
+		if (size > 0)
+		{
+			data = new ILubyte[size]; // allocate buffer
+			if (ilSaveL(IL_DDS, data, size) > 0)// Save to buffer
+			{
+				size_t bar_pos = texture_name->rfind("\\");
+				std::string tex_name = texture_name->substr(bar_pos, texture_name->rfind(".") - bar_pos);
+				tex_name += ".dds";
+				std::string tex_path = *App->importer->Get_Library_material_path() + tex_name;
+
+				std::ofstream outfile(tex_path, std::ofstream::binary);
+				if (outfile.good()) //write file
+					outfile.write((char*)data, size);
+				else
+					LOGP("Failed to write the file %s", tex_path.c_str());
+				outfile.close();
+			}
+			RELEASE_ARRAY(data);
+		}
+		ilDeleteImages(1, &imgID);
+	}
 
 	return false;
 }

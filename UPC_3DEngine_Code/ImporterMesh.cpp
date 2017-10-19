@@ -1,3 +1,5 @@
+#include <fstream>
+
 #include "ImporterMesh.h"
 
 #include "ComponentMesh.h"
@@ -163,16 +165,15 @@ bool ImporterMesh::Save(const MeshData& DataMesh, std::string* file_to_save) con
 	
 	// Store BoundOBox(WIP)
 
-	// TODO Write the file
-
-
-
-
-
-
-
-
-
+	//Write to file
+	/*
+	std::ofstream outfile(path, std::ofstream::binary);
+	if (outfile.good()) //write file
+		outfile.write(data, file_size);
+	else
+		LOGP("Failed to write the file %s", path);
+	outfile.close();
+	*/
 
 	RELEASE_ARRAY(data);
 

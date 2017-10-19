@@ -30,6 +30,11 @@ public:
 	bool SaveConf(JSON_Object* conf) const;
 	bool LoadConf(JSON_Object* conf);
 
+	const std::string* Get_Assets_path() const;
+	const std::string* Get_Library_path() const;
+	const std::string* Get_Library_mesh_path() const;
+	const std::string* Get_Library_material_path() const;
+
 private:
 	aiNode* SearchForMesh(const aiNode* root, uint mesh_id) const;
 	aiNode* SearchForMeshIterator(const aiNode* root, uint mesh_id) const;
