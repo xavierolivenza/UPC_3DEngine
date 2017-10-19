@@ -2,7 +2,7 @@
 
 ComponentMesh::ComponentMesh(bool Active) : Component(Active, 1, ComponentType::Mesh_Component)
 {
-
+	if (Active) Enable();
 }
 
 ComponentMesh::~ComponentMesh()

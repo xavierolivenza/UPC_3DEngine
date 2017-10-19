@@ -2,7 +2,7 @@
 
 ComponentMaterial::ComponentMaterial(bool Active) : Component(Active, 1, ComponentType::Material_Component)
 {
-
+	if (Active) Enable();
 }
 
 ComponentMaterial::~ComponentMaterial()

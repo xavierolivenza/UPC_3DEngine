@@ -2,7 +2,7 @@
 
 ComponentTransform::ComponentTransform(bool Active) : Component(Active, 1, ComponentType::Transform_Component)
 {
-
+	if (Active) Enable();
 }
 
 ComponentTransform::~ComponentTransform()

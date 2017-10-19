@@ -39,6 +39,11 @@ public:
 
 	void ImGuiModuleVariables();
 
+	float GetAspectRatio()
+	{
+		return w_width / w_height;
+	}
+
 public:
 	//The window we'll be rendering to
 	SDL_Window* window;

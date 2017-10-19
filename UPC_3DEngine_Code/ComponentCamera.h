@@ -16,7 +16,11 @@ public:
 	void DrawComponentImGui();
 
 private:
-	Frustum frustrum;
+	void GenerateFrustumDraw();
+	void CleanFrustumDraw();
+
+private:
+	Frustum frustum;
 	float NearPlaneDistance = 0.1f;
 	float FarPlaneDistance = 5.0f;
 	float FOVHoritzontal = 60.0f;
@@ -25,9 +29,11 @@ private:
 	vec Up = { 0.0f, 1.0f, 0.0f };
 	vec Front = { 0.0f, 0.0f, 1.0f };
 
-	bool DebugDrawFrustrum = false;
-	uint DebugDrawFrustrum_id_vertices = 0; // id in VRAM
-	float* DebugDrawFrustrum_vertices = nullptr;
-	uint DebugDrawFrustrum_id_indices = 0; // id in VRAM
-	uint* DebugDrawFrustrum_indices = nullptr;
+	bool DebugDrawFrustum = false;
+	uint DebugDrawFrustum_id_vertices = 0; // id in VRAM
+	float* DebugDrawFrustum_vertices = nullptr;
+	uint DebugDrawFrustum_id_indices = 0; // id in VRAM
+	uint* DebugDrawFrustum_indices = nullptr;
+
+	bool first_time = true;
 };
