@@ -186,15 +186,14 @@ bool ModuleSceneImporter::Import(std::string* file_to_import, std::string& outpu
 				MeshDataStruct.texture_coords = new float[MeshDataStruct.num_vertices * 3];
 				memcpy(MeshDataStruct.texture_coords, MeshInstance->mTextureCoords[0], sizeof(float) * MeshDataStruct.num_vertices * 3);
 			}
+
 			//this causes some problems sometimes, so as this is a feature we don't use, we comment it and avoid crashes
 			// colors
-			/*
 			if (MeshInstance->HasVertexColors(0))
 			{
-			meshComponent->MeshDataStruct.colors = new float[meshComponent->MeshDataStruct.num_vertices * 3];
-			memcpy(meshComponent->MeshDataStruct.colors, MeshInstance->mColors, sizeof(float) * meshComponent->MeshDataStruct.num_vertices * 3);
+				//meshComponent->MeshDataStruct.colors = new float[meshComponent->MeshDataStruct.num_vertices * 3];
+				//memcpy(meshComponent->MeshDataStruct.colors, MeshInstance->mColors, sizeof(float) * meshComponent->MeshDataStruct.num_vertices * 3);
 			}
-			*/
 
 			// Generate AABB
 			MeshDataStruct.BoundBox.SetNegativeInfinity();
@@ -212,7 +211,7 @@ bool ModuleSceneImporter::Import(std::string* file_to_import, std::string& outpu
 
 			//All mesh allocated, serialize it to our own file
 			std::string output = MeshNode->mName.C_Str();
-			MeshImporter->Save(&MeshDataStruct, &output);
+			//MeshImporter->Save(MeshDataStruct, &output);
 
 
 			//------------------------------------------//

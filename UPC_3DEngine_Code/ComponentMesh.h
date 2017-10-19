@@ -6,7 +6,7 @@ struct MeshData
 	Sphere BoundSphere;
 	AABB BoundBox;
 	OBB BoundOBox;
-	int num_faces = 0;
+	uint num_faces = 0;
 	uint id_vertices = 0; // id in VRAM
 	uint num_vertices = 0;
 	float* vertices = nullptr;
