@@ -25,9 +25,9 @@ private:
 	float FarPlaneDistance = 5.0f;
 	float FOVHoritzontal = 60.0f;
 	float AspectRatio = 1.78f;
-	vec Pos = { 0.0f, 0.0f, 0.0f };
-	vec Up = { 0.0f, 1.0f, 0.0f };
-	vec Front = { 0.0f, 0.0f, 1.0f };
+	float3 Pos = { 0.0f, 0.0f, 0.0f };
+	float3 Up = { 0.0f, 1.0f, 0.0f };
+	float3 Front = { 0.0f, 0.0f, 1.0f };
 
 	bool DebugDrawFrustum = false;
 	uint DebugDrawFrustum_id_vertices = 0; // id in VRAM

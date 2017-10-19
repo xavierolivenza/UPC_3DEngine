@@ -3,12 +3,14 @@
 ComponentCamera::ComponentCamera(bool Active) : Component(Active, 0, ComponentType::Camera_Component)
 {
 	if (Active) Enable();
-	frustum.SetViewPlaneDistances(NearPlaneDistance, FarPlaneDistance);
+	frustum.nearPlaneDistance = NearPlaneDistance;
+	frustum.farPlaneDistance = FarPlaneDistance;
 	AspectRatio = App->window->GetAspectRatio();
-	frustum.SetVerticalFovAndAspectRatio(FOVHoritzontal * DEGTORAD, AspectRatio);
-	frustum.SetPos(Pos);
-	frustum.SetPos(Up);
-	frustum.SetPos(Front);
+	frustum.verticalFov = FOVHoritzontal * DEGTORAD;
+	frustum.horizontalFov = Atan(AspectRatio * Tan(frustum.verticalFov / 2.0f)) * 2.0f;
+	frustum.pos = Pos;
+	frustum.up = Up;
+	frustum.front = Front;
 }
 
 ComponentCamera::~ComponentCamera()
@@ -72,9 +74,9 @@ void ComponentCamera::DrawComponentImGui()
 		float temp_NearPlaneDistance = NearPlaneDistance;
 		float temp_FarPlaneDistance = FarPlaneDistance;
 		float temp_FOVHoritzontal = FOVHoritzontal;
-		vec temp_Pos = Pos;
-		vec temp_Up = Up;
-		vec temp_Front = Front;
+		float3 temp_Pos = Pos;
+		float3 temp_Up = Up;
+		float3 temp_Front = Front;
 
 		ImGui::InputFloat("NearPlaneDistance", &NearPlaneDistance, 3, ImGuiInputTextFlags_CharsDecimal);
 		ImGui::InputFloat("FarPlaneDistance", &FarPlaneDistance, 3, ImGuiInputTextFlags_CharsDecimal);
@@ -86,29 +88,36 @@ void ComponentCamera::DrawComponentImGui()
 
 		//Update frustrum
 		bool frustum_modified = false;
-		if ((temp_NearPlaneDistance != NearPlaneDistance) || (temp_FarPlaneDistance != FarPlaneDistance))
+		if (temp_NearPlaneDistance != NearPlaneDistance)
 		{
-			frustum.SetViewPlaneDistances(NearPlaneDistance, FarPlaneDistance);
+			frustum.nearPlaneDistance = NearPlaneDistance;
+			frustum_modified = true;
+		}
+		if (temp_FarPlaneDistance != FarPlaneDistance)
+		{
+			frustum.farPlaneDistance = FarPlaneDistance;
 			frustum_modified = true;
 		}
 		if (temp_FOVHoritzontal != FOVHoritzontal)
 		{
-			frustum.SetVerticalFovAndAspectRatio(FOVHoritzontal * DEGTORAD, AspectRatio);
+			AspectRatio = App->window->GetAspectRatio();
+			frustum.verticalFov = FOVHoritzontal * DEGTORAD;
+			frustum.horizontalFov = Atan(AspectRatio * Tan(frustum.verticalFov / 2.0f)) * 2.0f;
 			frustum_modified = true;
 		}
 		if ((temp_Pos.x != Pos.x) || (temp_Pos.y != Pos.y) || (temp_Pos.z != Pos.z))
 		{
-			frustum.SetPos(Pos);
+			frustum.pos = Pos;
 			frustum_modified = true;
 		}
 		if ((temp_Up.x != Up.x) || (temp_Up.y != Up.y) || (temp_Up.z != Up.z))
 		{
-			frustum.SetPos(Up);
+			frustum.up = Up;
 			frustum_modified = true;
 		}
 		if ((temp_Front.x != Front.x) || (temp_Front.y != Front.y) || (temp_Front.z != Front.z))
 		{
-			frustum.SetPos(Front);
+			frustum.front = Front;
 			frustum_modified = true;
 		}
 		if(frustum_modified)

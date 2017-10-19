@@ -254,7 +254,7 @@ void P2Cube::GeneratePrimitiveWithNewData()
 	};
 	memcpy(GeometryStruct.texture_coords, texture_coords, sizeof(float) * GeometryStruct.num_indices * 3);
 
-	GeometryStruct.BoundBox = AABB(vec(-sx, -sy, -sz), vec(sx, sy, sz));
+	GeometryStruct.BoundBox = AABB(float3(-sx, -sy, -sz), float3(sx, sy, sz));
 }
 
 // SPHERE ============================================
@@ -379,7 +379,7 @@ void P2Sphere::GeneratePrimitiveWithNewData()
 		}
 	}
 
-	GeometryStruct.BoundBox = AABB(vec(-radius, -radius, -radius), vec(radius, radius, radius));
+	GeometryStruct.BoundBox = AABB(float3(-radius, -radius, -radius), float3(radius, radius, radius));
 
 }
 
@@ -468,12 +468,12 @@ const Ray* P2Ray::GetRay() const
 
 void P2Ray::SetOrigin(float x, float y, float z)
 {
-	GeolibRay.pos = vec(x, y, z);
+	GeolibRay.pos = float3(x, y, z);
 }
 
 void P2Ray::SetDirection(float x, float y, float z)
 {
-	vec direction;
+	float3 direction;
 	direction.x = x;
 	direction.y = y;
 	direction.z = z;
@@ -488,7 +488,7 @@ void P2Ray::InnerRender() const
 	glBegin(GL_LINES);
 
 	glVertex3f(GeolibRay.pos.x, GeolibRay.pos.y, GeolibRay.pos.z);
-	vec dir;
+	float3 dir;
 	dir.x = GeolibRay.pos.x + GeolibRay.dir.x;
 	dir.y = GeolibRay.pos.y + GeolibRay.dir.y;
 	dir.z = GeolibRay.pos.z + GeolibRay.dir.z;

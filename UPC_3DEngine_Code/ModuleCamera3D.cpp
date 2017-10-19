@@ -203,7 +203,7 @@ void ModuleCamera3D::CenterCameraToGeometry(const AABB* meshAABB)
 		Reference = vec3(0.0f, 0.0f, 0.0f);
 	else
 	{
-		vec centre = meshAABB->CenterPoint();
+		float3 centre = meshAABB->CenterPoint();
 		Reference = vec3(centre.x, centre.y, centre.z);
 		LastCentreGeometry = meshAABB;
 		
@@ -219,7 +219,7 @@ void ModuleCamera3D::CenterCameraToGeometry(const AABB* meshAABB)
 		float wide = MAX(MAX(difference.x, difference.y), difference.z); //Get max of the 3 sides of the AABB
 		*/
 
-		vec difference = meshAABB->maxPoint - meshAABB->minPoint;
+		float3 difference = meshAABB->maxPoint - meshAABB->minPoint;
 		float wide = difference.Length() + 2.0f; //This magic number is just to have some frame around geometry
 		float FOVdistance = (wide * 0.5f) / tan(60.0f * 0.5f * DEGTORAD); //FOV = 60.0f, by now this remains as magic number, will change when we update camera
 
@@ -302,7 +302,7 @@ void ModuleCamera3D::ImGuiModuleVariables()
 
 void ModuleCamera3D::NormalizeVec(float* vector)
 {
-	vec temp = { vector[0] ,vector[1] ,vector[2] };
+	float3 temp = { vector[0] ,vector[1] ,vector[2] };
 	temp.Normalize();
 	vector[0] = temp.x;
 	vector[1] = temp.y;
