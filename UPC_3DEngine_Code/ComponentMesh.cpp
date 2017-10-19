@@ -1,6 +1,6 @@
 #include "ComponentMesh.h"
 
-ComponentMesh::ComponentMesh(bool Active) : Component(Active, 1, ComponentType::Mesh_Component)
+ComponentMesh::ComponentMesh(GameObject* parent, bool Active) : Component(parent, Active, 1, ComponentType::Mesh_Component)
 {
 	if (Active) Enable();
 }

@@ -1,6 +1,6 @@
 #include "ComponentMaterial.h"
 
-ComponentMaterial::ComponentMaterial(bool Active) : Component(Active, 1, ComponentType::Material_Component)
+ComponentMaterial::ComponentMaterial(GameObject* parent, bool Active) : Component(parent, Active, 1, ComponentType::Material_Component)
 {
 	if (Active) Enable();
 }

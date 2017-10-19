@@ -66,7 +66,7 @@ struct MeshData
 class ComponentMesh : public Component
 {
 public:
-	ComponentMesh(bool Active);
+	ComponentMesh(GameObject* parent, bool Active);
 	~ComponentMesh();
 
 	bool Enable();

@@ -198,7 +198,7 @@ void ModuleLoadMesh::LoadGeometry(const aiScene* scene, GameObject* gameObject, 
 	//------------------------------------------//
 	//-------------Load Transform---------------//
 	//------------------------------------------//
-	ComponentTransform* transformComponent = gameObject->CreateTransformComponent(true);
+	ComponentTransform* transformComponent = gameObject->CreateTransformComponent(gameObject, true);
 	
 	float3 pos = { 0.0f,0.0f,0.0f };
 	float3 scale = { 1.0f,1.0f,1.0f };
@@ -227,7 +227,7 @@ void ModuleLoadMesh::LoadGeometry(const aiScene* scene, GameObject* gameObject, 
 	//------------------------------------------//
 	//---------------Load Mesh------------------//
 	//------------------------------------------//
-	ComponentMesh* meshComponent = gameObject->CreateMeshComponent(true);
+	ComponentMesh* meshComponent = gameObject->CreateMeshComponent(gameObject, true);
 
 	// copy vertices
 	meshComponent->MeshDataStruct.num_vertices = MeshInstance->mNumVertices;
@@ -291,7 +291,7 @@ void ModuleLoadMesh::LoadGeometry(const aiScene* scene, GameObject* gameObject, 
 	//------------------------------------------//
 	//-------------Load Material----------------//
 	//------------------------------------------//
-	ComponentMaterial* materialComponent = gameObject->CreateMaterialComponent(true);
+	ComponentMaterial* materialComponent = gameObject->CreateMaterialComponent(gameObject, true);
 
 	//load texture
 	if (scene->HasMaterials())

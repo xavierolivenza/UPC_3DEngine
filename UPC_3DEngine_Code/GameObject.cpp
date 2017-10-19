@@ -119,30 +119,30 @@ bool GameObject::RemoveChild(GameObject* child)
 	return false;
 }
 
-ComponentTransform* GameObject::CreateTransformComponent(bool active)
+ComponentTransform* GameObject::CreateTransformComponent(GameObject* parent, bool active)
 {
-	ComponentTransform* transform = new ComponentTransform(active);
+	ComponentTransform* transform = new ComponentTransform(parent, active);
 	components.push_back((Component*)transform);
 	return transform;
 }
 
-ComponentMesh* GameObject::CreateMeshComponent(bool active)
+ComponentMesh* GameObject::CreateMeshComponent(GameObject* parent, bool active)
 {
-	ComponentMesh* mesh = new ComponentMesh(active);
+	ComponentMesh* mesh = new ComponentMesh(parent, active);
 	components.push_back((Component*)mesh);
 	return mesh;
 }
 
-ComponentMaterial* GameObject::CreateMaterialComponent(bool active)
+ComponentMaterial* GameObject::CreateMaterialComponent(GameObject* parent, bool active)
 {
-	ComponentMaterial* material = new ComponentMaterial(active);
+	ComponentMaterial* material = new ComponentMaterial(parent, active);
 	components.push_back((Component*)material);
 	return material;
 }
 
-ComponentCamera* GameObject::CreateCameraComponent(bool active)
+ComponentCamera* GameObject::CreateCameraComponent(GameObject* parent, bool active)
 {
-	ComponentCamera* camera = new ComponentCamera(active);
+	ComponentCamera* camera = new ComponentCamera(parent, active);
 	components.push_back((Component*)camera);
 	return camera;
 }

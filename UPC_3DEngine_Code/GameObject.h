@@ -31,10 +31,10 @@ public:
 	bool RemoveChild(GameObject* child);
 
 	//Create/Remove Component
-	ComponentTransform* CreateTransformComponent(bool active);
-	ComponentMesh* CreateMeshComponent(bool active);
-	ComponentMaterial* CreateMaterialComponent(bool active);
-	ComponentCamera* CreateCameraComponent(bool active);
+	ComponentTransform* CreateTransformComponent(GameObject* parent, bool active);
+	ComponentMesh* CreateMeshComponent(GameObject* parent, bool active);
+	ComponentMaterial* CreateMaterialComponent(GameObject* parent, bool active);
+	ComponentCamera* CreateCameraComponent(GameObject* parent, bool active);
 	bool RemoveComponent(Component* component);
 
 	//Find Component

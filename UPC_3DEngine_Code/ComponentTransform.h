@@ -4,7 +4,7 @@
 class ComponentTransform : public Component
 {
 public:
-	ComponentTransform(bool Active);
+	ComponentTransform(GameObject* parent, bool Active);
 	~ComponentTransform();
 
 	bool Enable();
@@ -28,9 +28,17 @@ public:
 	Quat GetRot();
 	float3 GetRotEuler();
 
+	const float4x4* GetMatrix() const;
+
+private:
+	void UpdateMatrix();
+
 private:
 	float3 pos = { 0.0f,0.0f,0.0f };
 	float3 scale = { 1.0f,1.0f,1.0f };
 	Quat rot = { 0.0f,0.0f,0.0f,1.0f };
 	float3 rot_euler = { 0.0f,0.0f,0.0f };
+	float4x4 matrix = float4x4::identity;
+
+	bool change = false;
 };

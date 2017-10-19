@@ -40,8 +40,6 @@ enum FrustumType
 class Frustum
 {
 public:
-	// WARNING
-	// David was here
 
 	void Update();
 

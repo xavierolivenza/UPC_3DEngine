@@ -1,13 +1,15 @@
 #include "ComponentCamera.h"
+#include "ComponentTransform.h"
 
-ComponentCamera::ComponentCamera(bool Active) : Component(Active, 0, ComponentType::Camera_Component)
+ComponentCamera::ComponentCamera(GameObject* parent, bool Active) : Component(parent, Active, 1, ComponentType::Camera_Component)
 {
 	if (Active) Enable();
+	frustum.type = FrustumType::PerspectiveFrustum;
 	frustum.nearPlaneDistance = NearPlaneDistance;
 	frustum.farPlaneDistance = FarPlaneDistance;
 	AspectRatio = App->window->GetAspectRatio();
 	frustum.verticalFov = FOVHoritzontal * DEGTORAD;
-	frustum.horizontalFov = Atan(AspectRatio * Tan(frustum.verticalFov / 2.0f)) * 2.0f;
+	frustum.horizontalFov = Atan(AspectRatio * Tan(frustum.verticalFov * 0.5f)) * 2.0f;
 	frustum.pos = Pos;
 	frustum.up = Up;
 	frustum.front = Front;
@@ -35,6 +37,35 @@ bool ComponentCamera::Update(float dt)
 		GenerateFrustumDraw();
 		first_time = false;
 	}
+
+	if (parent != nullptr)
+	{
+		/*
+		ComponentTransform* transform = (ComponentTransform*)parent->FindComponentFirst(ComponentType::Camera_Component);
+		if (transform != nullptr)
+		{
+			bool frustum_changed = false;
+			float3 prev_pos = frustum.pos;
+			frustum.pos = transform->GetPos();
+			if ((prev_pos.x != frustum.pos.x) || (prev_pos.y != frustum.pos.y) || (prev_pos.z != frustum.pos.z))
+				frustum_changed = true;
+
+			float3 prev_front = frustum.front;
+			frustum.front = transform->GetMatrix()->Row3(2).Normalized();
+			if ((prev_front.x != frustum.front.x) || (prev_front.y != frustum.front.y) || (prev_front.z != frustum.front.z))
+				frustum_changed = true;
+
+			float3 prev_up = frustum.up;
+			frustum.up = transform->GetMatrix()->Row3(1).Normalized();
+			if ((prev_up.x != frustum.up.x) || (prev_up.y != frustum.up.y) || (prev_up.z != frustum.up.z))
+				frustum_changed = true;
+
+			if (frustum_changed)
+				GenerateFrustumDraw();
+		}
+		*/
+	}
+	
 	if (DebugDrawFrustum && (DebugDrawFrustum_id_vertices != 0))
 	{
 		glColor3f(1.0f, 0.0f, 0.0f);
@@ -78,12 +109,22 @@ void ComponentCamera::DrawComponentImGui()
 		float3 temp_Up = Up;
 		float3 temp_Front = Front;
 
+		ImGui::DragFloat("NearPlaneDistance", &NearPlaneDistance, 3, ImGuiInputTextFlags_CharsDecimal);
+		ImGui::DragFloat("FarPlaneDistance", &FarPlaneDistance, 3, ImGuiInputTextFlags_CharsDecimal);
+		ImGui::DragFloat("FOVHoritzontal", &FOVHoritzontal, 3, ImGuiInputTextFlags_CharsDecimal);
+		ImGui::DragFloat3("FPosition", &Pos[0], 3, ImGuiInputTextFlags_CharsDecimal | ImGuiInputTextFlags_ReadOnly);
+		ImGui::DragFloat3("Up", &Up[0], 3, ImGuiInputTextFlags_CharsDecimal | ImGuiInputTextFlags_ReadOnly);
+		ImGui::DragFloat3("Front", &Front[0], 3, ImGuiInputTextFlags_CharsDecimal | ImGuiInputTextFlags_ReadOnly);
+
+		/*
 		ImGui::InputFloat("NearPlaneDistance", &NearPlaneDistance, 3, ImGuiInputTextFlags_CharsDecimal);
 		ImGui::InputFloat("FarPlaneDistance", &FarPlaneDistance, 3, ImGuiInputTextFlags_CharsDecimal);
 		ImGui::InputFloat("FOVHoritzontal", &FOVHoritzontal, 3, ImGuiInputTextFlags_CharsDecimal);
 		ImGui::InputFloat3("FPosition", &Pos[0], 3, ImGuiInputTextFlags_CharsDecimal | ImGuiInputTextFlags_ReadOnly);
 		ImGui::InputFloat3("Up", &Up[0], 3, ImGuiInputTextFlags_CharsDecimal | ImGuiInputTextFlags_ReadOnly);
 		ImGui::InputFloat3("Front", &Front[0], 3, ImGuiInputTextFlags_CharsDecimal | ImGuiInputTextFlags_ReadOnly);
+		*/
+
 		ImGui::Checkbox("Debug Draw Frustrum", &DebugDrawFrustum);
 
 		//Update frustrum
@@ -112,12 +153,12 @@ void ComponentCamera::DrawComponentImGui()
 		}
 		if ((temp_Up.x != Up.x) || (temp_Up.y != Up.y) || (temp_Up.z != Up.z))
 		{
-			frustum.up = Up;
+			frustum.up = Up = Up.Normalized();
 			frustum_modified = true;
 		}
 		if ((temp_Front.x != Front.x) || (temp_Front.y != Front.y) || (temp_Front.z != Front.z))
 		{
-			frustum.front = Front;
+			frustum.front = Front = Front.Normalized();
 			frustum_modified = true;
 		}
 		if(frustum_modified)

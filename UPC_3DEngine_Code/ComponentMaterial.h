@@ -25,7 +25,7 @@ struct MaterialData
 class ComponentMaterial : public Component
 {
 public:
-	ComponentMaterial(bool Active);
+	ComponentMaterial(GameObject* parent, bool Active);
 	~ComponentMaterial();
 
 	bool Enable();
