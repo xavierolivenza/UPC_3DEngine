@@ -27,7 +27,9 @@ struct MeshData
 
 	~MeshData()
 	{
+		BoundSphere.SetNegativeInfinity();
 		BoundBox.SetNegativeInfinity();
+		BoundOBox.SetNegativeInfinity();
 		if (vertices != nullptr)
 		{
 			if (id_vertices > 0)

@@ -76,10 +76,10 @@ bool ImporterMesh::Save(const MeshData& DataMesh, std::string* file_to_save) con
 		file_size += sizeof(float) * DataMesh.num_vertices * 3;	// texture_coords
 	if (DataMesh.colors != nullptr)
 		file_size += sizeof(float) * DataMesh.num_vertices * 3;	// colors
-	file_size += sizeof(vec);									// SpherePosition
+	file_size += sizeof(float) * 3;								// SpherePosition
 	file_size += sizeof(float);									// SpherePosition
-	file_size += sizeof(vec);									// BoundBoxMinPoint
-	file_size += sizeof(vec);									// BoundBoxMaxPoint
+	file_size += sizeof(float) * 3;								// BoundBoxMinPoint
+	file_size += sizeof(float) * 3;								// BoundBoxMaxPoint
 	//file_size += sizeof(OBB);									// BoundOBox(WIP)
 
 	//Create char* to allocate data and another char* to move around the previous one
@@ -130,25 +130,36 @@ bool ImporterMesh::Save(const MeshData& DataMesh, std::string* file_to_save) con
 		memcpy(cursor, DataMesh.colors, current_allocation_size);
 	}
 
-	// Store SpherePosition
-	cursor += current_allocation_size;
-	current_allocation_size = sizeof(vec);
-	memcpy(cursor, &DataMesh.BoundSphere.pos, current_allocation_size);
+	// SpherePosition, SphereRadius, BoundBoxMinPoint, BoundBoxMaxPoint use this size.
+	current_allocation_size = sizeof(float);
 
 	// Store SpherePosition
 	cursor += current_allocation_size;
-	current_allocation_size = sizeof(float);
+	memcpy(cursor, &DataMesh.BoundSphere.pos.x, current_allocation_size);
+	cursor += current_allocation_size;
+	memcpy(cursor, &DataMesh.BoundSphere.pos.y, current_allocation_size);
+	cursor += current_allocation_size;
+	memcpy(cursor, &DataMesh.BoundSphere.pos.z, current_allocation_size);
+
+	// Store SphereRadius
+	cursor += current_allocation_size;
 	memcpy(cursor, &DataMesh.BoundSphere.r, current_allocation_size);
 
 	// Store BoundBoxMinPoint
 	cursor += current_allocation_size;
-	current_allocation_size = sizeof(vec);
-	memcpy(cursor, &DataMesh.BoundBox.minPoint, current_allocation_size);
+	memcpy(cursor, &DataMesh.BoundBox.minPoint.x, current_allocation_size);
+	cursor += current_allocation_size;
+	memcpy(cursor, &DataMesh.BoundBox.minPoint.y, current_allocation_size);
+	cursor += current_allocation_size;
+	memcpy(cursor, &DataMesh.BoundBox.minPoint.z, current_allocation_size);
 
 	// Store BoundBoxMaxPoint
 	cursor += current_allocation_size;
-	current_allocation_size = sizeof(vec);
-	memcpy(cursor, &DataMesh.BoundBox.maxPoint, current_allocation_size);
+	memcpy(cursor, &DataMesh.BoundBox.maxPoint.x, current_allocation_size);
+	cursor += current_allocation_size;
+	memcpy(cursor, &DataMesh.BoundBox.maxPoint.y, current_allocation_size);
+	cursor += current_allocation_size;
+	memcpy(cursor, &DataMesh.BoundBox.maxPoint.z, current_allocation_size);
 	
 	// Store BoundOBox(WIP)
 

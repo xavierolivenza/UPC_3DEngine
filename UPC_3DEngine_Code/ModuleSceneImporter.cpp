@@ -209,10 +209,11 @@ bool ModuleSceneImporter::Import(std::string* file_to_import, std::string& outpu
 			meshComponent->GenerateOBBDraw();
 			*/
 
-			//All mesh allocated, serialize it to our own file
+			//------------------------------------------//
+			//-------Serialize Mesh To Own Format-------//
+			//------------------------------------------//
 			std::string output = MeshNode->mName.C_Str();
 			//MeshImporter->Save(MeshDataStruct, &output);
-
 
 			//------------------------------------------//
 			//-------------Load Material----------------//
