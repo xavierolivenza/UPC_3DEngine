@@ -102,6 +102,8 @@ void ComponentCamera::DrawComponentImGui()
 {
 	if (ImGui::CollapsingHeader("Camera Component", ImGuiTreeNodeFlags_DefaultOpen))
 	{
+		ImGui::Checkbox("Camera Component Active", &Active);
+
 		float temp_NearPlaneDistance = NearPlaneDistance;
 		float temp_FarPlaneDistance = FarPlaneDistance;
 		float temp_FOVHoritzontal = FOVHoritzontal;

@@ -26,7 +26,7 @@ public:
 	bool RemoveChildFromRoot(GameObject* child);
 
 	//Functions to create GameObjects
-	GameObject* CreateGameObject(const char* name, bool active = true);
+	GameObject* CreateGameObject(const char* name, bool active = true, bool static_game_object = true);
 
 private:
 	GameObject* root = nullptr;

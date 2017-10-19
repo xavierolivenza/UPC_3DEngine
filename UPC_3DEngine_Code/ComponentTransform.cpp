@@ -42,6 +42,8 @@ void ComponentTransform::DrawComponentImGui()
 {
 	if (ImGui::CollapsingHeader("Transform Component", ImGuiTreeNodeFlags_DefaultOpen))
 	{
+		ImGui::Checkbox("Transform Component Active", &Active);
+
 		float3 pos_prev = pos;
 		ImGui::DragFloat3("Position", &pos[0], 3, ImGuiInputTextFlags_CharsDecimal);
 		//ImGui::InputFloat3("Position", &pos[0], 3, ImGuiInputTextFlags_CharsDecimal);

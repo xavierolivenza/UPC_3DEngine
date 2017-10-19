@@ -12,7 +12,7 @@ class ComponentCamera;
 class GameObject
 {
 public:
-	GameObject(const char* name, bool active);
+	GameObject(const char* name, bool active, bool static_game_object);
 	~GameObject();
 
 	bool PreUpdate(float dt);
@@ -25,6 +25,7 @@ public:
 	const std::vector<GameObject*>* GetChildren() const;
 	const std::vector<Component*>* GetComponents() const;
 
+	void DrawGameObjectImGui();
 	void DrawComponentImGui();
 
 	void AddChild(GameObject* child);
@@ -50,6 +51,7 @@ public:
 
 private:
 	bool Active = true;
+	bool Static = true;
 	GameObject* parent = nullptr;
 	std::vector<GameObject*> children;
 	std::vector<Component*> components;

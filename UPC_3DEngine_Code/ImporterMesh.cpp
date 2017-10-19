@@ -48,6 +48,24 @@ bool ImporterMesh::Save(const MeshData& DataMesh, std::string* file_to_save) con
 	//Serialize MeshData to file
 	// amount of num_faces / vertices / indices / normals / texture_coords / colors / Asociated Texture Name.dds / SpherePosition / SphereRadius  / BoundBoxMinPoint / BoundBoxMaxPoint / BoundOBox(WIP)
 	
+	/*
+	//Check if the file exists
+
+	size_t bar_pos = DataMesh.Asociated_texture_name.rfind("\\") + 1;
+	std::string mesh_name = DataMesh.Asociated_texture_name.substr(bar_pos, DataMesh.Asociated_texture_name.rfind(".") - bar_pos);
+	mesh_name += ".mesh";
+	
+	std::string mesh_path = *App->importer->Get_Library_mesh_path() + mesh_name;
+	FILE* file = fopen(mesh_path.c_str(), "r");
+	if (file == nullptr)
+	{
+		LOGP("File already exists: %s", mesh_path.c_str());
+		return false;
+	}
+	else
+		fclose(file);
+	*/
+
 	//Clac size of the file
 	uint normals_amount = 0;
 	if(DataMesh.normals != nullptr)
@@ -62,7 +80,7 @@ bool ImporterMesh::Save(const MeshData& DataMesh, std::string* file_to_save) con
 	size_t bar_pos = DataMesh.Asociated_texture_name.rfind("\\") + 1;
 	std::string tex_name = DataMesh.Asociated_texture_name.substr(bar_pos, DataMesh.Asociated_texture_name.rfind(".") - bar_pos);
 	tex_name += ".dds";
-	
+
 	uint amount_of_each[6] =
 	{
 		DataMesh.num_vertices,

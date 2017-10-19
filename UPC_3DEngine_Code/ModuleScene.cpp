@@ -17,8 +17,8 @@ bool ModuleScene::Init()
 {
 	LOGP("Creating Module Scene");
 	bool ret = true;
-	root = new GameObject("Root", true);
-	TestCamera = new GameObject("Camera", true);
+	root = new GameObject("Root", true, true);
+	TestCamera = new GameObject("Camera", true, true);
 	TestCamera->CreateTransformComponent(TestCamera, true);
 	TestCamera->CreateCameraComponent(TestCamera, true);
 	AddChildToRoot(TestCamera);
@@ -91,7 +91,7 @@ bool ModuleScene::RemoveChildFromRoot(GameObject* child)
 	return root->RemoveChild(child);
 }
 
-GameObject* ModuleScene::CreateGameObject(const char* name, bool active)
+GameObject* ModuleScene::CreateGameObject(const char* name, bool active, bool static_game_object)
 {
-	return new GameObject(name, active);
+	return new GameObject(name, active, static_game_object);
 }

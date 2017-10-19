@@ -535,7 +535,10 @@ void ModuleEngineUI::ImGuiInspectorWindow()
 	ImGui::Text("If one of the IDs/Paths below is zero/null,\nit means that it does not have\nthat characteristic.");
 	
 	if (GameObjectSelected)
+	{
+		GameObjectSelected->DrawGameObjectImGui();
 		GameObjectSelected->DrawComponentImGui();
+	}
 
 	ImGui::End();
 }

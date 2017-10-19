@@ -42,6 +42,8 @@ void ComponentMaterial::DrawComponentImGui()
 {
 	if (ImGui::CollapsingHeader("Material Component", ImGuiTreeNodeFlags_DefaultOpen))
 	{
+		ImGui::Checkbox("Material Component Active", &Active);
+
 		char data[100] = "";
 		uint data_size = sizeof data;
 

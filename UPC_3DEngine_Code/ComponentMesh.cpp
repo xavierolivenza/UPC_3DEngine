@@ -87,6 +87,8 @@ void ComponentMesh::DrawComponentImGui()
 {
 	if (ImGui::CollapsingHeader("Mesh Component", ImGuiTreeNodeFlags_DefaultOpen))
 	{
+		ImGui::Checkbox("Mesh Component Active", &Active);
+
 		char data[100] = "";
 		uint data_size = sizeof data;
 

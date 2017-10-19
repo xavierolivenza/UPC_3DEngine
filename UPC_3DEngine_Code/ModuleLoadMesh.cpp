@@ -173,7 +173,7 @@ bool ModuleLoadMesh::LoadGeometryFromModelFile(std::string* file)
 		{
 			aiNode* MeshNode = SearchForMesh(scene->mRootNode, i);
 			aiMesh* MeshInstance = scene->mMeshes[i];
-			GameObject* gameObject = new GameObject(MeshNode->mName.C_Str(), true);
+			GameObject* gameObject = new GameObject(MeshNode->mName.C_Str(), true, true);
 			LoadGeometry(scene, gameObject, MeshNode, MeshInstance);
 			App->scene->AddChildToRoot(gameObject);
 		}

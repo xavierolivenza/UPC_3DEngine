@@ -5,7 +5,7 @@
 #include "ComponentMaterial.h"
 #include "ComponentCamera.h"
 
-GameObject::GameObject(const char* name, bool active): name(name), Active(active)
+GameObject::GameObject(const char* name, bool active, bool static_game_object): name(name), Active(active), Static(static_game_object)
 {
 	
 }
@@ -84,6 +84,12 @@ const std::vector<GameObject*>* GameObject::GetChildren() const
 const std::vector<Component*>* GameObject::GetComponents() const
 {
 	return &components;
+}
+
+void GameObject::DrawGameObjectImGui()
+{
+	ImGui::Checkbox("Active", &Active);
+	ImGui::Checkbox("Static", &Static);
 }
 
 void GameObject::DrawComponentImGui()
