@@ -46,7 +46,7 @@ bool ImporterMesh::Save(const MeshData& DataMesh, std::string* file_to_save) con
 	LOGP("Importing process start, to file: %s", file_to_save->c_str());
 
 	//Serialize MeshData to file
-	// amount of num_faces / vertices / indices / normals / texture_coords / colors / SpherePosition / SphereRadius  / BoundBoxMinPoint / BoundBoxMaxPoint / BoundOBox(WIP)
+	// amount of num_faces / vertices / indices / normals / texture_coords / colors / Asociated Texture Name.dds / SpherePosition / SphereRadius  / BoundBoxMinPoint / BoundBoxMaxPoint / BoundOBox(WIP)
 	
 	//Clac size of the file
 	uint normals_amount = 0;
@@ -59,13 +59,18 @@ bool ImporterMesh::Save(const MeshData& DataMesh, std::string* file_to_save) con
 	if (DataMesh.colors != nullptr)
 		colors_amount = DataMesh.num_vertices;
 
-	uint amount_of_each[5] =
+	size_t bar_pos = DataMesh.Asociated_texture_name.rfind("\\") + 1;
+	std::string tex_name = DataMesh.Asociated_texture_name.substr(bar_pos, DataMesh.Asociated_texture_name.rfind(".") - bar_pos);
+	tex_name += ".dds";
+	
+	uint amount_of_each[6] =
 	{
 		DataMesh.num_vertices,
 		DataMesh.num_indices,
 		normals_amount,
 		texture_coords_amount,
-		colors_amount
+		colors_amount,
+		tex_name.length()
 	};
 
 	uint file_size = sizeof(amount_of_each);
@@ -78,6 +83,7 @@ bool ImporterMesh::Save(const MeshData& DataMesh, std::string* file_to_save) con
 		file_size += sizeof(float) * DataMesh.num_vertices * 3;	// texture_coords
 	if (DataMesh.colors != nullptr)
 		file_size += sizeof(float) * DataMesh.num_vertices * 3;	// colors
+	file_size += sizeof(char) * tex_name.length();				// Asociated Texture Name.dds
 	file_size += sizeof(float) * 3;								// SpherePosition
 	file_size += sizeof(float);									// SpherePosition
 	file_size += sizeof(float) * 3;								// BoundBoxMinPoint
@@ -132,6 +138,11 @@ bool ImporterMesh::Save(const MeshData& DataMesh, std::string* file_to_save) con
 		memcpy(cursor, DataMesh.colors, current_allocation_size);
 	}
 
+	// Asociated Texture Name.dds
+	cursor += current_allocation_size;
+	current_allocation_size = sizeof(char) * tex_name.length();
+	memcpy(cursor, tex_name.c_str(), current_allocation_size);
+	
 	// SpherePosition, SphereRadius, BoundBoxMinPoint, BoundBoxMaxPoint use this size.
 	current_allocation_size = sizeof(float);
 
