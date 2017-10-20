@@ -20,6 +20,7 @@ struct MeshData
 	uint id_colors = 0; // id in VRAM
 	float* colors = nullptr;
 
+	std::string Mesh_name;
 	std::string Asociated_texture_name;
 
 	MeshData()

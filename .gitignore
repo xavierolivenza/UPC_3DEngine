@@ -191,6 +191,7 @@ _pkginfo.txt
 !*.[Cc]ache/
 
 # Others
+[Ll]ibrary/
 ClientBin/
 ~$*
 *~

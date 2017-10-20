@@ -152,6 +152,9 @@ bool ModuleSceneImporter::Import(std::string* file_to_import, std::string& outpu
 			//------------------------------------------//
 			MeshData MeshDataStruct;
 
+			//Load name
+			MeshDataStruct.Mesh_name = MeshNode->mName.C_Str();
+
 			// copy vertices
 			MeshDataStruct.num_vertices = MeshInstance->mNumVertices;
 			MeshDataStruct.vertices = new float[MeshDataStruct.num_vertices * 3];
@@ -218,20 +221,20 @@ bool ModuleSceneImporter::Import(std::string* file_to_import, std::string& outpu
 			{
 				aiString material_path;
 				scene->mMaterials[MeshInstance->mMaterialIndex]->GetTexture(aiTextureType_DIFFUSE, 0, &material_path);
-				MeshDataStruct.Asociated_texture_name = WorkingPath + material_path.C_Str();
+				MeshDataStruct.Asociated_texture_name = material_path.C_Str();
 
 				//------------------------------------------//
 				//-------Serialize Tex To Own Format--------//
 				//------------------------------------------//
-				std::string output = MeshNode->mName.C_Str();
-				MaterialImporter->Save(&MeshDataStruct.Asociated_texture_name, &output);
+				std::string output;
+				MaterialImporter->Save(&(WorkingPath + material_path.C_Str()), output);
 			}
 
 			//------------------------------------------//
 			//-------Serialize Mesh To Own Format-------//
 			//------------------------------------------//
-			std::string output = MeshNode->mName.C_Str();
-			//MeshImporter->Save(MeshDataStruct, &output);
+			std::string output;
+			MeshImporter->Save(MeshDataStruct, output);
 		}
 		WorkingPath.clear();
 		aiReleaseImport(scene);

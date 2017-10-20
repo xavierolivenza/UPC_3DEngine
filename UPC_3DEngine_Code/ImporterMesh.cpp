@@ -38,33 +38,25 @@ bool ImporterMesh::CleanUp()
 	return true;
 }
 
-bool ImporterMesh::Save(const MeshData& DataMesh, std::string* file_to_save) const
+bool ImporterMesh::Save(const MeshData& DataMesh, std::string& loaded_file) const
 {
-	if ((file_to_save == nullptr) || file_to_save->empty())
-		return false;
-
-	LOGP("Importing process start, to file: %s", file_to_save->c_str());
-
 	//Serialize MeshData to file
 	// amount of num_faces / vertices / indices / normals / texture_coords / colors / Asociated Texture Name.dds / SpherePosition / SphereRadius  / BoundBoxMinPoint / BoundBoxMaxPoint / BoundOBox(WIP)
 	
-	/*
 	//Check if the file exists
 
-	size_t bar_pos = DataMesh.Asociated_texture_name.rfind("\\") + 1;
-	std::string mesh_name = DataMesh.Asociated_texture_name.substr(bar_pos, DataMesh.Asociated_texture_name.rfind(".") - bar_pos);
-	mesh_name += ".mesh";
+	std::string mesh_name = "\\" + DataMesh.Mesh_name + ".meshalvoli";
 	
+	LOGP("Importing process start, to file: %s", mesh_name.c_str());
+
 	std::string mesh_path = *App->importer->Get_Library_mesh_path() + mesh_name;
 	FILE* file = fopen(mesh_path.c_str(), "r");
-	if (file == nullptr)
+	if (file != nullptr)
 	{
+		fclose(file);
 		LOGP("File already exists: %s", mesh_path.c_str());
 		return false;
 	}
-	else
-		fclose(file);
-	*/
 
 	//Clac size of the file
 	uint normals_amount = 0;
@@ -88,20 +80,17 @@ bool ImporterMesh::Save(const MeshData& DataMesh, std::string* file_to_save) con
 		normals_amount,
 		texture_coords_amount,
 		colors_amount,
-		tex_name.length()
+		(uint)tex_name.length() + 1
 	};
 
 	uint file_size = sizeof(amount_of_each);
 	file_size += sizeof(uint);									// num_faces
 	file_size += sizeof(float) * DataMesh.num_vertices * 3;		// vertices
 	file_size += sizeof(uint) * DataMesh.num_indices;			// indices
-	if (DataMesh.normals != nullptr)
-		file_size += sizeof(float) * DataMesh.num_vertices * 3;	// normals
-	if (DataMesh.texture_coords != nullptr)
-		file_size += sizeof(float) * DataMesh.num_vertices * 3;	// texture_coords
-	if (DataMesh.colors != nullptr)
-		file_size += sizeof(float) * DataMesh.num_vertices * 3;	// colors
-	file_size += sizeof(char) * tex_name.length();				// Asociated Texture Name.dds
+	file_size += sizeof(float) * DataMesh.num_vertices * 3;		// normals
+	file_size += sizeof(float) * DataMesh.num_vertices * 3;		// texture_coords
+	file_size += sizeof(float) * DataMesh.num_vertices * 3;		// colors
+	file_size += sizeof(char) * (tex_name.length() + 1);		// Asociated Texture Name.dds
 	file_size += sizeof(float) * 3;								// SpherePosition
 	file_size += sizeof(float);									// SpherePosition
 	file_size += sizeof(float) * 3;								// BoundBoxMinPoint
@@ -158,7 +147,7 @@ bool ImporterMesh::Save(const MeshData& DataMesh, std::string* file_to_save) con
 
 	// Asociated Texture Name.dds
 	cursor += current_allocation_size;
-	current_allocation_size = sizeof(char) * tex_name.length();
+	current_allocation_size = sizeof(char) * (tex_name.length() + 1);
 	memcpy(cursor, tex_name.c_str(), current_allocation_size);
 	
 	// SpherePosition, SphereRadius, BoundBoxMinPoint, BoundBoxMaxPoint use this size.
@@ -192,21 +181,21 @@ bool ImporterMesh::Save(const MeshData& DataMesh, std::string* file_to_save) con
 	cursor += current_allocation_size;
 	memcpy(cursor, &DataMesh.BoundBox.maxPoint.z, current_allocation_size);
 	
+
 	// Store BoundOBox(WIP)
 
 	//Write to file
-	/*
-	std::ofstream outfile(path, std::ofstream::binary);
+	std::ofstream outfile(mesh_path, std::ofstream::binary);
 	if (outfile.good()) //write file
 		outfile.write(data, file_size);
 	else
-		LOGP("Failed to write the file %s", path);
+		LOGP("Failed to write the file with path: %s", mesh_path.c_str());
 	outfile.close();
-	*/
 
 	RELEASE_ARRAY(data);
 
-	LOGP("Importing process ended, to file: %s", file_to_save->c_str());
+	LOGP("Importing process ended, to file: %s", mesh_name.c_str());
+	loaded_file = mesh_name;
 
 	return true;
 }

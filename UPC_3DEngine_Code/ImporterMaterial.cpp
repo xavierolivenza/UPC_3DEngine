@@ -39,11 +39,8 @@ bool ImporterMaterial::CleanUp()
 	return true;
 }
 
-bool ImporterMaterial::Save(const std::string* texture_name, std::string* file_to_save)
+bool ImporterMaterial::Save(const std::string* texture_name, std::string& loaded_file)
 {
-	if ((texture_name == nullptr) || (file_to_save == nullptr) || file_to_save->empty())
-		return false;
-
 	//Serialize MaterialData to file
 
 	uint imgID = 0;
@@ -68,7 +65,10 @@ bool ImporterMaterial::Save(const std::string* texture_name, std::string* file_t
 
 				std::ofstream outfile(tex_path, std::ofstream::binary);
 				if (outfile.good()) //write file
+				{
 					outfile.write((char*)data, size);
+					loaded_file = tex_name;
+				}
 				else
 					LOGP("Failed to write the file %s", tex_path.c_str());
 				outfile.close();
