@@ -97,5 +97,6 @@ float3 ComponentTransform::GetRotEuler()
 const float4x4* ComponentTransform::GetMatrix() const
 {
 	//TODO Don't do this every time
-	return &float4x4::FromTRS(pos, rot, scale);
+	return &float4x4::identity;
+	//return &float4x4::FromTRS(pos, rot, scale);
 }

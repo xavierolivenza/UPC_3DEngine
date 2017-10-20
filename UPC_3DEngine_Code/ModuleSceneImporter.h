@@ -46,7 +46,7 @@ private:
 	std::string Library_path = "..\\Game\\Library";
 	std::string Library_mesh_path = "..\\Game\\Library\\Mesh";
 	std::string Library_material_path = "..\\Game\\Library\\Material";
-	std::string Mesh_Extention = "meshalvoli";
+	std::string Mesh_Extention = "MeshAlvOli";
 
 	ImporterMesh* MeshImporter = nullptr;
 	ImporterMaterial* MaterialImporter = nullptr;

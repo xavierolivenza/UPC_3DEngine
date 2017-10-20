@@ -266,10 +266,10 @@ bool ModuleSceneImporter::Load(std::string* file_to_load)
 	GameObject* NewGameObject = new GameObject("NewMesh", true, true);
 	NewGameObject->CreateTransformComponent(NewGameObject, true);
 	ComponentMesh* NewMesh = NewGameObject->CreateMeshComponent(NewGameObject, true);
-	NewGameObject->name = NewMesh->MeshDataStruct.Mesh_name;
 	MeshImporter->Load(NewMesh->MeshDataStruct, file_to_load);
-	ComponentMaterial* NewMaterial = NewGameObject->CreateMaterialComponent(NewGameObject, true);
-	MaterialImporter->Load(NewMaterial->MaterialDataStruct, &NewMesh->MeshDataStruct.Asociated_texture_name);
+	NewGameObject->name = NewMesh->MeshDataStruct.Mesh_name;
+	//ComponentMaterial* NewMaterial = NewGameObject->CreateMaterialComponent(NewGameObject, true);
+	//MaterialImporter->Load(NewMaterial->MaterialDataStruct, &NewMesh->MeshDataStruct.Asociated_texture_name);
 	App->scene->AddChildToRoot(NewGameObject);
 
 	return true;

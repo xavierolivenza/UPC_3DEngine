@@ -640,12 +640,11 @@ bool ModuleRenderer3D::Draw(const std::vector<GeometryData>* meshData) const
 
 bool ModuleRenderer3D::DrawComponentMeshMaterial(const ComponentTransform* transform, const ComponentMesh* mesh, const ComponentMaterial* material) const
 {
-	if (((mesh == nullptr) && (material == nullptr)) || ((mesh->MeshDataStruct.vertices == nullptr) || (mesh->MeshDataStruct.indices == nullptr)))
+	if ((mesh == nullptr) || ((mesh->MeshDataStruct.vertices == nullptr) || (mesh->MeshDataStruct.indices == nullptr)))
 		return false;
 
 	const MeshData* meshData = &mesh->MeshDataStruct;
-	const MaterialData* materialData = &material->MaterialDataStruct;
-
+	
 	if (GL_Wireframe)
 		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	if (GL_Point)
@@ -666,17 +665,21 @@ bool ModuleRenderer3D::DrawComponentMeshMaterial(const ComponentTransform* trans
 			glColor3f(1.0f, 1.0f, 1.0f);
 		}
 
-	if ((materialData != nullptr) && glIsEnabled(GL_TEXTURE_2D))
+	if (material != nullptr)
 	{
-		if (materialData->texture_name != "")
-			glBindTexture(GL_TEXTURE_2D, materialData->id_texture);
-		else
+		const MaterialData* materialData = &material->MaterialDataStruct;
+		if ((materialData != nullptr) && glIsEnabled(GL_TEXTURE_2D))
 		{
-			glBindTexture(GL_TEXTURE_2D, id_checkImage);
-			//glBindTexture(GL_TEXTURE_2D, Lenna_tex);
+			if (materialData->texture_name != "")
+				glBindTexture(GL_TEXTURE_2D, materialData->id_texture);
+			else
+			{
+				glBindTexture(GL_TEXTURE_2D, id_checkImage);
+				//glBindTexture(GL_TEXTURE_2D, Lenna_tex);
+			}
 		}
 	}
-
+	
 	glEnableClientState(GL_VERTEX_ARRAY);
 	glBindBuffer(GL_ARRAY_BUFFER, meshData->id_vertices);
 	glVertexPointer(3, GL_FLOAT, 0, NULL);
@@ -687,7 +690,8 @@ bool ModuleRenderer3D::DrawComponentMeshMaterial(const ComponentTransform* trans
 		glBindBuffer(GL_ARRAY_BUFFER, meshData->id_normals);
 		glNormalPointer(GL_FLOAT, 0, NULL);
 	}
-	if ((materialData != nullptr) && (meshData->colors != nullptr)) {
+	if (meshData->colors != nullptr)
+	{
 		glEnableClientState(GL_COLOR_ARRAY);
 		glBindBuffer(GL_ARRAY_BUFFER, meshData->id_colors);
 		glColorPointer(3, GL_FLOAT, 0, NULL);
