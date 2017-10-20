@@ -81,10 +81,11 @@ update_status ModuleLoadMesh::PreUpdate(float dt)
 
 update_status ModuleLoadMesh::Update(float dt)
 {
+	/*
 	std::string* DroppedFile = App->input->GetDroppedFile();
 	if (DroppedFile != nullptr)
 		LoadGeometryFromModelFile(DroppedFile);
-
+	*/
 	/*
 	if (DroppedFile != nullptr)
 	{

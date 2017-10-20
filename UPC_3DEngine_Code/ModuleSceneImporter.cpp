@@ -92,6 +92,9 @@ update_status ModuleSceneImporter::PreUpdate(float dt)
 
 update_status ModuleSceneImporter::Update(float dt)
 {
+	std::string* DroppedFile = App->input->GetDroppedFile();
+	if (DroppedFile != nullptr)
+		Load(DroppedFile);
 	return UPDATE_CONTINUE;
 }
 
@@ -190,10 +193,10 @@ bool ModuleSceneImporter::Import(std::string* file_to_import, std::string& outpu
 				memcpy(MeshDataStruct.texture_coords, MeshInstance->mTextureCoords[0], sizeof(float) * MeshDataStruct.num_vertices * 3);
 			}
 
-			//this causes some problems sometimes, so as this is a feature we don't use, we comment it and avoid crashes
 			// colors
 			if (MeshInstance->HasVertexColors(0))
 			{
+				//this causes some problems sometimes, so as this is a feature we don't use, we comment it and avoid crashes
 				//meshComponent->MeshDataStruct.colors = new float[meshComponent->MeshDataStruct.num_vertices * 3];
 				//memcpy(meshComponent->MeshDataStruct.colors, MeshInstance->mColors, sizeof(float) * meshComponent->MeshDataStruct.num_vertices * 3);
 			}
@@ -202,9 +205,11 @@ bool ModuleSceneImporter::Import(std::string* file_to_import, std::string& outpu
 			MeshDataStruct.BoundBox.SetNegativeInfinity();
 			MeshDataStruct.BoundBox.Enclose((float3*)MeshDataStruct.vertices,MeshDataStruct.num_vertices);
 			
+			// Generate Sphere
 			MeshDataStruct.BoundSphere.SetNegativeInfinity();
 			MeshDataStruct.BoundSphere.Enclose(MeshDataStruct.BoundBox);
 
+			// Generate OBB
 			/*
 			meshComponent->MeshDataStruct.BoundOBox.SetNegativeInfinity();
 			for (uint i = 0; i < meshComponent->MeshDataStruct.num_vertices * 3; i += 3)
@@ -246,13 +251,28 @@ bool ModuleSceneImporter::Import(std::string* file_to_import, std::string& outpu
 		ret = false;
 	}
 
-
 	return ret;
 }
 
-Component* ModuleSceneImporter::Load(std::string* file_to_load)
+bool ModuleSceneImporter::Load(std::string* file_to_load)
 {
-	return nullptr;
+	//Check if this is a mesh file
+	if (file_to_load->substr(file_to_load->rfind(".") + 1, file_to_load->length()) != Mesh_Extention)
+	{
+		LOGP("The dropped file is not a .%s file", Mesh_Extention.c_str());
+		return false;
+	}
+
+	GameObject* NewGameObject = new GameObject("NewMesh", true, true);
+	NewGameObject->CreateTransformComponent(NewGameObject, true);
+	ComponentMesh* NewMesh = NewGameObject->CreateMeshComponent(NewGameObject, true);
+	NewGameObject->name = NewMesh->MeshDataStruct.Mesh_name;
+	MeshImporter->Load(NewMesh->MeshDataStruct, file_to_load);
+	ComponentMaterial* NewMaterial = NewGameObject->CreateMaterialComponent(NewGameObject, true);
+	MaterialImporter->Load(NewMaterial->MaterialDataStruct, &NewMesh->MeshDataStruct.Asociated_texture_name);
+	App->scene->AddChildToRoot(NewGameObject);
+
+	return true;
 }
 
 bool ModuleSceneImporter::SaveConf(JSON_Object* conf) const
@@ -311,4 +331,9 @@ const std::string* ModuleSceneImporter::Get_Library_mesh_path() const
 const std::string* ModuleSceneImporter::Get_Library_material_path() const
 {
 	return &Library_material_path;
+}
+
+const std::string* ModuleSceneImporter::Get_Mesh_Extention() const
+{
+	return &Mesh_Extention;
 }

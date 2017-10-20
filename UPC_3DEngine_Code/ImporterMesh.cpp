@@ -45,7 +45,7 @@ bool ImporterMesh::Save(const MeshData& DataMesh, std::string& loaded_file) cons
 	
 	//Check if the file exists
 
-	std::string mesh_name = "\\" + DataMesh.Mesh_name + ".meshalvoli";
+	std::string mesh_name = "\\" + DataMesh.Mesh_name + "." + *App->importer->Get_Mesh_Extention();
 	
 	LOGP("Importing process start, to file: %s", mesh_name.c_str());
 

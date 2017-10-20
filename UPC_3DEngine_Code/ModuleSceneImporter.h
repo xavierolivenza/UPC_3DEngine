@@ -25,7 +25,7 @@ public:
 	void ImGuiModuleVariables();
 
 	bool Import(std::string* file_to_import, std::string& output_file);
-	Component* Load(std::string* file_to_load);
+	bool Load(std::string* file_to_load);
 
 	bool SaveConf(JSON_Object* conf) const;
 	bool LoadConf(JSON_Object* conf);
@@ -34,6 +34,7 @@ public:
 	const std::string* Get_Library_path() const;
 	const std::string* Get_Library_mesh_path() const;
 	const std::string* Get_Library_material_path() const;
+	const std::string* Get_Mesh_Extention() const;
 
 private:
 	aiNode* SearchForMesh(const aiNode* root, uint mesh_id) const;
@@ -45,6 +46,7 @@ private:
 	std::string Library_path = "..\\Game\\Library";
 	std::string Library_mesh_path = "..\\Game\\Library\\Mesh";
 	std::string Library_material_path = "..\\Game\\Library\\Material";
+	std::string Mesh_Extention = "meshalvoli";
 
 	ImporterMesh* MeshImporter = nullptr;
 	ImporterMaterial* MaterialImporter = nullptr;
