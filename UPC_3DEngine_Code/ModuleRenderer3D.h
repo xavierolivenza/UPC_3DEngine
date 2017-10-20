@@ -11,6 +11,7 @@
 
 class ComponentMesh;
 class ComponentMaterial;
+class ComponentTransform;
 
 class ModuleRenderer3D : public Module
 {
@@ -28,7 +29,7 @@ public:
 	bool Draw(const GeometryData* meshData) const;
 	bool Draw(const std::vector<GeometryData>* meshData) const;
 
-	bool DrawComponentMeshMaterial(const ComponentMesh* mesh, const ComponentMaterial* material) const;
+	bool DrawComponentMeshMaterial(const ComponentTransform* transform, const ComponentMesh* mesh, const ComponentMaterial* material) const;
 
 	bool SaveConf(JSON_Object* conf) const;
 	bool LoadConf(JSON_Object* conf);

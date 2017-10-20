@@ -5,6 +5,7 @@
 #include <gl/GL.h>
 #include <gl/GLU.h>
 
+#include "ComponentTransform.h"
 #include "ComponentMesh.h"
 #include "ComponentMaterial.h"
 
@@ -637,7 +638,7 @@ bool ModuleRenderer3D::Draw(const std::vector<GeometryData>* meshData) const
 	return ret;
 }
 
-bool ModuleRenderer3D::DrawComponentMeshMaterial(const ComponentMesh* mesh, const ComponentMaterial* material) const
+bool ModuleRenderer3D::DrawComponentMeshMaterial(const ComponentTransform* transform, const ComponentMesh* mesh, const ComponentMaterial* material) const
 {
 	if (((mesh == nullptr) && (material == nullptr)) || ((mesh->MeshDataStruct.vertices == nullptr) || (mesh->MeshDataStruct.indices == nullptr)))
 		return false;
@@ -697,8 +698,25 @@ bool ModuleRenderer3D::DrawComponentMeshMaterial(const ComponentMesh* mesh, cons
 		glTexCoordPointer(3, GL_FLOAT, 0, NULL);
 	}
 
+	if (transform != nullptr)
+	{
+		glPushMatrix();
+		float4x4 matrixfloat = *transform->GetMatrix();
+		GLfloat matrix[] =
+		{
+			matrixfloat[0][0],matrixfloat[1][0],matrixfloat[2][0],matrixfloat[3][0],
+			matrixfloat[0][1],matrixfloat[1][1],matrixfloat[2][1],matrixfloat[3][1],
+			matrixfloat[0][2],matrixfloat[1][2],matrixfloat[2][2],matrixfloat[3][2],
+			matrixfloat[0][3],matrixfloat[1][3],matrixfloat[2][3],matrixfloat[3][3],
+		};
+		glMultMatrixf(matrix);
+	}
+
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, meshData->id_indices);
 	glDrawElements(GL_TRIANGLES, meshData->num_indices, GL_UNSIGNED_INT, NULL);
+
+	if (transform != nullptr)
+		glPopMatrix();
 
 	glBindTexture(GL_TEXTURE_2D, 0);
 

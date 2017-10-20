@@ -104,7 +104,11 @@ void GameObject::DrawGameObject()
 	if (MeshComponent != nullptr)
 	{
 		const Component* MaterialComponent = FindComponentFirst(ComponentType::Material_Component);
-		App->renderer3D->DrawComponentMeshMaterial((ComponentMesh*)MeshComponent, (ComponentMaterial*)MaterialComponent);
+		if (MaterialComponent != nullptr)
+		{
+			const Component* TransformComponent = FindComponentFirst(ComponentType::Transform_Component);
+			App->renderer3D->DrawComponentMeshMaterial((ComponentTransform*)TransformComponent, (ComponentMesh*)MeshComponent, (ComponentMaterial*)MaterialComponent);
+		}
 	}
 }
 

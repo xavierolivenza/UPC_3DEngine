@@ -55,7 +55,7 @@ void ComponentTransform::DrawComponentImGui()
 		//ImGui::InputFloat3("Rotation", &rot_euler[0], 3, ImGuiInputTextFlags_CharsDecimal);
 		if ((euler_prev.x != rot_euler.x) || (euler_prev.y != rot_euler.y) || (euler_prev.z != rot_euler.z))
 		{
-			rot.FromEulerXYZ(rot_euler.x, rot_euler.y, rot_euler.z);
+			rot = rot.FromEulerXYZ(rot_euler.x, rot_euler.y, rot_euler.z);
 			change = true;
 		}
 		
@@ -120,8 +120,9 @@ void ComponentTransform::UpdateMatrix()
 {
 	if (change)
 	{
+		//LOGP("Matrix Changed");
 		matrix = float4x4::FromTRS(pos, float4x4::FromQuat(rot), scale);
-		matrix.Transpose();
+		//matrix.Transpose();
 		change = false;
 	}
 }
