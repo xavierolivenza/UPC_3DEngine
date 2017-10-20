@@ -40,30 +40,31 @@ bool ComponentCamera::Update(float dt)
 
 	if (parent != nullptr)
 	{
-		/*
+		/**/
 		ComponentTransform* transform = (ComponentTransform*)parent->FindComponentFirst(ComponentType::Camera_Component);
 		if (transform != nullptr)
 		{
+			float4x4 dsaf = *transform->GetMatrix();
 			bool frustum_changed = false;
 			float3 prev_pos = frustum.pos;
-			frustum.pos = transform->GetPos();
+			frustum.pos = transform->GetMatrix()->Col3(3);
 			if ((prev_pos.x != frustum.pos.x) || (prev_pos.y != frustum.pos.y) || (prev_pos.z != frustum.pos.z))
 				frustum_changed = true;
 
 			float3 prev_front = frustum.front;
-			frustum.front = transform->GetMatrix()->Row3(2).Normalized();
+			frustum.front = transform->GetMatrix()->Col3(2).Normalized();
 			if ((prev_front.x != frustum.front.x) || (prev_front.y != frustum.front.y) || (prev_front.z != frustum.front.z))
 				frustum_changed = true;
 
 			float3 prev_up = frustum.up;
-			frustum.up = transform->GetMatrix()->Row3(1).Normalized();
+			frustum.up = transform->GetMatrix()->Col3(1).Normalized();
 			if ((prev_up.x != frustum.up.x) || (prev_up.y != frustum.up.y) || (prev_up.z != frustum.up.z))
 				frustum_changed = true;
 
 			if (frustum_changed)
 				GenerateFrustumDraw();
 		}
-		*/
+		/**/
 	}
 	
 	if (DebugDrawFrustum && (DebugDrawFrustum_id_vertices != 0))

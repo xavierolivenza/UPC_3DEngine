@@ -31,14 +31,9 @@ public:
 	const float4x4* GetMatrix() const;
 
 private:
-	void UpdateMatrix();
-
-private:
-	float3 pos = { 0.0f,0.0f,0.0f };
-	float3 scale = { 1.0f,1.0f,1.0f };
-	Quat rot = { 0.0f,0.0f,0.0f,1.0f };
-	float3 rot_euler = { 0.0f,0.0f,0.0f };
+	float3 pos = float3::zero;
+	float3 scale = float3::one;
+	Quat rot = Quat::identity;
+	float3 rot_euler = float3::zero;
 	float4x4 matrix = float4x4::identity;
-
-	bool change = false;
 };
