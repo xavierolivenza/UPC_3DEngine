@@ -47,14 +47,14 @@ bool ImporterMesh::Save(const MeshData& DataMesh, std::string& loaded_file) cons
 
 	std::string mesh_name = DataMesh.Mesh_name + "." + *App->importer->Get_Mesh_Extention();
 	
-	LOGP("Importing process start, to file: %s", mesh_name.c_str());
+	LOGP("Importing mesh process start, to file: %s", mesh_name.c_str());
 
 	std::string mesh_path = *App->importer->Get_Library_mesh_path() + "\\" + mesh_name;
 	FILE* file = fopen(mesh_path.c_str(), "r");
 	if (file != nullptr)
 	{
 		fclose(file);
-		LOGP("File already exists: %s", mesh_path.c_str());
+		LOGP("Mesh file already exists: %s", mesh_path.c_str());
 		return false;
 	}
 

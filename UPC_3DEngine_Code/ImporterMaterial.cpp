@@ -41,8 +41,22 @@ bool ImporterMaterial::CleanUp()
 
 bool ImporterMaterial::Save(const std::string* texture_name, std::string& loaded_file)
 {
-	//Serialize MaterialData to file
+	//Check if the file exists
+	size_t bar_pos = texture_name->rfind("\\");
+	std::string tex_path = *App->importer->Get_Library_material_path() + texture_name->substr(bar_pos, texture_name->rfind(".") - bar_pos);
+	tex_path += ".dds";
 
+	LOGP("Importing dds process start, to file: %s", tex_path.c_str());
+
+	FILE* file = fopen(tex_path.c_str(), "r");
+	if (file != nullptr)
+	{
+		fclose(file);
+		LOGP("DDS file already exists: %s", tex_path.c_str());
+		return false;
+	}
+
+	//Serialize MaterialData to file
 	uint imgID = 0;
 	ilGenImages(1, &imgID);
 	ilBindImage(imgID);
