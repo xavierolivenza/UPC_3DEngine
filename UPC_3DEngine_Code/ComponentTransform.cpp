@@ -3,6 +3,9 @@
 ComponentTransform::ComponentTransform(GameObject* parent, bool Active) : Component(parent, Active, 1, ComponentType::Transform_Component)
 {
 	if (Active) Enable();
+	SetPos(float3(0.0f, 0.0f, 0.0f));
+	SetScale(float3(1.0f, 1.0f, 1.0f));
+	SetRot(Quat(0.0f, 0.0f, 0.0f, 1.0f));
 }
 
 ComponentTransform::~ComponentTransform()
@@ -97,6 +100,6 @@ float3 ComponentTransform::GetRotEuler()
 const float4x4* ComponentTransform::GetMatrix() const
 {
 	//TODO Don't do this every time
-	return &float4x4::identity;
-	//return &float4x4::FromTRS(pos, rot, scale);
+	//return &float4x4::identity;
+	return &float4x4::FromTRS(pos, rot, scale);
 }

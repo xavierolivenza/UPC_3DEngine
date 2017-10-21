@@ -111,6 +111,7 @@ void GameObject::DrawGameObject()
 
 void GameObject::AddChild(GameObject* child)
 {
+	child->parent = this;
 	children.push_back(child);
 }
 
@@ -126,30 +127,30 @@ bool GameObject::RemoveChild(GameObject* child)
 	return false;
 }
 
-ComponentTransform* GameObject::CreateTransformComponent(GameObject* parent, bool active)
+ComponentTransform* GameObject::CreateTransformComponent(bool active)
 {
-	ComponentTransform* transform = new ComponentTransform(parent, active);
+	ComponentTransform* transform = new ComponentTransform(this, active);
 	components.push_back((Component*)transform);
 	return transform;
 }
 
-ComponentMesh* GameObject::CreateMeshComponent(GameObject* parent, bool active)
+ComponentMesh* GameObject::CreateMeshComponent(bool active)
 {
-	ComponentMesh* mesh = new ComponentMesh(parent, active);
+	ComponentMesh* mesh = new ComponentMesh(this, active);
 	components.push_back((Component*)mesh);
 	return mesh;
 }
 
-ComponentMaterial* GameObject::CreateMaterialComponent(GameObject* parent, bool active)
+ComponentMaterial* GameObject::CreateMaterialComponent(bool active)
 {
-	ComponentMaterial* material = new ComponentMaterial(parent, active);
+	ComponentMaterial* material = new ComponentMaterial(this, active);
 	components.push_back((Component*)material);
 	return material;
 }
 
-ComponentCamera* GameObject::CreateCameraComponent(GameObject* parent, bool active)
+ComponentCamera* GameObject::CreateCameraComponent(bool active)
 {
-	ComponentCamera* camera = new ComponentCamera(parent, active);
+	ComponentCamera* camera = new ComponentCamera(this, active);
 	components.push_back((Component*)camera);
 	return camera;
 }

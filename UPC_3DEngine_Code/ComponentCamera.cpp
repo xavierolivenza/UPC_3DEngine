@@ -40,7 +40,6 @@ bool ComponentCamera::Update(float dt)
 
 	if (parent != nullptr)
 	{
-		/**/
 		ComponentTransform* transform = (ComponentTransform*)parent->FindComponentFirst(ComponentType::Camera_Component);
 		if (transform != nullptr)
 		{
@@ -64,7 +63,6 @@ bool ComponentCamera::Update(float dt)
 			if (frustum_changed)
 				GenerateFrustumDraw();
 		}
-		/**/
 	}
 	
 	if (DebugDrawFrustum && (DebugDrawFrustum_id_vertices != 0))
