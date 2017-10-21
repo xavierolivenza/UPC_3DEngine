@@ -20,6 +20,8 @@ private:
 	void CleanFrustumDraw();
 
 private:
+	bool FrustumCulling = false;
+
 	Frustum frustum;
 	float NearPlaneDistance = 0.1f;
 	float FarPlaneDistance = 5.0f;

@@ -97,7 +97,9 @@ bool ImporterMaterial::Save(const std::string* texture_name, std::string& loaded
 
 bool ImporterMaterial::Load(MaterialData& DataMaterial, std::string* file_to_load)
 {
-	LoadImageFromFile(DataMaterial, file_to_load);
+	int tex_id = LoadImageFromFile(DataMaterial, file_to_load);
+	if(tex_id > 0)
+		DataMaterial.id_texture = LoadImageFromFile(DataMaterial, file_to_load);
 	return false;
 }
 
@@ -117,8 +119,12 @@ int ImporterMaterial::LoadImageFromFile(MaterialData& DataMaterial, std::string*
 	// Bind the image
 	ilBindImage(imageID);
 	// Load the image file
-	success = ilLoadImage(file_to_load->c_str());
-	//success = ilLoadImage("D:\\Repositoris\\UPC_3DEngine\\UPC_3DEngine_Code\\Game\\Library\\Material\\Baker_house.dds");
+	TCHAR directory[MAX_PATH + 1] = "";
+	DWORD len = GetCurrentDirectory(MAX_PATH, directory);
+	std::string texture_path = directory;
+	texture_path += file_to_load->substr(7, file_to_load->length());
+	success = ilLoadImage(texture_path.c_str());
+	DataMaterial.texture_name = texture_path;
 
 	// If we managed to load the image, then we can start to do things with it...
 	if (success)

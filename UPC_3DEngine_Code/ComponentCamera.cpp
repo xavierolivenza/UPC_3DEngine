@@ -43,7 +43,6 @@ bool ComponentCamera::Update(float dt)
 		ComponentTransform* transform = parent->GetTransform();
 		if (transform != nullptr)
 		{
-			float4x4 dsaf = *transform->GetMatrix();
 			bool frustum_changed = false;
 			float3 prev_pos = frustum.pos;
 			frustum.pos = transform->GetMatrix()->Col3(3);
@@ -69,16 +68,21 @@ bool ComponentCamera::Update(float dt)
 	{
 		glColor3f(1.0f, 0.0f, 0.0f);
 		glLineWidth(2.0f);
-		//glPushMatrix();
 		glEnableClientState(GL_VERTEX_ARRAY);
 		glBindBuffer(GL_ARRAY_BUFFER, DebugDrawFrustum_id_vertices);
 		glVertexPointer(3, GL_FLOAT, 0, NULL);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, DebugDrawFrustum_id_indices);
 		glDrawElements(GL_LINES, 24, GL_UNSIGNED_INT, NULL);
-		//glPopMatrix();
 		glColor3f(1.0f, 1.0f, 1.0f);
 		glLineWidth(1.0f);
 	}
+
+	//Apply Frustum Culling
+	if (FrustumCulling)
+	{
+
+	}
+
 	return true;
 }
 
@@ -102,6 +106,7 @@ void ComponentCamera::DrawComponentImGui()
 	if (ImGui::CollapsingHeader("Camera Component", ImGuiTreeNodeFlags_DefaultOpen))
 	{
 		ImGui::Checkbox("Camera Component Active", &Active);
+		ImGui::Checkbox("Frustum Culling", &FrustumCulling);
 
 		float temp_NearPlaneDistance = NearPlaneDistance;
 		float temp_FarPlaneDistance = FarPlaneDistance;
