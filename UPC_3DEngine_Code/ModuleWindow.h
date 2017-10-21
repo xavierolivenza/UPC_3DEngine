@@ -41,7 +41,7 @@ public:
 
 	float GetAspectRatio()
 	{
-		return w_width / w_height;
+		return (float)w_width / (float)w_height;
 	}
 
 public:

@@ -25,7 +25,7 @@ private:
 	Frustum frustum;
 	float NearPlaneDistance = 0.1f;
 	float FarPlaneDistance = 5.0f;
-	float FOVHoritzontal = 60.0f;
+	float FOVVertical = 60.0f;
 	float AspectRatio = 1280.0f / 720.0f;
 	float3 Pos = { 0.0f, 0.0f, 0.0f };
 	float3 Up = { 0.0f, 1.0f, 0.0f };

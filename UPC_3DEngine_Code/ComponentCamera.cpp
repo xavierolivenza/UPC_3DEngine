@@ -8,7 +8,7 @@ ComponentCamera::ComponentCamera(GameObject* parent, bool Active) : Component(pa
 	frustum.nearPlaneDistance = NearPlaneDistance;
 	frustum.farPlaneDistance = FarPlaneDistance;
 	AspectRatio = App->window->GetAspectRatio();
-	frustum.verticalFov = FOVHoritzontal * DEGTORAD;
+	frustum.verticalFov = FOVVertical * DEGTORAD;
 	frustum.horizontalFov = Atan(AspectRatio * Tan(frustum.verticalFov * 0.5f)) * 2.0f;
 	frustum.pos = Pos;
 	frustum.up = Up;
@@ -110,14 +110,14 @@ void ComponentCamera::DrawComponentImGui()
 
 		float temp_NearPlaneDistance = NearPlaneDistance;
 		float temp_FarPlaneDistance = FarPlaneDistance;
-		float temp_FOVHoritzontal = FOVHoritzontal;
+		float temp_FOVVertical = FOVVertical;
 		float3 temp_Pos = Pos;
 		float3 temp_Up = Up;
 		float3 temp_Front = Front;
 
 		ImGui::DragFloat("NearPlaneDistance", &NearPlaneDistance, 3, ImGuiInputTextFlags_CharsDecimal);
 		ImGui::DragFloat("FarPlaneDistance", &FarPlaneDistance, 3, ImGuiInputTextFlags_CharsDecimal);
-		ImGui::DragFloat("FOVHoritzontal", &FOVHoritzontal, 3, ImGuiInputTextFlags_CharsDecimal);
+		ImGui::DragFloat("FOV", &FOVVertical, 3, ImGuiInputTextFlags_CharsDecimal);
 		ImGui::DragFloat3("FPosition", &Pos[0], 3, ImGuiInputTextFlags_CharsDecimal | ImGuiInputTextFlags_ReadOnly);
 		ImGui::DragFloat3("Up", &Up[0], 3, ImGuiInputTextFlags_CharsDecimal | ImGuiInputTextFlags_ReadOnly);
 		ImGui::DragFloat3("Front", &Front[0], 3, ImGuiInputTextFlags_CharsDecimal | ImGuiInputTextFlags_ReadOnly);
@@ -145,10 +145,10 @@ void ComponentCamera::DrawComponentImGui()
 			frustum.farPlaneDistance = FarPlaneDistance;
 			frustum_modified = true;
 		}
-		if (temp_FOVHoritzontal != FOVHoritzontal)
+		if (temp_FOVVertical != FOVVertical)
 		{
 			AspectRatio = App->window->GetAspectRatio();
-			frustum.verticalFov = FOVHoritzontal * DEGTORAD;
+			frustum.verticalFov = FOVVertical * DEGTORAD;
 			frustum.horizontalFov = Atan(AspectRatio * Tan(frustum.verticalFov / 2.0f)) * 2.0f;
 			frustum_modified = true;
 		}
