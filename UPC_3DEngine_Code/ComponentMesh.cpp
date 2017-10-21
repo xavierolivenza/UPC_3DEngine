@@ -41,6 +41,12 @@ bool ComponentMesh::PreUpdate(float dt)
 
 bool ComponentMesh::Update(float dt)
 {
+	const Component* MeshComponent = parent->FindComponentFirst(ComponentType::Mesh_Component);
+	if (MeshComponent != nullptr)
+	{
+		const Component* MaterialComponent = parent->FindComponentFirst(ComponentType::Material_Component);
+		App->renderer3D->DrawComponentMeshMaterial(parent->GetTransform(), (ComponentMesh*)MeshComponent, (ComponentMaterial*)MaterialComponent);
+	}
 	if (DebugDrawAABB && (DebugDrawAABB_id_vertices != 0))
 	{
 		glColor3f(1.0f, 1.0f, 0.0f);

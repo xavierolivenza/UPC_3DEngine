@@ -21,6 +21,7 @@ public:
 	bool CleanUp();
 
 	void SetActive(bool active);
+	bool IsActive();
 
 	const std::vector<GameObject*>* GetChildren() const;
 	const std::vector<Component*>* GetComponents() const;
@@ -47,7 +48,6 @@ public:
 
 private:
 	ComponentTransform* CreateTransformComponent(bool active);
-	void DrawGameObject();
 
 public:
 	std::string name;

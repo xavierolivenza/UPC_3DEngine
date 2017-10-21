@@ -21,7 +21,8 @@ bool GameObject::PreUpdate(float dt)
 			if ((*item)->IsActive())
 				(*item)->PreUpdate(dt);
 		for (std::vector<GameObject*>::const_iterator item = children.cbegin(); item != children.cend(); ++item)
-			(*item)->PreUpdate(dt);
+			if ((*item)->IsActive())
+				(*item)->PreUpdate(dt);
 	}
 	return true;
 }
@@ -34,8 +35,8 @@ bool GameObject::Update(float dt)
 			if ((*item)->IsActive())
 				(*item)->Update(dt);
 		for (std::vector<GameObject*>::const_iterator item = children.cbegin(); item != children.cend(); ++item)
-			(*item)->Update(dt);
-		DrawGameObject();
+			if ((*item)->IsActive())
+				(*item)->Update(dt);
 	}
 	return true;
 }
@@ -48,7 +49,8 @@ bool GameObject::PostUpdate(float dt)
 			if ((*item)->IsActive())
 				(*item)->PostUpdate(dt);
 		for (std::vector<GameObject*>::const_iterator item = children.cbegin(); item != children.cend(); ++item)
-			(*item)->PostUpdate(dt);
+			if ((*item)->IsActive())
+				(*item)->PostUpdate(dt);
 	}
 	return true;
 }
@@ -76,6 +78,11 @@ void GameObject::SetActive(bool active)
 	}
 }
 
+bool GameObject::IsActive()
+{
+	return Active;
+}
+
 const std::vector<GameObject*>* GameObject::GetChildren() const
 {
 	return &children;
@@ -96,16 +103,6 @@ void GameObject::DrawComponentImGui()
 {
 	for (std::vector<Component*>::iterator item = components.begin(); item != components.cend(); ++item)
 		(*item)->DrawComponentImGui();
-}
-
-void GameObject::DrawGameObject()
-{
-	const Component* MeshComponent = FindComponentFirst(ComponentType::Mesh_Component);
-	if (MeshComponent != nullptr)
-	{
-		const Component* MaterialComponent = FindComponentFirst(ComponentType::Material_Component);
-		App->renderer3D->DrawComponentMeshMaterial(TransformComponent, (ComponentMesh*)MeshComponent, (ComponentMaterial*)MaterialComponent);
-	}
 }
 
 void GameObject::AddChild(GameObject* child)
