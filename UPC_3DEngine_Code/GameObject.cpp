@@ -7,7 +7,7 @@
 
 GameObject::GameObject(const char* name, bool active, bool static_game_object): name(name), Active(active), Static(static_game_object)
 {
-	
+	TransformComponent = CreateTransformComponent(true);
 }
 
 GameObject::~GameObject()
@@ -104,8 +104,7 @@ void GameObject::DrawGameObject()
 	if (MeshComponent != nullptr)
 	{
 		const Component* MaterialComponent = FindComponentFirst(ComponentType::Material_Component);
-		const Component* TransformComponent = FindComponentFirst(ComponentType::Transform_Component);
-		App->renderer3D->DrawComponentMeshMaterial((ComponentTransform*)TransformComponent, (ComponentMesh*)MeshComponent, (ComponentMaterial*)MaterialComponent);
+		App->renderer3D->DrawComponentMeshMaterial(TransformComponent, (ComponentMesh*)MeshComponent, (ComponentMaterial*)MaterialComponent);
 	}
 }
 
@@ -196,4 +195,9 @@ void GameObject::FindComponentVec(std::vector<Component*>& vec, ComponentType ty
 	for (std::vector<Component*>::const_iterator item = components.cbegin(); item != components.cend(); ++item)
 		if (type == (*item)->GetType())
 			vec.push_back(*item);
+}
+
+ComponentTransform* GameObject::GetTransform() const
+{
+	return TransformComponent;
 }

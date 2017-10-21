@@ -264,7 +264,6 @@ bool ModuleSceneImporter::Load(std::string* file_to_load)
 	}
 
 	GameObject* NewGameObject = new GameObject("NewMesh", true, true);
-	NewGameObject->CreateTransformComponent(true);
 	ComponentMesh* NewMesh = NewGameObject->CreateMeshComponent(true);
 	MeshImporter->Load(NewMesh->MeshDataStruct, file_to_load);
 	NewGameObject->name = NewMesh->MeshDataStruct.Mesh_name;

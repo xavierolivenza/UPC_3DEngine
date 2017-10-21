@@ -40,7 +40,7 @@ bool ComponentCamera::Update(float dt)
 
 	if (parent != nullptr)
 	{
-		ComponentTransform* transform = (ComponentTransform*)parent->FindComponentFirst(ComponentType::Camera_Component);
+		ComponentTransform* transform = parent->GetTransform();
 		if (transform != nullptr)
 		{
 			float4x4 dsaf = *transform->GetMatrix();

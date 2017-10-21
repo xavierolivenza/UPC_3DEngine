@@ -200,7 +200,7 @@ void ModuleLoadMesh::LoadGeometry(const aiScene* scene, GameObject* gameObject, 
 	//------------------------------------------//
 	//-------------Load Transform---------------//
 	//------------------------------------------//
-	ComponentTransform* transformComponent = gameObject->CreateTransformComponent(true);
+	ComponentTransform* transformComponent = gameObject->GetTransform();
 	
 	float3 pos = { 0.0f,0.0f,0.0f };
 	float3 scale = { 1.0f,1.0f,1.0f };

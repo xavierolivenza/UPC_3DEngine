@@ -32,7 +32,7 @@ public:
 	bool RemoveChild(GameObject* child);
 
 	//Create/Remove Component
-	ComponentTransform* CreateTransformComponent(bool active);
+	//ComponentTransform* CreateTransformComponent(bool active);
 	ComponentMesh* CreateMeshComponent(bool active);
 	ComponentMaterial* CreateMaterialComponent(bool active);
 	ComponentCamera* CreateCameraComponent(bool active);
@@ -43,7 +43,10 @@ public:
 	const Component* FindComponentLast(ComponentType type) const;
 	void FindComponentVec(std::vector<Component*>& vec, ComponentType type) const;
 
+	ComponentTransform* GetTransform() const;
+
 private:
+	ComponentTransform* CreateTransformComponent(bool active);
 	void DrawGameObject();
 
 public:
@@ -55,4 +58,5 @@ private:
 	GameObject* parent = nullptr;
 	std::vector<GameObject*> children;
 	std::vector<Component*> components;
+	ComponentTransform* TransformComponent;
 };

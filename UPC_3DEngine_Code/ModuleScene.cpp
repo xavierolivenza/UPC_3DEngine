@@ -19,7 +19,6 @@ bool ModuleScene::Init()
 	bool ret = true;
 	root = new GameObject("Root", true, true);
 	TestCamera = new GameObject("Camera", true, true);
-	TestCamera->CreateTransformComponent(true);
 	TestCamera->CreateCameraComponent(true);
 	AddChildToRoot(TestCamera);
 	return ret;
