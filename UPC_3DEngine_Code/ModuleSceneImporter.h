@@ -35,10 +35,13 @@ public:
 	const std::string* Get_Library_mesh_path() const;
 	const std::string* Get_Library_material_path() const;
 	const std::string* Get_Mesh_Extention() const;
+	const std::string* Get_FBXComponents_Extention() const;
 
 private:
 	aiNode* SearchForMesh(const aiNode* root, uint mesh_id) const;
 	aiNode* SearchForMeshIterator(const aiNode* root, uint mesh_id) const;
+	bool ImportFBXComponents(const std::string* file_to_import, const std::vector<std::string>* FBXComponents);
+	bool LoadFBXComponents(const std::string* file_to_load);
 
 private:
 	std::string WorkingPath; //Used to load textures from same path as fbx
@@ -47,6 +50,7 @@ private:
 	std::string Library_mesh_path = "..\\Game\\Library\\Mesh";
 	std::string Library_material_path = "..\\Game\\Library\\Material";
 	std::string Mesh_Extention = "MeshAlvOli";
+	std::string FBXComponents_Extention = "GameObjectMeshAlvOli";
 
 	ImporterMesh* MeshImporter = nullptr;
 	ImporterMaterial* MaterialImporter = nullptr;

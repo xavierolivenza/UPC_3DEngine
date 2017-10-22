@@ -1,4 +1,5 @@
 #include <experimental\filesystem>
+#include <fstream>
 
 #include "ModuleSceneImporter.h"
 #include "ImporterMesh.h"
@@ -126,14 +127,6 @@ bool ModuleSceneImporter::Import(std::string* file_to_import, std::string& outpu
 {
 	bool ret = true;
 
-	/*
-	if (!std::experimental::filesystem::is_regular_file(file_to_import))
-	{
-		LOGP("The file you are trying to import is not a regular file: %s", file_to_import->c_str());
-		return false;
-	}
-	*/
-
 	if (file_to_import == nullptr)
 		return false;
 
@@ -143,6 +136,8 @@ bool ModuleSceneImporter::Import(std::string* file_to_import, std::string& outpu
 		//Get the working path to load textures from it
 		WorkingPath = file_to_import->substr(0, file_to_import->rfind("\\"));
 		WorkingPath += "\\";
+
+		std::vector<std::string> fbx_MeshComponents;
 
 		// Use scene->mNumMeshes to iterate on scene->mMeshes array
 		for (uint i = 0; i < scene->mNumMeshes; ++i)
@@ -240,7 +235,12 @@ bool ModuleSceneImporter::Import(std::string* file_to_import, std::string& outpu
 			//------------------------------------------//
 			std::string output;
 			MeshImporter->Save(MeshDataStruct, output);
+			fbx_MeshComponents.push_back(output);
 		}
+
+		//Save fbx_MeshComponents
+		ImportFBXComponents(file_to_import, &fbx_MeshComponents);
+
 		WorkingPath.clear();
 		aiReleaseImport(scene);
 	}
@@ -254,21 +254,171 @@ bool ModuleSceneImporter::Import(std::string* file_to_import, std::string& outpu
 	return ret;
 }
 
-bool ModuleSceneImporter::Load(std::string* file_to_load)
+bool ModuleSceneImporter::ImportFBXComponents(const std::string* file_to_import, const std::vector<std::string>* FBXComponents)
 {
-	//Check if this is a mesh file
-	if (file_to_load->substr(file_to_load->rfind(".") + 1, file_to_load->length()) != Mesh_Extention)
+	//Num strings / length of each / strings
+
+	size_t bar_pos = file_to_import->rfind("\\") + 1;
+	std::string FBXComponents_name = file_to_import->substr(bar_pos, file_to_import->rfind(".") - bar_pos);
+	FBXComponents_name += "." + FBXComponents_Extention;
+
+	std::string FBXComponents_path = Library_mesh_path + "\\" + FBXComponents_name;
+	FILE* file = fopen(FBXComponents_path.c_str(), "r");
+	if (file != nullptr)
 	{
-		LOGP("The dropped file is not a .%s file", Mesh_Extention.c_str());
+		fclose(file);
+		LOGP("Mesh file already exists: %s", FBXComponents_path.c_str());
 		return false;
 	}
 
-	GameObject* NewGameObject = new GameObject("NewMesh", true, true);
-	ComponentMesh* NewMesh = NewGameObject->CreateMeshComponent(true);
-	MeshImporter->Load(NewMesh->MeshDataStruct, file_to_load);
-	NewGameObject->name = NewMesh->MeshDataStruct.Mesh_name;
-	ComponentMaterial* NewMaterial = NewGameObject->CreateMaterialComponent(true);
-	MaterialImporter->Load(NewMaterial->MaterialDataStruct, &(Library_material_path + "\\" + NewMesh->MeshDataStruct.Asociated_texture_name));
+	std::vector<uint> amount_of_each;
+	for (std::vector<std::string>::const_iterator item = FBXComponents->cbegin(); item != FBXComponents->cend(); ++item)
+		amount_of_each.push_back(item->length() + 1);
+
+	uint file_size = sizeof(uint);
+	file_size += sizeof(uint) * amount_of_each.size();
+	for (std::vector<uint>::const_iterator item = amount_of_each.cbegin(); item != amount_of_each.cend(); ++item)
+		file_size += sizeof(char) * (*item);
+
+	//Create char* to allocate data and another char* to move around the previous one
+	char* data = new char[file_size];
+	char* cursor = data;
+	uint current_allocation_size = 0;
+
+	current_allocation_size = sizeof(uint);
+	uint amount_of_each_size = amount_of_each.size();
+	memcpy(cursor, &amount_of_each_size, current_allocation_size);
+
+	for (std::vector<std::string>::const_iterator item = FBXComponents->cbegin(); item != FBXComponents->cend(); ++item)
+	{
+		cursor += current_allocation_size;
+		current_allocation_size = sizeof(uint);
+		uint leng = item->length() + 1;
+		memcpy(cursor, &leng, current_allocation_size);
+	}
+
+	for (std::vector<std::string>::const_iterator item = FBXComponents->cbegin(); item != FBXComponents->cend(); ++item)
+	{
+		cursor += current_allocation_size;
+		current_allocation_size = sizeof(char) * (item->length() + 1);
+		memcpy(cursor, item->c_str(), current_allocation_size);
+	}
+
+	//Write to file
+	std::ofstream outfile(FBXComponents_path, std::ofstream::binary);
+	if (outfile.good()) //write file
+		outfile.write(data, file_size);
+	else
+		LOGP("Failed to write the file with path: %s", FBXComponents_path.c_str());
+	outfile.close();
+
+	RELEASE_ARRAY(data);
+
+	return true;
+}
+
+bool ModuleSceneImporter::Load(std::string* file_to_load)
+{
+	if (file_to_load == nullptr)
+	{
+		LOGP("Loading file was nullptr.");
+		return false;
+	}
+
+	//Check if this is a mesh file
+	std::string extention = file_to_load->substr(file_to_load->rfind(".") + 1, file_to_load->length());
+
+	if (extention == Mesh_Extention)
+	{
+		GameObject* NewGameObject = new GameObject("NewMesh", true, true);
+		ComponentMesh* NewMesh = NewGameObject->CreateMeshComponent(true);
+		MeshImporter->Load(NewMesh->MeshDataStruct, file_to_load);
+		NewGameObject->name = NewMesh->MeshDataStruct.Mesh_name;
+		ComponentMaterial* NewMaterial = NewGameObject->CreateMaterialComponent(true);
+		MaterialImporter->Load(NewMaterial->MaterialDataStruct, &(Library_material_path + "\\" + NewMesh->MeshDataStruct.Asociated_texture_name));
+		App->scene->AddChildToRoot(NewGameObject);
+	}
+	else if (extention == FBXComponents_Extention)
+	{
+		LoadFBXComponents(file_to_load);
+	}
+	else
+	{
+		LOGP("The dropped file is not a .%s or .%s file", Mesh_Extention.c_str(), FBXComponents_Extention.c_str());
+		return false;
+	}
+	return true;
+}
+
+bool ModuleSceneImporter::LoadFBXComponents(const std::string* file_to_load)
+{
+	//Num strings / length of each / strings
+
+	char* data = nullptr;
+	std::ifstream file(file_to_load->c_str(), std::ifstream::binary);
+	if (file) {
+		// get length of file:
+		file.seekg(0, file.end);
+		int length = file.tellg();
+		file.seekg(0, file.beg);
+		data = new char[length];
+		LOGP("Reading %i characters. File: %s", length, file_to_load->c_str());
+		// read data as a block:
+		file.read(data, length);
+		if (file)
+			LOGP("All characters read successfully. File: %s", file_to_load->c_str());
+		else
+		{
+			LOGP("error: only %ll could be read. File: %s", file.gcount(), file_to_load->c_str());
+			RELEASE_ARRAY(data);
+			return false;
+		}
+		file.close();
+		// ...buffer contains the entire file...
+	}
+	else
+		LOGP("File loading problem. File: %s", file_to_load->c_str());
+
+	if (data == nullptr)
+		return false;
+	char* cursor = data;
+	uint current_loading_size = 0;
+
+	//Load amount_of_strings
+	uint amount_of_strings = 0;
+	current_loading_size = sizeof(uint);
+	memcpy(&amount_of_strings, cursor, current_loading_size);
+
+	std::vector<uint> size_of_each;
+	for (uint i = 0; i < amount_of_strings; i++)
+	{
+		cursor += current_loading_size;
+		current_loading_size = sizeof(uint);
+		uint size = 0;
+		memcpy(&size, cursor, current_loading_size);
+		size_of_each.push_back(size);
+	}
+	
+	size_t bar_pos = file_to_load->rfind("\\") + 1;
+	std::string gameobject_name = file_to_load->substr(bar_pos, file_to_load->rfind(".") - bar_pos);
+
+	GameObject* NewGameObject = new GameObject(gameobject_name.c_str(), true, true);
+	std::string file_string;
+	for (uint i = 0; i < amount_of_strings; i++)
+	{
+		cursor += current_loading_size;
+		current_loading_size = sizeof(char) * size_of_each[i];
+
+		GameObject* NewMeshGameObject = new GameObject("NewMesh", true, true);
+		ComponentMesh* NewMesh = NewMeshGameObject->CreateMeshComponent(true);
+		std::string name = Library_mesh_path + "\\" + cursor;
+		MeshImporter->Load(NewMesh->MeshDataStruct, &name);
+		NewMeshGameObject->name = NewMesh->MeshDataStruct.Mesh_name;
+		ComponentMaterial* NewMaterial = NewMeshGameObject->CreateMaterialComponent(true);
+		MaterialImporter->Load(NewMaterial->MaterialDataStruct, &(Library_material_path + "\\" + NewMesh->MeshDataStruct.Asociated_texture_name));
+
+		NewGameObject->AddChild(NewMeshGameObject);
+	}
 	App->scene->AddChildToRoot(NewGameObject);
 
 	return true;
@@ -335,4 +485,9 @@ const std::string* ModuleSceneImporter::Get_Library_material_path() const
 const std::string* ModuleSceneImporter::Get_Mesh_Extention() const
 {
 	return &Mesh_Extention;
+}
+
+const std::string* ModuleSceneImporter::Get_FBXComponents_Extention() const
+{
+	return &FBXComponents_Extention;
 }

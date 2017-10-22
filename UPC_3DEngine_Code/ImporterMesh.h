@@ -12,7 +12,7 @@ public:
 	bool CleanUp();
 
 	bool Save(const MeshData& DataMesh, std::string& loaded_file) const;
-	bool Load(MeshData& DataMesh, std::string* file_to_load);
+	bool Load(MeshData& DataMesh, const std::string* file_to_load);
 
 private:
 	uint imported_meshes = 0;

@@ -213,7 +213,7 @@ bool ImporterMesh::Save(const MeshData& DataMesh, std::string& loaded_file) cons
 	return true;
 }
 
-bool ImporterMesh::Load(MeshData& DataMesh, std::string* file_to_load)
+bool ImporterMesh::Load(MeshData& DataMesh, const std::string* file_to_load)
 {
 	//Get serialized MeshData from file
 	// amount of each / mesh name / num_faces / vertices / indices / normals / texture_coords / colors / Asociated Texture Name.dds / SpherePosition / SphereRadius  / BoundBoxMinPoint / BoundBoxMaxPoint / BoundOBox(WIP)
