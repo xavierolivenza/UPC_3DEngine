@@ -43,19 +43,21 @@ bool ComponentCamera::Update(float dt)
 		ComponentTransform* transform = parent->GetTransform();
 		if (transform != nullptr)
 		{
+			float4x4 matrix = *transform->GetMatrix();
+
 			bool frustum_changed = false;
 			float3 prev_pos = frustum.pos;
-			frustum.pos = transform->GetMatrix()->Col3(3);
+			frustum.pos = matrix.Row3(3);
 			if ((prev_pos.x != frustum.pos.x) || (prev_pos.y != frustum.pos.y) || (prev_pos.z != frustum.pos.z))
 				frustum_changed = true;
 
 			float3 prev_front = frustum.front;
-			frustum.front = transform->GetMatrix()->Col3(2).Normalized();
+			frustum.front = matrix.Row3(2);
 			if ((prev_front.x != frustum.front.x) || (prev_front.y != frustum.front.y) || (prev_front.z != frustum.front.z))
 				frustum_changed = true;
 
 			float3 prev_up = frustum.up;
-			frustum.up = transform->GetMatrix()->Col3(1).Normalized();
+			frustum.up = matrix.Row3(1);
 			if ((prev_up.x != frustum.up.x) || (prev_up.y != frustum.up.y) || (prev_up.z != frustum.up.z))
 				frustum_changed = true;
 

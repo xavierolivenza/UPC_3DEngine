@@ -167,12 +167,13 @@ update_status ModuleRenderer3D::PreUpdate(float dt)
 	if (camera != nullptr)
 	{
 		float4x4 matrixfloat = *App->scene->GetActiveCamera()->GetViewProjMatrix();
+		matrixfloat.Transpose();
 		GLfloat matrix[16] =
 		{
-			matrixfloat[0][0],matrixfloat[1][0],matrixfloat[2][0],matrixfloat[3][0],
-			matrixfloat[0][1],matrixfloat[1][1],matrixfloat[2][1],matrixfloat[3][1],
-			matrixfloat[0][2],matrixfloat[1][2],matrixfloat[2][2],matrixfloat[3][2],
-			matrixfloat[0][3],matrixfloat[1][3],matrixfloat[2][3],matrixfloat[3][3]
+			matrixfloat[0][0],matrixfloat[0][1],matrixfloat[0][2],matrixfloat[0][3],
+			matrixfloat[1][0],matrixfloat[1][1],matrixfloat[1][2],matrixfloat[1][3],
+			matrixfloat[2][0],matrixfloat[2][1],matrixfloat[2][2],matrixfloat[2][3],
+			matrixfloat[3][0],matrixfloat[3][1],matrixfloat[3][2],matrixfloat[3][3]
 		};
 		glLoadMatrixf(matrix);
 	}
@@ -723,10 +724,10 @@ bool ModuleRenderer3D::DrawComponentMeshMaterial(const ComponentTransform* trans
 		float4x4 matrixfloat = *transform->GetMatrix();
 		GLfloat matrix[16] =
 		{
-			matrixfloat[0][0],matrixfloat[1][0],matrixfloat[2][0],matrixfloat[3][0],
-			matrixfloat[0][1],matrixfloat[1][1],matrixfloat[2][1],matrixfloat[3][1],
-			matrixfloat[0][2],matrixfloat[1][2],matrixfloat[2][2],matrixfloat[3][2],
-			matrixfloat[0][3],matrixfloat[1][3],matrixfloat[2][3],matrixfloat[3][3]
+			matrixfloat[0][0],matrixfloat[0][1],matrixfloat[0][2],matrixfloat[0][3],
+			matrixfloat[1][0],matrixfloat[1][1],matrixfloat[1][2],matrixfloat[1][3],
+			matrixfloat[2][0],matrixfloat[2][1],matrixfloat[2][2],matrixfloat[2][3],
+			matrixfloat[3][0],matrixfloat[3][1],matrixfloat[3][2],matrixfloat[3][3]
 		};
 		glMultMatrixf(matrix);
 	}

@@ -54,7 +54,7 @@ void ComponentTransform::DrawComponentImGui()
 		ImGui::DragFloat3("Rotation", &rot_euler[0], 3, ImGuiInputTextFlags_CharsDecimal);
 		//ImGui::InputFloat3("Rotation", &rot_euler[0], 3, ImGuiInputTextFlags_CharsDecimal);
 		if((rot_euler_prev.x != rot_euler.x) || (rot_euler_prev.y != rot_euler.y) || (rot_euler_prev.z != rot_euler.z))
-			rot = rot.FromEulerXYZ(rot_euler.x, rot_euler.y, rot_euler.z);
+			rot = rot.FromEulerXYZ(rot_euler.x * DEGTORAD, rot_euler.y * DEGTORAD, rot_euler.z * DEGTORAD);
 		
 		ImGui::DragFloat3("Scale", &scale[0], 3, ImGuiInputTextFlags_CharsDecimal);
 		//ImGui::InputFloat3("Scale", &scale[0], 3, ImGuiInputTextFlags_CharsDecimal);
@@ -100,6 +100,7 @@ float3 ComponentTransform::GetRotEuler()
 const float4x4* ComponentTransform::GetMatrix() const
 {
 	//TODO Don't do this every time
-	//return &float4x4::identity;
-	return &float4x4::FromTRS(pos, rot, scale);
+	float4x4 matrix = float4x4::FromTRS(pos, rot, scale);
+	matrix.Transpose();
+	return &matrix;
 }
