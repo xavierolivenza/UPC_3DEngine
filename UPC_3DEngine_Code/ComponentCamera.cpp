@@ -106,6 +106,7 @@ void ComponentCamera::DrawComponentImGui()
 	if (ImGui::CollapsingHeader("Camera Component", ImGuiTreeNodeFlags_DefaultOpen))
 	{
 		ImGui::Checkbox("Camera Component Active", &Active);
+		ImGui::Checkbox("Main Camera", &MainCamera);
 		ImGui::Checkbox("Frustum Culling", &FrustumCulling);
 
 		float temp_NearPlaneDistance = NearPlaneDistance;
@@ -233,4 +234,14 @@ void ComponentCamera::CleanFrustumDraw()
 		glDeleteBuffers(1, &DebugDrawFrustum_id_indices);
 		RELEASE_ARRAY(DebugDrawFrustum_indices);
 	}
+}
+
+bool ComponentCamera::IsMainCamera() const
+{
+	return MainCamera;
+}
+
+const float4x4* ComponentCamera::GetViewProjMatrix() const
+{
+	return &frustum.ViewProjMatrix();
 }

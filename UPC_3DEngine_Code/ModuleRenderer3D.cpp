@@ -8,6 +8,7 @@
 #include "ComponentTransform.h"
 #include "ComponentMesh.h"
 #include "ComponentMaterial.h"
+#include "ComponentCamera.h"
 
 #include "DevIL\include\il.h"
 #include "DevIL\include\ilu.h"
@@ -162,7 +163,21 @@ update_status ModuleRenderer3D::PreUpdate(float dt)
 	glLoadIdentity();
 
 	glMatrixMode(GL_MODELVIEW);
-	glLoadMatrixf(App->camera->GetViewMatrix());
+	const ComponentCamera* camera = App->scene->GetActiveCamera();
+	if (camera != nullptr)
+	{
+		float4x4 matrixfloat = *App->scene->GetActiveCamera()->GetViewProjMatrix();
+		GLfloat matrix[16] =
+		{
+			matrixfloat[0][0],matrixfloat[1][0],matrixfloat[2][0],matrixfloat[3][0],
+			matrixfloat[0][1],matrixfloat[1][1],matrixfloat[2][1],matrixfloat[3][1],
+			matrixfloat[0][2],matrixfloat[1][2],matrixfloat[2][2],matrixfloat[3][2],
+			matrixfloat[0][3],matrixfloat[1][3],matrixfloat[2][3],matrixfloat[3][3]
+		};
+		glLoadMatrixf(matrix);
+	}
+	else
+		glLoadMatrixf(App->camera->GetViewMatrix());
 
 	// light 0 on cam pos
 	lights[0].SetPos(App->camera->Position.x, App->camera->Position.y, App->camera->Position.z);

@@ -2,6 +2,7 @@
 #include "Module.h"
 
 class GameObject;
+class ComponentCamera;
 
 class ModuleScene : public Module
 {
@@ -27,6 +28,11 @@ public:
 
 	//Functions to create GameObjects
 	GameObject* CreateGameObject(const char* name, bool active = true, bool static_game_object = true);
+
+	const ComponentCamera* GetActiveCamera() const;
+
+private:
+	const ComponentCamera* GetActiveCameraIterator(GameObject* node) const;
 
 private:
 	GameObject* root = nullptr;

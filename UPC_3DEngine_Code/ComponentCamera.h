@@ -15,12 +15,17 @@ public:
 	bool CleanUp();
 	void DrawComponentImGui();
 
+	bool IsMainCamera() const;
+
+	const float4x4* GetViewProjMatrix() const;
+
 private:
 	void GenerateFrustumDraw();
 	void CleanFrustumDraw();
 
 private:
 	bool FrustumCulling = false;
+	bool MainCamera = false;
 
 	Frustum frustum;
 	float NearPlaneDistance = 0.1f;

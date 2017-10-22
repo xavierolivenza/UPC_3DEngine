@@ -2,6 +2,8 @@
 #include "Application.h"
 #include "ModuleScene.h"
 #include "GameObject.h"
+#include "Component.h"
+#include "ComponentCamera.h"
 
 ModuleScene::ModuleScene(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
@@ -93,4 +95,31 @@ bool ModuleScene::RemoveChildFromRoot(GameObject* child)
 GameObject* ModuleScene::CreateGameObject(const char* name, bool active, bool static_game_object)
 {
 	return new GameObject(name, active, static_game_object);
+}
+
+const ComponentCamera* ModuleScene::GetActiveCamera() const
+{
+	const ComponentCamera* camera = nullptr;
+	if (root != nullptr)
+		camera = GetActiveCameraIterator(root);
+	return camera;
+}
+
+const ComponentCamera* ModuleScene::GetActiveCameraIterator(GameObject* node) const
+{
+	const ComponentCamera* camera = nullptr;
+	const std::vector<GameObject*>* children = node->GetChildren();
+	for (std::vector<GameObject*>::const_iterator item = children->cbegin(); item != children->cend(); ++item)
+	{
+		const Component* camera_comp_found = (*item)->FindComponentFirst(ComponentType::Camera_Component);
+		if ((camera_comp_found != nullptr) && (((ComponentCamera*)camera_comp_found)->IsMainCamera()))
+			return (ComponentCamera*)camera_comp_found;
+		else
+		{
+			camera = GetActiveCameraIterator(*item);
+			if ((camera != nullptr) && (camera->IsMainCamera()))
+				return camera;
+		}
+	}
+	return nullptr;
 }
