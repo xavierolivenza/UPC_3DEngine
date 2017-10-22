@@ -42,7 +42,7 @@ bool ImporterMesh::CleanUp()
 bool ImporterMesh::Save(const float3& pos, const float3& scale, const Quat& rot, const MeshData& DataMesh, std::string& loaded_file) const
 {
 	//Serialize MeshData to file
-	// amount of each / mesh name / num_faces / vertices / indices / normals / texture_coords / colors / Asociated Texture Name.dds / SpherePosition / SphereRadius  / BoundBoxMinPoint / BoundBoxMaxPoint / BoundOBox(WIP)
+	// amount of each / mesh name / transform:pos / transform:scale / transform:rot / num_faces / vertices / indices / normals / texture_coords / colors / Asociated Texture Name.dds / SpherePosition / SphereRadius  / BoundBoxMinPoint / BoundBoxMaxPoint / BoundOBox(WIP)
 	
 	//Check if the file exists
 
@@ -87,6 +87,9 @@ bool ImporterMesh::Save(const float3& pos, const float3& scale, const Quat& rot,
 
 	uint file_size = sizeof(amount_of_each);
 	file_size += sizeof(char) * (DataMesh.Mesh_name.length() + 1);// Mesh Name
+	file_size += sizeof(float) * 3;								// transform:pos
+	file_size += sizeof(float) * 3;								// transform:scale 
+	file_size += sizeof(float) * 4;								// transform:rot	//Quaternion 4 float
 	file_size += sizeof(uint);									// num_faces
 	file_size += sizeof(float) * DataMesh.num_vertices * 3;		// vertices
 	file_size += sizeof(uint) * DataMesh.num_indices;			// indices
@@ -113,6 +116,42 @@ bool ImporterMesh::Save(const float3& pos, const float3& scale, const Quat& rot,
 	cursor += current_allocation_size;
 	current_allocation_size = sizeof(char) * (DataMesh.Mesh_name.length() + 1);
 	memcpy(cursor, DataMesh.Mesh_name.c_str(), current_allocation_size);
+
+	//Store transform:pos
+	cursor += current_allocation_size;
+	current_allocation_size = sizeof(float);
+	memcpy(cursor, &pos.x, current_allocation_size);
+	cursor += current_allocation_size;
+	current_allocation_size = sizeof(float);
+	memcpy(cursor, &pos.y, current_allocation_size);
+	cursor += current_allocation_size;
+	current_allocation_size = sizeof(float);
+	memcpy(cursor, &pos.z, current_allocation_size);
+
+	//Store transform:scale
+	cursor += current_allocation_size;
+	current_allocation_size = sizeof(float);
+	memcpy(cursor, &scale.x, current_allocation_size);
+	cursor += current_allocation_size;
+	current_allocation_size = sizeof(float);
+	memcpy(cursor, &scale.y, current_allocation_size);
+	cursor += current_allocation_size;
+	current_allocation_size = sizeof(float);
+	memcpy(cursor, &scale.z, current_allocation_size);
+
+	//Store transform:rot
+	cursor += current_allocation_size;
+	current_allocation_size = sizeof(float);
+	memcpy(cursor, &rot.x, current_allocation_size);
+	cursor += current_allocation_size;
+	current_allocation_size = sizeof(float);
+	memcpy(cursor, &rot.y, current_allocation_size);
+	cursor += current_allocation_size;
+	current_allocation_size = sizeof(float);
+	memcpy(cursor, &rot.z, current_allocation_size);
+	cursor += current_allocation_size;
+	current_allocation_size = sizeof(float);
+	memcpy(cursor, &rot.w, current_allocation_size);
 
 	//Store numfaces
 	cursor += current_allocation_size;
@@ -217,7 +256,7 @@ bool ImporterMesh::Save(const float3& pos, const float3& scale, const Quat& rot,
 bool ImporterMesh::Load(ComponentTransform& transform, MeshData& DataMesh, const std::string* file_to_load)
 {
 	//Get serialized MeshData from file
-	// amount of each / mesh name / num_faces / vertices / indices / normals / texture_coords / colors / Asociated Texture Name.dds / SpherePosition / SphereRadius  / BoundBoxMinPoint / BoundBoxMaxPoint / BoundOBox(WIP)
+	// amount of each / mesh name / transform:pos / transform:scale / transform:rot / num_faces / vertices / indices / normals / texture_coords / colors / Asociated Texture Name.dds / SpherePosition / SphereRadius  / BoundBoxMinPoint / BoundBoxMaxPoint / BoundOBox(WIP)
 
 	char* data = nullptr;
 	std::ifstream file(file_to_load->c_str(), std::ifstream::binary);
@@ -264,6 +303,48 @@ bool ImporterMesh::Load(ComponentTransform& transform, MeshData& DataMesh, const
 	cursor += current_loading_size;
 	current_loading_size = sizeof(char) * Mesh_name_size;
 	DataMesh.Mesh_name = cursor;
+
+	//Load transform:pos
+	float3 pos = float3::zero;
+	cursor += current_loading_size;
+	current_loading_size = sizeof(float);
+	memcpy(&pos.x, cursor, current_loading_size);
+	cursor += current_loading_size;
+	current_loading_size = sizeof(float);
+	memcpy(&pos.y, cursor, current_loading_size);
+	cursor += current_loading_size;
+	current_loading_size = sizeof(float);
+	memcpy(&pos.z, cursor, current_loading_size);
+	transform.SetPos(pos);
+
+	//Load transform:scale
+	float3 scale = float3::zero;
+	cursor += current_loading_size;
+	current_loading_size = sizeof(float);
+	memcpy(&scale.x, cursor, current_loading_size);
+	cursor += current_loading_size;
+	current_loading_size = sizeof(float);
+	memcpy(&scale.y, cursor, current_loading_size);
+	cursor += current_loading_size;
+	current_loading_size = sizeof(float);
+	memcpy(&scale.z, cursor, current_loading_size);
+	transform.SetScale(scale);
+
+	//Load transform:rot
+	Quat rot = Quat::identity;
+	cursor += current_loading_size;
+	current_loading_size = sizeof(float);
+	memcpy(&rot.x, cursor, current_loading_size);
+	cursor += current_loading_size;
+	current_loading_size = sizeof(float);
+	memcpy(&rot.y, cursor, current_loading_size);
+	cursor += current_loading_size;
+	current_loading_size = sizeof(float);
+	memcpy(&rot.z, cursor, current_loading_size);
+	cursor += current_loading_size;
+	current_loading_size = sizeof(float);
+	memcpy(&rot.w, cursor, current_loading_size);
+	transform.SetRot(rot);
 
 	//Load numfaces
 	cursor += current_loading_size;
