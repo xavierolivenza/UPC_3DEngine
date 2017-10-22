@@ -198,3 +198,8 @@ ComponentTransform* GameObject::GetTransform() const
 {
 	return TransformComponent;
 }
+
+const GameObject* GameObject::GetParent() const
+{
+	return parent;
+}

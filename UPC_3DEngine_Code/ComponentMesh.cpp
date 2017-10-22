@@ -45,6 +45,8 @@ bool ComponentMesh::Update(float dt)
 	if (MeshComponent != nullptr)
 	{
 		const Component* MaterialComponent = parent->FindComponentFirst(ComponentType::Material_Component);
+		if (!MaterialComponent->IsActive())
+			MaterialComponent = nullptr;
 		App->renderer3D->DrawComponentMeshMaterial(parent->GetTransform(), (ComponentMesh*)MeshComponent, (ComponentMaterial*)MaterialComponent);
 	}
 	if (DebugDrawAABB && (DebugDrawAABB_id_vertices != 0))

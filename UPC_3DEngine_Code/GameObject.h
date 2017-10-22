@@ -45,6 +45,7 @@ public:
 	void FindComponentVec(std::vector<Component*>& vec, ComponentType type) const;
 
 	ComponentTransform* GetTransform() const;
+	const GameObject* GetParent() const;
 
 private:
 	ComponentTransform* CreateTransformComponent(bool active);
