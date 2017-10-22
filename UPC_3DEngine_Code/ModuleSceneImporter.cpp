@@ -4,6 +4,7 @@
 #include "ModuleSceneImporter.h"
 #include "ImporterMesh.h"
 #include "ImporterMaterial.h"
+#include "ComponentMesh.h"
 
 //Assimp includes here because the main core of 3dmodel file read action is done here
 #include "Assimp/include/cimport.h"
@@ -146,6 +147,30 @@ bool ModuleSceneImporter::Import(std::string* file_to_import, std::string& outpu
 			aiMesh* MeshInstance = scene->mMeshes[i];
 			
 			//------------------------------------------//
+			//-------------Load Transform---------------//
+			//------------------------------------------//
+			float3 pos = { 0.0f,0.0f,0.0f };
+			float3 scale = { 1.0f,1.0f,1.0f };
+			Quat rot = { 0.0f,0.0f,0.0f,1.0f };
+			if ((scene->mRootNode != nullptr) && (scene->mRootNode->mNumChildren > 0))
+			{
+				//Sum up all transformations from root node to the node where the mesh is stored
+				aiMatrix4x4 transform;
+				if (MeshNode != nullptr)
+				{
+					for (const aiNode* iterator = MeshNode; iterator->mParent != nullptr; iterator = iterator->mParent)
+						transform *= iterator->mTransformation;
+					aiVector3D translation;
+					aiVector3D scaling;
+					aiQuaternion rotation;
+					transform.Decompose(scaling, rotation, translation);
+					pos = { translation.x, translation.y, translation.z };
+					scale = { scaling.x, scaling.y, scaling.z };
+					rot = { rotation.x, rotation.y, rotation.z, rotation.w };
+				}
+			}
+
+			//------------------------------------------//
 			//---------------Load Mesh------------------//
 			//------------------------------------------//
 			MeshData MeshDataStruct;
@@ -234,7 +259,7 @@ bool ModuleSceneImporter::Import(std::string* file_to_import, std::string& outpu
 			//-------Serialize Mesh To Own Format-------//
 			//------------------------------------------//
 			std::string output;
-			MeshImporter->Save(MeshDataStruct, output);
+			MeshImporter->Save(pos, scale, rot, MeshDataStruct, output);
 			fbx_MeshComponents.push_back(output);
 		}
 
@@ -332,7 +357,7 @@ bool ModuleSceneImporter::Load(std::string* file_to_load)
 	{
 		GameObject* NewGameObject = new GameObject("NewMesh", true, true);
 		ComponentMesh* NewMesh = NewGameObject->CreateMeshComponent(true);
-		MeshImporter->Load(NewMesh->MeshDataStruct, file_to_load);
+		MeshImporter->Load(*NewGameObject->GetTransform(), NewMesh->MeshDataStruct, file_to_load);
 		NewGameObject->name = NewMesh->MeshDataStruct.Mesh_name;
 		ComponentMaterial* NewMaterial = NewGameObject->CreateMaterialComponent(true);
 		MaterialImporter->Load(NewMaterial->MaterialDataStruct, &(Library_material_path + "\\" + NewMesh->MeshDataStruct.Asociated_texture_name));
@@ -412,7 +437,7 @@ bool ModuleSceneImporter::LoadFBXComponents(const std::string* file_to_load)
 		GameObject* NewMeshGameObject = new GameObject("NewMesh", true, true);
 		ComponentMesh* NewMesh = NewMeshGameObject->CreateMeshComponent(true);
 		std::string name = Library_mesh_path + "\\" + cursor;
-		MeshImporter->Load(NewMesh->MeshDataStruct, &name);
+		MeshImporter->Load(*NewMeshGameObject->GetTransform(), NewMesh->MeshDataStruct, &name);
 		NewMeshGameObject->name = NewMesh->MeshDataStruct.Mesh_name;
 		ComponentMaterial* NewMaterial = NewMeshGameObject->CreateMaterialComponent(true);
 		MaterialImporter->Load(NewMaterial->MaterialDataStruct, &(Library_material_path + "\\" + NewMesh->MeshDataStruct.Asociated_texture_name));

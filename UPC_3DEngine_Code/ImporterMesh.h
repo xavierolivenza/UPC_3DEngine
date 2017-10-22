@@ -1,6 +1,9 @@
 #pragma once
 
-#include "ComponentMesh.h"
+#include "MathGeoLib\Math.h"
+
+struct MeshData;
+class ComponentTransform;
 
 class ImporterMesh
 {
@@ -11,9 +14,7 @@ public:
 	bool Init();
 	bool CleanUp();
 
-	bool Save(const MeshData& DataMesh, std::string& loaded_file) const;
-	bool Load(MeshData& DataMesh, const std::string* file_to_load);
+	bool Save(const float3& pos, const float3& scale, const Quat& rot, const MeshData& DataMesh, std::string& loaded_file) const;
+	bool Load(ComponentTransform& transform, MeshData& DataMesh, const std::string* file_to_load);
 
-private:
-	uint imported_meshes = 0;
 };

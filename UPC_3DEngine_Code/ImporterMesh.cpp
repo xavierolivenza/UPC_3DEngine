@@ -3,6 +3,7 @@
 #include "ImporterMesh.h"
 
 #include "ComponentMesh.h"
+#include "ComponentTransform.h"
 
 #include "Assimp/include/Logger.hpp"
 #include "Assimp/include/LogStream.hpp"
@@ -38,7 +39,7 @@ bool ImporterMesh::CleanUp()
 	return true;
 }
 
-bool ImporterMesh::Save(const MeshData& DataMesh, std::string& loaded_file) const
+bool ImporterMesh::Save(const float3& pos, const float3& scale, const Quat& rot, const MeshData& DataMesh, std::string& loaded_file) const
 {
 	//Serialize MeshData to file
 	// amount of each / mesh name / num_faces / vertices / indices / normals / texture_coords / colors / Asociated Texture Name.dds / SpherePosition / SphereRadius  / BoundBoxMinPoint / BoundBoxMaxPoint / BoundOBox(WIP)
@@ -213,7 +214,7 @@ bool ImporterMesh::Save(const MeshData& DataMesh, std::string& loaded_file) cons
 	return true;
 }
 
-bool ImporterMesh::Load(MeshData& DataMesh, const std::string* file_to_load)
+bool ImporterMesh::Load(ComponentTransform& transform, MeshData& DataMesh, const std::string* file_to_load)
 {
 	//Get serialized MeshData from file
 	// amount of each / mesh name / num_faces / vertices / indices / normals / texture_coords / colors / Asociated Texture Name.dds / SpherePosition / SphereRadius  / BoundBoxMinPoint / BoundBoxMaxPoint / BoundOBox(WIP)
