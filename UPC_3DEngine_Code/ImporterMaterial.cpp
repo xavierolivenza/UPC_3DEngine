@@ -99,7 +99,7 @@ bool ImporterMaterial::Load(MaterialData& DataMaterial, std::string* file_to_loa
 {
 	int tex_id = LoadImageFromFile(DataMaterial, file_to_load);
 	if(tex_id > 0)
-		DataMaterial.id_texture = LoadImageFromFile(DataMaterial, file_to_load);
+		DataMaterial.id_texture = tex_id;
 	return false;
 }
 
@@ -122,9 +122,18 @@ int ImporterMaterial::LoadImageFromFile(MaterialData& DataMaterial, std::string*
 	TCHAR directory[MAX_PATH + 1] = "";
 	DWORD len = GetCurrentDirectory(MAX_PATH, directory);
 	std::string texture_path = directory;
-	texture_path += file_to_load->substr(7, file_to_load->length());
+
+	size_t bar_pos = texture_path.rfind("\\") + 1;
+	texture_path = texture_path.substr(0, bar_pos);
+
+	LOGP("Starting loading texture directory: %s", texture_path.c_str());
+
+	texture_path += file_to_load->substr(2, file_to_load->length());
 	success = ilLoadImage(texture_path.c_str());
 	DataMaterial.texture_name = texture_path;
+
+	LOGP("Starting loading texture file_to_load: %s", file_to_load->c_str());
+	LOGP("Starting loading texture: %s", texture_path.c_str());
 
 	// If we managed to load the image, then we can start to do things with it...
 	if (success)
