@@ -44,6 +44,7 @@ public:
 	std::string file_name;
 	JSON_Value* root_value = nullptr;
 	JSON_Object* root_object = nullptr;
+	JSON_Array* array = nullptr;
 
 };
 
