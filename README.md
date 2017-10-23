@@ -37,7 +37,9 @@ WARNING:
 
 -Profiler: This window shows the ms wasted in every module
 
--Properties: This window shows useful informattion about the loaded geometry
+-Hierarchy: This window shows game object hierarchy, if you clic one node, the inspector window updates with the new data to show
+
+-Inspector: This window shows game object and associated components configuration
 
 -Console: A console that LOGS all the engine process
 
@@ -60,6 +62,16 @@ WARNING:
 -Close: Closes the engine
 
 ## CHANGELOG
+
+v0.6:
+
+	-New structure with game objects and components.
+	-Components mesh, matrial, transformation working, camera components only shows frustum, WIP.
+	-Now fbx are imported to library/Mesh as own format
+	-MeshAlvOli, contains only one mesh. GameObjectMeshAlvOli contains multiples meshes
+	-Textures are imported as dds to library/materials
+	-By now this importing system takes everything inside assets folder and import them.
+	-By now the load process only acceps own format files (open library/mesh to get the files to drop)
 
 v0.5(First Assignment):
 
