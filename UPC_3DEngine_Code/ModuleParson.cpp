@@ -125,6 +125,37 @@ const char* ParsonJSON::GetString(JSON_Object* conf, const char* field, const ch
 	return default;
 }
 
+float2 ParsonJSON::GetFloat2(JSON_Object* conf, const char* field, float2 default) const
+{
+	float2 ret = float2::zero;
+	JSON_Object* float2_iterate = nullptr;
+	float2_iterate = json_object_get_object(conf, "float2");
+	ret.x = GetFloat(float2_iterate, "x", default.x);
+	ret.y = GetFloat(float2_iterate, "y", default.y);
+	return ret;
+}
+
+float3 ParsonJSON::GetFloat3(JSON_Object* conf, const char* field, float3 default) const
+{
+	float3 ret = float3::zero;
+	JSON_Object* float3_iterate = nullptr;
+	float3_iterate = json_object_get_object(conf, "float3");
+	ret.x = GetFloat(float3_iterate, "x", default.x);
+	ret.y = GetFloat(float3_iterate, "y", default.y);
+	ret.z = GetFloat(float3_iterate, "z", default.z);
+	return ret;
+}
+
+float4x4 ParsonJSON::GetFloat4x4(JSON_Object* conf, const char* field, float4x4 default) const
+{
+	return default;
+}
+
+Color ParsonJSON::GetColor(JSON_Object* conf, const char* field, Color default) const
+{
+	return default;
+}
+
 bool ParsonJSON::SetInt(JSON_Object* conf, const char * field, int value)
 {
 	return json_object_set_number(conf, field, (double)value) == JSONSuccess;
@@ -155,4 +186,24 @@ bool ParsonJSON::SetBool(JSON_Object* conf, const char * field, bool value)
 bool ParsonJSON::SetString(JSON_Object* conf, const char * field, const char* value)
 {
 	return json_object_set_string(conf, field, value) == JSONSuccess;
+}
+
+bool ParsonJSON::SetFloat2(JSON_Object* conf, const char* field, float2 value)
+{
+	return true;
+}
+
+bool ParsonJSON::SetFloat3(JSON_Object* conf, const char* field, float3 value)
+{
+	return true;
+}
+
+bool ParsonJSON::SetFloat4x4(JSON_Object* conf, const char* field, float4x4 value)
+{
+	return true;
+}
+
+bool ParsonJSON::SetColor(JSON_Object* conf, const char* field, Color color)
+{
+	return true;
 }
