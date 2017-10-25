@@ -164,7 +164,7 @@ update_status ModuleRenderer3D::PreUpdate(float dt)
 	glMatrixMode(GL_MODELVIEW);
 	const ComponentCamera* camera = App->scene->GetActiveCamera();
 	if (camera != nullptr)
-		glLoadMatrixf(App->scene->GetActiveCamera()->GetViewProjMatrix()->ptr());
+		glLoadMatrixf(App->scene->GetActiveCamera()->GetViewProjMatrix());
 	else
 		glLoadMatrixf(App->camera->GetViewMatrix());
 

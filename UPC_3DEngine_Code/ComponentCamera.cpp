@@ -243,7 +243,7 @@ bool ComponentCamera::IsMainCamera() const
 	return MainCamera;
 }
 
-float4x4* ComponentCamera::GetViewProjMatrix() const
+const float* ComponentCamera::GetViewProjMatrix() const
 {
-	return &frustum.ViewProjMatrix().Transposed();
+	return frustum.ViewProjMatrix().Transposed().ptr();
 }
