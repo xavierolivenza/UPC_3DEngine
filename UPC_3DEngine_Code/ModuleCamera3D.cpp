@@ -2,6 +2,7 @@
 #include "Application.h"
 #include "PhysBody3D.h"
 #include "ModuleCamera3D.h"
+#include "ComponentCamera.h"
 
 ModuleCamera3D::ModuleCamera3D(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
@@ -25,6 +26,7 @@ ModuleCamera3D::~ModuleCamera3D()
 bool ModuleCamera3D::Start()
 {
 	LOGP("Setting up the camera");
+	CameraComp = new ComponentCamera(nullptr, true);
 	bool ret = true;
 	return ret;
 }
@@ -33,7 +35,7 @@ bool ModuleCamera3D::Start()
 bool ModuleCamera3D::CleanUp()
 {
 	LOGP("Cleaning camera");
-
+	RELEASE(CameraComp);
 	return true;
 }
 
@@ -247,9 +249,10 @@ void ModuleCamera3D::RecentreCameraToGeometry()
 
 void ModuleCamera3D::ImGuiModuleVariables()
 {
+	CameraComp->DrawComponentImGui();
+	/*
 	//TODO: We have to store every component in a vec and then normalize it
 	char buffer[10];
-
 	snprintf(buffer, sizeof buffer, "%.3f", X.x);
 	if (ImGui::InputText("X_x", buffer, 10, ImGuiInputTextFlags_EnterReturnsTrue | ImGuiInputTextFlags_CharsDecimal))
 		X.x = atof(buffer);
@@ -298,6 +301,7 @@ void ModuleCamera3D::ImGuiModuleVariables()
 	snprintf(buffer, sizeof buffer, "%.3f", Reference.z);
 	if (ImGui::InputText("Reference_z", buffer, 10, ImGuiInputTextFlags_EnterReturnsTrue | ImGuiInputTextFlags_CharsDecimal))
 		Reference.z = atof(buffer);
+	*/
 }
 
 void ModuleCamera3D::NormalizeVec(float* vector)

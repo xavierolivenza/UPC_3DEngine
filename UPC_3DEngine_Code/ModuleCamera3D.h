@@ -4,6 +4,7 @@
 #include "glmath.h"
 
 struct PhysVehicle3D;
+class ComponentCamera;
 
 class ModuleCamera3D : public Module
 {
@@ -41,5 +42,7 @@ private:
 	mat4x4			ViewMatrixInverse;
 
 	const AABB*		LastCentreGeometry = nullptr;
+
+	ComponentCamera* CameraComp = nullptr;
 
 };

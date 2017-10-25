@@ -161,24 +161,27 @@ update_status ModuleRenderer3D::PreUpdate(float dt)
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glLoadIdentity();
-
 	glMatrixMode(GL_MODELVIEW);
 	const ComponentCamera* camera = App->scene->GetActiveCamera();
 	if (camera != nullptr)
-	{
-		float4x4 matrixfloat = *App->scene->GetActiveCamera()->GetViewProjMatrix();
-		matrixfloat.Transpose();
-		GLfloat matrix[16] =
-		{
-			matrixfloat[0][0],matrixfloat[0][1],matrixfloat[0][2],matrixfloat[0][3],
-			matrixfloat[1][0],matrixfloat[1][1],matrixfloat[1][2],matrixfloat[1][3],
-			matrixfloat[2][0],matrixfloat[2][1],matrixfloat[2][2],matrixfloat[2][3],
-			matrixfloat[3][0],matrixfloat[3][1],matrixfloat[3][2],matrixfloat[3][3]
-		};
-		glLoadMatrixf(matrix);
-	}
+		glLoadMatrixf(App->scene->GetActiveCamera()->GetViewProjMatrix()->ptr());
 	else
 		glLoadMatrixf(App->camera->GetViewMatrix());
+
+	/*
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+
+	const ComponentCamera* camera = App->scene->GetActiveCamera();
+	if (camera != nullptr)
+		glLoadMatrixf(App->scene->GetActiveCamera()->GetViewProjMatrix()->ptr());
+	else
+		glLoadMatrixf(App->camera->GetViewMatrix());
+
+	glMatrixMode(GL_MODELVIEW);
+	glLoadIdentity();
+	*/
 
 	// light 0 on cam pos
 	lights[0].SetPos(App->camera->Position.x, App->camera->Position.y, App->camera->Position.z);

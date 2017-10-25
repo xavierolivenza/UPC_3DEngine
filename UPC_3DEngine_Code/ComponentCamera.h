@@ -17,7 +17,7 @@ public:
 
 	bool IsMainCamera() const;
 
-	const float4x4* GetViewProjMatrix() const;
+	float4x4* GetViewProjMatrix() const;
 
 private:
 	void GenerateFrustumDraw();
