@@ -1,3 +1,4 @@
+#include "imgui-1.51\ImGuizmo.h"
 #include "ComponentTransform.h"
 
 ComponentTransform::ComponentTransform(GameObject* parent, bool Active) : Component(parent, Active, 1, ComponentType::Transform_Component)
