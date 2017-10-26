@@ -102,6 +102,16 @@ const float4x4* ComponentTransform::GetMatrix() const
 {
 	//TODO Don't do this every time
 
+	float4x4 matrix = float4x4::identity;
+
+	/*
+	if (parent->GetParent() != nullptr)
+		matrix = matrix * (*parent->GetParent()->GetTransform()->GetMatrix());
+	float4x4 local_matrix = float4x4::FromTRS(pos, rot, scale);
+	local_matrix.Transpose();
+	matrix = matrix * local_matrix;
+	*/
+
 	/*
 	float4x4 matrix = float4x4::identity;
 	if (parent->GetParent() != nullptr)
@@ -111,7 +121,10 @@ const float4x4* ComponentTransform::GetMatrix() const
 	return &matrix;
 	*/
 
-	float4x4 matrix = float4x4::FromTRS(pos, rot, scale);
+	/**/
+	matrix = float4x4::FromTRS(pos, rot, scale);
 	matrix.Transpose();
+	/**/
+
 	return &matrix;
 }
