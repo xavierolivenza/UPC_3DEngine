@@ -8,6 +8,8 @@
 GameObject::GameObject(const char* name, bool active, bool static_game_object): name(name), Active(active), Static(static_game_object)
 {
 	TransformComponent = CreateTransformComponent(true);
+	LCG UUIDGen;
+	UUID = UUIDGen.Int();
 }
 
 GameObject::~GameObject()

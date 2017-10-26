@@ -1,3 +1,5 @@
+#include <experimental\filesystem>
+
 #include "Globals.h"
 #include "Application.h"
 #include "ModuleEngineUI.h"
@@ -203,6 +205,12 @@ void ModuleEngineUI::DrawModuleImGui()
 		ImGuiHierarchyWindow();
 
 	//------------------------------------------//
+	//-------------Load File PopUp--------------//
+	//------------------------------------------//
+	if (showLoadFilePopUp)
+		ImGuiLoadFilePopUp();
+
+	//------------------------------------------//
 	//-----------------Rand Gen-----------------//
 	//------------------------------------------//
 	/*
@@ -223,6 +231,12 @@ void ModuleEngineUI::ImGuiDrawMenuBar()
 	ImGui::BeginMainMenuBar();
 	if (ImGui::BeginMenu("File"))
 	{
+		if (ImGui::MenuItem("Load File"))
+			showLoadFilePopUp = true;
+		if (ImGui::MenuItem("Save File"))
+		{
+
+		}
 		ImGui::EndMenu();
 	}
 	if (ImGui::BeginMenu("View"))
@@ -581,6 +595,84 @@ void ModuleEngineUI::RecursiveDrawHierarchy(const GameObject* node)
 		ImGui::TreePop();
 	}
 	*/
+}
+
+void ModuleEngineUI::ImGuiLoadFilePopUp()
+{
+	ImGui::OpenPopup("Load File");
+	if (ImGui::BeginPopupModal("Load File", nullptr, ImGuiWindowFlags_AlwaysAutoResize))
+	{
+		ImGui::BeginChild("File Browser", ImVec2(300, 300), true);
+		//Iterate all Assets folder including files and directories
+		RecursiveDrawDirectory(App->importer->Get_Assets_path()->c_str());
+		/*
+		for (auto& file_in_path : std::experimental::filesystem::recursive_directory_iterator(*App->importer->Get_Library_path()))
+		{
+			LOGP("%S", file_in_path.path().filename().c_str());
+			if (std::experimental::filesystem::is_regular_file(file_in_path.path()))
+			{
+
+			}
+		}
+		*/
+		RecursiveDrawDirectory(App->importer->Get_Library_path()->c_str());
+		/*
+		for (auto& file_in_path : std::experimental::filesystem::recursive_directory_iterator(*App->importer->Get_Assets_path()))
+		{
+			LOGP("%S", file_in_path.path().filename().c_str());
+			if (std::experimental::filesystem::is_regular_file(file_in_path.path()))
+			{
+
+			}
+		}
+		*/
+		ImGui::EndChild();
+
+		if (ImGui::Button("Ok", ImVec2(50, 20)))
+		{
+			showLoadFilePopUp = false;
+		}
+		ImGui::SameLine();
+		if (ImGui::Button("Cancel", ImVec2(50, 20)))
+		{
+			showLoadFilePopUp = false;
+		}
+		ImGui::EndPopup();
+	}
+}
+
+void ModuleEngineUI::RecursiveDrawDirectory(const char* directory)
+{
+	if (ImGui::TreeNodeEx(directory, 0))
+	{
+		for (auto& file_in_path : std::experimental::filesystem::recursive_directory_iterator(directory))
+		{
+			char title[1000] = "";
+			sprintf_s(title, 1000, "%S", file_in_path.path().filename().c_str());
+			if (ImGui::TreeNodeEx(title, 0))
+			{
+				if (ImGui::IsItemClicked())
+				{
+
+				}
+				if (std::experimental::filesystem::is_directory(file_in_path.path()))
+				{
+					sprintf_s(title, 1000, "%S", file_in_path.path().c_str());
+					RecursiveDrawDirectory(title);
+				}
+				ImGui::TreePop();
+			}
+			if (std::experimental::filesystem::is_regular_file(file_in_path.path()))
+			{
+				sprintf_s(title, 1000, "%S", file_in_path.path().filename().c_str());
+				if (ImGui::TreeNodeEx(title, ImGuiTreeNodeFlags_Leaf))
+				{
+					ImGui::TreePop();
+				}
+			}
+		}
+		ImGui::TreePop();
+	}
 }
 
 void ModuleEngineUI::PushNewConsoleLabel(std::string* newlabel)

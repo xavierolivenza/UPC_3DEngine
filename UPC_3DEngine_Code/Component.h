@@ -33,4 +33,7 @@ protected:
 	uint replica_limit = 0; // 0 for no limit
 	GameObject* parent = nullptr;
 	ComponentType type = ComponentType::Null_ComponentType;
+
+private:
+	uint UUID = 0;
 };

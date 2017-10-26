@@ -54,6 +54,7 @@ public:
 	std::string name;
 
 private:
+	u32 UUID = 0;
 	bool Active = true;
 	bool Static = true;
 	GameObject* parent = nullptr;

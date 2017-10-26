@@ -39,6 +39,8 @@ private:
 	void ImGuiInspectorWindow();
 	void ImGuiHierarchyWindow();
 	void RecursiveDrawHierarchy(const GameObject* node);
+	void ImGuiLoadFilePopUp();
+	void RecursiveDrawDirectory(const char* directory);
 
 private:
 	GameObject* GameObjectSelected = nullptr;
@@ -50,6 +52,7 @@ private:
 	bool showConsoleWindow = true;
 	bool showInspectorWindow = true;
 	bool showHierarchyWindow = true;
+	bool showLoadFilePopUp = false;
 	bool freezeplots = false;
 	bool active = false;
 	bool ScrollDownConsole = true;

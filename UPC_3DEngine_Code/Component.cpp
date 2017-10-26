@@ -2,7 +2,8 @@
 
 Component::Component(GameObject* parent, bool Active, uint replica_limit, ComponentType type) : parent(parent), Active(Active), replica_limit(replica_limit), type(type)
 {
-
+	LCG UUIDGen;
+	UUID = UUIDGen.Int();
 }
 
 Component::~Component()
