@@ -158,8 +158,11 @@ bool ModuleSceneImporter::Import(std::string* file_to_import, std::string& outpu
 				aiMatrix4x4 transform;
 				if (MeshNode != nullptr)
 				{
+					std::vector<const aiNode*> NodesVector;
 					for (const aiNode* iterator = MeshNode; iterator->mParent != nullptr; iterator = iterator->mParent)
-						transform *= iterator->mTransformation;
+						NodesVector.push_back(iterator);
+					for (std::vector<const aiNode*>::reverse_iterator item = NodesVector.rbegin(); item != NodesVector.crend(); ++item)
+						transform *= (*item)->mTransformation;
 					aiVector3D translation;
 					aiVector3D scaling;
 					aiQuaternion rotation;
