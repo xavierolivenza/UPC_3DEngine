@@ -600,32 +600,20 @@ void ModuleEngineUI::RecursiveDrawHierarchy(const GameObject* node)
 void ModuleEngineUI::ImGuiLoadFilePopUp()
 {
 	ImGui::OpenPopup("Load File");
-	if (ImGui::BeginPopupModal("Load File", nullptr, ImGuiWindowFlags_AlwaysAutoResize))
+	if (ImGui::BeginPopupModal("Load File", nullptr, ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_HorizontalScrollbar))
 	{
 		ImGui::BeginChild("File Browser", ImVec2(300, 300), true);
 		//Iterate all Assets folder including files and directories
-		RecursiveDrawDirectory(App->importer->Get_Assets_path()->c_str());
-		/*
-		for (auto& file_in_path : std::experimental::filesystem::recursive_directory_iterator(*App->importer->Get_Library_path()))
+		if (ImGui::TreeNodeEx(App->importer->Get_Assets_path()->c_str(), 0))
 		{
-			LOGP("%S", file_in_path.path().filename().c_str());
-			if (std::experimental::filesystem::is_regular_file(file_in_path.path()))
-			{
-
-			}
+			RecursiveDrawDirectory(App->importer->Get_Assets_path()->c_str());
+			ImGui::TreePop();
 		}
-		*/
-		RecursiveDrawDirectory(App->importer->Get_Library_path()->c_str());
-		/*
-		for (auto& file_in_path : std::experimental::filesystem::recursive_directory_iterator(*App->importer->Get_Assets_path()))
+		if (ImGui::TreeNodeEx(App->importer->Get_Library_path()->c_str(), 0))
 		{
-			LOGP("%S", file_in_path.path().filename().c_str());
-			if (std::experimental::filesystem::is_regular_file(file_in_path.path()))
-			{
-
-			}
+			RecursiveDrawDirectory(App->importer->Get_Library_path()->c_str());
+			ImGui::TreePop();
 		}
-		*/
 		ImGui::EndChild();
 
 		if (ImGui::Button("Ok", ImVec2(50, 20)))
@@ -643,11 +631,11 @@ void ModuleEngineUI::ImGuiLoadFilePopUp()
 
 void ModuleEngineUI::RecursiveDrawDirectory(const char* directory)
 {
-	if (ImGui::TreeNodeEx(directory, 0))
+	for (auto& file_in_path : std::experimental::filesystem::directory_iterator(directory))
 	{
-		for (auto& file_in_path : std::experimental::filesystem::recursive_directory_iterator(directory))
+		char title[1000] = "";
+		if (std::experimental::filesystem::is_directory(file_in_path.path()))
 		{
-			char title[1000] = "";
 			sprintf_s(title, 1000, "%S", file_in_path.path().filename().c_str());
 			if (ImGui::TreeNodeEx(title, 0))
 			{
@@ -655,12 +643,39 @@ void ModuleEngineUI::RecursiveDrawDirectory(const char* directory)
 				{
 
 				}
-				if (std::experimental::filesystem::is_directory(file_in_path.path()))
+				sprintf_s(title, 1000, "%S", file_in_path.path().c_str());
+				RecursiveDrawDirectory(title);
+				ImGui::TreePop();
+			}
+		}
+		if (std::experimental::filesystem::is_regular_file(file_in_path.path()))
+		{
+			sprintf_s(title, 1000, "%S", file_in_path.path().filename().c_str());
+			if (ImGui::TreeNodeEx(title, ImGuiTreeNodeFlags_Leaf))
+			{
+				ImGui::TreePop();
+			}
+		}
+	}
+	/*
+	if (ImGui::TreeNodeEx(directory, 0))
+	{
+		for (auto& file_in_path : std::experimental::filesystem::recursive_directory_iterator(directory))
+		{
+			char title[1000] = "";
+			if (std::experimental::filesystem::is_directory(file_in_path.path()))
+			{
+				sprintf_s(title, 1000, "%S", file_in_path.path().filename().c_str());
+				if (ImGui::TreeNodeEx(title, 0))
 				{
+					if (ImGui::IsItemClicked())
+					{
+
+					}
 					sprintf_s(title, 1000, "%S", file_in_path.path().c_str());
 					RecursiveDrawDirectory(title);
+					ImGui::TreePop();
 				}
-				ImGui::TreePop();
 			}
 			if (std::experimental::filesystem::is_regular_file(file_in_path.path()))
 			{
@@ -673,6 +688,7 @@ void ModuleEngineUI::RecursiveDrawDirectory(const char* directory)
 		}
 		ImGui::TreePop();
 	}
+	*/
 }
 
 void ModuleEngineUI::PushNewConsoleLabel(std::string* newlabel)
