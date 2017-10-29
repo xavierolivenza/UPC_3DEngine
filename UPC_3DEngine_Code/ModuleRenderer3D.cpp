@@ -756,8 +756,30 @@ bool ModuleRenderer3D::DrawComponentMeshMaterial(const ComponentTransform* trans
 
 bool ModuleRenderer3D::DrawDebugBox(const float3& p0, const float3& p1, const float3& p2, const float3& p3, const float3& p4, const float3& p5, const float3& p6, const float3& p7) const
 {
-	glLineWidth(5.0f);
-	glColor3f(1.0f, 0.0f, 0.0f);
+	return DrawDebugBox(p0, p1, p2, p3, p4, p5, p6, p7, DebugDrawDefaultR, DebugDrawDefaultG, DebugDrawDefaultB, DebugDrawDefaultThickness);
+}
+
+bool ModuleRenderer3D::DrawDebugBox(const float3& p0, const float3& p1, const float3& p2, const float3& p3, const float3& p4, const float3& p5, const float3& p6, const float3& p7, float thickness) const
+{
+	return DrawDebugBox(p0, p1, p2, p3, p4, p5, p6, p7, DebugDrawDefaultR, DebugDrawDefaultG, DebugDrawDefaultB, thickness);
+}
+
+bool ModuleRenderer3D::DrawDebugBox(const float3& p0, const float3& p1, const float3& p2, const float3& p3, const float3& p4, const float3& p5, const float3& p6, const float3& p7, float r, float g, float b) const
+{
+
+	return DrawDebugBox(p0, p1, p2, p3, p4, p5, p6, p7, r, g, b, DebugDrawDefaultThickness);
+}
+
+bool ModuleRenderer3D::DrawDebugBox(const float3& p0, const float3& p1, const float3& p2, const float3& p3, const float3& p4, const float3& p5, const float3& p6, const float3& p7, float r, float g, float b, float thickness) const
+{
+	float R = r;
+	float G = g;
+	float B = b;
+
+	//std::clamp
+
+	glLineWidth(thickness);
+	glColor3f(R, G, B);
 
 	glBegin(GL_LINES);
 

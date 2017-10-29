@@ -33,6 +33,9 @@ public:
 	
 	//The points are ordered like: 0: ---, 1: --+, 2: -+-, 3: -++, 4: +--, 5: +-+, 6: ++-, 7: +++
 	bool DrawDebugBox(const float3& p0, const float3& p1, const float3& p2, const float3& p3, const float3& p4, const float3& p5, const float3& p6, const float3& p7) const;
+	bool DrawDebugBox(const float3& p0, const float3& p1, const float3& p2, const float3& p3, const float3& p4, const float3& p5, const float3& p6, const float3& p7, float thickness) const;
+	bool DrawDebugBox(const float3& p0, const float3& p1, const float3& p2, const float3& p3, const float3& p4, const float3& p5, const float3& p6, const float3& p7, float r, float g, float b) const;
+	bool DrawDebugBox(const float3& p0, const float3& p1, const float3& p2, const float3& p3, const float3& p4, const float3& p5, const float3& p6, const float3& p7, float r, float g, float b, float thickness) const;
 
 	bool SaveConf(JSON_Object* conf) const;
 	bool LoadConf(JSON_Object* conf);
@@ -74,4 +77,10 @@ private:
 	//uint Lenna_tex = 0;
 	uint id_checkImage = 0;
 	unsigned char checkImage[CHECKERS_HEIGHT][CHECKERS_WIDTH][4];
+
+	//Debug Draw Default
+	float DebugDrawDefaultR = 1.0f;
+	float DebugDrawDefaultG = 0.0f;
+	float DebugDrawDefaultB = 0.0f;
+	float DebugDrawDefaultThickness = 5.0f;
 };
