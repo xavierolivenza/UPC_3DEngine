@@ -15,25 +15,24 @@
 #define NULL  0
 
 // Deletes a buffer
-#define RELEASE( x ) \
-    {                        \
-    if( x != NULL )        \
-	    {                      \
-      delete x;            \
-	  x = NULL;              \
-	    }                      \
-    }
+#define RELEASE( x )	\
+{                       \
+	if( x != NULL )     \
+	{                   \
+		delete x;       \
+	    x = NULL;       \
+	}                   \
+}
 
 // Deletes an array of buffers
-#define RELEASE_ARRAY( x ) \
-    {                              \
-    if( x != NULL )              \
-	    {                            \
-      delete[] x;                \
-	  x = NULL;                    \
-	    }                            \
-                              \
-    }
+#define RELEASE_ARRAY( x )	\
+{                           \
+	if( x != NULL )         \
+	{                       \
+		delete[] x;         \
+	    x = NULL;           \
+	}                       \
+}
 
 #define IN_RANGE( value, min, max ) ( ((value) >= (min) && (value) <= (max)) ? 1 : 0 )
 #define MIN( a, b ) ( ((a) < (b)) ? (a) : (b) )
@@ -41,6 +40,7 @@
 #define TO_BOOL( a )  ( (a != 0) ? true : false )
 
 #define CAP(n) ((n <= 0.0f) ? n=0.0f : (n >= 1.0f) ? n=1.0f : n=n)
+#define CLAMP(n,min,max) ((n <= min) ? n=min : (n >= max) ? n=max : n=n)
 
 #define DEGTORAD 0.0174532925199432957f
 #define RADTODEG 57.295779513082320876f
