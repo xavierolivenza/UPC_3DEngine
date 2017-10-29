@@ -20,10 +20,6 @@ public:
 	const float* GetViewProjMatrix() const;
 
 private:
-	void GenerateFrustumDraw();
-	void CleanFrustumDraw();
-
-private:
 	bool FrustumCulling = false;
 	bool MainCamera = false;
 
@@ -37,10 +33,4 @@ private:
 	float3 Front = { 0.0f, 0.0f, 1.0f };
 
 	bool DebugDrawFrustum = false;
-	uint DebugDrawFrustum_id_vertices = 0; // id in VRAM
-	float* DebugDrawFrustum_vertices = nullptr;
-	uint DebugDrawFrustum_id_indices = 0; // id in VRAM
-	uint* DebugDrawFrustum_indices = nullptr;
-
-	bool first_time = true;
 };

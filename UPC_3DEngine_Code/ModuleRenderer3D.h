@@ -30,6 +30,9 @@ public:
 	bool Draw(const std::vector<GeometryData>* meshData) const;
 
 	bool DrawComponentMeshMaterial(const ComponentTransform* transform, const ComponentMesh* mesh, const ComponentMaterial* material) const;
+	
+	//The points are ordered like: 0: ---, 1: --+, 2: -+-, 3: -++, 4: +--, 5: +-+, 6: ++-, 7: +++
+	bool DrawDebugBox(const float3& p0, const float3& p1, const float3& p2, const float3& p3, const float3& p4, const float3& p5, const float3& p6, const float3& p7) const;
 
 	bool SaveConf(JSON_Object* conf) const;
 	bool LoadConf(JSON_Object* conf);

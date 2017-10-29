@@ -80,22 +80,10 @@ public:
 	bool CleanUp();
 	void DrawComponentImGui();
 
-	void GenerateAABBDraw();
-	void GenerateOBBDraw();
-
 public:
 	MeshData MeshDataStruct;
 
 private:
 	bool DebugDrawAABB = false;
-	uint DebugDrawAABB_id_vertices = 0; // id in VRAM
-	float* DebugDrawAABB_vertices = nullptr;
-	uint DebugDrawAABB_id_indices = 0; // id in VRAM
-	uint* DebugDrawAABB_indices = nullptr;
-
 	bool DebugDrawOBB = false;
-	uint DebugDrawOBB_id_vertices = 0; // id in VRAM
-	float* DebugDrawOBB_vertices = nullptr;
-	uint DebugDrawOBB_id_indices = 0; // id in VRAM
-	uint* DebugDrawOBB_indices = nullptr;
 };

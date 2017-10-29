@@ -754,6 +754,57 @@ bool ModuleRenderer3D::DrawComponentMeshMaterial(const ComponentTransform* trans
 	return true;
 }
 
+bool ModuleRenderer3D::DrawDebugBox(const float3& p0, const float3& p1, const float3& p2, const float3& p3, const float3& p4, const float3& p5, const float3& p6, const float3& p7) const
+{
+	glLineWidth(5.0f);
+	glColor3f(1.0f, 0.0f, 0.0f);
+
+	glBegin(GL_LINES);
+
+	glVertex3f(p0.x, p0.y, p0.z);
+	glVertex3f(p1.x, p1.y, p1.z);
+
+	glVertex3f(p0.x, p0.y, p0.z);
+	glVertex3f(p2.x, p2.y, p2.z);
+
+	glVertex3f(p0.x, p0.y, p0.z);
+	glVertex3f(p4.x, p4.y, p4.z);
+
+	glVertex3f(p7.x, p7.y, p7.z);
+	glVertex3f(p6.x, p6.y, p6.z);
+
+	glVertex3f(p7.x, p7.y, p7.z);
+	glVertex3f(p3.x, p3.y, p3.z);
+
+	glVertex3f(p7.x, p7.y, p7.z);
+	glVertex3f(p5.x, p5.y, p5.z);
+
+	glVertex3f(p5.x, p5.y, p5.z);
+	glVertex3f(p1.x, p1.y, p1.z);
+
+	glVertex3f(p5.x, p5.y, p5.z);
+	glVertex3f(p4.x, p4.y, p4.z);
+
+	glVertex3f(p2.x, p2.y, p2.z);
+	glVertex3f(p3.x, p3.y, p3.z);
+
+	glVertex3f(p2.x, p2.y, p2.z);
+	glVertex3f(p6.x, p6.y, p6.z);
+
+	glVertex3f(p6.x, p6.y, p6.z);
+	glVertex3f(p4.x, p4.y, p4.z);
+
+	glVertex3f(p3.x, p3.y, p3.z);
+	glVertex3f(p1.x, p1.y, p1.z);
+
+	glEnd();
+
+	glLineWidth(1.0f);
+	glColor3f(1.0f, 1.0f, 1.0f);
+
+	return true;
+}
+
 bool ModuleRenderer3D::SaveConf(JSON_Object* conf) const
 {
 	App->parsonjson->SetBool(conf, "GL_DepthTest", GL_DepthTest);
