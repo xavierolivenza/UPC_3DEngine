@@ -749,7 +749,7 @@ ImGuiIO::ImGuiIO()
     DisplaySize = ImVec2(-1.0f, -1.0f);
     DeltaTime = 1.0f/60.0f;
     IniSavingRate = 5.0f;
-    IniFilename = "imgui.ini";
+    IniFilename = "..\\Game\\Settings\\imgui.ini"; //App is nullptr when this is created, so a sall hardcode path here
     LogFilename = "imgui_log.txt";
     Fonts = &GImDefaultFontAtlas;
     FontGlobalScale = 1.0f;

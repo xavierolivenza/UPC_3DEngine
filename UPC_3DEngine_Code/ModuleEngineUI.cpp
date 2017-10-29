@@ -614,8 +614,22 @@ void ModuleEngineUI::ImGuiLoadFilePopUp()
 			RecursiveDrawDirectory(App->importer->Get_Library_path()->c_str());
 			ImGui::TreePop();
 		}
+		if (ImGui::TreeNodeEx(App->importer->Get_Settings_path()->c_str(), 0))
+		{
+			RecursiveDrawDirectory(App->importer->Get_Settings_path()->c_str());
+			ImGui::TreePop();
+		}
+		if (ImGui::TreeNodeEx(App->importer->Get_Scenes_path()->c_str(), 0))
+		{
+			RecursiveDrawDirectory(App->importer->Get_Scenes_path()->c_str());
+			ImGui::TreePop();
+		}
 		ImGui::EndChild();
 
+		char file_path[1000] = "";
+		sprintf_s(file_path, 1000, "%s", FileSelectedInFileBrowser.c_str());
+		ImGui::InputText("input text", file_path, 128, ImGuiInputTextFlags_ReadOnly);
+		ImGui::SameLine();
 		if (ImGui::Button("Ok", ImVec2(50, 20)))
 		{
 			showLoadFilePopUp = false;
@@ -639,10 +653,12 @@ void ModuleEngineUI::RecursiveDrawDirectory(const char* directory)
 			sprintf_s(title, 1000, "%S", file_in_path.path().filename().c_str());
 			if (ImGui::TreeNodeEx(title, 0))
 			{
+				/*
 				if (ImGui::IsItemClicked())
 				{
-
+					
 				}
+				*/
 				sprintf_s(title, 1000, "%S", file_in_path.path().c_str());
 				RecursiveDrawDirectory(title);
 				ImGui::TreePop();
@@ -653,6 +669,12 @@ void ModuleEngineUI::RecursiveDrawDirectory(const char* directory)
 			sprintf_s(title, 1000, "%S", file_in_path.path().filename().c_str());
 			if (ImGui::TreeNodeEx(title, ImGuiTreeNodeFlags_Leaf))
 			{
+				if (ImGui::IsItemClicked())
+				{
+					char path[1000] = "";
+					sprintf_s(path, 1000, "%S", file_in_path.path().c_str());
+					FileSelectedInFileBrowser = path;
+				}
 				ImGui::TreePop();
 			}
 		}

@@ -67,6 +67,14 @@ bool ModuleSceneImporter::Init()
 	else LOGP("Material folder already exists");
 	/**/
 
+	//Create Settings folder, this just fails if the folder is already created
+	if (std::experimental::filesystem::create_directory(Settings_path.c_str())) LOGP("Settings folder created");
+	else LOGP("Settings folder already exists");
+
+	//Create Scenes folder, this just fails if the folder is already created
+	if (std::experimental::filesystem::create_directory(Scenes_path.c_str())) LOGP("Scenes folder created");
+	else LOGP("Scenes folder already exists");
+
 	//Iterate all Assets folder including files and directories
 	for (auto& file_in_path : std::experimental::filesystem::recursive_directory_iterator(Assets_path.c_str()))
 	{
@@ -508,6 +516,16 @@ const std::string* ModuleSceneImporter::Get_Library_mesh_path() const
 const std::string* ModuleSceneImporter::Get_Library_material_path() const
 {
 	return &Library_material_path;
+}
+
+const std::string* ModuleSceneImporter::Get_Settings_path() const
+{
+	return &Settings_path;
+}
+
+const std::string* ModuleSceneImporter::Get_Scenes_path() const
+{
+	return &Scenes_path;
 }
 
 const std::string* ModuleSceneImporter::Get_Mesh_Extention() const

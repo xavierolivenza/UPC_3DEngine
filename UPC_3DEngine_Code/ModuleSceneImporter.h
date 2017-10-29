@@ -34,6 +34,8 @@ public:
 	const std::string* Get_Library_path() const;
 	const std::string* Get_Library_mesh_path() const;
 	const std::string* Get_Library_material_path() const;
+	const std::string* Get_Settings_path() const;
+	const std::string* Get_Scenes_path() const;
 	const std::string* Get_Mesh_Extention() const;
 	const std::string* Get_FBXComponents_Extention() const;
 
@@ -49,6 +51,8 @@ private:
 	std::string Library_path = "..\\Game\\Library";
 	std::string Library_mesh_path = "..\\Game\\Library\\Mesh";
 	std::string Library_material_path = "..\\Game\\Library\\Material";
+	std::string Settings_path = "..\\Game\\Settings"; //Imgui save file cannot load this because when its loaded App is nullptr, so remember to change ther the path too f you change this (imgui.cpp line:752)
+	std::string Scenes_path = "..\\Game\\Scenes";
 	std::string Mesh_Extention = "MeshAlvOli";
 	std::string FBXComponents_Extention = "GameObjectMeshAlvOli";
 

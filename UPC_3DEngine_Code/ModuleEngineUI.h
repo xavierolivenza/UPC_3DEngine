@@ -61,6 +61,7 @@ private:
 	std::vector<float> msPlotData;
 	std::vector<float> memPlotData;
 	ImGuiStyle style_custom;
+	std::string FileSelectedInFileBrowser;
 
 private:
 	char appnamestr[128];
