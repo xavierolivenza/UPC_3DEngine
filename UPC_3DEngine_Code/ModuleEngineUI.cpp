@@ -205,10 +205,13 @@ void ModuleEngineUI::DrawModuleImGui()
 		ImGuiHierarchyWindow();
 
 	//------------------------------------------//
-	//-------------Load File PopUp--------------//
+	//----------Ave & Load File PopUp-----------//
 	//------------------------------------------//
 	if (showLoadFilePopUp)
 		ImGuiLoadFilePopUp();
+
+	if (showSaveFilePopUp)
+		ImGuiSaveFilePopUp();
 
 	//------------------------------------------//
 	//-----------------Rand Gen-----------------//
@@ -232,10 +235,14 @@ void ModuleEngineUI::ImGuiDrawMenuBar()
 	if (ImGui::BeginMenu("File"))
 	{
 		if (ImGui::MenuItem("Load File"))
+		{
 			showLoadFilePopUp = true;
+			showSaveFilePopUp = false;
+		}
 		if (ImGui::MenuItem("Save File"))
 		{
-
+			showLoadFilePopUp = false;
+			showSaveFilePopUp = true;
 		}
 		ImGui::EndMenu();
 	}
@@ -627,17 +634,20 @@ void ModuleEngineUI::ImGuiLoadFilePopUp()
 		ImGui::EndChild();
 
 		char file_path[1000] = "";
-		sprintf_s(file_path, 1000, "%s", FileSelectedInFileBrowser.c_str());
-		ImGui::InputText("input text", file_path, 128, ImGuiInputTextFlags_ReadOnly);
+		sprintf_s(file_path, 1000, "%s", LoadFileNameFileBrowser.c_str());
+		ImGui::InputText("input text", file_path, 1000, ImGuiInputTextFlags_ReadOnly);
 		ImGui::SameLine();
 		if (ImGui::Button("Ok", ImVec2(50, 20)))
 		{
+			//TODO Load Scene here
 			showLoadFilePopUp = false;
+			LoadFileNameFileBrowser.clear();
 		}
 		ImGui::SameLine();
 		if (ImGui::Button("Cancel", ImVec2(50, 20)))
 		{
 			showLoadFilePopUp = false;
+			LoadFileNameFileBrowser.clear();
 		}
 		ImGui::EndPopup();
 	}
@@ -653,12 +663,6 @@ void ModuleEngineUI::RecursiveDrawDirectory(const char* directory)
 			sprintf_s(title, 1000, "%S", file_in_path.path().filename().c_str());
 			if (ImGui::TreeNodeEx(title, 0))
 			{
-				/*
-				if (ImGui::IsItemClicked())
-				{
-					
-				}
-				*/
 				sprintf_s(title, 1000, "%S", file_in_path.path().c_str());
 				RecursiveDrawDirectory(title);
 				ImGui::TreePop();
@@ -673,44 +677,37 @@ void ModuleEngineUI::RecursiveDrawDirectory(const char* directory)
 				{
 					char path[1000] = "";
 					sprintf_s(path, 1000, "%S", file_in_path.path().c_str());
-					FileSelectedInFileBrowser = path;
+					LoadFileNameFileBrowser = path;
 				}
 				ImGui::TreePop();
 			}
 		}
 	}
-	/*
-	if (ImGui::TreeNodeEx(directory, 0))
-	{
-		for (auto& file_in_path : std::experimental::filesystem::recursive_directory_iterator(directory))
-		{
-			char title[1000] = "";
-			if (std::experimental::filesystem::is_directory(file_in_path.path()))
-			{
-				sprintf_s(title, 1000, "%S", file_in_path.path().filename().c_str());
-				if (ImGui::TreeNodeEx(title, 0))
-				{
-					if (ImGui::IsItemClicked())
-					{
+}
 
-					}
-					sprintf_s(title, 1000, "%S", file_in_path.path().c_str());
-					RecursiveDrawDirectory(title);
-					ImGui::TreePop();
-				}
-			}
-			if (std::experimental::filesystem::is_regular_file(file_in_path.path()))
-			{
-				sprintf_s(title, 1000, "%S", file_in_path.path().filename().c_str());
-				if (ImGui::TreeNodeEx(title, ImGuiTreeNodeFlags_Leaf))
-				{
-					ImGui::TreePop();
-				}
-			}
+void ModuleEngineUI::ImGuiSaveFilePopUp()
+{
+	ImGui::OpenPopup("Save File");
+	if (ImGui::BeginPopupModal("Save File", nullptr, ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_HorizontalScrollbar))
+	{
+		char file_name[500] = "";
+		sprintf_s(file_name, 500, "%s", SaveFileNameFileBrowser.c_str());
+		ImGui::InputText("Scene to save name", file_name, 500);
+
+		if (ImGui::Button("Ok", ImVec2(50, 20)))
+		{
+			//TODO Save Scene here
+			showSaveFilePopUp = false;
+			SaveFileNameFileBrowser.clear();
 		}
-		ImGui::TreePop();
+		ImGui::SameLine();
+		if (ImGui::Button("Cancel", ImVec2(50, 20)))
+		{
+			showSaveFilePopUp = false;
+			SaveFileNameFileBrowser.clear();
+		}
+		ImGui::EndPopup();
 	}
-	*/
 }
 
 void ModuleEngineUI::PushNewConsoleLabel(std::string* newlabel)

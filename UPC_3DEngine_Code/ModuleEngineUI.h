@@ -41,6 +41,7 @@ private:
 	void RecursiveDrawHierarchy(const GameObject* node);
 	void ImGuiLoadFilePopUp();
 	void RecursiveDrawDirectory(const char* directory);
+	void ImGuiSaveFilePopUp();
 
 private:
 	GameObject* GameObjectSelected = nullptr;
@@ -53,6 +54,7 @@ private:
 	bool showInspectorWindow = true;
 	bool showHierarchyWindow = true;
 	bool showLoadFilePopUp = false;
+	bool showSaveFilePopUp = false;
 	bool freezeplots = false;
 	bool active = false;
 	bool ScrollDownConsole = true;
@@ -61,7 +63,8 @@ private:
 	std::vector<float> msPlotData;
 	std::vector<float> memPlotData;
 	ImGuiStyle style_custom;
-	std::string FileSelectedInFileBrowser;
+	std::string LoadFileNameFileBrowser;
+	std::string SaveFileNameFileBrowser;
 
 private:
 	char appnamestr[128];
