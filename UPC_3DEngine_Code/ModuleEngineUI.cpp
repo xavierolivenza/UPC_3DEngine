@@ -640,6 +640,16 @@ void ModuleEngineUI::ImGuiLoadFilePopUp()
 		if (ImGui::Button("Ok", ImVec2(50, 20)))
 		{
 			//TODO Load Scene here
+			TCHAR directory[MAX_PATH + 1] = "";
+			DWORD len = GetCurrentDirectory(MAX_PATH, directory);
+			std::string path = directory;
+			size_t bar_pos = LoadFileNameFileBrowser.find("\\") + 1;
+			LoadFileNameFileBrowser = LoadFileNameFileBrowser.substr(bar_pos, LoadFileNameFileBrowser.length());
+			bar_pos = LoadFileNameFileBrowser.find("\\");
+			LoadFileNameFileBrowser = LoadFileNameFileBrowser.substr(bar_pos, LoadFileNameFileBrowser.length());
+			path += LoadFileNameFileBrowser;
+			App->importer->Load(&path);
+
 			showLoadFilePopUp = false;
 			LoadFileNameFileBrowser.clear();
 		}
