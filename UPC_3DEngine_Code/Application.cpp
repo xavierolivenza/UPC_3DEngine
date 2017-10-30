@@ -57,7 +57,7 @@ bool Application::Init()
 {
 	bool ret = true;
 
-	parsonjson = new ParsonJSON();
+	parsonjson = new ParsonJSON("conf");
 	parsonjson->Init();
 	parsonjson->Load();
 

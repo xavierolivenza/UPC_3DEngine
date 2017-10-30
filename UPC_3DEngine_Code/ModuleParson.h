@@ -10,7 +10,7 @@
 class ParsonJSON
 {
 public:
-	ParsonJSON();
+	ParsonJSON(const char* filename);
 	~ParsonJSON();
 
 	bool Init();
