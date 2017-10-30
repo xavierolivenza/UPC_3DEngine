@@ -100,31 +100,34 @@ float3 ComponentTransform::GetRotEuler()
 
 const float4x4* ComponentTransform::GetMatrix() const
 {
-	//TODO Don't do this every time
+	//TODO Don't do this every time only when modified?
 
 	float4x4 matrix = float4x4::identity;
 
-	/*
-	if (parent->GetParent() != nullptr)
-		matrix = matrix * (*parent->GetParent()->GetTransform()->GetMatrix());
-	float4x4 local_matrix = float4x4::FromTRS(pos, rot, scale);
-	local_matrix.Transpose();
-	matrix = matrix * local_matrix;
-	*/
+	std::list<const GameObject*> parents;
 
-	/*
-	float4x4 matrix = float4x4::identity;
-	if (parent->GetParent() != nullptr)
-		matrix = matrix * (*parent->GetParent()->GetTransform()->GetMatrix());
-	matrix = matrix * float4x4::FromTRS(pos, rot, scale);
+	const GameObject* parent_GO = parent;
+	while (parent_GO != nullptr)
+	{
+		parents.push_back(parent_GO);
+		parent_GO = parent_GO->GetParent();
+	}
+
+	for (std::list<const GameObject*>::reverse_iterator item = parents.rbegin(); item != parents.crend(); ++item)
+	{
+		float4x4 other = *(*item)->GetTransform()->GetLocalMatrix();
+		matrix = matrix * other;
+	}
+
 	matrix.Transpose();
+
 	return &matrix;
-	*/
+}
 
-	/**/
+const float4x4* ComponentTransform::GetLocalMatrix() const
+{
+	float4x4 matrix = float4x4::identity;
 	matrix = float4x4::FromTRS(pos, rot, scale);
-	matrix.Transpose();
-	/**/
-
+	//matrix.Transpose();
 	return &matrix;
 }

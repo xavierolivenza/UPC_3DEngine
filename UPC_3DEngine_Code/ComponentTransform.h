@@ -29,6 +29,7 @@ public:
 	float3 GetRotEuler();
 
 	const float4x4* GetMatrix() const;
+	const float4x4* GetLocalMatrix() const;
 
 private:
 	float3 pos = float3::zero;
