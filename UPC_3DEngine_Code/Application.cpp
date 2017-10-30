@@ -59,7 +59,7 @@ bool Application::Init()
 
 	parsonjson = new ParsonJSON("conf");
 	parsonjson->Init();
-	parsonjson->Load();
+	parsonjson->LoadModulesConfig();
 
 	// Call Init() in all modules
 	for (std::list<Module*>::iterator item = list_modules.begin(); item != list_modules.cend() && ret == true; ++item) {
@@ -157,7 +157,7 @@ update_status Application::Update()
 bool Application::CleanUp()
 {
 	bool ret = true;
-	parsonjson->Save();
+	parsonjson->SaveModulesConfig();
 	RELEASE(parsonjson);
 	for (std::list<Module*>::iterator item = list_modules.begin(); item != list_modules.cend(); ++item)
 	{

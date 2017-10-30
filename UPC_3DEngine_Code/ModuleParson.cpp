@@ -53,7 +53,7 @@ bool ParsonJSON::Init()
 	return true;
 }
 
-bool ParsonJSON::Save() const
+bool ParsonJSON::SaveModulesConfig() const
 {
 	JSON_Object* conf = nullptr;
 	for (std::list<Module*>::const_reverse_iterator item = App->GetModuleList()->rbegin(); item != App->GetModuleList()->crend(); ++item)
@@ -66,7 +66,7 @@ bool ParsonJSON::Save() const
 	return true;
 }
 
-bool ParsonJSON::Load()
+bool ParsonJSON::LoadModulesConfig()
 {
 	JSON_Object* conf = nullptr;
 	for (std::list<Module*>::const_reverse_iterator item = App->GetModuleList()->rbegin(); item != App->GetModuleList()->crend(); ++item)
@@ -74,6 +74,16 @@ bool ParsonJSON::Load()
 		conf = json_object_get_object(root_object, (*item)->name.c_str());
 		(*item)->LoadConf(conf);
 	}
+	return true;
+}
+
+bool ParsonJSON::SaveScene(const char* filename) const
+{
+	return true;
+}
+
+bool ParsonJSON::LoadScene(const char* filename)
+{
 	return true;
 }
 

@@ -15,8 +15,11 @@ public:
 
 	bool Init();
 
-	bool Save() const;
-	bool Load();
+	bool SaveModulesConfig() const;
+	bool LoadModulesConfig();
+
+	bool SaveScene(const char* filename) const;
+	bool LoadScene(const char* filename);
 
 	int GetInt(JSON_Object* conf, const char* field, int default = 0) const;
 	uint GetUInt(JSON_Object* conf, const char* field, uint default = 0) const;
@@ -39,12 +42,14 @@ public:
 	bool SetFloat3(JSON_Object* conf, const char* field, float3 value);
 	bool SetFloat4x4(JSON_Object* conf, const char* field, float4x4 value);
 	bool SetColor(JSON_Object* conf, const char* field, Color color);
+	bool SetArray(const char* array_name);
+	bool SetArrayEntry(const ParsonJSON& config);
 
 public:
 	std::string file_name;
 	JSON_Value* root_value = nullptr;
 	JSON_Object* root_object = nullptr;
-	JSON_Array* array = nullptr;
+	//JSON_Array* array = nullptr;
 
 };
 

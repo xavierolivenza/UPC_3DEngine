@@ -20,6 +20,9 @@ public:
 	bool PostUpdate(float dt);
 	bool CleanUp();
 
+	bool SaveGameObject(JSON_Object* conf) const;
+	bool LoadGameObject(JSON_Object* conf);
+
 	void SetActive(bool active);
 	bool IsActive();
 
