@@ -24,6 +24,8 @@ public:
 	virtual bool Disable();
 	virtual bool CleanUp();
 	virtual void DrawComponentImGui();
+	virtual bool SaveComponent(JSON_Object* conf) const;
+	virtual bool LoadComponent(JSON_Object* conf);
 	void SetActive(bool active);
 	bool IsActive() const;
 	ComponentType GetType() const;

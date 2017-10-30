@@ -15,6 +15,9 @@ public:
 	bool CleanUp();
 	void DrawComponentImGui();
 
+	bool SaveComponent(JSON_Object* conf) const;
+	bool LoadComponent(JSON_Object* conf);
+
 	//Functions to get/set variables
 	//We don't make them public and force this functions usage
 	//because we can do more stuff than anly copy data, like with

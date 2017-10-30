@@ -62,6 +62,20 @@ void ComponentTransform::DrawComponentImGui()
 	}
 }
 
+bool ComponentTransform::SaveComponent(JSON_Object* conf) const
+{
+	//JSON_Value* va = json_value_init_array();
+	//JSON_Array* array = json_value_get_array(va);
+	//json_object_set_value(conf, /*array_name*/, va);
+	//json_array_append_number(array, /*value*/);
+	return true;
+}
+
+bool ComponentTransform::LoadComponent(JSON_Object* conf)
+{
+	return true;
+}
+
 void ComponentTransform::SetPos(float3& new_pos)
 {
 	pos = new_pos;

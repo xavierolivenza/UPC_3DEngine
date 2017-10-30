@@ -87,3 +87,17 @@ void ComponentMesh::DrawComponentImGui()
 		ImGui::Checkbox("Debug Draw OBB", &DebugDrawOBB);
 	}
 }
+
+bool ComponentMesh::SaveComponent(JSON_Object* conf) const
+{
+	//JSON_Value* va = json_value_init_array();
+	//JSON_Array* array = json_value_get_array(va);
+	//json_object_set_value(conf, /*array_name*/, va);
+	//json_array_append_number(array, /*value*/);
+	return true;
+}
+
+bool ComponentMesh::LoadComponent(JSON_Object* conf)
+{
+	return true;
+}

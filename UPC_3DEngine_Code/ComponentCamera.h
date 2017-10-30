@@ -15,6 +15,9 @@ public:
 	bool CleanUp();
 	void DrawComponentImGui();
 
+	bool SaveComponent(JSON_Object* conf) const;
+	bool LoadComponent(JSON_Object* conf);
+
 	bool IsMainCamera() const;
 
 	const float* GetViewProjMatrix() const;

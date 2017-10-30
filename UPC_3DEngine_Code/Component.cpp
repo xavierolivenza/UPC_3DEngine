@@ -63,3 +63,13 @@ ComponentType Component::GetType() const
 {
 	return type;
 }
+
+bool Component::SaveComponent(JSON_Object* conf) const
+{
+	return true;
+}
+
+bool Component::LoadComponent(JSON_Object* conf)
+{
+	return true;
+}

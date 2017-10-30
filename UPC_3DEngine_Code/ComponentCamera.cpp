@@ -82,7 +82,7 @@ void ComponentCamera::DrawComponentImGui()
 		ImGui::DragFloat("NearPlaneDistance", &NearPlaneDistance, 3, ImGuiInputTextFlags_CharsDecimal);
 		ImGui::DragFloat("FarPlaneDistance", &FarPlaneDistance, 3, ImGuiInputTextFlags_CharsDecimal);
 		ImGui::DragFloat("FOV", &FOVVertical, 3, ImGuiInputTextFlags_CharsDecimal);
-		ImGui::DragFloat3("FPosition", &Pos[0], 3, ImGuiInputTextFlags_CharsDecimal | ImGuiInputTextFlags_ReadOnly);
+		//ImGui::DragFloat3("FPosition", &Pos[0], 3, ImGuiInputTextFlags_CharsDecimal | ImGuiInputTextFlags_ReadOnly);
 		ImGui::DragFloat3("Up", &Up[0], 3, ImGuiInputTextFlags_CharsDecimal | ImGuiInputTextFlags_ReadOnly);
 		ImGui::DragFloat3("Front", &Front[0], 3, ImGuiInputTextFlags_CharsDecimal | ImGuiInputTextFlags_ReadOnly);
 
@@ -97,6 +97,20 @@ void ComponentCamera::DrawComponentImGui()
 
 		ImGui::Checkbox("Debug Draw Frustrum", &DebugDrawFrustum);
 	}
+}
+
+bool ComponentCamera::SaveComponent(JSON_Object* conf) const
+{
+	//JSON_Value* va = json_value_init_array();
+	//JSON_Array* array = json_value_get_array(va);
+	//json_object_set_value(conf, /*array_name*/, va);
+	//json_array_append_number(array, /*value*/);
+	return true;
+}
+
+bool ComponentCamera::LoadComponent(JSON_Object* conf)
+{
+	return true;
 }
 
 bool ComponentCamera::IsMainCamera() const

@@ -47,6 +47,14 @@ bool ModuleSceneImporter::Init()
 	//Create Library/Material folder, this just fails if the folder is already created
 	if (CreateDirectory(Library_material_path.c_str(), false)) LOGP("Material folder created");
 	else LOGP("Material folder already exists");
+
+	//Create Settings folder, this just fails if the folder is already created
+	if (CreateDirectory(Settings_path.c_str(), false)) LOGP("Material folder created");
+	else LOGP("Material folder already exists");
+
+	//Create Scenes folder, this just fails if the folder is already created
+	if (CreateDirectory(Scenes_path.c_str(), false)) LOGP("Material folder created");
+	else LOGP("Material folder already exists");
 	*/
 
 	/**/
@@ -65,7 +73,6 @@ bool ModuleSceneImporter::Init()
 	//Create Library/Material folder, this just fails if the folder is already created
 	if (std::experimental::filesystem::create_directory(Library_material_path.c_str())) LOGP("Material folder created");
 	else LOGP("Material folder already exists");
-	/**/
 
 	//Create Settings folder, this just fails if the folder is already created
 	if (std::experimental::filesystem::create_directory(Settings_path.c_str())) LOGP("Settings folder created");
@@ -74,6 +81,7 @@ bool ModuleSceneImporter::Init()
 	//Create Scenes folder, this just fails if the folder is already created
 	if (std::experimental::filesystem::create_directory(Scenes_path.c_str())) LOGP("Scenes folder created");
 	else LOGP("Scenes folder already exists");
+	/**/
 
 	//Iterate all Assets folder including files and directories
 	for (auto& file_in_path : std::experimental::filesystem::recursive_directory_iterator(Assets_path.c_str()))
