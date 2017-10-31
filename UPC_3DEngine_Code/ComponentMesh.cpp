@@ -90,10 +90,11 @@ void ComponentMesh::DrawComponentImGui()
 
 bool ComponentMesh::SaveComponent(JSON_Object* conf) const
 {
-	//JSON_Value* va = json_value_init_array();
-	//JSON_Array* array = json_value_get_array(va);
-	//json_object_set_value(conf, /*array_name*/, va);
-	//json_array_append_number(array, /*value*/);
+	App->parsonjson->SetUInt(conf, "UUID", UUID);
+	App->parsonjson->SetUInt(conf, "UUID_Parent", parent->GetUUID());
+	App->parsonjson->SetBool(conf, "Active", Active);
+	App->parsonjson->SetUInt(conf, "Type", type);
+
 	return true;
 }
 

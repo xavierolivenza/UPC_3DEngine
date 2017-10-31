@@ -68,31 +68,40 @@ bool GameObject::CleanUp()
 	return true;
 }
 
-bool GameObject::SaveGameObject(JSON_Object* conf) const
+bool GameObject::SaveGameObject(JSON_Array* array) const
 {
-	JSON_Object* tempConf = conf;
-	if (json_object_get_object(conf, name.c_str()) == NULL)
-		json_object_set_value(conf, name.c_str(), json_value_init_object());
-	tempConf = json_object_get_object(conf, name.c_str());
+	JSON_Value* GameObjectArray_value = json_value_init_object();
+	JSON_Object* GameObjectArray_object = json_value_get_object(GameObjectArray_value);
 
-	App->parsonjson->SetString(tempConf, "name", name.c_str());
-	App->parsonjson->SetUInt(tempConf, "UUID", UUID);
+	App->parsonjson->SetString(GameObjectArray_object, "name", name.c_str());
+	App->parsonjson->SetUInt(GameObjectArray_object, "UUID", UUID);
 	if (this->GetParent() != nullptr)
-		App->parsonjson->SetUInt(tempConf, "UUID_Parent", this->GetParent()->UUID);
+		App->parsonjson->SetUInt(GameObjectArray_object, "UUID_Parent", this->GetParent()->UUID);
 	else
-		App->parsonjson->SetUInt(tempConf, "UUID_Parent", 0);
-	App->parsonjson->SetBool(tempConf, "Active", Active);
-	App->parsonjson->SetBool(tempConf, "Static", Static);
+		App->parsonjson->SetUInt(GameObjectArray_object, "UUID_Parent", 0);
+	App->parsonjson->SetBool(GameObjectArray_object, "Active", Active);
+	App->parsonjson->SetBool(GameObjectArray_object, "Static", Static);
 
-	/*
+	/**/
+	JSON_Value* comp_array_value = json_value_init_array();
+	JSON_Array* comp_array = json_value_get_array(comp_array_value);
+	if (json_object_set_value(GameObjectArray_object, "Components", comp_array_value) == JSONFailure)
+		return false;
 	for (std::vector<Component*>::const_iterator item = components.cbegin(); item != components.cend(); ++item)
-		if ((*item)->IsActive())
-			(*item)->SaveComponent(conf);
-	*/
+	{
+		JSON_Value* GameObjectArray_value = json_value_init_object();
+		JSON_Object* GameObjectArray_object = json_value_get_object(GameObjectArray_value);
+		(*item)->SaveComponent(GameObjectArray_object);
+		if (json_array_append_value(comp_array, GameObjectArray_value) == JSONFailure)
+			return false;
+	}
+	//json_value_free(array_value);
+	/**/
+	if (json_array_append_value(array, GameObjectArray_value) == JSONFailure)
+		return false;
 	/**/
 	for (std::vector<GameObject*>::const_iterator item = children.cbegin(); item != children.cend(); ++item)
-		if ((*item)->IsActive())
-			(*item)->SaveGameObject(conf);
+		(*item)->SaveGameObject(array);
 	/**/
 	return true;
 }
@@ -238,4 +247,9 @@ ComponentTransform* GameObject::GetTransform() const
 const GameObject* GameObject::GetParent() const
 {
 	return parent;
+}
+
+u32 GameObject::GetUUID() const
+{
+	return UUID;
 }

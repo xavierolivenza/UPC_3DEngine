@@ -20,7 +20,7 @@ public:
 	bool PostUpdate(float dt);
 	bool CleanUp();
 
-	bool SaveGameObject(JSON_Object* conf) const;
+	bool SaveGameObject(JSON_Array* array) const;
 	bool LoadGameObject(JSON_Object* conf);
 
 	void SetActive(bool active);
@@ -49,6 +49,7 @@ public:
 
 	ComponentTransform* GetTransform() const;
 	const GameObject* GetParent() const;
+	u32 GetUUID() const;
 
 private:
 	ComponentTransform* CreateTransformComponent(bool active);

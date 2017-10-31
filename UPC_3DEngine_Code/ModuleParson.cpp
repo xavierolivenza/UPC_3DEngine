@@ -84,16 +84,13 @@ bool ParsonJSON::SaveScene(const GameObject* root) const
 	JSON_Array* array = json_value_get_array(array_value);
 	if (json_object_set_value(root_object, "GameObjects", array_value) == JSONFailure)
 		return false;
-	JSON_Value* GameObjectArray_value = json_value_init_object();
-	JSON_Object* GameObjectArray_object = json_value_get_object(GameObjectArray_value);
-	root->SaveGameObject(GameObjectArray_object);
-	if (json_array_append_value(array, GameObjectArray_value) == JSONFailure)
-		return false;
-
+	root->SaveGameObject(array);
+	//json_value_free(array_value);
+	/*
 	char * serialized_string = json_serialize_to_string_pretty(root_value);
 	LOGP("%s", serialized_string);
 	json_free_serialized_string(serialized_string);
-
+	*/
 	json_serialize_to_file(root_value, file_name.c_str());
 	return true;
 }
