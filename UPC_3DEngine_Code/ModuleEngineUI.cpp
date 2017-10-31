@@ -621,11 +621,13 @@ void ModuleEngineUI::ImGuiLoadFilePopUp()
 			RecursiveDrawDirectory(App->importer->Get_Library_path()->c_str());
 			ImGui::TreePop();
 		}
+		/*
 		if (ImGui::TreeNodeEx(App->importer->Get_Settings_path()->c_str(), 0))
 		{
 			RecursiveDrawDirectory(App->importer->Get_Settings_path()->c_str());
 			ImGui::TreePop();
 		}
+		*/
 		if (ImGui::TreeNodeEx(App->importer->Get_Scenes_path()->c_str(), 0))
 		{
 			RecursiveDrawDirectory(App->importer->Get_Scenes_path()->c_str());
@@ -639,17 +641,26 @@ void ModuleEngineUI::ImGuiLoadFilePopUp()
 		ImGui::SameLine();
 		if (ImGui::Button("Ok", ImVec2(50, 20)))
 		{
-			//TODO Load Scene here
-			TCHAR directory[MAX_PATH + 1] = "";
-			DWORD len = GetCurrentDirectory(MAX_PATH, directory);
-			std::string path = directory;
-			size_t bar_pos = LoadFileNameFileBrowser.find("\\") + 1;
-			LoadFileNameFileBrowser = LoadFileNameFileBrowser.substr(bar_pos, LoadFileNameFileBrowser.length());
-			bar_pos = LoadFileNameFileBrowser.find("\\");
-			LoadFileNameFileBrowser = LoadFileNameFileBrowser.substr(bar_pos, LoadFileNameFileBrowser.length());
-			path += LoadFileNameFileBrowser;
-			App->importer->Load(&path);
-
+			std::string extention = LoadFileNameFileBrowser.substr(LoadFileNameFileBrowser.rfind(".") + 1, LoadFileNameFileBrowser.length());
+			//if is a mesh file load
+			if ((extention == *App->importer->Get_Mesh_Extention()) || (extention == *App->importer->Get_FBXComponents_Extention()))
+			{
+				//Load Scene here
+				TCHAR directory[MAX_PATH + 1] = "";
+				DWORD len = GetCurrentDirectory(MAX_PATH, directory);
+				std::string path = directory;
+				size_t bar_pos = LoadFileNameFileBrowser.find("\\") + 1;
+				LoadFileNameFileBrowser = LoadFileNameFileBrowser.substr(bar_pos, LoadFileNameFileBrowser.length());
+				bar_pos = LoadFileNameFileBrowser.find("\\");
+				LoadFileNameFileBrowser = LoadFileNameFileBrowser.substr(bar_pos, LoadFileNameFileBrowser.length());
+				path += LoadFileNameFileBrowser;
+				App->importer->Load(&path);
+			}
+			//Scene file
+			else if (extention == "json")
+			{
+				App->scene->LoadScene(LoadFileNameFileBrowser.c_str());
+			}
 			showLoadFilePopUp = false;
 			LoadFileNameFileBrowser.clear();
 		}
@@ -701,12 +712,14 @@ void ModuleEngineUI::ImGuiSaveFilePopUp()
 	if (ImGui::BeginPopupModal("Save File", nullptr, ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_HorizontalScrollbar))
 	{
 		char file_name[500] = "";
-		sprintf_s(file_name, 500, "%s", SaveFileNameFileBrowser.c_str());
 		ImGui::InputText("Scene to save name", file_name, 500);
+		if (strcmp(file_name, ""))
+			SaveFileNameFileBrowser = file_name;
 
 		if (ImGui::Button("Ok", ImVec2(50, 20)))
 		{
-			//TODO Save Scene here
+			//Save Scene here
+			App->scene->SaveScene(SaveFileNameFileBrowser.c_str());
 			showSaveFilePopUp = false;
 			SaveFileNameFileBrowser.clear();
 		}

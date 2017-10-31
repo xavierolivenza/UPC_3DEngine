@@ -72,6 +72,34 @@ bool ModuleScene::LoadConf(JSON_Object* conf)
 	return true;
 }
 
+bool ModuleScene::SaveScene(const char* filename) const
+{
+	bool ret = true;
+
+	ParsonJSON* parsonjson = new ParsonJSON(filename);
+	ret = parsonjson->Init();
+	if (ret)
+		ret = parsonjson->SaveScene(root);
+	RELEASE(parsonjson);
+
+	if (ret) LOGP("SaveScene Success, file: %s", filename);
+	else LOGP("SaveScene Failure, file: %s", filename);
+	return ret;
+}
+
+bool ModuleScene::LoadScene(const char* filename)
+{
+	bool ret = true;
+	ParsonJSON* parsonjson = new ParsonJSON(filename);
+	ret = parsonjson->Init();
+	if (ret)
+		ret = parsonjson->LoadScene();
+	RELEASE(parsonjson);
+	if (ret) LOGP("LoadScene Success, file: %s", filename);
+	else LOGP("LoadScene Failure, file: %s", filename);
+	return ret;
+}
+
 void ModuleScene::ImGuiModuleVariables()
 {
 	

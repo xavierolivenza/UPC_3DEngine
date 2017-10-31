@@ -1,6 +1,8 @@
 #include "ModuleParson.h"
 #include "Module.h"
 #include "Application.h"
+#include "ModuleScene.h"
+#include "GameObject.h"
 
 /*
 static int malloc_count;
@@ -23,12 +25,15 @@ free(ptr);
 }
 */
 
-ParsonJSON::ParsonJSON(const char* filename)
+ParsonJSON::ParsonJSON(const char* filename, bool isScene) : isScene(isScene)
 {
 	//json_set_allocation_functions(counted_malloc, counted_free);
 	root_value = json_value_init_object();
 	root_object = json_value_get_object(root_value);
-	file_name = *App->importer->Get_Settings_path() + "\\" + filename + ".json";
+	if (isScene)
+		file_name = *App->importer->Get_Scenes_path() + "\\" + filename + ".json";
+	else
+		file_name = *App->importer->Get_Settings_path() + "\\" + filename + ".json";
 }
 
 ParsonJSON::~ParsonJSON()
@@ -47,9 +52,10 @@ bool ParsonJSON::Init()
 	else
 		root_object = json_value_get_object(root_value);
 	
-	for (std::list<Module*>::const_reverse_iterator item = App->GetModuleList()->rbegin(); item != App->GetModuleList()->crend(); ++item)
-		if (json_object_get_object(root_object, (*item)->name.c_str()) == NULL)
-			json_object_set_value(root_object, (*item)->name.c_str(), json_value_init_object());
+	if (!isScene)
+		for (std::list<Module*>::const_reverse_iterator item = App->GetModuleList()->rbegin(); item != App->GetModuleList()->crend(); ++item)
+			if (json_object_get_object(root_object, (*item)->name.c_str()) == NULL)
+				json_object_set_value(root_object, (*item)->name.c_str(), json_value_init_object());
 	return true;
 }
 
@@ -77,12 +83,15 @@ bool ParsonJSON::LoadModulesConfig()
 	return true;
 }
 
-bool ParsonJSON::SaveScene(const char* filename) const
+bool ParsonJSON::SaveScene(const GameObject* root) const
 {
+	root->SaveGameObject(root_object);
+	json_serialize_to_string_pretty(root_value);
+	json_serialize_to_file(root_value, file_name.c_str());
 	return true;
 }
 
-bool ParsonJSON::LoadScene(const char* filename)
+bool ParsonJSON::LoadScene()
 {
 	return true;
 }

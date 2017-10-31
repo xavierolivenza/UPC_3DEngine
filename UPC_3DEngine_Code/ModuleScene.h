@@ -20,6 +20,9 @@ public:
 	bool SaveConf(JSON_Object* conf) const;
 	bool LoadConf(JSON_Object* conf);
 
+	bool SaveScene(const char* filename) const;
+	bool LoadScene(const char* filename);
+
 	void ImGuiModuleVariables();
 
 	const GameObject* GetRoot() const;

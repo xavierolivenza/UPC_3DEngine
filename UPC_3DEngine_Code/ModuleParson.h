@@ -7,10 +7,12 @@
 #include "Color.h"
 #include "MathGeoLib\Math.h"
 
+class GameObject;
+
 class ParsonJSON
 {
 public:
-	ParsonJSON(const char* filename);
+	ParsonJSON(const char* filename, bool isScene = true);
 	~ParsonJSON();
 
 	bool Init();
@@ -18,8 +20,8 @@ public:
 	bool SaveModulesConfig() const;
 	bool LoadModulesConfig();
 
-	bool SaveScene(const char* filename) const;
-	bool LoadScene(const char* filename);
+	bool SaveScene(const GameObject* root) const;
+	bool LoadScene();
 
 	int GetInt(JSON_Object* conf, const char* field, int default = 0) const;
 	uint GetUInt(JSON_Object* conf, const char* field, uint default = 0) const;
@@ -42,8 +44,6 @@ public:
 	bool SetFloat3(JSON_Object* conf, const char* field, float3 value);
 	bool SetFloat4x4(JSON_Object* conf, const char* field, float4x4 value);
 	bool SetColor(JSON_Object* conf, const char* field, Color color);
-	bool SetArray(const char* array_name);
-	bool SetArrayEntry(const ParsonJSON& config);
 
 public:
 	std::string file_name;
@@ -51,6 +51,8 @@ public:
 	JSON_Object* root_object = nullptr;
 	//JSON_Array* array = nullptr;
 
+private:
+	bool isScene = false;
 };
 
 #endif
