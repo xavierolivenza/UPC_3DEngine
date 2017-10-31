@@ -71,7 +71,9 @@ bool GameObject::CleanUp()
 bool GameObject::SaveGameObject(JSON_Object* conf) const
 {
 	JSON_Object* tempConf = conf;
+	/*
 	tempConf = json_object_get_object(App->parsonjson->root_object, name.c_str());
+	*/
 
 	App->parsonjson->SetString(tempConf, "name", name.c_str());
 	App->parsonjson->SetUInt(tempConf, "UUID", UUID);

@@ -28,8 +28,8 @@ free(ptr);
 ParsonJSON::ParsonJSON(const char* filename, bool isScene) : isScene(isScene)
 {
 	//json_set_allocation_functions(counted_malloc, counted_free);
-	root_value = json_value_init_object();
-	root_object = json_value_get_object(root_value);
+	//root_value = json_value_init_object();
+	//root_object = json_value_get_object(root_value);
 	if (isScene)
 		file_name = *App->importer->Get_Scenes_path() + "\\" + filename + ".json";
 	else
@@ -45,17 +45,8 @@ bool ParsonJSON::Init()
 {
 	root_value = json_parse_file(file_name.c_str());
 	if (root_value == NULL)
-	{
 		root_value = json_value_init_object();
-		json_serialize_to_file(root_value, file_name.c_str());
-	}
-	else
-		root_object = json_value_get_object(root_value);
-	
-	if (!isScene)
-		for (std::list<Module*>::const_reverse_iterator item = App->GetModuleList()->rbegin(); item != App->GetModuleList()->crend(); ++item)
-			if (json_object_get_object(root_object, (*item)->name.c_str()) == NULL)
-				json_object_set_value(root_object, (*item)->name.c_str(), json_value_init_object());
+	root_object = json_value_get_object(root_value);
 	return true;
 }
 
@@ -64,10 +55,14 @@ bool ParsonJSON::SaveModulesConfig() const
 	JSON_Object* conf = nullptr;
 	for (std::list<Module*>::const_reverse_iterator item = App->GetModuleList()->rbegin(); item != App->GetModuleList()->crend(); ++item)
 	{
+		//If this entry does not exist, create it
+		if (json_object_get_object(root_object, (*item)->name.c_str()) == NULL)
+			json_object_set_value(root_object, (*item)->name.c_str(), json_value_init_object());
+		//Save
 		conf = json_object_get_object(root_object, (*item)->name.c_str());
 		(*item)->SaveConf(conf);
 	}
-	json_serialize_to_string_pretty(root_value);
+	//json_serialize_to_string_pretty(root_value);
 	json_serialize_to_file(root_value, file_name.c_str());
 	return true;
 }
@@ -86,7 +81,11 @@ bool ParsonJSON::LoadModulesConfig()
 bool ParsonJSON::SaveScene(const GameObject* root) const
 {
 	root->SaveGameObject(root_object);
-	json_serialize_to_string_pretty(root_value);
+
+	char * serialized_string = json_serialize_to_string_pretty(root_value);
+	LOGP("%s", serialized_string);
+	json_free_serialized_string(serialized_string);
+
 	json_serialize_to_file(root_value, file_name.c_str());
 	return true;
 }
