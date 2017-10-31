@@ -32,6 +32,7 @@ public:
 	float2 GetFloat2(JSON_Object* conf, const char* field, float2 default = float2::zero) const;
 	float3 GetFloat3(JSON_Object* conf, const char* field, float3 default = float3::zero) const;
 	float4x4 GetFloat4x4(JSON_Object* conf, const char* field, float4x4 default = float4x4::identity) const;
+	Quat GetQuat(JSON_Object* conf, const char* field, Quat default = Quat::identity) const;
 	Color GetColor(JSON_Object* conf, const char* field, Color default = White) const;
 
 	bool SetInt(JSON_Object* conf, const char* field, int value);
@@ -43,6 +44,7 @@ public:
 	bool SetFloat2(JSON_Object* conf, const char* field, float2 value);
 	bool SetFloat3(JSON_Object* conf, const char* field, float3 value);
 	bool SetFloat4x4(JSON_Object* conf, const char* field, float4x4 value);
+	bool SetQuat(JSON_Object* conf, const char* field, Quat value);
 	bool SetColor(JSON_Object* conf, const char* field, Color color);
 
 public:

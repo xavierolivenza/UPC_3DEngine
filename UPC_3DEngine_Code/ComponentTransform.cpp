@@ -68,8 +68,10 @@ bool ComponentTransform::SaveComponent(JSON_Object* conf) const
 	App->parsonjson->SetUInt(conf, "UUID_Parent", parent->GetUUID());
 	App->parsonjson->SetBool(conf, "Active", Active);
 	App->parsonjson->SetUInt(conf, "Type", type);
-
-
+	App->parsonjson->SetFloat3(conf, "Position", pos);
+	App->parsonjson->SetFloat3(conf, "Scale", scale);
+	App->parsonjson->SetQuat(conf, "Rotation", rot);
+	App->parsonjson->SetFloat4x4(conf, "Matrix", *GetMatrix());
 	return true;
 }
 

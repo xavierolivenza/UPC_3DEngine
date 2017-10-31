@@ -105,6 +105,14 @@ bool ComponentCamera::SaveComponent(JSON_Object* conf) const
 	App->parsonjson->SetUInt(conf, "UUID_Parent", parent->GetUUID());
 	App->parsonjson->SetBool(conf, "Active", Active);
 	App->parsonjson->SetUInt(conf, "Type", type);
+	App->parsonjson->SetUInt(conf, "Frustum_Type", frustum.type);
+	App->parsonjson->SetFloat(conf, "Near_Plane", frustum.nearPlaneDistance);
+	App->parsonjson->SetFloat(conf, "Far_Plane", frustum.farPlaneDistance);
+	App->parsonjson->SetFloat(conf, "FOV_Vertical", frustum.verticalFov);
+	App->parsonjson->SetFloat(conf, "FOV_Horitzontal", frustum.horizontalFov);
+	App->parsonjson->SetFloat3(conf, "Position", frustum.pos);
+	App->parsonjson->SetFloat3(conf, "Up", frustum.up);
+	App->parsonjson->SetFloat3(conf, "Front", frustum.front);
 	return true;
 }
 

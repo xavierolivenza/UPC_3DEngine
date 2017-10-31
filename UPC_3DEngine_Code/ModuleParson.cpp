@@ -152,7 +152,11 @@ float2 ParsonJSON::GetFloat2(JSON_Object* conf, const char* field, float2 defaul
 {
 	float2 ret = float2::zero;
 	JSON_Object* float2_iterate = nullptr;
-	float2_iterate = json_object_get_object(conf, "float2");
+	//If this entry does not exist, create it
+	if (json_object_get_object(conf, field) == NULL)
+		json_object_set_value(conf, field, json_value_init_object());
+	float2_iterate = json_object_get_object(conf, field);
+
 	ret.x = GetFloat(float2_iterate, "x", default.x);
 	ret.y = GetFloat(float2_iterate, "y", default.y);
 	return ret;
@@ -162,7 +166,11 @@ float3 ParsonJSON::GetFloat3(JSON_Object* conf, const char* field, float3 defaul
 {
 	float3 ret = float3::zero;
 	JSON_Object* float3_iterate = nullptr;
-	float3_iterate = json_object_get_object(conf, "float3");
+	//If this entry does not exist, create it
+	if (json_object_get_object(conf, field) == NULL)
+		json_object_set_value(conf, field, json_value_init_object());
+	float3_iterate = json_object_get_object(conf, field);
+
 	ret.x = GetFloat(float3_iterate, "x", default.x);
 	ret.y = GetFloat(float3_iterate, "y", default.y);
 	ret.z = GetFloat(float3_iterate, "z", default.z);
@@ -172,9 +180,12 @@ float3 ParsonJSON::GetFloat3(JSON_Object* conf, const char* field, float3 defaul
 float4x4 ParsonJSON::GetFloat4x4(JSON_Object* conf, const char* field, float4x4 default) const
 {
 	float4x4 ret = float4x4::identity;
-
 	JSON_Object* float4x4_iterate = nullptr;
-	float4x4_iterate = json_object_get_object(conf, "float4x4");
+	//If this entry does not exist, create it
+	if (json_object_get_object(conf, field) == NULL)
+		json_object_set_value(conf, field, json_value_init_object());
+	float4x4_iterate = json_object_get_object(conf, field);
+
 	ret[0][0] = GetFloat(float4x4_iterate, "00", default[0][0]);
 	ret[0][1] = GetFloat(float4x4_iterate, "01", default[0][1]);
 	ret[0][2] = GetFloat(float4x4_iterate, "02", default[0][2]);
@@ -198,11 +209,31 @@ float4x4 ParsonJSON::GetFloat4x4(JSON_Object* conf, const char* field, float4x4 
 	return ret;
 }
 
+Quat ParsonJSON::GetQuat(JSON_Object* conf, const char* field, Quat default) const
+{
+	Quat ret = Quat::identity;
+	JSON_Object* quat_iterate = nullptr;
+	//If this entry does not exist, create it
+	if (json_object_get_object(conf, field) == NULL)
+		json_object_set_value(conf, field, json_value_init_object());
+	quat_iterate = json_object_get_object(conf, field);
+
+	ret.x = GetFloat(quat_iterate, "x", default.x);
+	ret.y = GetFloat(quat_iterate, "y", default.y);
+	ret.z = GetFloat(quat_iterate, "z", default.z);
+	ret.w = GetFloat(quat_iterate, "w", default.w);
+	return ret;
+}
+
 Color ParsonJSON::GetColor(JSON_Object* conf, const char* field, Color default) const
 {
 	Color ret = default;
 	JSON_Object* color_iterate = nullptr;
-	color_iterate = json_object_get_object(conf, "color");
+	//If this entry does not exist, create it
+	if (json_object_get_object(conf, field) == NULL)
+		json_object_set_value(conf, field, json_value_init_object());
+	color_iterate = json_object_get_object(conf, field);
+
 	ret.r = GetFloat(color_iterate, "r", default.r);
 	ret.g = GetFloat(color_iterate, "g", default.g);
 	ret.b = GetFloat(color_iterate, "b", default.b);
@@ -246,7 +277,11 @@ bool ParsonJSON::SetFloat2(JSON_Object* conf, const char* field, float2 value)
 {
 	bool ret = true;
 	JSON_Object* float2_iterate = nullptr;
-	float2_iterate = json_object_get_object(conf, "float2");
+	//If this entry does not exist, create it
+	if (json_object_get_object(conf, field) == NULL)
+		json_object_set_value(conf, field, json_value_init_object());
+	float2_iterate = json_object_get_object(conf, field);
+
 	ret = SetFloat(float2_iterate, "x", value.x);
 	if (!ret) return false;
 	ret = SetFloat(float2_iterate, "y", value.y);
@@ -257,7 +292,11 @@ bool ParsonJSON::SetFloat3(JSON_Object* conf, const char* field, float3 value)
 {
 	bool ret = true;
 	JSON_Object* float3_iterate = nullptr;
-	float3_iterate = json_object_get_object(conf, "float3");
+	//If this entry does not exist, create it
+	if (json_object_get_object(conf, field) == NULL)
+		json_object_set_value(conf, field, json_value_init_object());
+	float3_iterate = json_object_get_object(conf, field);
+
 	ret = SetFloat(float3_iterate, "x", value.x);
 	if (!ret) return false;
 	ret = SetFloat(float3_iterate, "y", value.y);
@@ -270,7 +309,11 @@ bool ParsonJSON::SetFloat4x4(JSON_Object* conf, const char* field, float4x4 valu
 {
 	bool ret = true;
 	JSON_Object* float4x4_iterate = nullptr;
-	float4x4_iterate = json_object_get_object(conf, "float4x4");
+	//If this entry does not exist, create it
+	if (json_object_get_object(conf, field) == NULL)
+		json_object_set_value(conf, field, json_value_init_object());
+	float4x4_iterate = json_object_get_object(conf, field);
+
 	ret = SetFloat(float4x4_iterate, "00", value[0][0]);
 	if (!ret) return false;
 	ret = SetFloat(float4x4_iterate, "01", value[0][1]);
@@ -308,11 +351,34 @@ bool ParsonJSON::SetFloat4x4(JSON_Object* conf, const char* field, float4x4 valu
 	return ret;
 }
 
+bool ParsonJSON::SetQuat(JSON_Object* conf, const char* field, Quat value)
+{
+	bool ret = true;
+	JSON_Object* quat_iterate = nullptr;
+	//If this entry does not exist, create it
+	if (json_object_get_object(conf, field) == NULL)
+		json_object_set_value(conf, field, json_value_init_object());
+	quat_iterate = json_object_get_object(conf, field);
+
+	ret = SetFloat(quat_iterate, "x", value.x);
+	if (!ret) return false;
+	ret = SetFloat(quat_iterate, "y", value.y);
+	if (!ret) return false;
+	ret = SetFloat(quat_iterate, "z", value.z);
+	if (!ret) return false;
+	ret = SetFloat(quat_iterate, "w", value.w);
+	return ret;
+}
+
 bool ParsonJSON::SetColor(JSON_Object* conf, const char* field, Color color)
 {
 	bool ret = true;
 	JSON_Object* color_iterate = nullptr;
-	color_iterate = json_object_get_object(conf, "float3");
+	//If this entry does not exist, create it
+	if (json_object_get_object(conf, field) == NULL)
+		json_object_set_value(conf, field, json_value_init_object());
+	color_iterate = json_object_get_object(conf, field);
+
 	ret = SetFloat(color_iterate, "r", color.r);
 	if (!ret) return false;
 	ret = SetFloat(color_iterate, "g", color.g);

@@ -73,6 +73,7 @@ bool ComponentMaterial::SaveComponent(JSON_Object* conf) const
 	App->parsonjson->SetUInt(conf, "UUID_Parent", parent->GetUUID());
 	App->parsonjson->SetBool(conf, "Active", Active);
 	App->parsonjson->SetUInt(conf, "Type", type);
+	App->parsonjson->SetString(conf, "Texture_Path", MaterialDataStruct.texture_name.c_str());
 	return true;
 }
 

@@ -287,6 +287,9 @@ bool ImporterMesh::Load(ComponentTransform& transform, MeshData& DataMesh, const
 	char* cursor = data;
 	uint current_loading_size = 0;
 
+	size_t bar_pos = file_to_load->rfind("\\") + 1;
+	DataMesh.Mesh_File = file_to_load->substr(bar_pos, file_to_load->length());
+
 	//Load amount_of_each
 	uint amount_of_each[7];
 	current_loading_size = sizeof(amount_of_each);

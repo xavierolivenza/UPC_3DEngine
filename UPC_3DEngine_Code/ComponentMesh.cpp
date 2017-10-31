@@ -94,7 +94,7 @@ bool ComponentMesh::SaveComponent(JSON_Object* conf) const
 	App->parsonjson->SetUInt(conf, "UUID_Parent", parent->GetUUID());
 	App->parsonjson->SetBool(conf, "Active", Active);
 	App->parsonjson->SetUInt(conf, "Type", type);
-
+	App->parsonjson->SetString(conf, "Mesh_File_Name", MeshDataStruct.Mesh_File.c_str());
 	return true;
 }
 
