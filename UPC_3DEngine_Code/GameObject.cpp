@@ -253,3 +253,19 @@ u32 GameObject::GetUUID() const
 {
 	return UUID;
 }
+
+const GameObject* GameObject::FindGameObjectWithUUID(u32 UUID_ToSearch)
+{
+	if (UUID == UUID_ToSearch)
+		return this;
+	else
+	{
+		for (std::vector<GameObject*>::const_iterator item = children.cbegin(); item != children.cend(); ++item)
+		{
+			const GameObject* gameobject = (*item)->FindGameObjectWithUUID(UUID_ToSearch);
+			if (gameobject != nullptr)
+				return gameobject;
+		}
+	}
+	return nullptr;
+}

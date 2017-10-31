@@ -120,6 +120,11 @@ bool ModuleScene::RemoveChildFromRoot(GameObject* child)
 	return root->RemoveChild(child);
 }
 
+const GameObject* ModuleScene::FindGameObjectWithUUID(u32 UUID_ToSearch)
+{
+	return root->FindGameObjectWithUUID(UUID_ToSearch);
+}
+
 GameObject* ModuleScene::CreateGameObject(const char* name, bool active, bool static_game_object)
 {
 	return new GameObject(name, active, static_game_object);

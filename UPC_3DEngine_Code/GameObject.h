@@ -50,6 +50,7 @@ public:
 	ComponentTransform* GetTransform() const;
 	const GameObject* GetParent() const;
 	u32 GetUUID() const;
+	const GameObject* FindGameObjectWithUUID(u32 UUID_ToSearch);
 
 private:
 	ComponentTransform* CreateTransformComponent(bool active);

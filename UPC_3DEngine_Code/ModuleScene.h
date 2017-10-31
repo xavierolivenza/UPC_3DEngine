@@ -29,6 +29,8 @@ public:
 	void AddChildToRoot(GameObject* child);
 	bool RemoveChildFromRoot(GameObject* child);
 
+	const GameObject* FindGameObjectWithUUID(u32 UUID_ToSearch);
+
 	//Functions to create GameObjects
 	GameObject* CreateGameObject(const char* name, bool active = true, bool static_game_object = true);
 

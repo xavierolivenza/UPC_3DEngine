@@ -73,7 +73,9 @@ bool ComponentMaterial::SaveComponent(JSON_Object* conf) const
 	App->parsonjson->SetUInt(conf, "UUID_Parent", parent->GetUUID());
 	App->parsonjson->SetBool(conf, "Active", Active);
 	App->parsonjson->SetUInt(conf, "Type", type);
-	App->parsonjson->SetString(conf, "Texture_Path", MaterialDataStruct.texture_name.c_str());
+	size_t bar_pos = MaterialDataStruct.texture_name.rfind("\\") + 1;
+	std::string tex_name = MaterialDataStruct.texture_name.substr(bar_pos, MaterialDataStruct.texture_name.length());
+	App->parsonjson->SetString(conf, "Texture_Path", tex_name.c_str());
 	return true;
 }
 
