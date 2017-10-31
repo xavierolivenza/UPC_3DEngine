@@ -70,14 +70,17 @@ bool GameObject::CleanUp()
 
 bool GameObject::SaveGameObject(JSON_Object* conf) const
 {
-	App->parsonjson->SetString(conf, "name", name.c_str());
-	App->parsonjson->SetUInt(conf, "UUID", UUID);
+	JSON_Object* tempConf = conf;
+	tempConf = json_object_get_object(App->parsonjson->root_object, name.c_str());
+
+	App->parsonjson->SetString(tempConf, "name", name.c_str());
+	App->parsonjson->SetUInt(tempConf, "UUID", UUID);
 	if (this->GetParent() != nullptr)
-		App->parsonjson->SetUInt(conf, "UUID_Parent", this->GetParent()->UUID);
+		App->parsonjson->SetUInt(tempConf, "UUID_Parent", this->GetParent()->UUID);
 	else
-		App->parsonjson->SetUInt(conf, "UUID_Parent", 0);
-	App->parsonjson->SetBool(conf, "Active", Active);
-	App->parsonjson->SetBool(conf, "Static", Static);
+		App->parsonjson->SetUInt(tempConf, "UUID_Parent", 0);
+	App->parsonjson->SetBool(tempConf, "Active", Active);
+	App->parsonjson->SetBool(tempConf, "Static", Static);
 
 	/*
 	for (std::vector<Component*>::const_iterator item = components.cbegin(); item != components.cend(); ++item)
