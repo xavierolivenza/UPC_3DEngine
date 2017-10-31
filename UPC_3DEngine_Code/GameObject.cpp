@@ -71,9 +71,9 @@ bool GameObject::CleanUp()
 bool GameObject::SaveGameObject(JSON_Object* conf) const
 {
 	JSON_Object* tempConf = conf;
-	/*
-	tempConf = json_object_get_object(App->parsonjson->root_object, name.c_str());
-	*/
+	if (json_object_get_object(conf, name.c_str()) == NULL)
+		json_object_set_value(conf, name.c_str(), json_value_init_object());
+	tempConf = json_object_get_object(conf, name.c_str());
 
 	App->parsonjson->SetString(tempConf, "name", name.c_str());
 	App->parsonjson->SetUInt(tempConf, "UUID", UUID);
@@ -94,11 +94,6 @@ bool GameObject::SaveGameObject(JSON_Object* conf) const
 		if ((*item)->IsActive())
 			(*item)->SaveGameObject(conf);
 	/**/
-
-	//JSON_Value* va = json_value_init_array();
-	//JSON_Array* array = json_value_get_array(va);
-	//json_object_set_value(conf, /*array_name*/, va);
-	//json_array_append_number(array, /*value*/);
 	return true;
 }
 
