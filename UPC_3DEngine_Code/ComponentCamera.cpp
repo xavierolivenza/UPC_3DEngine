@@ -109,7 +109,6 @@ bool ComponentCamera::SaveComponent(JSON_Object* conf) const
 	App->parsonjson->SetFloat(conf, "Near_Plane", frustum.nearPlaneDistance);
 	App->parsonjson->SetFloat(conf, "Far_Plane", frustum.farPlaneDistance);
 	App->parsonjson->SetFloat(conf, "FOV_Vertical", frustum.verticalFov);
-	App->parsonjson->SetFloat(conf, "FOV_Horitzontal", frustum.horizontalFov);
 	App->parsonjson->SetFloat3(conf, "Position", frustum.pos);
 	App->parsonjson->SetFloat3(conf, "Up", frustum.up);
 	App->parsonjson->SetFloat3(conf, "Front", frustum.front);
@@ -118,6 +117,17 @@ bool ComponentCamera::SaveComponent(JSON_Object* conf) const
 
 bool ComponentCamera::LoadComponent(JSON_Object* conf)
 {
+	UUID = App->parsonjson->GetUInt(conf, "UUID", 0);
+	Active = App->parsonjson->GetBool(conf, "Active", true);
+	frustum.type = (FrustumType)App->parsonjson->GetUInt(conf, "Frustum_Type", FrustumType::PerspectiveFrustum);
+	frustum.nearPlaneDistance = App->parsonjson->GetFloat(conf, "Near_Plane", NearPlaneDistance);
+	frustum.farPlaneDistance = App->parsonjson->GetFloat(conf, "Far_Plane", FarPlaneDistance);
+	AspectRatio = App->window->GetAspectRatio();
+	frustum.verticalFov = App->parsonjson->GetFloat(conf, "FOV_Vertical", FOVVertical) * DEGTORAD;
+	frustum.horizontalFov = Atan(AspectRatio * Tan(frustum.verticalFov * 0.5f)) * 2.0f;
+	frustum.pos = App->parsonjson->GetFloat3(conf, "Position", float3::zero);
+	frustum.up = App->parsonjson->GetFloat3(conf, "Up", float3::zero);
+	frustum.front = App->parsonjson->GetFloat3(conf, "Front", float3::zero);
 	return true;
 }
 

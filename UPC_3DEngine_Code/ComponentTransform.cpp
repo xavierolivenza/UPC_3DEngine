@@ -71,12 +71,18 @@ bool ComponentTransform::SaveComponent(JSON_Object* conf) const
 	App->parsonjson->SetFloat3(conf, "Position", pos);
 	App->parsonjson->SetFloat3(conf, "Scale", scale);
 	App->parsonjson->SetQuat(conf, "Rotation", rot);
-	App->parsonjson->SetFloat4x4(conf, "Matrix", *GetMatrix());
+	//App->parsonjson->SetFloat4x4(conf, "Matrix", *GetLocalMatrix());
 	return true;
 }
 
 bool ComponentTransform::LoadComponent(JSON_Object* conf)
 {
+	UUID = App->parsonjson->GetUInt(conf, "UUID", 0);
+	Active = App->parsonjson->GetBool(conf, "Active", true);
+	pos = App->parsonjson->GetFloat3(conf, "Position", float3::zero);
+	scale = App->parsonjson->GetFloat3(conf, "Scale", float3::zero);
+	Quat loaded_rot = App->parsonjson->GetQuat(conf, "Rotation", Quat::identity);
+	SetRot(loaded_rot);
 	return true;
 }
 

@@ -31,7 +31,7 @@ ParsonJSON::ParsonJSON(const char* filename, bool isScene) : isScene(isScene)
 	//root_value = json_value_init_object();
 	//root_object = json_value_get_object(root_value);
 	if (isScene)
-		file_name = *App->importer->Get_Scenes_path() + "\\" + filename + ".json";
+		file_name = filename;
 	else
 		file_name = *App->importer->Get_Settings_path() + "\\" + filename + ".json";
 }
@@ -88,7 +88,6 @@ bool ParsonJSON::SaveScene(const GameObject* root) const
 	//json_value_free(array_value);
 	/*
 	char * serialized_string = json_serialize_to_string_pretty(root_value);
-	LOGP("%s", serialized_string);
 	json_free_serialized_string(serialized_string);
 	*/
 	json_serialize_to_file(root_value, file_name.c_str());
@@ -97,6 +96,10 @@ bool ParsonJSON::SaveScene(const GameObject* root) const
 
 bool ParsonJSON::LoadScene(GameObject* root)
 {
+	/*
+	char * serialized_string = json_serialize_to_string_pretty(root_value);
+	json_free_serialized_string(serialized_string);
+	*/
 	JSON_Array* array = json_object_get_array(root_object, "GameObjects");
 	if (array != nullptr)
 	{
@@ -106,7 +109,7 @@ bool ParsonJSON::LoadScene(GameObject* root)
 			LOGP("Empty GameObject array when trying to load scene.");
 			return false;
 		}
-		for (uint i; i < array_count; i++)
+		for (uint i = 0; i < array_count; i++)
 		{
 			JSON_Object* array_object = json_array_get_object(array, i);
 			uint parentUUID = GetUInt(array_object, "UUID_Parent", 0);

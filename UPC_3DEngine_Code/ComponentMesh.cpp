@@ -100,5 +100,10 @@ bool ComponentMesh::SaveComponent(JSON_Object* conf) const
 
 bool ComponentMesh::LoadComponent(JSON_Object* conf)
 {
+	UUID = App->parsonjson->GetUInt(conf, "UUID", 0);
+	Active = App->parsonjson->GetBool(conf, "Active", true);
+	const char* MeshFile = App->parsonjson->GetString(conf, "Mesh_File_Name", "");
+	std::string File_path = *App->importer->Get_Library_mesh_path() + "\\" + MeshFile;
+	App->importer->Load(&File_path);
 	return true;
 }

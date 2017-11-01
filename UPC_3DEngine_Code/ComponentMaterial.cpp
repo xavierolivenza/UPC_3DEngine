@@ -81,5 +81,8 @@ bool ComponentMaterial::SaveComponent(JSON_Object* conf) const
 
 bool ComponentMaterial::LoadComponent(JSON_Object* conf)
 {
+	UUID = App->parsonjson->GetUInt(conf, "UUID", 0);
+	Active = App->parsonjson->GetBool(conf, "Active", true);
+	//When we can edit in-engine mesh-material relation, this will be fullflled, by now, mesh has texture related, so when mesh is loaded, material do too.
 	return true;
 }

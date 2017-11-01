@@ -108,13 +108,82 @@ bool GameObject::SaveGameObject(JSON_Array* array) const
 
 bool GameObject::LoadGameObject(JSON_Object* conf)
 {
+	name = App->parsonjson->GetString(conf, "name", "Error Name GameObject");
+	UUID = App->parsonjson->GetUInt(conf, "UUID", 0);
+	Active = App->parsonjson->GetBool(conf, "Active", true);
+	Static = App->parsonjson->GetBool(conf, "Static", true);
 
-
-
-
-
-
-
+	JSON_Array* array = json_object_get_array(conf, "Components");
+	if (array != nullptr)
+	{
+		uint array_count = json_array_get_count(array);
+		if (array_count < 0)
+		{
+			LOGP("Empty Components array when trying to load GameObject.");
+			return false;
+		}
+		for (uint i = 0; i < array_count; i++)
+		{
+			JSON_Object* array_object = json_array_get_object(array, i);
+			ComponentType componentType = (ComponentType)App->parsonjson->GetUInt(array_object, "Type", ComponentType::Null_ComponentType);
+			switch (componentType)
+			{
+			case ComponentType::Transform_Component:
+			{
+				TransformComponent->LoadComponent(array_object);
+				break;
+			}
+			case ComponentType::Mesh_Component:
+			{
+				ComponentMesh* newMesh = CreateMeshComponent(true);
+				newMesh->LoadComponent(array_object);
+				break;
+			}
+			case ComponentType::Material_Component:
+			{
+				ComponentMaterial* newMaterial = CreateMaterialComponent(true);
+				newMaterial->LoadComponent(array_object);
+				break;
+			}
+			case ComponentType::Camera_Component:
+			{
+				ComponentCamera* newCamera = CreateCameraComponent(true);
+				newCamera->LoadComponent(array_object);
+				break;
+			}
+			case ComponentType::Null_ComponentType:
+			{
+				LOGP("Error trying to load component. Null type.");
+				break;
+			}
+			}
+			/*
+			
+			uint parentUUID = GetUInt(array_object, "UUID_Parent", 0);
+			//If parent UUID is = 0, means that this has no parent, so just create the game object and add to root
+			if (parentUUID == 0)
+			{
+				GameObject* newGameObject = App->scene->CreateGameObject("Default name", true, true);
+				newGameObject->LoadGameObject(array_object);
+				App->scene->AddChildToRoot(newGameObject);
+			}
+			else
+			{
+				GameObject* ParentGameObject = App->scene->FindGameObjectWithUUID(parentUUID);
+				if (ParentGameObject == nullptr)
+				{
+					LOGP("Error finding parent game object with UUID: %i", parentUUID);
+					continue;
+				}
+				GameObject* newGameObject = App->scene->CreateGameObject("Default name", true, true);
+				newGameObject->LoadGameObject(array_object);
+				ParentGameObject->AddChild(newGameObject);
+			}
+			*/
+		}
+	}
+	else
+		LOGP("No array Components Found when trying to load GameObject.");
 	return true;
 }
 

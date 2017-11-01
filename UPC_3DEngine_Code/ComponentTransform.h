@@ -39,5 +39,4 @@ private:
 	float3 scale = float3::one;
 	Quat rot = Quat::identity;
 	float3 rot_euler = float3::zero;
-	float4x4 matrix = float4x4::identity;
 };
