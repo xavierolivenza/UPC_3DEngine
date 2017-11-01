@@ -116,19 +116,33 @@ void Application::FinishUpdate()
 update_status Application::Update()
 {
 	update_status ret = UPDATE_CONTINUE;
+
 	PrepareUpdate();
+	float modified_DT = dt * TimeUpdate;
+
+	if (OneFrameForward) // if it's true, means TimeUpdate is 0.0f;
+	{
+		modified_DT = dt;
+		OneFrameForward = false;
+	}
 
 	for (std::list<Module*>::iterator item = list_modules.begin(); item != list_modules.cend(); ++item)
 	{
 		(*item)->ms_timer.Start();
-		(*item)->PreUpdate(dt);
+		if ((*item) == camera) //Do not effect editor camera (if we do so, we can not move it)
+			(*item)->PreUpdate(dt);
+		else
+			(*item)->PreUpdate(modified_DT);
 		PushMSToPreUpdate(*item, (*item)->ms_timer.Read());
 	}
 
 	for (std::list<Module*>::iterator item = list_modules.begin(); item != list_modules.cend(); ++item)
 	{
 		(*item)->ms_timer.Start();
-		(*item)->Update(dt);
+		if ((*item) == camera) //Do not effect editor camera (if we do so, we can not move it)
+			(*item)->Update(dt);
+		else
+			(*item)->Update(modified_DT);
 		PushMSToUpdate(*item, (*item)->ms_timer.Read());
 	}
 
@@ -142,7 +156,10 @@ update_status Application::Update()
 	for (std::list<Module*>::iterator item = list_modules.begin(); item != list_modules.cend(); ++item)
 	{
 		(*item)->ms_timer.Start();
-		(*item)->PostUpdate(dt);
+		if ((*item) == camera) //Do not effect editor camera (if we do so, we can not move it)
+			(*item)->PostUpdate(dt);
+		else
+			(*item)->PostUpdate(modified_DT);
 		PushMSToPostUpdate(*item, (*item)->ms_timer.Read());
 	}
 
