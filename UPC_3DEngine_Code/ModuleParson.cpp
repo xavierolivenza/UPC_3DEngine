@@ -95,8 +95,44 @@ bool ParsonJSON::SaveScene(const GameObject* root) const
 	return true;
 }
 
-bool ParsonJSON::LoadScene()
+bool ParsonJSON::LoadScene(GameObject* root)
 {
+	JSON_Array* array = json_object_get_array(root_object, "GameObjects");
+	if (array != nullptr)
+	{
+		uint array_count = json_array_get_count(array);
+		if (array_count < 0)
+		{
+			LOGP("Empty GameObject array when trying to load scene.");
+			return false;
+		}
+		for (uint i; i < array_count; i++)
+		{
+			JSON_Object* array_object = json_array_get_object(array, i);
+			uint parentUUID = GetUInt(array_object, "UUID_Parent", 0);
+			//If parent UUID is = 0, means that this has no parent, so just create the game object and add to root
+			if (parentUUID == 0)
+			{
+				GameObject* newGameObject = App->scene->CreateGameObject("Default name", true, true);
+				newGameObject->LoadGameObject(array_object);
+				App->scene->AddChildToRoot(newGameObject);
+			}
+			else
+			{
+				GameObject* ParentGameObject = App->scene->FindGameObjectWithUUID(parentUUID);
+				if (ParentGameObject == nullptr)
+				{
+					LOGP("Error finding parent game object with UUID: %i", parentUUID);
+					continue;
+				}
+				GameObject* newGameObject = App->scene->CreateGameObject("Default name", true, true);
+				newGameObject->LoadGameObject(array_object);
+				ParentGameObject->AddChild(newGameObject);
+			}
+		}
+	}
+	else
+		LOGP("No array GameObject Found when trying to load scene.");
 	return true;
 }
 

@@ -108,6 +108,13 @@ bool GameObject::SaveGameObject(JSON_Array* array) const
 
 bool GameObject::LoadGameObject(JSON_Object* conf)
 {
+
+
+
+
+
+
+
 	return true;
 }
 
@@ -254,7 +261,7 @@ u32 GameObject::GetUUID() const
 	return UUID;
 }
 
-const GameObject* GameObject::FindGameObjectWithUUID(u32 UUID_ToSearch)
+GameObject* GameObject::FindGameObjectWithUUID(u32 UUID_ToSearch)
 {
 	if (UUID == UUID_ToSearch)
 		return this;
@@ -262,7 +269,7 @@ const GameObject* GameObject::FindGameObjectWithUUID(u32 UUID_ToSearch)
 	{
 		for (std::vector<GameObject*>::const_iterator item = children.cbegin(); item != children.cend(); ++item)
 		{
-			const GameObject* gameobject = (*item)->FindGameObjectWithUUID(UUID_ToSearch);
+			GameObject* gameobject = (*item)->FindGameObjectWithUUID(UUID_ToSearch);
 			if (gameobject != nullptr)
 				return gameobject;
 		}

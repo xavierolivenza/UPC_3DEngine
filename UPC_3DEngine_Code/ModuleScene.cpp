@@ -93,7 +93,7 @@ bool ModuleScene::LoadScene(const char* filename)
 	ParsonJSON* parsonjson = new ParsonJSON(filename);
 	ret = parsonjson->Init();
 	if (ret)
-		ret = parsonjson->LoadScene();
+		ret = parsonjson->LoadScene(root);
 	RELEASE(parsonjson);
 	if (ret) LOGP("LoadScene Success, file: %s", filename);
 	else LOGP("LoadScene Failure, file: %s", filename);
@@ -120,7 +120,7 @@ bool ModuleScene::RemoveChildFromRoot(GameObject* child)
 	return root->RemoveChild(child);
 }
 
-const GameObject* ModuleScene::FindGameObjectWithUUID(u32 UUID_ToSearch)
+GameObject* ModuleScene::FindGameObjectWithUUID(u32 UUID_ToSearch)
 {
 	return root->FindGameObjectWithUUID(UUID_ToSearch);
 }

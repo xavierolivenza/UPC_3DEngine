@@ -21,7 +21,7 @@ public:
 	bool LoadModulesConfig();
 
 	bool SaveScene(const GameObject* root) const;
-	bool LoadScene();
+	bool LoadScene(GameObject* root);
 
 	int GetInt(JSON_Object* conf, const char* field, int default = 0) const;
 	uint GetUInt(JSON_Object* conf, const char* field, uint default = 0) const;
