@@ -4,6 +4,7 @@
 #include "ModuleSceneImporter.h"
 #include "ImporterMesh.h"
 #include "ImporterMaterial.h"
+#include "ComponentTransform.h"
 #include "ComponentMesh.h"
 
 //Assimp includes here because the main core of 3dmodel file read action is done here
@@ -392,6 +393,22 @@ bool ModuleSceneImporter::Load(std::string* file_to_load)
 		return false;
 	}
 	return true;
+}
+
+bool ModuleSceneImporter::LoadSimpleMesh(std::string* file_to_load, MeshData& Data)
+{
+	bool ret = true;
+	ComponentTransform* transform = new ComponentTransform(nullptr, true);
+	ret = MeshImporter->Load(*transform, Data, file_to_load);
+	RELEASE(transform);
+	return ret;
+}
+
+bool ModuleSceneImporter::LoadTexture(std::string* file_to_load, MaterialData& DataMaterial)
+{
+	bool ret = true;
+	ret = MaterialImporter->Load(DataMaterial, file_to_load);
+	return ret;
 }
 
 bool ModuleSceneImporter::LoadFBXComponents(const std::string* file_to_load)

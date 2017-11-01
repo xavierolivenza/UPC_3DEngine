@@ -104,6 +104,6 @@ bool ComponentMesh::LoadComponent(JSON_Object* conf)
 	Active = App->parsonjson->GetBool(conf, "Active", true);
 	const char* MeshFile = App->parsonjson->GetString(conf, "Mesh_File_Name", "");
 	std::string File_path = *App->importer->Get_Library_mesh_path() + "\\" + MeshFile;
-	App->importer->Load(&File_path);
+	App->importer->LoadSimpleMesh(&File_path, MeshDataStruct);
 	return true;
 }

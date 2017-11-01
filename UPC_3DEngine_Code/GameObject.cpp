@@ -157,29 +157,6 @@ bool GameObject::LoadGameObject(JSON_Object* conf)
 				break;
 			}
 			}
-			/*
-			
-			uint parentUUID = GetUInt(array_object, "UUID_Parent", 0);
-			//If parent UUID is = 0, means that this has no parent, so just create the game object and add to root
-			if (parentUUID == 0)
-			{
-				GameObject* newGameObject = App->scene->CreateGameObject("Default name", true, true);
-				newGameObject->LoadGameObject(array_object);
-				App->scene->AddChildToRoot(newGameObject);
-			}
-			else
-			{
-				GameObject* ParentGameObject = App->scene->FindGameObjectWithUUID(parentUUID);
-				if (ParentGameObject == nullptr)
-				{
-					LOGP("Error finding parent game object with UUID: %i", parentUUID);
-					continue;
-				}
-				GameObject* newGameObject = App->scene->CreateGameObject("Default name", true, true);
-				newGameObject->LoadGameObject(array_object);
-				ParentGameObject->AddChild(newGameObject);
-			}
-			*/
 		}
 	}
 	else
@@ -344,17 +321,30 @@ bool GameObject::CanCreateOneMoreComponent(ComponentType type)
 	std::vector<Component*> vec;
 	FindComponentVec(vec, type);
 	if (vec.size() == 0)
+	{
+		vec.clear();
 		return true;
+	}
 	else
 	{
 		uint limit = (*vec.begin())->GetReplicaLimit();
 		if (limit == 0)//no limit
+		{
+			vec.clear();
 			return true;
+		}
 		if (vec.size() < limit)
+		{
+			vec.clear();
 			return true;
+		}
 		else
+		{
+			vec.clear();
 			return false;
+		}
 	}
+	vec.clear();
 	return false;
 }
 

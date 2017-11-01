@@ -83,6 +83,8 @@ bool ComponentMaterial::LoadComponent(JSON_Object* conf)
 {
 	UUID = App->parsonjson->GetUInt(conf, "UUID", 0);
 	Active = App->parsonjson->GetBool(conf, "Active", true);
-	//When we can edit in-engine mesh-material relation, this will be fullflled, by now, mesh has texture related, so when mesh is loaded, material do too.
+	const char* texture_name = App->parsonjson->GetString(conf, "Texture_Path", "");
+	std::string tex_path = *App->importer->Get_Library_material_path() + "\\" + texture_name;
+	App->importer->LoadTexture(&tex_path, MaterialDataStruct);
 	return true;
 }

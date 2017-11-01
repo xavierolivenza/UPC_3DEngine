@@ -3,6 +3,8 @@
 #include "Module.h"
 
 class Component;
+struct MeshData;
+struct MaterialData;
 class ImporterMesh;
 class ImporterMaterial;
 struct aiNode;
@@ -26,6 +28,8 @@ public:
 
 	bool Import(std::string* file_to_import, std::string& output_file);
 	bool Load(std::string* file_to_load);
+	bool LoadSimpleMesh(std::string* file_to_load, MeshData& Data);
+	bool LoadTexture(std::string* file_to_load, MaterialData& DataMaterial);
 
 	bool SaveConf(JSON_Object* conf) const;
 	bool LoadConf(JSON_Object* conf);
