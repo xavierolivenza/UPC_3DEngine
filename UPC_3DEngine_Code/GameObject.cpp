@@ -246,30 +246,54 @@ bool GameObject::RemoveChild(GameObject* child)
 
 ComponentTransform* GameObject::CreateTransformComponent(bool active)
 {
-	ComponentTransform* transform = new ComponentTransform(this, active);
-	components.push_back((Component*)transform);
-	return transform;
+	if (CanCreateOneMoreComponent(ComponentType::Transform_Component))
+	{
+		ComponentTransform* transform = new ComponentTransform(this, active);
+		components.push_back((Component*)transform);
+		return transform;
+	}
+	else
+		LOGP("You cannot create another component Transform in this GameObject.");
+	return nullptr;
 }
 
 ComponentMesh* GameObject::CreateMeshComponent(bool active)
 {
-	ComponentMesh* mesh = new ComponentMesh(this, active);
-	components.push_back((Component*)mesh);
-	return mesh;
+	if (CanCreateOneMoreComponent(ComponentType::Mesh_Component))
+	{
+		ComponentMesh* mesh = new ComponentMesh(this, active);
+		components.push_back((Component*)mesh);
+		return mesh;
+	}
+	else
+		LOGP("You cannot create another component Mesh in this GameObject.");
+	return nullptr;
 }
 
 ComponentMaterial* GameObject::CreateMaterialComponent(bool active)
 {
-	ComponentMaterial* material = new ComponentMaterial(this, active);
-	components.push_back((Component*)material);
-	return material;
+	if (CanCreateOneMoreComponent(ComponentType::Material_Component))
+	{
+		ComponentMaterial* material = new ComponentMaterial(this, active);
+		components.push_back((Component*)material);
+		return material;
+	}
+	else
+		LOGP("You cannot create another component Material in this GameObject.");
+	return nullptr;
 }
 
 ComponentCamera* GameObject::CreateCameraComponent(bool active)
 {
-	ComponentCamera* camera = new ComponentCamera(this, active);
-	components.push_back((Component*)camera);
-	return camera;
+	if (CanCreateOneMoreComponent(ComponentType::Camera_Component))
+	{
+		ComponentCamera* camera = new ComponentCamera(this, active);
+		components.push_back((Component*)camera);
+		return camera;
+	}
+	else
+		LOGP("You cannot create another component Camera in this GameObject.");
+	return nullptr;
 }
 
 bool GameObject::RemoveComponent(Component* component)
@@ -313,6 +337,25 @@ void GameObject::FindComponentVec(std::vector<Component*>& vec, ComponentType ty
 	for (std::vector<Component*>::const_iterator item = components.cbegin(); item != components.cend(); ++item)
 		if (type == (*item)->GetType())
 			vec.push_back(*item);
+}
+
+bool GameObject::CanCreateOneMoreComponent(ComponentType type)
+{
+	std::vector<Component*> vec;
+	FindComponentVec(vec, type);
+	if (vec.size() == 0)
+		return true;
+	else
+	{
+		uint limit = (*vec.begin())->GetReplicaLimit();
+		if (limit == 0)//no limit
+			return true;
+		if (vec.size() < limit)
+			return true;
+		else
+			return false;
+	}
+	return false;
 }
 
 ComponentTransform* GameObject::GetTransform() const

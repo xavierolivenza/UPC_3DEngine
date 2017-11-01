@@ -12,7 +12,7 @@ class GameObject;
 class ParsonJSON
 {
 public:
-	ParsonJSON(const char* filename, bool isScene = true);
+	ParsonJSON(const char* filename, bool isScene, bool loadingScene);
 	~ParsonJSON();
 
 	bool Init();

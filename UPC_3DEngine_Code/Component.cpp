@@ -73,3 +73,8 @@ bool Component::LoadComponent(JSON_Object* conf)
 {
 	return true;
 }
+
+uint Component::GetReplicaLimit() const
+{
+	return replica_limit;
+}

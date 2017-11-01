@@ -1,0 +1,212 @@
+{
+  "GameObjects": [
+    {
+      "name": "Root",
+      "UUID": 2113498593,
+      "UUID_Parent": 0,
+      "Active": true,
+      "Static": true,
+      "Components": [
+        {
+          "UUID": 2105701041,
+          "UUID_Parent": 2113498593,
+          "Active": true,
+          "Type": 0,
+          "Position": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "Scale": {
+            "x": 1,
+            "y": 1,
+            "z": 1
+          },
+          "Rotation": {
+            "x": 0,
+            "y": 0,
+            "z": 0,
+            "w": 1
+          }
+        }
+      ]
+    },
+    {
+      "name": "Camera",
+      "UUID": 2118720168,
+      "UUID_Parent": 2113498593,
+      "Active": true,
+      "Static": true,
+      "Components": [
+        {
+          "UUID": 2117118885,
+          "UUID_Parent": 2118720168,
+          "Active": true,
+          "Type": 0,
+          "Position": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "Scale": {
+            "x": 1,
+            "y": 1,
+            "z": 1
+          },
+          "Rotation": {
+            "x": 0,
+            "y": 0,
+            "z": 0,
+            "w": 1
+          }
+        },
+        {
+          "UUID": 2121156903,
+          "UUID_Parent": 2118720168,
+          "Active": true,
+          "Type": 3,
+          "Frustum_Type": 2,
+          "Near_Plane": 0.10000000149011612,
+          "Far_Plane": 5,
+          "FOV_Vertical": 1.0471975803375244,
+          "Position": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "Up": {
+            "x": 0,
+            "y": 1,
+            "z": 0
+          },
+          "Front": {
+            "x": 0,
+            "y": 0,
+            "z": 1
+          }
+        }
+      ]
+    },
+    {
+      "name": "BakerHouse",
+      "UUID": 601473499,
+      "UUID_Parent": 2113498593,
+      "Active": true,
+      "Static": true,
+      "Components": [
+        {
+          "UUID": 594163294,
+          "UUID_Parent": 601473499,
+          "Active": true,
+          "Type": 0,
+          "Position": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "Scale": {
+            "x": 1,
+            "y": 1,
+            "z": 1
+          },
+          "Rotation": {
+            "x": -0.38268345594406128,
+            "y": 0,
+            "z": 0,
+            "w": 0.92387950420379639
+          }
+        }
+      ]
+    },
+    {
+      "name": "Chimney",
+      "UUID": 608922946,
+      "UUID_Parent": 601473499,
+      "Active": true,
+      "Static": true,
+      "Components": [
+        {
+          "UUID": 606834316,
+          "UUID_Parent": 608922946,
+          "Active": true,
+          "Type": 0,
+          "Position": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "Scale": {
+            "x": 1,
+            "y": 1,
+            "z": 1
+          },
+          "Rotation": {
+            "x": 0.20082731544971466,
+            "y": -0.053811520338058472,
+            "z": 0.25316324830055237,
+            "w": 0.94481813907623291
+          }
+        },
+        {
+          "UUID": 611081197,
+          "UUID_Parent": 608922946,
+          "Active": true,
+          "Type": 1,
+          "Mesh_File_Name": "Chimney.MeshAlvOli"
+        },
+        {
+          "UUID": 1688905715,
+          "UUID_Parent": 608922946,
+          "Active": true,
+          "Type": 2,
+          "Texture_Path": "Baker_house.dds"
+        }
+      ]
+    },
+    {
+      "name": "Baker_house",
+      "UUID": 302888762,
+      "UUID_Parent": 601473499,
+      "Active": true,
+      "Static": true,
+      "Components": [
+        {
+          "UUID": 299755817,
+          "UUID_Parent": 302888762,
+          "Active": true,
+          "Type": 0,
+          "Position": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "Scale": {
+            "x": 1,
+            "y": 1,
+            "z": 1
+          },
+          "Rotation": {
+            "x": 0.42110344767570496,
+            "y": 0.18765805661678314,
+            "z": 0.089508309960365295,
+            "w": 0.88286161422729492
+          }
+        },
+        {
+          "UUID": 304350803,
+          "UUID_Parent": 302888762,
+          "Active": true,
+          "Type": 1,
+          "Mesh_File_Name": "Baker_house.MeshAlvOli"
+        },
+        {
+          "UUID": 549068618,
+          "UUID_Parent": 302888762,
+          "Active": true,
+          "Type": 2,
+          "Texture_Path": "Baker_house.dds"
+        }
+      ]
+    }
+  ]
+}

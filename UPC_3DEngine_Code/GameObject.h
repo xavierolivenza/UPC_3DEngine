@@ -54,6 +54,7 @@ public:
 
 private:
 	ComponentTransform* CreateTransformComponent(bool active);
+	bool CanCreateOneMoreComponent(ComponentType type);
 
 public:
 	std::string name;

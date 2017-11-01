@@ -29,6 +29,7 @@ public:
 	void SetActive(bool active);
 	bool IsActive() const;
 	ComponentType GetType() const;
+	uint GetReplicaLimit() const;
 
 protected:
 	bool Active = true;

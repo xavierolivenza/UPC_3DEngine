@@ -25,13 +25,16 @@ free(ptr);
 }
 */
 
-ParsonJSON::ParsonJSON(const char* filename, bool isScene) : isScene(isScene)
+ParsonJSON::ParsonJSON(const char* filename, bool isScene, bool loadingScene) : isScene(isScene)
 {
 	//json_set_allocation_functions(counted_malloc, counted_free);
 	//root_value = json_value_init_object();
 	//root_object = json_value_get_object(root_value);
 	if (isScene)
-		file_name = filename;
+		if (loadingScene)
+			file_name = filename;
+		else
+			file_name = *App->importer->Get_Scenes_path() + "\\" + filename + ".json";
 	else
 		file_name = *App->importer->Get_Settings_path() + "\\" + filename + ".json";
 }
