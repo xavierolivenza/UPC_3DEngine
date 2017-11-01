@@ -682,13 +682,11 @@ void ModuleEngineUI::ImGuiLoadFilePopUp()
 				//Load Scene here
 				TCHAR directory[MAX_PATH + 1] = "";
 				DWORD len = GetCurrentDirectory(MAX_PATH, directory);
-				std::string path = directory;
 				size_t bar_pos = LoadFileNameFileBrowser.find("\\") + 1;
 				LoadFileNameFileBrowser = LoadFileNameFileBrowser.substr(bar_pos, LoadFileNameFileBrowser.length());
 				bar_pos = LoadFileNameFileBrowser.find("\\");
 				LoadFileNameFileBrowser = LoadFileNameFileBrowser.substr(bar_pos, LoadFileNameFileBrowser.length());
-				path += LoadFileNameFileBrowser;
-				App->importer->Load(&path);
+				App->importer->Load(&(directory + LoadFileNameFileBrowser));
 			}
 			//Scene file
 			else if (extention == "json")
@@ -777,12 +775,31 @@ void ModuleEngineUI::ImGuiTimeManager()
 	if (state == EngineTimeStatus::stop)
 	{
 		if (ImGui::Button("Play"))
+		{
+			//App->scene->SaveScene("EditorScenePlayStop_Backup");
 			App->Play();
+		}
 	}
 	else
 	{
 		if (ImGui::Button("Stop"))
+		{
+			//TODO Destroy all current scene
+			/*
+			TCHAR directory[MAX_PATH + 1] = "";
+			DWORD len = GetCurrentDirectory(MAX_PATH, directory);
+			EditorScenePlayStop_Backup_path = *App->importer->Get_Scenes_path();														//	..\\Game\\Scenes
+			size_t bar_pos = EditorScenePlayStop_Backup_path.find("\\") + 1;
+			EditorScenePlayStop_Backup_path = EditorScenePlayStop_Backup_path.substr(bar_pos, EditorScenePlayStop_Backup_path.length());
+			bar_pos = EditorScenePlayStop_Backup_path.find("\\");
+			EditorScenePlayStop_Backup_path = EditorScenePlayStop_Backup_path.substr(bar_pos, EditorScenePlayStop_Backup_path.length()); //  \\Scenes
+			EditorScenePlayStop_Backup_path += "\\";
+			EditorScenePlayStop_Backup_path += "EditorScenePlayStop_Backup.json";
+			App->scene->LoadScene((directory + EditorScenePlayStop_Backup_path).c_str());
+			EditorScenePlayStop_Backup_path.clear();
+			*/
 			App->Stop();
+		}
 	}
 	ImGui::SameLine();
 	if (state == EngineTimeStatus::play_unpause)

@@ -67,6 +67,7 @@ private:
 	ImGuiStyle style_custom;
 	std::string LoadFileNameFileBrowser;
 	std::string SaveFileNameFileBrowser;
+	std::string EditorScenePlayStop_Backup_path;
 
 private:
 	char appnamestr[128];
