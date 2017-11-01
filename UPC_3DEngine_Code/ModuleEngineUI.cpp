@@ -161,6 +161,7 @@ void ModuleEngineUI::DrawModuleImGui()
 	if ((App->input->GetKey(SDL_SCANCODE_4) == KEY_DOWN) && (App->input->GetKey(SDL_SCANCODE_LALT) == KEY_REPEAT)) showConsoleWindow = !showConsoleWindow;
 	if ((App->input->GetKey(SDL_SCANCODE_5) == KEY_DOWN) && (App->input->GetKey(SDL_SCANCODE_LALT) == KEY_REPEAT)) showConfigurationWindow = !showConfigurationWindow;
 	if ((App->input->GetKey(SDL_SCANCODE_6) == KEY_DOWN) && (App->input->GetKey(SDL_SCANCODE_LALT) == KEY_REPEAT)) showProfilerWindow = !showProfilerWindow;
+	if ((App->input->GetKey(SDL_SCANCODE_7) == KEY_DOWN) && (App->input->GetKey(SDL_SCANCODE_LALT) == KEY_REPEAT)) showTimeManager = !showTimeManager;
 
 	//------------------------------------------//
 	//-------------GUI Test Window--------------//
@@ -205,13 +206,19 @@ void ModuleEngineUI::DrawModuleImGui()
 		ImGuiHierarchyWindow();
 
 	//------------------------------------------//
-	//----------Ave & Load File PopUp-----------//
+	//----------Save & Load File PopUp----------//
 	//------------------------------------------//
 	if (showLoadFilePopUp)
 		ImGuiLoadFilePopUp();
 
 	if (showSaveFilePopUp)
 		ImGuiSaveFilePopUp();
+
+	//------------------------------------------//
+	//---------------Time Manager---------------//
+	//------------------------------------------//
+	if (showTimeManager)
+		ImGuiTimeManager();
 
 	//------------------------------------------//
 	//-----------------Rand Gen-----------------//
@@ -731,6 +738,41 @@ void ModuleEngineUI::ImGuiSaveFilePopUp()
 		}
 		ImGui::EndPopup();
 	}
+}
+
+void ModuleEngineUI::ImGuiTimeManager()
+{
+	//ImGui::Begin("Time Manager", false, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse);
+	ImGui::Begin("Time Manager", false, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse);
+
+	EngineTimeStatus state = App->GetEngineTimeStatus();
+
+	if (state == EngineTimeStatus::stop)
+	{
+		if (ImGui::Button("Play"))
+			App->Play();
+	}
+	else
+	{
+		if (ImGui::Button("Stop"))
+			App->Stop();
+	}
+	ImGui::SameLine();
+	if (state == EngineTimeStatus::play_unpause)
+	{
+		if (ImGui::Button("Pause"))
+			App->Pause();
+	}
+	ImGui::SameLine();
+	if (state == EngineTimeStatus::play_pause)
+	{
+		if (ImGui::Button("Continue"))
+			App->Play();
+		ImGui::SameLine();
+		if (ImGui::Button("Frame"))
+			App->Frame();
+	}
+	ImGui::End();
 }
 
 void ModuleEngineUI::PushNewConsoleLabel(std::string* newlabel)

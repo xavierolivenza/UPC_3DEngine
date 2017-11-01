@@ -117,7 +117,8 @@ update_status ModuleInput::PreUpdate(float dt)
 		}
 
 		case SDL_QUIT:
-			quit = true;
+			//quit = true;
+			App->WantToClose();
 			break;
 
 		case SDL_WINDOWEVENT:
@@ -127,10 +128,10 @@ update_status ModuleInput::PreUpdate(float dt)
 		}
 		}
 	}
-
+	/*
 	if(quit == true || keyboard[SDL_SCANCODE_ESCAPE] == KEY_UP)
 		return UPDATE_STOP;
-
+	*/
 	return UPDATE_CONTINUE;
 }
 

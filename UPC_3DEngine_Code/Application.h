@@ -33,8 +33,48 @@ struct PerformanceStruct
 	uint capped_frames = 0;
 };
 
+enum EngineTimeStatus
+{
+	play_unpause,
+	play_pause,
+	//play_pause_frame,
+	stop
+	//play_custom //TimeUpdate != 0.0 or 1.0f and > 0.0f (no negative time), Time distortion
+};
+
 class Application
 {
+public:
+	Application();
+	~Application();
+
+	bool Init();
+	update_status Update();
+	bool CleanUp();
+
+	const std::list<Module*>* GetModuleList() const;
+	uint& GetFramerateCapModif();
+	const PerformanceStruct* GetPerformanceStruct() const;
+
+	void OpenLink(const char* link);
+	void WantToClose();
+
+	//TimeManager
+	EngineTimeStatus GetEngineTimeStatus() const;
+	void Play();
+	void Stop();
+	void Pause();
+	void Frame();
+	void UpdateEngineTimeStatusValue(float value = -1.0f); //Send value > 0.0f to affect this and change to a custom EngineTimeStatus
+
+private:
+	void AddModule(Module* mod);
+	void PrepareUpdate();
+	void FinishUpdate();
+	void PushMSToPreUpdate(Module* module, uint ms);
+	void PushMSToUpdate(Module* module, uint ms);
+	void PushMSToPostUpdate(Module* module, uint ms);
+
 public:
 	ModuleWindow* window;
 	ModuleInput* input;
@@ -50,9 +90,8 @@ public:
 	ModuleSceneImporter* importer;
 
 	ParsonJSON* parsonjson;
-	
-private:
 
+private:
 	Timer	ms_timer;
 	Timer	startup_timer;
 	Timer	last_sec_frame_time;
@@ -62,45 +101,12 @@ private:
 	std::list<Module*> list_modules;
 	PerformanceStruct performance;
 
-public:
-
-	Application();
-	~Application();
-
-	bool Init();
-	update_status Update();
-	bool CleanUp();
-
-	void WantToClose()
-	{
-		Want_To_Close = true;
-	}
-
-	const PerformanceStruct* GetPerformanceStruct() const;
-
-	void OpenLink(const char* link);
-
-	const std::list<Module*>* GetModuleList() const
-	{
-		return &list_modules;
-	}
-
-	uint& GetFramerateCapModif()
-	{
-		return performance.capped_frames;
-	}
-
-private:
-
-	void AddModule(Module* mod);
-	void PrepareUpdate();
-	void FinishUpdate();
+	//Time Manager
+	EngineTimeStatus TimeStatus = EngineTimeStatus::stop;
+	float TimeUpdate = 1.0f; //0.0f: pause, 1.0f: normal time, other: time distortion
+	bool OneFrameForward = false;
 
 	bool Want_To_Close = false;
-
-	void PushMSToPreUpdate(Module* module, uint ms);
-	void PushMSToUpdate(Module* module, uint ms);
-	void PushMSToPostUpdate(Module* module, uint ms);
 };
 
 extern Application* App;

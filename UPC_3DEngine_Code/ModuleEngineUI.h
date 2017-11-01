@@ -42,6 +42,7 @@ private:
 	void ImGuiLoadFilePopUp();
 	void RecursiveDrawDirectory(const char* directory);
 	void ImGuiSaveFilePopUp();
+	void ImGuiTimeManager();
 
 private:
 	GameObject* GameObjectSelected = nullptr;
@@ -55,6 +56,7 @@ private:
 	bool showHierarchyWindow = true;
 	bool showLoadFilePopUp = false;
 	bool showSaveFilePopUp = false;
+	bool showTimeManager = true;
 	bool freezeplots = false;
 	bool active = false;
 	bool ScrollDownConsole = true;

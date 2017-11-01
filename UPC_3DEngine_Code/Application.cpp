@@ -236,3 +236,73 @@ void Application::PushMSToPostUpdate(Module* module, uint ms)
 
 	module->ModulePostUpdateMs[count - 1] = ms;
 }
+
+void Application::WantToClose()
+{
+	Want_To_Close = true;
+}
+
+const std::list<Module*>* Application::GetModuleList() const
+{
+	return &list_modules;
+}
+
+uint& Application::GetFramerateCapModif()
+{
+	return performance.capped_frames;
+}
+
+EngineTimeStatus Application::GetEngineTimeStatus() const
+{
+	return TimeStatus;
+}
+
+void Application::Play()
+{
+	TimeStatus = EngineTimeStatus::play_unpause;
+	UpdateEngineTimeStatusValue();
+}
+
+void Application::Stop()
+{
+	TimeStatus = EngineTimeStatus::stop;
+	UpdateEngineTimeStatusValue();
+}
+
+void Application::Pause()
+{
+	TimeStatus = EngineTimeStatus::play_pause;
+	UpdateEngineTimeStatusValue();
+}
+
+void Application::Frame()
+{
+	OneFrameForward = true;
+}
+
+void Application::UpdateEngineTimeStatusValue(float value)
+{
+	if (value == -1.0f)
+	{
+		switch (TimeStatus)
+		{
+		case EngineTimeStatus::play_unpause:
+			TimeUpdate = 1.0f;
+			break;
+		case EngineTimeStatus::play_pause:
+		case EngineTimeStatus::stop:
+			TimeUpdate = 0.0f;
+			break;
+		}
+	}
+	/*
+	else
+	{
+		if ((value >= 0.0f) && (value <= MAX_TIME_DISTORTION))
+		{
+			TimeUpdate = value;
+			TimeStatus = EngineTimeStatus::play_custom;
+		}
+	}
+	*/
+}
