@@ -42,6 +42,22 @@ enum EngineTimeStatus
 	//play_custom //TimeUpdate != 0.0 or 1.0f and > 0.0f (no negative time), Time distortion
 };
 
+struct TimeManager
+{
+	//Realtime
+	Timer	ms_timer;
+	Timer	startup_timer;
+	Timer	last_sec_frame_time;
+	float	dt = 0.0f;
+	uint prev_last_sec_frame_count = 0;
+	uint last_sec_frame_count = 0;
+	//GameTime
+	float GameSecSinceStartUp = 0.0f;
+	EngineTimeStatus TimeStatus = EngineTimeStatus::stop;
+	float TimeUpdate = 1.0f; //0.0f: pause, 1.0f: normal time, other: time distortion
+	bool OneFrameForward = false;
+};
+
 class Application
 {
 public:
@@ -55,6 +71,7 @@ public:
 	const std::list<Module*>* GetModuleList() const;
 	uint& GetFramerateCapModif();
 	const PerformanceStruct* GetPerformanceStruct() const;
+	const TimeManager* GetTimeManagerStruct() const;
 
 	void OpenLink(const char* link);
 	void WantToClose();
@@ -92,20 +109,12 @@ public:
 	ParsonJSON* parsonjson;
 
 private:
-	Timer	ms_timer;
-	Timer	startup_timer;
-	Timer	last_sec_frame_time;
-	float	dt;
-	uint prev_last_sec_frame_count = 0;
-	uint last_sec_frame_count = 0;
 	std::list<Module*> list_modules;
 	PerformanceStruct performance;
 
 	//Time Manager
-	EngineTimeStatus TimeStatus = EngineTimeStatus::stop;
-	float TimeUpdate = 1.0f; //0.0f: pause, 1.0f: normal time, other: time distortion
-	bool OneFrameForward = false;
-
+	TimeManager Time;
+	
 	bool Want_To_Close = false;
 };
 

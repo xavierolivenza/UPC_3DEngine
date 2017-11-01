@@ -391,6 +391,33 @@ void ModuleEngineUI::ImGuiConfigurationWindow()
 		sprintf_s(title, title_size, "peakAllocUnitCount: %i", MemoryStats.peakAllocUnitCount);
 		ImGui::Text(title);
 	}
+	if (ImGui::CollapsingHeader("Time"))
+	{
+		TimeManager time = *App->GetTimeManagerStruct();
+		char title[100];
+		uint title_size = sizeof title;
+		sprintf_s(title, title_size, "ms_timer: %i", time.ms_timer.Read());
+		ImGui::Text(title);
+		sprintf_s(title, title_size, "startup_timer: %.3fs", time.startup_timer.Read() / 1000.0f);
+		ImGui::Text(title);
+		sprintf_s(title, title_size, "last_sec_frame_time: %i", time.last_sec_frame_time.Read());
+		ImGui::Text(title);
+		sprintf_s(title, title_size, "dt: %.3f", time.dt);
+		ImGui::Text(title);
+		sprintf_s(title, title_size, "prev_last_sec_frame_count: %i", time.prev_last_sec_frame_count);
+		ImGui::Text(title);
+		sprintf_s(title, title_size, "last_sec_frame_count: %i", time.last_sec_frame_count);
+		ImGui::Text(title);
+
+		ImGui::Separator();
+
+		sprintf_s(title, title_size, "GameSecSinceStartUp: %.3fs", time.GameSecSinceStartUp);
+		ImGui::Text(title);
+		sprintf_s(title, title_size, "TimeStatus: %i", time.TimeStatus);
+		ImGui::Text(title);
+		sprintf_s(title, title_size, "TimeUpdate: %.3f", time.TimeUpdate);
+		ImGui::Text(title);
+	}
 	if (ImGui::CollapsingHeader("Window"))
 	{
 		ImGui::SliderInt("Screen Width", &App->window->w_width, 0, 1920);

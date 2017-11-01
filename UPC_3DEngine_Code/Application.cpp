@@ -76,9 +76,9 @@ bool Application::Init()
 	glewInit();
 	ImGui_ImplSdlGL3_Init(App->window->window);
 
-	ms_timer.Start();
-	last_sec_frame_time.Start();
-	startup_timer.Start();
+	Time.ms_timer.Start();
+	Time.last_sec_frame_time.Start();
+	Time.startup_timer.Start();
 	return ret;
 }
 
@@ -86,23 +86,23 @@ bool Application::Init()
 void Application::PrepareUpdate()
 {
 	performance.frame_count++;
-	last_sec_frame_count++;
-	dt = (float)ms_timer.Read() / 1000.0f;
-	ms_timer.Start();
+	Time.last_sec_frame_count++;
+	Time.dt = (float)Time.ms_timer.Read() / 1000.0f;
+	Time.ms_timer.Start();
 }
 
 // ---------------------------------------------
 void Application::FinishUpdate()
 {
-	if (last_sec_frame_time.Read() > 1000)
+	if (Time.last_sec_frame_time.Read() > 1000)
 	{
-		last_sec_frame_time.Start();
-		prev_last_sec_frame_count = last_sec_frame_count;
-		last_sec_frame_count = 0;
+		Time.last_sec_frame_time.Start();
+		Time.prev_last_sec_frame_count = Time.last_sec_frame_count;
+		Time.last_sec_frame_count = 0;
 	}
-	performance.frames_last_second = prev_last_sec_frame_count;
-	performance.average_framerate = (float)performance.frame_count / ((float)startup_timer.Read() / 1000.0f);
-	performance.miliseconds_per_frame = ms_timer.Read();
+	performance.frames_last_second = Time.prev_last_sec_frame_count;
+	performance.average_framerate = (float)performance.frame_count / ((float)Time.startup_timer.Read() / 1000.0f);
+	performance.miliseconds_per_frame = Time.ms_timer.Read();
 
 	if (performance.capped_frames > 0)
 	{
@@ -118,19 +118,19 @@ update_status Application::Update()
 	update_status ret = UPDATE_CONTINUE;
 
 	PrepareUpdate();
-	float modified_DT = dt * TimeUpdate;
+	float modified_DT = Time.dt * Time.TimeUpdate;
 
-	if (OneFrameForward) // if it's true, means TimeUpdate is 0.0f;
+	if (Time.OneFrameForward) // if it's true, means TimeUpdate is 0.0f;
 	{
-		modified_DT = dt;
-		OneFrameForward = false;
+		modified_DT = Time.dt;
+		Time.OneFrameForward = false;
 	}
 
 	for (std::list<Module*>::iterator item = list_modules.begin(); item != list_modules.cend(); ++item)
 	{
 		(*item)->ms_timer.Start();
 		if ((*item) == camera) //Do not effect editor camera (if we do so, we can not move it)
-			(*item)->PreUpdate(dt);
+			(*item)->PreUpdate(Time.dt);
 		else
 			(*item)->PreUpdate(modified_DT);
 		PushMSToPreUpdate(*item, (*item)->ms_timer.Read());
@@ -140,7 +140,7 @@ update_status Application::Update()
 	{
 		(*item)->ms_timer.Start();
 		if ((*item) == camera) //Do not effect editor camera (if we do so, we can not move it)
-			(*item)->Update(dt);
+			(*item)->Update(Time.dt);
 		else
 			(*item)->Update(modified_DT);
 		PushMSToUpdate(*item, (*item)->ms_timer.Read());
@@ -157,13 +157,15 @@ update_status Application::Update()
 	{
 		(*item)->ms_timer.Start();
 		if ((*item) == camera) //Do not effect editor camera (if we do so, we can not move it)
-			(*item)->PostUpdate(dt);
+			(*item)->PostUpdate(Time.dt);
 		else
 			(*item)->PostUpdate(modified_DT);
 		PushMSToPostUpdate(*item, (*item)->ms_timer.Read());
 	}
 
 	FinishUpdate();
+
+	Time.GameSecSinceStartUp += modified_DT;
 
 	if (Want_To_Close)
 		ret = UPDATE_STOP;
@@ -193,6 +195,11 @@ void Application::AddModule(Module* mod)
 const PerformanceStruct* Application::GetPerformanceStruct() const
 {
 	return &performance;
+}
+
+const TimeManager* Application::GetTimeManagerStruct() const
+{
+	return &Time;
 }
 
 void Application::OpenLink(const char* link)
@@ -271,44 +278,44 @@ uint& Application::GetFramerateCapModif()
 
 EngineTimeStatus Application::GetEngineTimeStatus() const
 {
-	return TimeStatus;
+	return Time.TimeStatus;
 }
 
 void Application::Play()
 {
-	TimeStatus = EngineTimeStatus::play_unpause;
+	Time.TimeStatus = EngineTimeStatus::play_unpause;
 	UpdateEngineTimeStatusValue();
 }
 
 void Application::Stop()
 {
-	TimeStatus = EngineTimeStatus::stop;
+	Time.TimeStatus = EngineTimeStatus::stop;
 	UpdateEngineTimeStatusValue();
 }
 
 void Application::Pause()
 {
-	TimeStatus = EngineTimeStatus::play_pause;
+	Time.TimeStatus = EngineTimeStatus::play_pause;
 	UpdateEngineTimeStatusValue();
 }
 
 void Application::Frame()
 {
-	OneFrameForward = true;
+	Time.OneFrameForward = true;
 }
 
 void Application::UpdateEngineTimeStatusValue(float value)
 {
 	if (value == -1.0f)
 	{
-		switch (TimeStatus)
+		switch (Time.TimeStatus)
 		{
 		case EngineTimeStatus::play_unpause:
-			TimeUpdate = 1.0f;
+			Time.TimeUpdate = 1.0f;
 			break;
 		case EngineTimeStatus::play_pause:
 		case EngineTimeStatus::stop:
-			TimeUpdate = 0.0f;
+			Time.TimeUpdate = 0.0f;
 			break;
 		}
 	}
