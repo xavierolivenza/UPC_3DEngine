@@ -79,20 +79,22 @@ void ComponentCamera::DrawComponentImGui()
 		ImGui::Checkbox("Main Camera", &MainCamera);
 		ImGui::Checkbox("Frustum Culling", &FrustumCulling);
 
-		ImGui::DragFloat("NearPlaneDistance", &NearPlaneDistance, 3, ImGuiInputTextFlags_CharsDecimal);
-		ImGui::DragFloat("FarPlaneDistance", &FarPlaneDistance, 3, ImGuiInputTextFlags_CharsDecimal);
-		ImGui::DragFloat("FOV", &FOVVertical, 3, ImGuiInputTextFlags_CharsDecimal);
-		//ImGui::DragFloat3("FPosition", &Pos[0], 3, ImGuiInputTextFlags_CharsDecimal | ImGuiInputTextFlags_ReadOnly);
-		ImGui::DragFloat3("Up", &Up[0], 3, ImGuiInputTextFlags_CharsDecimal | ImGuiInputTextFlags_ReadOnly);
-		ImGui::DragFloat3("Front", &Front[0], 3, ImGuiInputTextFlags_CharsDecimal | ImGuiInputTextFlags_ReadOnly);
-
+		if (ImGui::DragFloat("NearPlaneDistance", &NearPlaneDistance, 3, ImGuiInputTextFlags_CharsDecimal))
+			frustum.nearPlaneDistance = NearPlaneDistance;
+		if (ImGui::DragFloat("FarPlaneDistance", &FarPlaneDistance, 3, ImGuiInputTextFlags_CharsDecimal))
+			frustum.farPlaneDistance = FarPlaneDistance;
+		if (ImGui::DragFloat("FOV", &FOVVertical, 3, ImGuiInputTextFlags_CharsDecimal))
+		{
+			AspectRatio = App->window->GetAspectRatio();
+			frustum.verticalFov = FOVVertical * DEGTORAD;
+			frustum.horizontalFov = Atan(AspectRatio * Tan(frustum.verticalFov * 0.5f)) * 2.0f;
+		}
 		/*
-		ImGui::InputFloat("NearPlaneDistance", &NearPlaneDistance, 3, ImGuiInputTextFlags_CharsDecimal);
-		ImGui::InputFloat("FarPlaneDistance", &FarPlaneDistance, 3, ImGuiInputTextFlags_CharsDecimal);
-		ImGui::InputFloat("FOVHoritzontal", &FOVHoritzontal, 3, ImGuiInputTextFlags_CharsDecimal);
-		ImGui::InputFloat3("FPosition", &Pos[0], 3, ImGuiInputTextFlags_CharsDecimal | ImGuiInputTextFlags_ReadOnly);
-		ImGui::InputFloat3("Up", &Up[0], 3, ImGuiInputTextFlags_CharsDecimal | ImGuiInputTextFlags_ReadOnly);
-		ImGui::InputFloat3("Front", &Front[0], 3, ImGuiInputTextFlags_CharsDecimal | ImGuiInputTextFlags_ReadOnly);
+		ImGui::DragFloat3("FPosition", &Pos[0], 3, ImGuiInputTextFlags_CharsDecimal | ImGuiInputTextFlags_ReadOnly);
+		if (ImGui::DragFloat3("Up", &Up[0], 3, ImGuiInputTextFlags_CharsDecimal | ImGuiInputTextFlags_ReadOnly))
+			frustum.up = Up;
+		if (ImGui::DragFloat3("Front", &Front[0], 3, ImGuiInputTextFlags_CharsDecimal | ImGuiInputTextFlags_ReadOnly))
+			frustum.front = Front;
 		*/
 
 		ImGui::Checkbox("Debug Draw Frustrum", &DebugDrawFrustum);
@@ -139,4 +141,11 @@ bool ComponentCamera::IsMainCamera() const
 const float* ComponentCamera::GetViewProjMatrix() const
 {
 	return frustum.ViewProjMatrix().Transposed().ptr();
+}
+
+void ComponentCamera::SetFrame(float3& pos, float3& front, float3& up)
+{
+	frustum.pos = pos;
+	frustum.front = front;
+	frustum.up = up;
 }

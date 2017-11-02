@@ -14,6 +14,7 @@ public:
 	bool Disable();
 	bool CleanUp();
 	void DrawComponentImGui();
+	void SetFrame(float3& pos, float3& front, float3& up);
 
 	bool SaveComponent(JSON_Object* conf) const;
 	bool LoadComponent(JSON_Object* conf);
@@ -27,8 +28,8 @@ private:
 	bool MainCamera = false;
 
 	Frustum frustum;
-	float NearPlaneDistance = 0.1f;
-	float FarPlaneDistance = 5.0f;
+	float NearPlaneDistance = 0.125f;
+	float FarPlaneDistance = 512.0f;
 	float FOVVertical = 60.0f;
 	float AspectRatio = 1280.0f / 720.0f;
 	float3 Pos = { 0.0f, 0.0f, 0.0f };
