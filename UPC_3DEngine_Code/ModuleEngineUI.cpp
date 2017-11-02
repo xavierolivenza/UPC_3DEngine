@@ -838,6 +838,18 @@ bool ModuleEngineUI::PlotsFreezed() const
 	return freezeplots;
 }
 
+bool ModuleEngineUI::SaveConf(JSON_Object * conf) const
+{
+	App->parsonjson->SetBool(conf, "startAsGame", startAsGame);
+	return true;
+}
+
+bool ModuleEngineUI::LoadConf(JSON_Object * conf)
+{
+	startAsGame = App->parsonjson->GetBool(conf, "startAsGame", false);
+	return true;
+}
+
 void ModuleEngineUI::PushFPSandMSPlot(uint fps, uint ms, uint mem)
 {
 	if (freezeplots)

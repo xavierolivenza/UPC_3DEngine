@@ -30,6 +30,9 @@ public:
 
 	bool PlotsFreezed() const;
 
+	bool SaveConf(JSON_Object* conf) const;
+	bool LoadConf(JSON_Object* conf);
+
 private:
 	void ImGuiDrawMenuBar();
 	void ImGuiConfigurationWindow();
@@ -45,6 +48,7 @@ private:
 	void ImGuiTimeManager();
 
 private:
+	bool startAsGame = false;
 	GameObject* GameObjectSelected = nullptr;
 	std::string Modes3D;
 	bool showTestWindow = false;
