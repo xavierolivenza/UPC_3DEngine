@@ -20,7 +20,7 @@ bool ModuleScene::Init()
 	LOGP("Creating Module Scene");
 	bool ret = true;
 	root = new GameObject("Root", true, true);
-	TestCamera = new GameObject("Camera", true, true);
+	GameObject* TestCamera = new GameObject("Camera", true, true);
 	TestCamera->CreateCameraComponent(true);
 	AddChildToRoot(TestCamera);
 	return ret;
@@ -55,11 +55,24 @@ update_status ModuleScene::PostUpdate(float dt)
 bool ModuleScene::CleanUp()
 {
 	LOGP("Destroying Module Scene");
-	root->CleanUp();
-	RELEASE(root);
-	TestCamera->CleanUp();
-	RELEASE(TestCamera);
+	CleanUpGameObjectTree(root); //Root cleared inside, no delete/RELEASE needed here
 	return true;
+}
+
+void ModuleScene::CleanUpGameObjectTree(GameObject* gameobject)
+{
+	if (gameobject != nullptr)
+	{
+		//Iterate Children
+		const std::vector<GameObject*>* vectorChildren = gameobject->GetChildren();
+		for (std::vector<GameObject*>::const_iterator item = vectorChildren->begin(); item != vectorChildren->cend(); ++item)
+		{
+			(*item)->CleanUp();
+			CleanUpGameObjectTree(*item);
+		}
+		//Once gameobject is cleaned, release it.
+		RELEASE(gameobject);
+	}
 }
 
 bool ModuleScene::SaveConf(JSON_Object* conf) const

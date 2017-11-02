@@ -16,6 +16,7 @@ public:
 	update_status Update(float dt);
 	update_status PostUpdate(float dt);
 	bool CleanUp();
+	void CleanUpGameObjectTree(GameObject* gameobject);
 
 	bool SaveConf(JSON_Object* conf) const;
 	bool LoadConf(JSON_Object* conf);
@@ -41,6 +42,5 @@ private:
 
 private:
 	GameObject* root = nullptr;
-	GameObject* TestCamera = nullptr;
 
 };

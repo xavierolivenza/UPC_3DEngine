@@ -59,12 +59,10 @@ bool GameObject::PostUpdate(float dt)
 
 bool GameObject::CleanUp()
 {
-	for (std::vector<Component*>::const_iterator item = components.cbegin(); item != components.cend(); ++item)
-		(*item)->CleanUp();
-	for (std::vector<GameObject*>::const_iterator item = children.cbegin(); item != children.cend(); ++item)
-		(*item)->CleanUp();
-	//Release memory here
-	//Cleanup loop need improvement iterate all the tree and from leaf nodes iterate backwards to clenaup memory
+	//Children are cleared when Cleaning all gameobject tree
+	for (std::vector<Component*>::iterator item = components.begin(); item != components.cend(); ++item)
+		RELEASE(*item);
+
 	return true;
 }
 
