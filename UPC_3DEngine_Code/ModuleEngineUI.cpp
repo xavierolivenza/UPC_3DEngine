@@ -705,7 +705,7 @@ void ModuleEngineUI::ImGuiLoadFilePopUp()
 
 void ModuleEngineUI::RecursiveDrawDirectory(const char* directory)
 {
-	for (auto& file_in_path : std::experimental::filesystem::directory_iterator(directory))
+	for (std::experimental::filesystem::directory_iterator::value_type file_in_path : std::experimental::filesystem::directory_iterator(directory))
 	{
 		char title[1000] = "";
 		if (std::experimental::filesystem::is_directory(file_in_path.path()))

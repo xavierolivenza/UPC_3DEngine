@@ -71,6 +71,7 @@ void ModuleScene::CleanUpGameObjectTree(GameObject* gameobject)
 			CleanUpGameObjectTree(*item);
 		}
 		//Once gameobject is cleaned, release it.
+		gameobject->CleanUp();
 		RELEASE(gameobject);
 	}
 }
