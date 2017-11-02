@@ -51,6 +51,7 @@ private:
 	bool startAsGame = false;
 	GameObject* GameObjectSelected = nullptr;
 	std::string Modes3D;
+	bool showMenuBar = true;
 	bool showTestWindow = false;
 	bool showProfilerWindow = false;
 	bool showModuleVariablesWindow = true;

@@ -154,7 +154,7 @@ void ModuleEngineUI::DrawModuleImGui()
 	//------------------------------------------//
 	//-----------------Menu Bar-----------------//
 	//------------------------------------------//
-	ImGuiDrawMenuBar();
+	if ((App->input->GetKey(SDL_SCANCODE_0) == KEY_DOWN) && (App->input->GetKey(SDL_SCANCODE_LALT) == KEY_REPEAT)) showMenuBar = !showMenuBar;
 	if ((App->input->GetKey(SDL_SCANCODE_1) == KEY_DOWN) && (App->input->GetKey(SDL_SCANCODE_LALT) == KEY_REPEAT)) showHierarchyWindow = !showHierarchyWindow;
 	if ((App->input->GetKey(SDL_SCANCODE_2) == KEY_DOWN) && (App->input->GetKey(SDL_SCANCODE_LALT) == KEY_REPEAT)) showModuleVariablesWindow = !showModuleVariablesWindow;
 	if ((App->input->GetKey(SDL_SCANCODE_3) == KEY_DOWN) && (App->input->GetKey(SDL_SCANCODE_LALT) == KEY_REPEAT)) showInspectorWindow = !showInspectorWindow;
@@ -162,6 +162,8 @@ void ModuleEngineUI::DrawModuleImGui()
 	if ((App->input->GetKey(SDL_SCANCODE_5) == KEY_DOWN) && (App->input->GetKey(SDL_SCANCODE_LALT) == KEY_REPEAT)) showConfigurationWindow = !showConfigurationWindow;
 	if ((App->input->GetKey(SDL_SCANCODE_6) == KEY_DOWN) && (App->input->GetKey(SDL_SCANCODE_LALT) == KEY_REPEAT)) showProfilerWindow = !showProfilerWindow;
 	if ((App->input->GetKey(SDL_SCANCODE_7) == KEY_DOWN) && (App->input->GetKey(SDL_SCANCODE_LALT) == KEY_REPEAT)) showTimeManager = !showTimeManager;
+	if (showMenuBar)
+		ImGuiDrawMenuBar();
 
 	//------------------------------------------//
 	//-------------GUI Test Window--------------//
@@ -847,6 +849,20 @@ bool ModuleEngineUI::SaveConf(JSON_Object * conf) const
 bool ModuleEngineUI::LoadConf(JSON_Object * conf)
 {
 	startAsGame = App->parsonjson->GetBool(conf, "startAsGame", false);
+	if (startAsGame)
+	{
+		showMenuBar = false;
+		showTestWindow = false;
+		showProfilerWindow = false;
+		showModuleVariablesWindow = false;
+		showConfigurationWindow = false;
+		showConsoleWindow = false;
+		showInspectorWindow = false;
+		showHierarchyWindow = false;
+		showLoadFilePopUp = false;
+		showSaveFilePopUp = false;
+		showTimeManager = false;
+	}
 	return true;
 }
 

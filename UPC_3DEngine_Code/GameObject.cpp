@@ -60,11 +60,13 @@ bool GameObject::PostUpdate(float dt)
 bool GameObject::CleanUp()
 {
 	//Children are cleared when Cleaning all gameobject tree
+
 	for (std::vector<Component*>::iterator item = components.begin(); item != components.cend(); ++item)
 	{
 		(*item)->CleanUp();
 		RELEASE(*item);
 	}
+	components.clear();
 
 	return true;
 }
