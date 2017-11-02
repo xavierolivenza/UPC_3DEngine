@@ -12,7 +12,7 @@
 //#pragma comment (lib, "glut/glut32.lib")
 
 // ------------------------------------------------------------
-Primitive::Primitive() : transform(IdentityMatrix), color(White), axis(false), type(PrimitiveTypes::Primitive_Point)
+Primitive::Primitive() : transform(float4x4::identity), color(White), axis(false), type(PrimitiveTypes::Primitive_Point)
 {}
 
 // ------------------------------------------------------------
@@ -25,7 +25,7 @@ PrimitiveTypes Primitive::GetType() const
 void Primitive::Render() const
 {
 	glPushMatrix();
-	glMultMatrixf(transform.M);
+	glMultMatrixf(transform.ptr());
 
 	if (axis == true)
 	{
@@ -99,19 +99,19 @@ void Primitive::GeneratePrimitiveWithNewData()
 // ------------------------------------------------------------
 void Primitive::SetPos(float x, float y, float z)
 {
-	transform.translate(x, y, z);
+	transform.Translate(x, y, z);
 }
 
 // ------------------------------------------------------------
-void Primitive::SetRotation(float angle, const vec3 &u)
+void Primitive::SetRotation(float angle, const float3 &u)
 {
-	transform.rotate(angle, u);
+	transform.RotateAxisAngle(u, angle * DEGTORAD);
 }
 
 // ------------------------------------------------------------
 void Primitive::Scale(float x, float y, float z)
 {
-	transform.scale(x, y, z);
+	transform.Scale(x, y, z);
 }
 
 // CUBE ============================================
@@ -301,10 +301,10 @@ void P2Sphere::GeneratePrimitiveWithNewData()
 			float phi1 = ((float)p / slices) * 2 * pi;
 			float phi2 = ((float)(p + 1) / slices) * 2 * pi;
 
-			vec3 vertex1;
-			vec3 vertex2;
-			vec3 vertex3;
-			vec3 vertex4;
+			float3 vertex1;
+			float3 vertex2;
+			float3 vertex3;
+			float3 vertex4;
 
 			vertex1.z = radius * Sin(theta1) * Cos(phi1);
 			vertex1.x = radius * Sin(theta1) * Sin(phi1);

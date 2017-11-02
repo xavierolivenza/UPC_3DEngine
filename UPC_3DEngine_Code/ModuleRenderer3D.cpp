@@ -4,7 +4,6 @@
 #include "SDL\include\SDL_opengl.h"
 #include <gl/GL.h>
 #include <gl/GLU.h>
-
 #include "ComponentTransform.h"
 #include "ComponentMesh.h"
 #include "ComponentMaterial.h"
@@ -873,6 +872,7 @@ bool ModuleRenderer3D::LoadConf(JSON_Object* conf)
 
 void ModuleRenderer3D::OnResize(int width, int height)
 {
+	/*
 	glViewport(0, 0, width, height);
 	SDL_SetWindowSize(App->window->window, width, height);
 
@@ -883,6 +883,7 @@ void ModuleRenderer3D::OnResize(int width, int height)
 
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
+	*/
 }
 
 void ModuleRenderer3D::ImGuiModuleVariables()

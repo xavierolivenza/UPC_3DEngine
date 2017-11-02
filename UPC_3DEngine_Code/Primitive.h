@@ -4,7 +4,7 @@
 #include <vector>
 
 #include "Globals.h"
-#include "glmath.h"
+//#include "glmath.h"
 #include "Color.h"
 #include "MathGeoLib\MathGeoLib.h"
 
@@ -60,14 +60,14 @@ public:
 	virtual void	InnerRender() const;
 	virtual void	GeneratePrimitiveWithNewData();
 	void			SetPos(float x, float y, float z);
-	void			SetRotation(float angle, const vec3 &u);
+	void			SetRotation(float angle, const float3 &u);
 	void			Scale(float x, float y, float z);
 	PrimitiveTypes	GetType() const;
 
 public:
 	
 	Color color;
-	mat4x4 transform;
+	float4x4 transform;
 	bool axis;
 
 protected:
@@ -85,7 +85,7 @@ public :
 	void InnerRender() const;
 	void GeneratePrimitiveWithNewData();
 public:
-	vec3 size;
+	float3 size;
 private:
 	bool buffersCreated = false;
 };
@@ -110,7 +110,7 @@ private:
 	float3*	vertex3 = nullptr;
 	float2* vertex3_uv = nullptr;
 
-	std::list<vec3> mesh;
+	std::list<float3> mesh;
 	std::vector<float> vertex_array;
 };
 
@@ -135,8 +135,8 @@ public:
 	void InnerRender() const;
 public:
 	float thickness = 2.0f;
-	vec3 origin;
-	vec3 destination;
+	float3 origin;
+	float3 destination;
 };
 
 // ============================================
@@ -161,6 +161,6 @@ public:
 	P2Plane(float x, float y, float z, float d);
 	void InnerRender() const;
 public:
-	vec3 normal;
+	float3 normal;
 	float constant;
 };
