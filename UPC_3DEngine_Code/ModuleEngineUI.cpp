@@ -613,29 +613,24 @@ void ModuleEngineUI::RecursiveDrawHierarchy(const GameObject* node)
 	uint flags = 0;
 	const std::vector<GameObject*>* children = node->GetChildren();
 
-	if (children->empty())
-		flags |= ImGuiTreeNodeFlags_Leaf;
-	if (ImGui::TreeNodeEx(node, flags, node->name.c_str()))
+	if (node == App->scene->GetRoot())
 	{
-		if (ImGui::IsItemClicked())
-			GameObjectSelected = const_cast<GameObject*>(node); //Warning const cast
 		for (std::vector<GameObject*>::const_iterator item = children->cbegin(); item != children->cend(); ++item)
 			RecursiveDrawHierarchy(*item);
-		ImGui::TreePop();
 	}
-	/*
-	if (ImGui::TreeNodeEx(node, flags, "Node"))
+	else
 	{
-		for (std::vector<GameObject*>::const_iterator item = children->cbegin(); item != children->cend(); ++item)
+		if (children->empty())
+			flags |= ImGuiTreeNodeFlags_Leaf;
+		if (ImGui::TreeNodeEx(node, flags, node->name.c_str()))
 		{
-			ImGui::Text("%s", (*item)->name.c_str());
-			if(ImGui::IsItemClicked())
-				GameObjectSelected = *item;
-			RecursiveDrawHierarchy(*item);
+			if (ImGui::IsItemClicked())
+				GameObjectSelected = const_cast<GameObject*>(node); //Warning const cast
+			for (std::vector<GameObject*>::const_iterator item = children->cbegin(); item != children->cend(); ++item)
+				RecursiveDrawHierarchy(*item);
+			ImGui::TreePop();
 		}
-		ImGui::TreePop();
 	}
-	*/
 }
 
 void ModuleEngineUI::ImGuiLoadFilePopUp()
@@ -776,6 +771,7 @@ void ModuleEngineUI::ImGuiTimeManager()
 	{
 		if (ImGui::Button("Play"))
 		{
+			//TODO save scene
 			//App->scene->SaveScene("EditorScenePlayStop_Backup");
 			App->Play();
 		}
@@ -785,6 +781,7 @@ void ModuleEngineUI::ImGuiTimeManager()
 		if (ImGui::Button("Stop"))
 		{
 			//TODO Destroy all current scene
+			//TODO Load Saved Scene
 			/*
 			TCHAR directory[MAX_PATH + 1] = "";
 			DWORD len = GetCurrentDirectory(MAX_PATH, directory);
