@@ -8,12 +8,12 @@ ModuleCamera3D::ModuleCamera3D(Application* app, bool start_enabled) : Module(ap
 {
 	name = "camera3d";
 
-	X = vec3(1.0f, 0.0f, 0.0f);
-	Y = vec3(0.0f, 1.0f, 0.0f);
-	Z = vec3(0.0f, 0.0f, 1.0f);
+	X = float3(1.0f, 0.0f, 0.0f);
+	Y = float3(0.0f, 1.0f, 0.0f);
+	Z = float3(0.0f, 0.0f, 1.0f);
 
-	Position = vec3(2.0f, 2.0f, 5.0f);
-	Reference = vec3(0.0f, 0.0f, 0.0f);
+	Position = float3(2.0f, 2.0f, 5.0f);
+	Reference = float3(0.0f, 0.0f, 0.0f);
 
 }
 
@@ -27,7 +27,7 @@ bool ModuleCamera3D::Start()
 {
 	LOGP("Setting up the camera");
 	CameraComp = new ComponentCamera(nullptr, true);
-	CameraComp->SetFrame(float3(Position.x, Position.y, Position.z), -float3(Z.x, Z.y, Z.z), float3(Y.x, Y.y, Y.z));
+	CameraComp->SetFrame(float3(Position.x, Position.y, Position.z), -Z, Y);
 	bool ret = true;
 	return ret;
 }
@@ -69,7 +69,7 @@ update_status ModuleCamera3D::Update(float dt)
 		return UPDATE_CONTINUE;
 	}
 
-	vec3 newPos(0, 0, 0);
+	float3 newPos(0, 0, 0);
 	float speed = 50.0f * dt;
 
 	//Speed
@@ -110,27 +110,29 @@ update_status ModuleCamera3D::Update(float dt)
 		if (dx != 0)
 		{
 			float DeltaX = (float)dx * Sensitivity;
+			float3x3 rotate = float3x3::RotateAxisAngle(float3(0.0f, 1.0f, 0.0f), DeltaX * DEGTORAD);
 
-			X = rotate(X, DeltaX, vec3(0.0f, 1.0f, 0.0f));
-			Y = rotate(Y, DeltaX, vec3(0.0f, 1.0f, 0.0f));
-			Z = rotate(Z, DeltaX, vec3(0.0f, 1.0f, 0.0f));
+			X = rotate * X;
+			Y = rotate * Y;
+			Z = rotate * Z;
 		}
 
 		if (dy != 0)
 		{
 			float DeltaY = (float)dy * Sensitivity;
+			float3x3 rotate = float3x3::RotateAxisAngle(X, DeltaY * DEGTORAD);
 
-			Y = rotate(Y, DeltaY, X);
-			Z = rotate(Z, DeltaY, X);
+			Y = rotate * Y;
+			Z = rotate * Z;
 
 			if (Y.y < 0.0f)
 			{
-				Z = vec3(0.0f, Z.y > 0.0f ? 1.0f : -1.0f, 0.0f);
-				Y = cross(Z, X);
+				Z = float3(0.0f, Z.y > 0.0f ? 1.0f : -1.0f, 0.0f);
+				Y = Z.Cross(X);
 			}
 		}
 
-		Position = Reference + Z * length(Position);
+		Position = Reference + Z * Position.Length();
 	}
 
 	if (App->input->GetKey(SDL_SCANCODE_F) == KEY_DOWN)
@@ -142,14 +144,14 @@ update_status ModuleCamera3D::Update(float dt)
 }
 
 // -----------------------------------------------------------------
-void ModuleCamera3D::Look(const vec3 &Position, const vec3 &Reference, bool RotateAroundReference)
+void ModuleCamera3D::Look(const float3 &Position, const float3 &Reference, bool RotateAroundReference)
 {
 	this->Position = Position;
 	this->Reference = Reference;
 
-	Z = normalize(Position - Reference);
-	X = normalize(cross(vec3(0.0f, 1.0f, 0.0f), Z));
-	Y = cross(Z, X);
+	Z = (Position - Reference).Normalized();
+	X = (float3(0.0f, 1.0f, 0.0f).Cross(Z).Normalized());
+	Y = Z.Cross(X);
 
 	if (!RotateAroundReference)
 	{
@@ -159,17 +161,17 @@ void ModuleCamera3D::Look(const vec3 &Position, const vec3 &Reference, bool Rota
 }
 
 // -----------------------------------------------------------------
-void ModuleCamera3D::LookAt(const vec3 &Spot)
+void ModuleCamera3D::LookAt(const float3 &Spot)
 {
 	Reference = Spot;
 
-	Z = normalize(Position - Reference);
-	X = normalize(cross(vec3(0.0f, 1.0f, 0.0f), Z));
-	Y = cross(Z, X);
+	Z = (Position - Reference).Normalized();
+	X = (float3(0.0f, 1.0f, 0.0f).Cross(Z).Normalized());
+	Y = Z.Cross(X);
 }
 
 // -----------------------------------------------------------------
-void ModuleCamera3D::Move(const vec3 &Movement)
+void ModuleCamera3D::Move(const float3 &Movement)
 {
 	Position += Movement;
 	Reference += Movement;
@@ -184,15 +186,15 @@ const float*  ModuleCamera3D::GetViewMatrix() const
 void ModuleCamera3D::CenterCameraToGeometry(const AABB* meshAABB)
 {
 	if (meshAABB == nullptr)
-		Reference = vec3(0.0f, 0.0f, 0.0f);
+		Reference = float3(0.0f, 0.0f, 0.0f);
 	else
 	{
 		float3 centre = meshAABB->CenterPoint();
-		Reference = vec3(centre.x, centre.y, centre.z);
+		Reference = float3(centre.x, centre.y, centre.z);
 		LastCentreGeometry = meshAABB;
 
 		//Same as LookAt, but here we don't recalculate viewmatrix, this is not necessary now
-		Z = normalize(Position - Reference);
+		Z = (Position - Reference).Normalized();
 		//For the math here, X,Y is not necesary
 		//X = normalize(cross(vec3(0.0f, 1.0f, 0.0f), Z));
 		//Y = cross(Z, X);
