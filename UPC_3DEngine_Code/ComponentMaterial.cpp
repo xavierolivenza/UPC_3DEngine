@@ -35,6 +35,7 @@ bool ComponentMaterial::Disable()
 
 bool ComponentMaterial::CleanUp()
 {
+	MaterialDataStruct.~MaterialDataStruct();
 	return true;
 }
 

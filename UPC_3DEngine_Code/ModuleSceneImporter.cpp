@@ -481,7 +481,7 @@ bool ModuleSceneImporter::LoadFBXComponents(const std::string* file_to_load)
 		NewGameObject->AddChild(NewMeshGameObject);
 	}
 	App->scene->AddChildToRoot(NewGameObject);
-
+	RELEASE_ARRAY(data);
 	return true;
 }
 

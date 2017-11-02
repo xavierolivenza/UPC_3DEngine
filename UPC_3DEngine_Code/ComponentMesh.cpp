@@ -51,6 +51,7 @@ bool ComponentMesh::Disable()
 
 bool ComponentMesh::CleanUp()
 {
+	MeshDataStruct.~MeshData();
 	return true;
 }
 
