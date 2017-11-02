@@ -1,6 +1,7 @@
 #include "Globals.h"
 #include "Application.h"
 #include "ModuleWindow.h"
+#include "SDL\include\SDL.h"
 
 ModuleWindow::ModuleWindow(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
@@ -117,7 +118,7 @@ bool ModuleWindow::LoadConf(JSON_Object* conf)
 	w_height = App->parsonjson->GetInt(conf, "height", 720);
 	title = App->parsonjson->GetString(conf, "title", "Default Title");
 	fullscreen = App->parsonjson->GetBool(conf, "fullscreen", false);
-	resizable = App->parsonjson->GetBool(conf, "resizable", false);
+	resizable = App->parsonjson->GetBool(conf, "resizable", true);
 	borderless = App->parsonjson->GetBool(conf, "borderless", false);
 	fullscreen_desktop = App->parsonjson->GetBool(conf, "fullscreen desktop", false);
 	return true;

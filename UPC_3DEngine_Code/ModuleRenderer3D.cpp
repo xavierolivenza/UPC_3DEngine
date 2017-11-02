@@ -873,10 +873,11 @@ bool ModuleRenderer3D::LoadConf(JSON_Object* conf)
 void ModuleRenderer3D::OnResize(int width, int height)
 {
 	glViewport(0, 0, width, height);
+	SDL_SetWindowSize(App->window->window, width, height);
 
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-	ProjectionMatrix = perspective(60.0f, (float)width / (float)height, 0.125f, 512.0f);
+	ProjectionMatrix = perspective(60.0f, (float)width / (float)height, 0.125f, 512.0f); //Load from main camera editor frustrum, Or main camera if looking from component camera of game object
 	glLoadMatrixf(&ProjectionMatrix);
 
 	glMatrixMode(GL_MODELVIEW);
