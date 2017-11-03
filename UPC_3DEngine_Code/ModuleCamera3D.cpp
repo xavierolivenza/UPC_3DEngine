@@ -1,3 +1,5 @@
+#include <map>
+
 #include "Globals.h"
 #include "Application.h"
 #include "PhysBody3D.h"
@@ -154,7 +156,7 @@ update_status ModuleCamera3D::Update(float dt)
 
 		//Check ray agains gameobjects Sphere - AABB (Optimaze with infrustrum gameobjects(quadtree/octree))
 		std::vector<const GameObject*> SceneGameObjects;
-		std::vector<const GameObject*> SceneGameObjectsHitted;
+		std::multimap<float, const GameObject*> SceneGameObjectsHitted;
 		App->scene->GetAllSceneGameObjects(SceneGameObjects);
 		for (std::vector<const GameObject*>::const_iterator item = SceneGameObjects.cbegin(); item != SceneGameObjects.cend(); ++item)
 		{
@@ -162,7 +164,9 @@ update_status ModuleCamera3D::Update(float dt)
 			if (MeshComp != nullptr)
 			{
 				bool hit = false;
-				hit = MousePickRay.Intersects(MeshComp->MeshDataStruct.BoundBox);
+				float Neardistance = 0.0f;
+				float Fardistance = 0.0f;
+				hit = MousePickRay.Intersects(MeshComp->MeshDataStruct.BoundBox, Neardistance, Fardistance);
 				/*
 				hit = MousePickRay.Intersects(MeshComp->MeshDataStruct.BoundSphere);
 				if (hit)
@@ -172,14 +176,14 @@ update_status ModuleCamera3D::Update(float dt)
 				*/
 				if (hit)
 				{
-					LOGP("Hit");
-					SceneGameObjectsHitted.push_back(*item);
+					//LOGP("Hit");
+					//Order hitted AABB by distance
+					SceneGameObjectsHitted.insert(std::pair<float, const GameObject*>(Neardistance, *item));
 				}
 			}
 		}
-		for (std::vector<const GameObject*>::const_iterator item = SceneGameObjectsHitted.cbegin(); item != SceneGameObjectsHitted.cend(); ++item)
+		for (std::multimap<float, const GameObject*>::const_iterator item = SceneGameObjectsHitted.cbegin(); item != SceneGameObjectsHitted.cend(); ++item)
 		{
-			//Order hitted AABB by distance
 			//Iterate mesh triangles to chechk if hit is real (using order by distance)
 			//Do not transform mesh triangles, transform ray to local space
 			//Now we can test
