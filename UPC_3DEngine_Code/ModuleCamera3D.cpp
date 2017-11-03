@@ -148,10 +148,13 @@ update_status ModuleCamera3D::Update(float dt)
 		int w = 0;
 		int h = 0;
 		App->window->GetWindowSize(w, h);
-		MousePickRay = CameraComp->frustum.UnProjectLineSegment(((float)App->input->GetMouseX() / (float)w), ((float)App->input->GetMouseY() / (float)h));
+		float MouseNormX = -(1.0f - (float(App->input->GetMouseX()) * 2.0f) / w);
+		float MouseNormY = 1.0f - (float(App->input->GetMouseY()) * 2.0f) / h;
+		MousePickRay = CameraComp->frustum.UnProjectLineSegment(MouseNormX, MouseNormY);
 
 		//Check ray agains gameobjects Sphere - AABB (Optimaze with infrustrum gameobjects(quadtree/octree))
 		std::vector<const GameObject*> SceneGameObjects;
+		std::vector<const GameObject*> SceneGameObjectsHitted;
 		App->scene->GetAllSceneGameObjects(SceneGameObjects);
 		for (std::vector<const GameObject*>::const_iterator item = SceneGameObjects.cbegin(); item != SceneGameObjects.cend(); ++item)
 		{
@@ -170,8 +173,16 @@ update_status ModuleCamera3D::Update(float dt)
 				if (hit)
 				{
 					LOGP("Hit");
+					SceneGameObjectsHitted.push_back(*item);
 				}
 			}
+		}
+		for (std::vector<const GameObject*>::const_iterator item = SceneGameObjectsHitted.cbegin(); item != SceneGameObjectsHitted.cend(); ++item)
+		{
+			//Order hitted AABB by distance
+			//Iterate mesh triangles to chechk if hit is real (using order by distance)
+			//Do not transform mesh triangles, transform ray to local space
+			//Now we can test
 		}
 	}
 
