@@ -1,4 +1,5 @@
 #include "ComponentMesh.h"
+#include "ComponentTransform.h"
 
 ComponentMesh::ComponentMesh(GameObject* parent, bool Active) : Component(parent, Active, 1, ComponentType::Mesh_Component)
 {
@@ -31,8 +32,14 @@ bool ComponentMesh::Update(float dt)
 		App->renderer3D->DrawComponentMeshMaterial(parent->GetTransform(), (ComponentMesh*)MeshComponent, (ComponentMaterial*)MaterialComponent);
 	}
 
+	//Recalculate AABB of this mesh
+	AABB LocalCopy = MeshDataStruct.BoundBox;
+	ComponentTransform* transform = this->parent->GetTransform();
+	const float4x4 matrix = *transform->GetMatrix();
+	LocalCopy.TransformAsAABB(matrix.Transposed());
+
 	if (DebugDrawAABB)
-		App->renderer3D->DrawDebugBox(MeshDataStruct.BoundBox.CornerPoint(0), MeshDataStruct.BoundBox.CornerPoint(1), MeshDataStruct.BoundBox.CornerPoint(2), MeshDataStruct.BoundBox.CornerPoint(3), MeshDataStruct.BoundBox.CornerPoint(4), MeshDataStruct.BoundBox.CornerPoint(5), MeshDataStruct.BoundBox.CornerPoint(6), MeshDataStruct.BoundBox.CornerPoint(7), 1.0f, 1.0f, 0.0f);
+		App->renderer3D->DrawDebugBox(LocalCopy.CornerPoint(0), LocalCopy.CornerPoint(1), LocalCopy.CornerPoint(2), LocalCopy.CornerPoint(3), LocalCopy.CornerPoint(4), LocalCopy.CornerPoint(5), LocalCopy.CornerPoint(6), LocalCopy.CornerPoint(7), 1.0f, 1.0f, 0.0f);
 	if (DebugDrawOBB)
 		App->renderer3D->DrawDebugBox(MeshDataStruct.BoundOBox.CornerPoint(0), MeshDataStruct.BoundOBox.CornerPoint(1), MeshDataStruct.BoundOBox.CornerPoint(2), MeshDataStruct.BoundOBox.CornerPoint(3), MeshDataStruct.BoundOBox.CornerPoint(4), MeshDataStruct.BoundOBox.CornerPoint(5), MeshDataStruct.BoundOBox.CornerPoint(6), MeshDataStruct.BoundOBox.CornerPoint(7), 0.0f, 1.0f, 0.0f);
 
