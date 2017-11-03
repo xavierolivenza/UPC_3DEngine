@@ -71,6 +71,12 @@ bool GameObject::CleanUp()
 	return true;
 }
 
+bool GameObject::CleanChildrenVec()
+{
+	children.clear();
+	return true;
+}
+
 bool GameObject::SaveGameObject(JSON_Array* array) const
 {
 	if (this != App->scene->GetRoot())

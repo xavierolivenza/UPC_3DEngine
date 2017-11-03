@@ -16,13 +16,14 @@ public:
 	update_status Update(float dt);
 	update_status PostUpdate(float dt);
 	bool CleanUp();
-	void CleanUpGameObjectTree(GameObject* gameobject);
+	void CleanUpScene();
 
 	bool SaveConf(JSON_Object* conf) const;
 	bool LoadConf(JSON_Object* conf);
 
 	bool SaveScene(const char* filename) const;
 	bool LoadScene(const char* filename);
+	bool LoadEditorScene(const char* filename);
 
 	void ImGuiModuleVariables();
 
@@ -39,8 +40,12 @@ public:
 
 private:
 	const ComponentCamera* GetActiveCameraIterator(GameObject* node) const;
+	void CleanUpGameObjectTree(GameObject* gameobject, bool cleanRoot = true);
 
 private:
 	GameObject* root = nullptr;
+	bool CleanScene = false;
+	bool SceneToLoad = false;
+	std::string EditorScene_ToLoad;
 
 };

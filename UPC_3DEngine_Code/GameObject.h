@@ -19,6 +19,7 @@ public:
 	bool Update(float dt);
 	bool PostUpdate(float dt);
 	bool CleanUp();
+	bool CleanChildrenVec();
 
 	bool SaveGameObject(JSON_Array* array) const;
 	bool LoadGameObject(JSON_Object* conf);

@@ -48,6 +48,17 @@ update_status ModuleScene::Update(float dt)
 update_status ModuleScene::PostUpdate(float dt)
 {
 	root->PostUpdate(dt);
+	if (CleanScene)
+	{
+		CleanUpGameObjectTree(root, false);
+		CleanScene = false;
+	}
+	if (SceneToLoad)
+	{
+		LoadScene(EditorScene_ToLoad.c_str());
+		EditorScene_ToLoad.clear();
+		SceneToLoad = false;
+	}
 	return UPDATE_CONTINUE;
 }
 
@@ -59,7 +70,19 @@ bool ModuleScene::CleanUp()
 	return true;
 }
 
-void ModuleScene::CleanUpGameObjectTree(GameObject* gameobject)
+void ModuleScene::CleanUpScene()
+{
+	CleanScene = true;
+}
+
+bool ModuleScene::LoadEditorScene(const char* filename)
+{
+	EditorScene_ToLoad = filename;
+	SceneToLoad = true;
+	return true;
+}
+
+void ModuleScene::CleanUpGameObjectTree(GameObject* gameobject, bool cleanRoot)
 {
 	if (gameobject != nullptr)
 	{
@@ -70,9 +93,13 @@ void ModuleScene::CleanUpGameObjectTree(GameObject* gameobject)
 			(*item)->CleanUp();
 			CleanUpGameObjectTree(*item);
 		}
+		gameobject->CleanChildrenVec();
 		//Once gameobject is cleaned, release it.
-		gameobject->CleanUp();
-		RELEASE(gameobject);
+		if (cleanRoot)
+		{
+			gameobject->CleanUp();
+			RELEASE(gameobject);
+		}
 	}
 }
 

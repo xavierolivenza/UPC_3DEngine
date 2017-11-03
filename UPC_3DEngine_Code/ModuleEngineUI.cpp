@@ -774,7 +774,7 @@ void ModuleEngineUI::ImGuiTimeManager()
 		if (ImGui::Button("Play"))
 		{
 			//TODO save scene
-			//App->scene->SaveScene("EditorScenePlayStop_Backup");
+			App->scene->SaveScene("EditorScene_Backup");
 			App->Play();
 		}
 	}
@@ -782,22 +782,12 @@ void ModuleEngineUI::ImGuiTimeManager()
 	{
 		if (ImGui::Button("Stop"))
 		{
-			//TODO Destroy all current scene
-			//TODO Load Saved Scene
-			/*
-			TCHAR directory[MAX_PATH + 1] = "";
-			DWORD len = GetCurrentDirectory(MAX_PATH, directory);
-			EditorScenePlayStop_Backup_path = *App->importer->Get_Scenes_path();														//	..\\Game\\Scenes
-			size_t bar_pos = EditorScenePlayStop_Backup_path.find("\\") + 1;
-			EditorScenePlayStop_Backup_path = EditorScenePlayStop_Backup_path.substr(bar_pos, EditorScenePlayStop_Backup_path.length());
-			bar_pos = EditorScenePlayStop_Backup_path.find("\\");
-			EditorScenePlayStop_Backup_path = EditorScenePlayStop_Backup_path.substr(bar_pos, EditorScenePlayStop_Backup_path.length()); //  \\Scenes
-			EditorScenePlayStop_Backup_path += "\\";
-			EditorScenePlayStop_Backup_path += "EditorScenePlayStop_Backup.json";
-			App->scene->LoadScene((directory + EditorScenePlayStop_Backup_path).c_str());
-			EditorScenePlayStop_Backup_path.clear();
-			*/
 			App->Stop();
+			//Destroy all current scene
+			App->scene->CleanUpScene();
+			GameObjectSelected = nullptr;
+			//Load Saved Scene
+			App->scene->LoadEditorScene((*App->importer->Get_Scenes_path() + "\\" + "EditorScene_Backup.json").c_str());
 		}
 	}
 	ImGui::SameLine();
