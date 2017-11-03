@@ -390,3 +390,10 @@ GameObject* GameObject::FindGameObjectWithUUID(u32 UUID_ToSearch)
 	}
 	return nullptr;
 }
+
+void GameObject::GetAllSceneGameObjects(std::vector<const GameObject*>& SceneGameObjects) const
+{
+	SceneGameObjects.push_back(this);
+	for (std::vector<GameObject*>::const_iterator item = children.cbegin(); item != children.cend(); ++item)
+		(*item)->GetAllSceneGameObjects(SceneGameObjects);
+}

@@ -3,6 +3,7 @@
 
 class ComponentCamera : public Component
 {
+	friend class ModuleCamera3D;
 public:
 	ComponentCamera(GameObject* parent, bool Active);
 	~ComponentCamera();

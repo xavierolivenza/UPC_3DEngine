@@ -3,6 +3,7 @@
 #include "PhysBody3D.h"
 #include "ModuleCamera3D.h"
 #include "ComponentCamera.h"
+#include "ComponentMesh.h"
 
 ModuleCamera3D::ModuleCamera3D(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
@@ -139,6 +140,49 @@ update_status ModuleCamera3D::Update(float dt)
 		RecentreCameraToGeometry();
 
 	CameraComp->SetFrame(float3(Position.x, Position.y, Position.z), -float3(Z.x, Z.y, Z.z), float3(Y.x, Y.y, Y.z));
+
+	//Mouse Picking
+	if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_DOWN)
+	{
+		//Create Ray
+		int w = 0;
+		int h = 0;
+		App->window->GetWindowSize(w, h);
+		MousePickRay = CameraComp->frustum.UnProjectLineSegment(((float)App->input->GetMouseX() / (float)w), ((float)App->input->GetMouseY() / (float)h));
+
+		//Check ray agains gameobjects Sphere - AABB (Optimaze with infrustrum gameobjects(quadtree/octree))
+		std::vector<const GameObject*> SceneGameObjects;
+		App->scene->GetAllSceneGameObjects(SceneGameObjects);
+		for (std::vector<const GameObject*>::const_iterator item = SceneGameObjects.cbegin(); item != SceneGameObjects.cend(); ++item)
+		{
+			ComponentMesh* MeshComp = (ComponentMesh*)(*item)->FindComponentFirst(ComponentType::Mesh_Component);
+			if (MeshComp != nullptr)
+			{
+				bool hit = false;
+				hit = MousePickRay.Intersects(MeshComp->MeshDataStruct.BoundBox);
+				/*
+				hit = MousePickRay.Intersects(MeshComp->MeshDataStruct.BoundSphere);
+				if (hit)
+					hit = MousePickRay.Intersects(MeshComp->MeshDataStruct.BoundBox);
+				if (hit)
+					hit = MousePickRay.Intersects(MeshComp->MeshDataStruct.BoundOBox);
+				*/
+				if (hit)
+				{
+					LOGP("Hit");
+				}
+			}
+		}
+	}
+
+	/**/
+	glLineWidth(5.0f);
+	glBegin(GL_LINES);
+	glVertex3f(MousePickRay.a.x, MousePickRay.a.y, MousePickRay.a.z);
+	glVertex3f(MousePickRay.b.x, MousePickRay.b.y, MousePickRay.b.z);
+	glEnd();
+	glLineWidth(1.0f);
+	/**/
 
 	return UPDATE_CONTINUE;
 }

@@ -38,4 +38,6 @@ private:
 
 	ComponentCamera* CameraComp = nullptr;
 
+	LineSegment		MousePickRay;
+
 };

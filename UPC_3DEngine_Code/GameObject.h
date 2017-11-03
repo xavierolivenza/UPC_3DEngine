@@ -53,6 +53,8 @@ public:
 	u32 GetUUID() const;
 	GameObject* FindGameObjectWithUUID(u32 UUID_ToSearch);
 
+	void GetAllSceneGameObjects(std::vector<const GameObject*>& SceneGameObjects) const;
+
 private:
 	ComponentTransform* CreateTransformComponent(bool active);
 	bool CanCreateOneMoreComponent(ComponentType type);
