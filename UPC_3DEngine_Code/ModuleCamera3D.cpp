@@ -6,6 +6,7 @@
 #include "ModuleCamera3D.h"
 #include "ComponentCamera.h"
 #include "ComponentMesh.h"
+#include "ComponentTransform.h"
 
 ModuleCamera3D::ModuleCamera3D(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
@@ -30,7 +31,7 @@ bool ModuleCamera3D::Start()
 {
 	LOGP("Setting up the camera");
 	CameraComp = new ComponentCamera(nullptr, true);
-	CameraComp->SetFrame(float3(Position.x, Position.y, Position.z), -Z, Y);
+	CameraComp->SetFrame(Position, -Z, Y);
 	bool ret = true;
 	return ret;
 }
@@ -141,7 +142,7 @@ update_status ModuleCamera3D::Update(float dt)
 	if (App->input->GetKey(SDL_SCANCODE_F) == KEY_DOWN)
 		RecentreCameraToGeometry();
 
-	CameraComp->SetFrame(float3(Position.x, Position.y, Position.z), -float3(Z.x, Z.y, Z.z), float3(Y.x, Y.y, Y.z));
+	CameraComp->SetFrame(Position, -Z, Y);
 
 	//Mouse Picking
 	if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_DOWN)
@@ -182,21 +183,54 @@ update_status ModuleCamera3D::Update(float dt)
 				}
 			}
 		}
+		bool TriangleHit = false;
 		for (std::multimap<float, const GameObject*>::const_iterator item = SceneGameObjectsHitted.cbegin(); item != SceneGameObjectsHitted.cend(); ++item)
 		{
+			//Transform Mouse to GameObject Local Space
+			//Copy it so we don't affect the original one
+			LineSegment	Ray = MousePickRay;
+			Ray.Transform(((*item).second)->GetTransform()->GetMatrix()->Inverted());
+
 			//Iterate mesh triangles to chechk if hit is real (using order by distance)
-			//Do not transform mesh triangles, transform ray to local space
-			//Now we can test
+			MeshData& Mesh = ((ComponentMesh*)(((*item).second)->FindComponentFirst(ComponentType::Mesh_Component)))->MeshDataStruct;
+
+			for (uint i = 0; i < Mesh.num_indices; i += 3) //Each 3 indices we have a triangle
+			{
+				uint index = 0;
+				index = Mesh.indices[i] * 3.0f;
+				float3 TrianglePoint1 = float3(Mesh.vertices[index], Mesh.vertices[index + 1], Mesh.vertices[index + 2]);
+				index = Mesh.indices[i + 1] * 3.0f;
+				float3 TrianglePoint2 = float3(Mesh.vertices[index], Mesh.vertices[index + 1], Mesh.vertices[index + 2]);
+				index = Mesh.indices[i + 2] * 3.0f;
+				float3 TrianglePoint3 = float3(Mesh.vertices[index], Mesh.vertices[index + 1], Mesh.vertices[index + 2]);
+
+				Triangle tri = Triangle(TrianglePoint1, TrianglePoint2, TrianglePoint3);
+				float distance = 0.0f;
+				float3 intersectionPoint = float3::zero;
+				TriangleHit = Ray.Intersects(tri, &distance, &intersectionPoint);
+				if (TriangleHit)
+					break;
+			}
+
+			if (TriangleHit)
+			{
+				//App->engineUI->SetSelectedInspectorGO(const_cast<GameObject*>((*item).second)); //Warning const cast
+				App->engineUI->SetSelectedInspectorGO((GameObject*)(*item).second);
+				break;
+			}
 		}
 	}
 
 	/**/
-	glLineWidth(5.0f);
-	glBegin(GL_LINES);
-	glVertex3f(MousePickRay.a.x, MousePickRay.a.y, MousePickRay.a.z);
-	glVertex3f(MousePickRay.b.x, MousePickRay.b.y, MousePickRay.b.z);
-	glEnd();
-	glLineWidth(1.0f);
+	if (RayDebugDraw)
+	{
+		glLineWidth(5.0f);
+		glBegin(GL_LINES);
+		glVertex3f(MousePickRay.a.x, MousePickRay.a.y, MousePickRay.a.z);
+		glVertex3f(MousePickRay.b.x, MousePickRay.b.y, MousePickRay.b.z);
+		glEnd();
+		glLineWidth(1.0f);
+	}
 	/**/
 
 	return UPDATE_CONTINUE;
@@ -291,5 +325,6 @@ void ModuleCamera3D::RecentreCameraToGeometry()
 
 void ModuleCamera3D::ImGuiModuleVariables()
 {
+	ImGui::Checkbox("Ray Debug Draw Active", &RayDebugDraw);
 	CameraComp->DrawComponentImGui();
 }

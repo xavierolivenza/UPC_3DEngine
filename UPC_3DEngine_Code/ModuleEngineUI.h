@@ -33,6 +33,8 @@ public:
 	bool SaveConf(JSON_Object* conf) const;
 	bool LoadConf(JSON_Object* conf);
 
+	void SetSelectedInspectorGO(GameObject* selected);
+
 private:
 	void ImGuiDrawMenuBar();
 	void ImGuiConfigurationWindow();

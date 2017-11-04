@@ -39,5 +39,6 @@ private:
 	ComponentCamera* CameraComp = nullptr;
 
 	LineSegment		MousePickRay;
+	bool			RayDebugDraw = false;
 
 };

@@ -877,3 +877,8 @@ void ModuleEngineUI::PushFPSandMSPlot(uint fps, uint ms, uint mem)
 	msPlotData[count - 1] = ms;
 	memPlotData[count - 1] = mem;
 }
+
+void ModuleEngineUI::SetSelectedInspectorGO(GameObject* selected)
+{
+	GameObjectSelected = selected;
+}
