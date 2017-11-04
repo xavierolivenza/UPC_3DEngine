@@ -193,8 +193,10 @@ update_status ModuleCamera3D::Update(float dt)
 		{
 			//Transform Mouse to GameObject Local Space
 			//Copy it so we don't affect the original one
-			LineSegment	RayLocal = MousePickRay;
-			RayLocal.Transform(((*item).second)->GetTransform()->GetMatrix()->Inverted());
+			RayLocal = MousePickRay;
+			float4x4 TransMatrix = *((*item).second)->GetTransform()->GetMatrix();
+			float4x4 InvertedTransMatrix = TransMatrix.Inverted();
+			RayLocal.Transform(InvertedTransMatrix);
 
 			//Iterate mesh triangles to chechk if hit is real (using order by distance)
 			MeshData& Mesh = ((ComponentMesh*)(((*item).second)->FindComponentFirst(ComponentType::Mesh_Component)))->MeshDataStruct;
@@ -224,6 +226,15 @@ update_status ModuleCamera3D::Update(float dt)
 	/**/
 	if (RayDebugDraw)
 	{
+		glLineWidth(5.0f);
+		glColor3f(1.0f, 0.0f, 0.0f);
+		glBegin(GL_LINES);
+		glVertex3f(RayLocal.a.x, RayLocal.a.y, RayLocal.a.z);
+		glVertex3f(RayLocal.b.x, RayLocal.b.y, RayLocal.b.z);
+		glEnd();
+		glColor3f(1.0f, 1.0f, 1.0f);
+		glLineWidth(1.0f);
+
 		glLineWidth(5.0f);
 		glBegin(GL_LINES);
 		glVertex3f(MousePickRay.a.x, MousePickRay.a.y, MousePickRay.a.z);
