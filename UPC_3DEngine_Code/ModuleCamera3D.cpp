@@ -183,35 +183,34 @@ update_status ModuleCamera3D::Update(float dt)
 				}
 			}
 		}
+		/*
+		if (SceneGameObjectsHitted.size() > 0)
+			App->engineUI->SetSelectedInspectorGO((GameObject*)(*SceneGameObjectsHitted.begin()).second);
+		*/
+		/**/
 		bool TriangleHit = false;
 		for (std::multimap<float, const GameObject*>::const_iterator item = SceneGameObjectsHitted.cbegin(); item != SceneGameObjectsHitted.cend(); ++item)
 		{
 			//Transform Mouse to GameObject Local Space
 			//Copy it so we don't affect the original one
-			LineSegment	Ray = MousePickRay;
-			Ray.Transform(((*item).second)->GetTransform()->GetMatrix()->Inverted());
+			LineSegment	RayLocal = MousePickRay;
+			RayLocal.Transform(((*item).second)->GetTransform()->GetMatrix()->Inverted());
 
 			//Iterate mesh triangles to chechk if hit is real (using order by distance)
 			MeshData& Mesh = ((ComponentMesh*)(((*item).second)->FindComponentFirst(ComponentType::Mesh_Component)))->MeshDataStruct;
 
 			for (uint i = 0; i < Mesh.num_indices; i += 3) //Each 3 indices we have a triangle
 			{
-				uint index = 0;
-				index = Mesh.indices[i] * 3.0f;
-				float3 TrianglePoint1 = float3(Mesh.vertices[index], Mesh.vertices[index + 1], Mesh.vertices[index + 2]);
-				index = Mesh.indices[i + 1] * 3.0f;
-				float3 TrianglePoint2 = float3(Mesh.vertices[index], Mesh.vertices[index + 1], Mesh.vertices[index + 2]);
-				index = Mesh.indices[i + 2] * 3.0f;
-				float3 TrianglePoint3 = float3(Mesh.vertices[index], Mesh.vertices[index + 1], Mesh.vertices[index + 2]);
-
-				Triangle tri = Triangle(TrianglePoint1, TrianglePoint2, TrianglePoint3);
+				Triangle tri;
+				tri.a.Set(&Mesh.vertices[Mesh.indices[i++] * 3]);
+				tri.b.Set(&Mesh.vertices[Mesh.indices[i++] * 3]);
+				tri.c.Set(&Mesh.vertices[Mesh.indices[i++] * 3]);
 				float distance = 0.0f;
 				float3 intersectionPoint = float3::zero;
-				TriangleHit = Ray.Intersects(tri, &distance, &intersectionPoint);
+				TriangleHit = RayLocal.Intersects(tri, &distance, &intersectionPoint);
 				if (TriangleHit)
 					break;
 			}
-
 			if (TriangleHit)
 			{
 				//App->engineUI->SetSelectedInspectorGO(const_cast<GameObject*>((*item).second)); //Warning const cast
@@ -219,6 +218,7 @@ update_status ModuleCamera3D::Update(float dt)
 				break;
 			}
 		}
+		/**/
 	}
 
 	/**/
