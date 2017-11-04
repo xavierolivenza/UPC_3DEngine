@@ -167,7 +167,10 @@ update_status ModuleCamera3D::Update(float dt)
 				bool hit = false;
 				float Neardistance = 0.0f;
 				float Fardistance = 0.0f;
-				hit = MousePickRay.Intersects(MeshComp->MeshDataStruct.BoundBox, Neardistance, Fardistance);
+
+				AABB GameObjectAABB;
+				MeshComp->GetTransformedAABB(GameObjectAABB);
+				hit = MousePickRay.Intersects(GameObjectAABB, Neardistance, Fardistance);
 				/*
 				hit = MousePickRay.Intersects(MeshComp->MeshDataStruct.BoundSphere);
 				if (hit)
@@ -183,11 +186,11 @@ update_status ModuleCamera3D::Update(float dt)
 				}
 			}
 		}
-		/*
+		/**/
 		if (SceneGameObjectsHitted.size() > 0)
 			App->engineUI->SetSelectedInspectorGO((GameObject*)(*SceneGameObjectsHitted.begin()).second);
-		*/
 		/**/
+		/*
 		bool TriangleHit = false;
 		for (std::multimap<float, const GameObject*>::const_iterator item = SceneGameObjectsHitted.cbegin(); item != SceneGameObjectsHitted.cend(); ++item)
 		{
@@ -220,7 +223,7 @@ update_status ModuleCamera3D::Update(float dt)
 				break;
 			}
 		}
-		/**/
+		*/
 	}
 
 	/**/

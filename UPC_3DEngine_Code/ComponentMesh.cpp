@@ -33,10 +33,8 @@ bool ComponentMesh::Update(float dt)
 	}
 
 	//Recalculate AABB of this mesh
-	AABB LocalCopy = MeshDataStruct.BoundBox;
-	ComponentTransform* transform = this->parent->GetTransform();
-	const float4x4 matrix = *transform->GetMatrix();
-	LocalCopy.TransformAsAABB(matrix.Transposed());
+	AABB LocalCopy;
+	GetTransformedAABB(LocalCopy);
 
 	if (DebugDrawAABB)
 		App->renderer3D->DrawDebugBox(LocalCopy.CornerPoint(0), LocalCopy.CornerPoint(1), LocalCopy.CornerPoint(2), LocalCopy.CornerPoint(3), LocalCopy.CornerPoint(4), LocalCopy.CornerPoint(5), LocalCopy.CornerPoint(6), LocalCopy.CornerPoint(7), 1.0f, 1.0f, 0.0f);
@@ -114,4 +112,12 @@ bool ComponentMesh::LoadComponent(JSON_Object* conf)
 	std::string File_path = *App->importer->Get_Library_mesh_path() + "\\" + MeshFile;
 	App->importer->LoadSimpleMesh(&File_path, MeshDataStruct);
 	return true;
+}
+
+void ComponentMesh::GetTransformedAABB(AABB& TransformedBox) const
+{
+	TransformedBox = MeshDataStruct.BoundBox;
+	ComponentTransform* transform = this->parent->GetTransform();
+	const float4x4 matrix = *transform->GetMatrix();
+	TransformedBox.TransformAsAABB(matrix.Transposed());
 }

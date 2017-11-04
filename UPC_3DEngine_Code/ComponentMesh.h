@@ -84,6 +84,8 @@ public:
 	bool SaveComponent(JSON_Object* conf) const;
 	bool LoadComponent(JSON_Object* conf);
 
+	void GetTransformedAABB(AABB& TransformedBox) const;
+
 public:
 	MeshData MeshDataStruct;
 
