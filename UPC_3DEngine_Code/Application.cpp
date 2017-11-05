@@ -1,4 +1,5 @@
 #include "Application.h"
+#include "imgui-1.51\ImGuizmo.h"
 
 #include <gl/GL.h>
 #include <gl/GLU.h>
@@ -147,6 +148,7 @@ update_status Application::Update()
 	}
 
 	ImGui_ImplSdlGL3_NewFrame(App->window->window);
+	//ImGuizmo::BeginFrame();
 	for (std::list<Module*>::iterator item = list_modules.begin(); item != list_modules.cend(); ++item)
 	{
 		(*item)->DrawModuleImGui();

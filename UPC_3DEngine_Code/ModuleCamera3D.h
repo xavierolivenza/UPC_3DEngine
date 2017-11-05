@@ -21,8 +21,8 @@ public:
 	void LookAt(const float3 &Spot);
 	void Move(const float3 &Movement);
 	const float* GetViewMatrix() const;
+	const float* GetViewProjMatrix() const;
 	void CenterCameraToGeometry(const AABB* meshAABB);
-	void RecentreCameraToGeometry();
 
 	void UpdateCamFov(int width, int height);
 
@@ -35,8 +35,6 @@ public:
 private:
 	bool			Cam_move_LOG = true;
 	bool			Cam_move = false;
-
-	const AABB*		LastCentreGeometry = nullptr;
 
 	ComponentCamera* CameraComp = nullptr;
 

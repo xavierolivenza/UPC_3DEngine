@@ -1,5 +1,6 @@
 #pragma once
 #include "Component.h"
+#include "imgui-1.51\ImGuizmo.h"
 
 class ComponentTransform : public Component
 {
@@ -42,4 +43,5 @@ private:
 	float3 scale = float3::one;
 	Quat rot = Quat::identity;
 	float3 rot_euler = float3::zero;
+	ImGuizmo::OPERATION gizmoOp = ImGuizmo::OPERATION::TRANSLATE;
 };

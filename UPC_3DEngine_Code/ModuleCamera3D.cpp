@@ -140,7 +140,19 @@ update_status ModuleCamera3D::Update(float dt)
 	}
 
 	if (App->input->GetKey(SDL_SCANCODE_F) == KEY_DOWN)
-		RecentreCameraToGeometry();
+	{
+		const GameObject* selected = App->engineUI->GetSelectedGameObject();
+		if (selected != nullptr)
+		{
+			ComponentMesh* Mesh = (ComponentMesh*)selected->FindComponentFirst(ComponentType::Mesh_Component);
+			if (Mesh != nullptr)
+			{
+				AABB Box;
+				Mesh->GetTransformedAABB(Box);
+				CenterCameraToGeometry(&Box);
+			}
+		}
+	}
 
 	CameraComp->SetFrame(Position, -Z, Y);
 
@@ -292,7 +304,12 @@ void ModuleCamera3D::Move(const float3 &Movement)
 }
 
 // -----------------------------------------------------------------
-const float*  ModuleCamera3D::GetViewMatrix() const
+const float* ModuleCamera3D::GetViewMatrix() const
+{
+	return CameraComp->GetViewMatrix();
+}
+
+const float* ModuleCamera3D::GetViewProjMatrix() const
 {
 	return CameraComp->GetViewProjMatrix();
 }
@@ -305,7 +322,6 @@ void ModuleCamera3D::CenterCameraToGeometry(const AABB* meshAABB)
 	{
 		float3 centre = meshAABB->CenterPoint();
 		Reference = float3(centre.x, centre.y, centre.z);
-		LastCentreGeometry = meshAABB;
 
 		//Same as LookAt, but here we don't recalculate viewmatrix, this is not necessary now
 		Z = (Position - Reference).Normalized();
@@ -337,11 +353,6 @@ void ModuleCamera3D::CenterCameraToGeometry(const AABB* meshAABB)
 		LookAt(Reference);
 		/**/
 	}
-}
-
-void ModuleCamera3D::RecentreCameraToGeometry()
-{
-	CenterCameraToGeometry(LastCentreGeometry);
 }
 
 void ModuleCamera3D::UpdateCamFov(int width, int height)

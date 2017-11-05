@@ -182,11 +182,11 @@ update_status ModuleRenderer3D::PreUpdate(float dt)
 			glLoadMatrixf(App->scene->GetActiveCamera()->GetViewProjMatrix());
 		//If not, continue loading editor matrix
 		else
-			glLoadMatrixf(App->camera->GetViewMatrix());
+			glLoadMatrixf(App->camera->GetViewProjMatrix());
 	}
 	//Load editor camera matrix
 	else
-		glLoadMatrixf(App->camera->GetViewMatrix());
+		glLoadMatrixf(App->camera->GetViewProjMatrix());
 
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
