@@ -21,6 +21,7 @@ public:
 	bool LoadComponent(JSON_Object* conf);
 
 	bool IsMainCamera() const;
+	void SetMainCamera(bool maincam);
 
 	const float* GetViewProjMatrix() const;
 

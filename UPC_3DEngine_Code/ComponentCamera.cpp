@@ -76,7 +76,23 @@ void ComponentCamera::DrawComponentImGui()
 	if (ImGui::CollapsingHeader("Camera Component", ImGuiTreeNodeFlags_DefaultOpen))
 	{
 		ImGui::Checkbox("Camera Component Active", &Active);
-		ImGui::Checkbox("Main Camera", &MainCamera);
+		if (ImGui::Checkbox("Main Camera", &MainCamera))
+		{
+			//If this camera is the MainCamera
+			if (MainCamera)
+			{
+				std::vector<const GameObject*> SceneGameObjects;
+				App->scene->GetAllSceneGameObjects(SceneGameObjects);
+				for (std::vector<const GameObject*>::const_iterator item = SceneGameObjects.cbegin(); item != SceneGameObjects.cend(); ++item)
+				{
+					//Search other cameras
+					ComponentCamera* CameraComp = (ComponentCamera*)(*item)->FindComponentFirst(ComponentType::Camera_Component);
+					// And set them to false
+					if ((CameraComp != nullptr) && (CameraComp != this))
+						CameraComp->SetMainCamera(false);
+				}
+			}
+		}
 		ImGui::Checkbox("Frustum Culling", &FrustumCulling);
 
 		if (ImGui::DragFloat("NearPlaneDistance", &NearPlaneDistance, 3, ImGuiInputTextFlags_CharsDecimal))
@@ -136,6 +152,11 @@ bool ComponentCamera::LoadComponent(JSON_Object* conf)
 bool ComponentCamera::IsMainCamera() const
 {
 	return MainCamera;
+}
+
+void ComponentCamera::SetMainCamera(bool maincam)
+{
+	MainCamera = maincam;
 }
 
 const float* ComponentCamera::GetViewProjMatrix() const
