@@ -23,6 +23,7 @@ public:
 	bool IsMainCamera() const;
 	void SetMainCamera(bool maincam);
 
+	const float* GetViewMatrix() const;
 	const float* GetViewProjMatrix() const;
 
 private:

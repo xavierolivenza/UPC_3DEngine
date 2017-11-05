@@ -1,4 +1,3 @@
-#include "imgui-1.51\ImGuizmo.h"
 #include "ComponentTransform.h"
 
 ComponentTransform::ComponentTransform(GameObject* parent, bool Active) : Component(parent, Active, 1, ComponentType::Transform_Component)
@@ -24,6 +23,30 @@ bool ComponentTransform::PreUpdate(float dt)
 
 bool ComponentTransform::Update(float dt)
 {
+	/*
+	ImGuizmo::BeginFrame();
+	//ImGuizmo::Enable(true);
+	if ((parent != nullptr) && (App->engineUI->GetSelectedGameObject() == parent))
+	{
+		ImGuiIO& io = ImGui::GetIO();
+		ImGuizmo::SetRect(0, 0, io.DisplaySize.x, io.DisplaySize.y);
+		float4x4 matrix = *GetMatrix();
+		ImGuizmo::Manipulate(App->camera->GetViewMatrix(), App->camera->GetViewProjMatrix(), gizmoOp, ImGuizmo::LOCAL, matrix.ptr());
+
+		if (ImGuizmo::IsUsing())
+		{
+			matrix.Transpose();
+			float3 position = float3::zero;
+			float3 scale = float3::zero;
+			Quat rotation = Quat::identity;
+			matrix.Decompose(position, rotation, scale);
+			SetPos(position);
+			SetRot(rotation);
+			SetScale(scale);
+		}
+	}
+	//ImGuizmo::Enable(false);
+	*/
 	return true;
 }
 
@@ -52,20 +75,17 @@ void ComponentTransform::DrawComponentImGui()
 
 		if ((parent != nullptr) && parent->IsStatic())
 			flags |= ImGuiInputTextFlags_ReadOnly;
-		else
-		{
-			if (ImGui::Checkbox("Translate", &Translate))
-				if (Translate)
-					Rotate = Scalate = false;
-			ImGui::SameLine();
-			if (ImGui::Checkbox("Rotate", &Rotate))
-				if (Rotate)
-					Translate = Scalate = false;
-			ImGui::SameLine();
-			if (ImGui::Checkbox("Scalate", &Scalate))
-				if (Scalate)
-					Translate = Rotate = false;
-		}
+		ImGui::InputFloat3("Position", &pos[0], 3, flags);
+		if (ImGui::InputFloat3("Rotation", &rot_euler[0], 3, flags))
+			rot = rot.FromEulerXYZ(rot_euler.x * DEGTORAD, rot_euler.y * DEGTORAD, rot_euler.z * DEGTORAD);
+		ImGui::InputFloat3("Scale", &scale[0], 3, flags);
+
+		if (App->input->GetKey(SDL_SCANCODE_W) == KEY_DOWN)
+			gizmoOp = ImGuizmo::OPERATION::TRANSLATE;
+		if (App->input->GetKey(SDL_SCANCODE_E) == KEY_DOWN)
+			gizmoOp = ImGuizmo::OPERATION::ROTATE;
+		if (App->input->GetKey(SDL_SCANCODE_R) == KEY_DOWN)
+			gizmoOp = ImGuizmo::OPERATION::SCALE;
 		
 		/*
 		ImGui::DragFloat3("Position", &pos[0], 3, flags);
@@ -75,13 +95,6 @@ void ComponentTransform::DrawComponentImGui()
 		
 		ImGui::DragFloat3("Scale", &scale[0], 3, flags);
 		*/
-
-		ImGui::InputFloat3("Position", &pos[0], 3, flags);
-
-		if (ImGui::InputFloat3("Rotation", &rot_euler[0], 3, flags))
-			rot = rot.FromEulerXYZ(rot_euler.x * DEGTORAD, rot_euler.y * DEGTORAD, rot_euler.z * DEGTORAD);
-
-		ImGui::InputFloat3("Scale", &scale[0], 3, flags);
 	}
 }
 

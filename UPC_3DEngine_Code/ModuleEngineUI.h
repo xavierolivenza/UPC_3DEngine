@@ -35,6 +35,8 @@ public:
 
 	void SetSelectedInspectorGO(GameObject* selected);
 
+	GameObject* GetSelectedGameObject() const;
+
 private:
 	void ImGuiDrawMenuBar();
 	void ImGuiConfigurationWindow();

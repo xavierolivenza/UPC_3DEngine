@@ -292,7 +292,12 @@ void ModuleCamera3D::Move(const float3 &Movement)
 }
 
 // -----------------------------------------------------------------
-const float*  ModuleCamera3D::GetViewMatrix() const
+const float* ModuleCamera3D::GetViewMatrix() const
+{
+	return CameraComp->GetViewMatrix();
+}
+
+const float* ModuleCamera3D::GetViewProjMatrix() const
 {
 	return CameraComp->GetViewProjMatrix();
 }

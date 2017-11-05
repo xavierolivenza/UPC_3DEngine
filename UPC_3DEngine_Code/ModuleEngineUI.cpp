@@ -882,3 +882,8 @@ void ModuleEngineUI::SetSelectedInspectorGO(GameObject* selected)
 {
 	GameObjectSelected = selected;
 }
+
+GameObject* ModuleEngineUI::GetSelectedGameObject() const
+{
+	return GameObjectSelected;
+}

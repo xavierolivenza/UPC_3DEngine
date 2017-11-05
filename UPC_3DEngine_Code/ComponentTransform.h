@@ -1,4 +1,5 @@
 #pragma once
+#include "imgui-1.51\ImGuizmo.h"
 #include "Component.h"
 
 class ComponentTransform : public Component
@@ -35,11 +36,9 @@ public:
 	const float4x4* GetLocalMatrix() const;
 
 private:
-	bool Translate = true;
-	bool Rotate = false;
-	bool Scalate = false;
 	float3 pos = float3::zero;
 	float3 scale = float3::one;
 	Quat rot = Quat::identity;
 	float3 rot_euler = float3::zero;
+	ImGuizmo::OPERATION gizmoOp = ImGuizmo::OPERATION::TRANSLATE;
 };
