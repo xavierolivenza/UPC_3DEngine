@@ -24,6 +24,12 @@ public:
 
 	void SetTitle(const char* title);
 
+	void SetWindowSize(int w, int h)
+	{
+		w_width = w;
+		w_height = h;
+	}
+
 	void GetWindowSize(int& w, int& h) const
 	{
 		w = w_width;

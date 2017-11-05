@@ -878,6 +878,7 @@ void ModuleRenderer3D::OnResize(int width, int height)
 	glViewport(0, 0, width, height);
 	SDL_SetWindowSize(App->window->window, width, height);
 	App->camera->UpdateCamFov(width, height);
+	App->window->SetWindowSize(width, height);
 
 	/*
 	glViewport(0, 0, width, height);

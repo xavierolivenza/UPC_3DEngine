@@ -163,8 +163,8 @@ update_status ModuleCamera3D::Update(float dt)
 		int w = 0;
 		int h = 0;
 		App->window->GetWindowSize(w, h);
-		float MouseNormX = -(1.0f - (float(App->input->GetMouseX()) * 2.0f) / w);
-		float MouseNormY = 1.0f - (float(App->input->GetMouseY()) * 2.0f) / h;
+		float MouseNormX = -(1.0f - (float(App->input->GetMouseX()) * 2.0f) / (float)w);
+		float MouseNormY = 1.0f - (float(App->input->GetMouseY()) * 2.0f) / (float)h;
 		MousePickRay = CameraComp->frustum.UnProjectLineSegment(MouseNormX, MouseNormY);
 
 		//Check ray agains gameobjects Sphere - AABB (Optimaze with infrustrum gameobjects(quadtree/octree))
