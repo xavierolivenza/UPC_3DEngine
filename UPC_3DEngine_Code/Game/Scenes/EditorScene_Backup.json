@@ -1,1 +1,63 @@
-{"GameObjects":[{"name":"Camera","UUID":739241070,"UUID_Parent":0,"Active":true,"Static":true,"Components":[{"UUID":738544860,"UUID_Parent":739241070,"Active":true,"Type":0,"Position":{"x":0,"y":2,"z":-5},"Scale":{"x":1,"y":1,"z":1},"Rotation":{"x":0,"y":0,"z":0,"w":1}},{"UUID":740355006,"UUID_Parent":739241070,"Active":true,"Type":3,"Frustum_Type":2,"Near_Plane":0.125,"Far_Plane":512,"FOV_Vertical":0.018277045339345932,"Position":{"x":0,"y":2,"z":-5},"Up":{"x":0,"y":1,"z":0},"Front":{"x":0,"y":0,"z":1}}]},{"name":"Camera","UUID":1697629178,"UUID_Parent":0,"Active":true,"Static":true,"Components":[{"UUID":1696515242,"UUID_Parent":1697629178,"Active":true,"Type":0,"Position":{"x":0,"y":2,"z":5},"Scale":{"x":1,"y":1,"z":1},"Rotation":{"x":0,"y":1,"z":0,"w":-4.3711388286737929e-08}},{"UUID":1699230461,"UUID_Parent":1697629178,"Active":true,"Type":3,"Frustum_Type":2,"Near_Plane":0.10000000149011612,"Far_Plane":512,"FOV_Vertical":0.00031899462919682264,"Position":{"x":0,"y":2,"z":5},"Up":{"x":0,"y":1,"z":0},"Front":{"x":-8.7422776573475858e-08,"y":0,"z":-1}}]},{"name":"BakerHouse","UUID":1599148765,"UUID_Parent":0,"Active":true,"Static":true,"Components":[{"UUID":1596363925,"UUID_Parent":1599148765,"Active":true,"Type":0,"Position":{"x":0,"y":0,"z":0},"Scale":{"x":1,"y":1,"z":1},"Rotation":{"x":0,"y":0.43051114678382874,"z":0,"w":0.90258526802062988}}]},{"name":"Chimney","UUID":1602908299,"UUID_Parent":1599148765,"Active":true,"Static":true,"Components":[{"UUID":1601863984,"UUID_Parent":1602908299,"Active":true,"Type":0,"Position":{"x":0,"y":0,"z":0},"Scale":{"x":1,"y":1,"z":1},"Rotation":{"x":0.2677246630191803,"y":-0.094806276261806488,"z":0.3200606107711792,"w":0.90382325649261475}},{"UUID":1606458970,"UUID_Parent":1602908299,"Active":true,"Type":1,"Mesh_File_Name":"Chimney.MeshAlvOli"},{"UUID":1821030892,"UUID_Parent":1602908299,"Active":true,"Type":2,"Texture_Path":"Baker_house.dds"}]},{"name":"Baker_house","UUID":1795501802,"UUID_Parent":1599148765,"Active":true,"Static":true,"Components":[{"UUID":1791046058,"UUID_Parent":1795501802,"Active":true,"Type":0,"Position":{"x":0,"y":0,"z":0},"Scale":{"x":1,"y":1,"z":1},"Rotation":{"x":-0.05558893084526062,"y":-0.39681431651115417,"z":-0.25769421458244324,"w":0.87922805547714233}},{"UUID":1798286642,"UUID_Parent":1795501802,"Active":true,"Type":1,"Mesh_File_Name":"Baker_house.MeshAlvOli"},{"UUID":2058808424,"UUID_Parent":1795501802,"Active":true,"Type":2,"Texture_Path":"Baker_house.dds"}]}]}
+{
+  "GameObjects": [
+    {
+      "name": "Camera",
+      "UUID": 578634466,
+      "UUID_Parent": 0,
+      "Active": false,
+      "Static": false,
+      "Components": [
+        {
+          "UUID": 577868635,
+          "UUID_Parent": 578634466,
+          "Active": true,
+          "Type": 0,
+          "Position": {
+            "x": 1,
+            "y": 2,
+            "z": 3
+          },
+          "Scale": {
+            "x": 1,
+            "y": 1,
+            "z": 1
+          },
+          "Rotation": {
+            "x": 0.36004218459129333,
+            "y": 0.19662821292877197,
+            "z": 0.46382695436477661,
+            "w": 0.78522080183029175
+          }
+        },
+        {
+          "UUID": 579818023,
+          "UUID_Parent": 578634466,
+          "Active": true,
+          "Type": 3,
+          "Frustum_Type": 2,
+          "Near_Plane": 0.10000000149011612,
+          "Far_Plane": 400,
+          "FOV_Vertical": 1.7453292608261108,
+          "Position": {
+            "x": 1,
+            "y": 2,
+            "z": 3
+          },
+          "Up": {
+            "x": -0.58682429790496826,
+            "y": 0.31046837568283081,
+            "z": 0.74782812595367432
+          },
+          "Front": {
+            "x": 0.64278769493103027,
+            "y": -0.38302230834960938,
+            "z": 0.66341394186019897
+          },
+          "FrustumCulling": false,
+          "MainCamera": false,
+          "DebugDrawFrustum": false
+        }
+      ]
+    }
+  ]
+}
