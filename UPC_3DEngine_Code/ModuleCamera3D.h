@@ -24,6 +24,8 @@ public:
 	void CenterCameraToGeometry(const AABB* meshAABB);
 	void RecentreCameraToGeometry();
 
+	void UpdateCamFov(int width, int height);
+
 	void ImGuiModuleVariables();
 
 public:

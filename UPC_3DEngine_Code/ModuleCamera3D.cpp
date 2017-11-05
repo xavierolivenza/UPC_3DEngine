@@ -344,6 +344,12 @@ void ModuleCamera3D::RecentreCameraToGeometry()
 	CenterCameraToGeometry(LastCentreGeometry);
 }
 
+void ModuleCamera3D::UpdateCamFov(int width, int height)
+{
+	//CameraComp->frustum.verticalFov = FOVVertical * DEGTORAD;
+	CameraComp->frustum.horizontalFov = Atan(((float)width / (float)height) * Tan(CameraComp->frustum.verticalFov * 0.5f)) * 2.0f;
+}
+
 void ModuleCamera3D::ImGuiModuleVariables()
 {
 	ImGui::Checkbox("Ray Debug Draw Active", &RayDebugDraw);

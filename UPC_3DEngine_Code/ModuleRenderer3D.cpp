@@ -119,7 +119,7 @@ bool ModuleRenderer3D::Init()
 	}
 
 	// Projection matrix for
-	OnResize(SCREEN_WIDTH, SCREEN_HEIGHT);
+	//OnResize(SCREEN_WIDTH, SCREEN_HEIGHT);
 
 	return ret;
 }
@@ -875,6 +875,10 @@ bool ModuleRenderer3D::LoadConf(JSON_Object* conf)
 
 void ModuleRenderer3D::OnResize(int width, int height)
 {
+	glViewport(0, 0, width, height);
+	SDL_SetWindowSize(App->window->window, width, height);
+	App->camera->UpdateCamFov(width, height);
+
 	/*
 	glViewport(0, 0, width, height);
 	SDL_SetWindowSize(App->window->window, width, height);

@@ -624,6 +624,8 @@ void ModuleEngineUI::RecursiveDrawHierarchy(const GameObject* node)
 	{
 		if (children->empty())
 			flags |= ImGuiTreeNodeFlags_Leaf;
+		if (node == GameObjectSelected)
+			flags |= ImGuiTreeNodeFlags_Selected;
 		if (ImGui::TreeNodeEx(node, flags, node->name.c_str()))
 		{
 			if (ImGui::IsItemClicked())
