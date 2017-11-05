@@ -21,7 +21,6 @@ public:
 	void LookAt(const float3 &Spot);
 	void Move(const float3 &Movement);
 	const float* GetViewMatrix() const;
-	const float* GetViewProjMatrix() const;
 	void CenterCameraToGeometry(const AABB* meshAABB);
 	void RecentreCameraToGeometry();
 
