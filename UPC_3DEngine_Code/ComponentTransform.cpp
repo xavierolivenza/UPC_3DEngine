@@ -48,17 +48,40 @@ void ComponentTransform::DrawComponentImGui()
 	{
 		ImGui::Checkbox("Transform Component Active", &Active);
 
-		ImGui::DragFloat3("Position", &pos[0], 3, ImGuiInputTextFlags_CharsDecimal);
-		//ImGui::InputFloat3("Position", &pos[0], 3, ImGuiInputTextFlags_CharsDecimal);
+		uint flags = ImGuiInputTextFlags_CharsDecimal;
 
-		float3 rot_euler_prev = rot_euler;
-		ImGui::DragFloat3("Rotation", &rot_euler[0], 3, ImGuiInputTextFlags_CharsDecimal);
-		//ImGui::InputFloat3("Rotation", &rot_euler[0], 3, ImGuiInputTextFlags_CharsDecimal);
-		if((rot_euler_prev.x != rot_euler.x) || (rot_euler_prev.y != rot_euler.y) || (rot_euler_prev.z != rot_euler.z))
+		if ((parent != nullptr) && parent->IsStatic())
+			flags |= ImGuiInputTextFlags_ReadOnly;
+		else
+		{
+			if (ImGui::Checkbox("Translate", &Translate))
+				if (Translate)
+					Rotate = Scalate = false;
+			ImGui::SameLine();
+			if (ImGui::Checkbox("Rotate", &Rotate))
+				if (Rotate)
+					Translate = Scalate = false;
+			ImGui::SameLine();
+			if (ImGui::Checkbox("Scalate", &Scalate))
+				if (Scalate)
+					Translate = Rotate = false;
+		}
+		
+		/*
+		ImGui::DragFloat3("Position", &pos[0], 3, flags);
+
+		if (ImGui::DragFloat3("Rotation", &rot_euler[0], 3, flags))
 			rot = rot.FromEulerXYZ(rot_euler.x * DEGTORAD, rot_euler.y * DEGTORAD, rot_euler.z * DEGTORAD);
 		
-		ImGui::DragFloat3("Scale", &scale[0], 3, ImGuiInputTextFlags_CharsDecimal);
-		//ImGui::InputFloat3("Scale", &scale[0], 3, ImGuiInputTextFlags_CharsDecimal);
+		ImGui::DragFloat3("Scale", &scale[0], 3, flags);
+		*/
+
+		ImGui::InputFloat3("Position", &pos[0], 3, flags);
+
+		if (ImGui::InputFloat3("Rotation", &rot_euler[0], 3, flags))
+			rot = rot.FromEulerXYZ(rot_euler.x * DEGTORAD, rot_euler.y * DEGTORAD, rot_euler.z * DEGTORAD);
+
+		ImGui::InputFloat3("Scale", &scale[0], 3, flags);
 	}
 }
 

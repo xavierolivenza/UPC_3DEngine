@@ -193,6 +193,11 @@ bool GameObject::IsActive()
 	return Active;
 }
 
+bool GameObject::IsStatic()
+{
+	return Static;
+}
+
 const std::vector<GameObject*>* GameObject::GetChildren() const
 {
 	return &children;

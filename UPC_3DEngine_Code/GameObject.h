@@ -26,6 +26,7 @@ public:
 
 	void SetActive(bool active);
 	bool IsActive();
+	bool IsStatic();
 
 	const std::vector<GameObject*>* GetChildren() const;
 	const std::vector<Component*>* GetComponents() const;

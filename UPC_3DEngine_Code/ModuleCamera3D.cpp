@@ -157,7 +157,7 @@ update_status ModuleCamera3D::Update(float dt)
 
 		//Check ray agains gameobjects Sphere - AABB (Optimaze with infrustrum gameobjects(quadtree/octree))
 		std::vector<const GameObject*> SceneGameObjects;
-		std::multimap<float, const GameObject*> SceneGameObjectsHitted;
+		std::map<float, const GameObject*> SceneGameObjectsHitted;
 		App->scene->GetAllSceneGameObjects(SceneGameObjects);
 		for (std::vector<const GameObject*>::const_iterator item = SceneGameObjects.cbegin(); item != SceneGameObjects.cend(); ++item)
 		{
@@ -191,20 +191,22 @@ update_status ModuleCamera3D::Update(float dt)
 			App->engineUI->SetSelectedInspectorGO((GameObject*)(*SceneGameObjectsHitted.begin()).second);
 		/**/
 		/*
-		bool TriangleHit = false;
-		for (std::multimap<float, const GameObject*>::const_iterator item = SceneGameObjectsHitted.cbegin(); item != SceneGameObjectsHitted.cend(); ++item)
+		GameObject* BestCandidate = nullptr;
+		float BestCandidateDistance = 500.0f; //Initialize with big number so any triangle hit distance is minor to this.
+		for (std::map<float, const GameObject*>::const_iterator item = SceneGameObjectsHitted.cbegin(); item != SceneGameObjectsHitted.cend(); ++item)
 		{
 			//Transform Mouse to GameObject Local Space
 			//Copy it so we don't affect the original one
 			RayLocal = MousePickRay;
 			float4x4 TransMatrix = *((*item).second)->GetTransform()->GetMatrix();
-			float4x4 InvertedTransMatrix = TransMatrix.Inverted();
-			RayLocal.Transform(InvertedTransMatrix);
+			//float4x4 InvertedTransMatrix = TransMatrix.Inverted();
+			RayLocal.Transform(TransMatrix.Inverted());
 
 			//Iterate mesh triangles to chechk if hit is real (using order by distance)
 			MeshData& Mesh = ((ComponentMesh*)(((*item).second)->FindComponentFirst(ComponentType::Mesh_Component)))->MeshDataStruct;
 
-			for (uint i = 0; i < Mesh.num_indices; i += 3) //Each 3 indices we have a triangle
+			//Each 3 indices we have a triangle
+			for (uint i = 0; i < Mesh.num_indices; i += 3)
 			{
 				Triangle tri;
 				tri.a.Set(&Mesh.vertices[Mesh.indices[i++] * 3]);
@@ -212,16 +214,21 @@ update_status ModuleCamera3D::Update(float dt)
 				tri.c.Set(&Mesh.vertices[Mesh.indices[i++] * 3]);
 				float distance = 0.0f;
 				float3 intersectionPoint = float3::zero;
-				TriangleHit = RayLocal.Intersects(tri, &distance, &intersectionPoint);
-				if (TriangleHit)
-					break;
+				if (RayLocal.Intersects(tri, &distance, &intersectionPoint))
+				{
+					if (distance < BestCandidateDistance)
+					{
+						BestCandidate = (GameObject*)(*item).second;
+						BestCandidateDistance = distance;
+					}
+				}
 			}
-			if (TriangleHit)
-			{
-				//App->engineUI->SetSelectedInspectorGO(const_cast<GameObject*>((*item).second)); //Warning const cast
-				App->engineUI->SetSelectedInspectorGO((GameObject*)(*item).second);
-				break;
-			}
+		}
+		//Assign BestCandidate to selected gameobject
+		if (BestCandidate != nullptr)
+		{
+			//App->engineUI->SetSelectedInspectorGO(const_cast<GameObject*>((*item).second)); //Warning const cast
+			App->engineUI->SetSelectedInspectorGO(BestCandidate);
 		}
 		*/
 	}
