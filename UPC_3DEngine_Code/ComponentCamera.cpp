@@ -1,5 +1,6 @@
 #include "ComponentCamera.h"
 #include "ComponentTransform.h"
+#include "ComponentMesh.h"
 
 ComponentCamera::ComponentCamera(GameObject* parent, bool Active) : Component(parent, Active, 1, ComponentType::Camera_Component)
 {
@@ -50,7 +51,23 @@ bool ComponentCamera::Update(float dt)
 	//Apply Frustum Culling
 	if (FrustumCulling)
 	{
-
+		/*
+		std::vector<GameObject*> SceneGameObjects;
+		App->scene->GetAllSceneGameObjects(SceneGameObjects);
+		for (std::vector<GameObject*>::iterator item = SceneGameObjects.begin(); item != SceneGameObjects.cend(); ++item)
+		{
+			ComponentMesh* mesh = (ComponentMesh*)(*item)->FindComponentFirst(ComponentType::Mesh_Component);
+			if (mesh != nullptr)
+			{
+				AABB Box;
+				mesh->GetTransformedAABB(Box);
+				if (frustum.ContainsAaBox(Box))
+					(*item)->SetActiveLocal(true);
+				else
+					(*item)->SetActiveLocal(false);
+			}
+		}
+		*/
 	}
 
 	return true;
@@ -81,9 +98,9 @@ void ComponentCamera::DrawComponentImGui()
 			//If this camera is the MainCamera
 			if (MainCamera)
 			{
-				std::vector<const GameObject*> SceneGameObjects;
+				std::vector<GameObject*> SceneGameObjects;
 				App->scene->GetAllSceneGameObjects(SceneGameObjects);
-				for (std::vector<const GameObject*>::const_iterator item = SceneGameObjects.cbegin(); item != SceneGameObjects.cend(); ++item)
+				for (std::vector<GameObject*>::const_iterator item = SceneGameObjects.cbegin(); item != SceneGameObjects.cend(); ++item)
 				{
 					//Search other cameras
 					ComponentCamera* CameraComp = (ComponentCamera*)(*item)->FindComponentFirst(ComponentType::Camera_Component);

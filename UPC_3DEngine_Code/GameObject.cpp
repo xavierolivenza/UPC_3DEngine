@@ -188,6 +188,12 @@ void GameObject::SetActive(bool active)
 	}
 }
 
+void GameObject::SetActiveLocal(bool active)
+{
+	if (Active != active)
+		Active = active;
+}
+
 bool GameObject::IsActive()
 {
 	return Active;
@@ -396,9 +402,9 @@ GameObject* GameObject::FindGameObjectWithUUID(u32 UUID_ToSearch)
 	return nullptr;
 }
 
-void GameObject::GetAllSceneGameObjects(std::vector<const GameObject*>& SceneGameObjects) const
+void GameObject::GetAllSceneGameObjects(std::vector<GameObject*>& SceneGameObjects) const
 {
-	SceneGameObjects.push_back(this);
+	SceneGameObjects.push_back((GameObject*)this);
 	for (std::vector<GameObject*>::const_iterator item = children.cbegin(); item != children.cend(); ++item)
 		(*item)->GetAllSceneGameObjects(SceneGameObjects);
 }

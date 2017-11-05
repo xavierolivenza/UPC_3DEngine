@@ -38,7 +38,7 @@ public:
 
 	const ComponentCamera* GetActiveCamera() const;
 
-	void GetAllSceneGameObjects(std::vector<const GameObject*>& SceneGameObjects) const;
+	void GetAllSceneGameObjects(std::vector<GameObject*>& SceneGameObjects) const;
 
 private:
 	const ComponentCamera* GetActiveCameraIterator(GameObject* node) const;

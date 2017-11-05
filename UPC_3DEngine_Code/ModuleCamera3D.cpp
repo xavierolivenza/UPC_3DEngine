@@ -156,10 +156,10 @@ update_status ModuleCamera3D::Update(float dt)
 		MousePickRay = CameraComp->frustum.UnProjectLineSegment(MouseNormX, MouseNormY);
 
 		//Check ray agains gameobjects Sphere - AABB (Optimaze with infrustrum gameobjects(quadtree/octree))
-		std::vector<const GameObject*> SceneGameObjects;
+		std::vector<GameObject*> SceneGameObjects;
 		std::map<float, const GameObject*> SceneGameObjectsHitted;
 		App->scene->GetAllSceneGameObjects(SceneGameObjects);
-		for (std::vector<const GameObject*>::const_iterator item = SceneGameObjects.cbegin(); item != SceneGameObjects.cend(); ++item)
+		for (std::vector<GameObject*>::const_iterator item = SceneGameObjects.cbegin(); item != SceneGameObjects.cend(); ++item)
 		{
 			ComponentMesh* MeshComp = (ComponentMesh*)(*item)->FindComponentFirst(ComponentType::Mesh_Component);
 			if (MeshComp != nullptr)
@@ -186,11 +186,11 @@ update_status ModuleCamera3D::Update(float dt)
 				}
 			}
 		}
-		/**/
+		/*
 		if (SceneGameObjectsHitted.size() > 0)
 			App->engineUI->SetSelectedInspectorGO((GameObject*)(*SceneGameObjectsHitted.begin()).second);
+		*/
 		/**/
-		/*
 		GameObject* BestCandidate = nullptr;
 		float BestCandidateDistance = 500.0f; //Initialize with big number so any triangle hit distance is minor to this.
 		for (std::map<float, const GameObject*>::const_iterator item = SceneGameObjectsHitted.cbegin(); item != SceneGameObjectsHitted.cend(); ++item)
@@ -198,9 +198,9 @@ update_status ModuleCamera3D::Update(float dt)
 			//Transform Mouse to GameObject Local Space
 			//Copy it so we don't affect the original one
 			RayLocal = MousePickRay;
-			float4x4 TransMatrix = *((*item).second)->GetTransform()->GetMatrix();
-			//float4x4 InvertedTransMatrix = TransMatrix.Inverted();
-			RayLocal.Transform(TransMatrix.Inverted());
+			float4x4 TransMatrix = ((*item).second)->GetTransform()->GetMatrix();
+			float4x4 InvertedTransMatrix = TransMatrix.Inverted().Transposed();
+			RayLocal.Transform(TransMatrix.Inverted().Transposed());
 
 			//Iterate mesh triangles to chechk if hit is real (using order by distance)
 			MeshData& Mesh = ((ComponentMesh*)(((*item).second)->FindComponentFirst(ComponentType::Mesh_Component)))->MeshDataStruct;
@@ -230,7 +230,7 @@ update_status ModuleCamera3D::Update(float dt)
 			//App->engineUI->SetSelectedInspectorGO(const_cast<GameObject*>((*item).second)); //Warning const cast
 			App->engineUI->SetSelectedInspectorGO(BestCandidate);
 		}
-		*/
+		/**/
 	}
 
 	/**/

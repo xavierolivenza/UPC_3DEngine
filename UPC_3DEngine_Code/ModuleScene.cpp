@@ -198,7 +198,7 @@ const ComponentCamera* ModuleScene::GetActiveCameraIterator(GameObject* node) co
 	return nullptr;
 }
 
-void ModuleScene::GetAllSceneGameObjects(std::vector<const GameObject*>& SceneGameObjects) const
+void ModuleScene::GetAllSceneGameObjects(std::vector<GameObject*>& SceneGameObjects) const
 {
 	root->GetAllSceneGameObjects(SceneGameObjects);
 }

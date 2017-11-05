@@ -25,6 +25,7 @@ public:
 	bool LoadGameObject(JSON_Object* conf);
 
 	void SetActive(bool active);
+	void SetActiveLocal(bool active);
 	bool IsActive();
 	bool IsStatic();
 
@@ -54,7 +55,7 @@ public:
 	u32 GetUUID() const;
 	GameObject* FindGameObjectWithUUID(u32 UUID_ToSearch);
 
-	void GetAllSceneGameObjects(std::vector<const GameObject*>& SceneGameObjects) const;
+	void GetAllSceneGameObjects(std::vector<GameObject*>& SceneGameObjects) const;
 
 private:
 	ComponentTransform* CreateTransformComponent(bool active);
