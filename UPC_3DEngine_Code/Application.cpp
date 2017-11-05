@@ -137,6 +137,9 @@ update_status Application::Update()
 		PushMSToPreUpdate(*item, (*item)->ms_timer.Read());
 	}
 
+	ImGui_ImplSdlGL3_NewFrame(App->window->window);
+	ImGuizmo::BeginFrame();
+
 	for (std::list<Module*>::iterator item = list_modules.begin(); item != list_modules.cend(); ++item)
 	{
 		(*item)->ms_timer.Start();
@@ -147,8 +150,6 @@ update_status Application::Update()
 		PushMSToUpdate(*item, (*item)->ms_timer.Read());
 	}
 
-	ImGui_ImplSdlGL3_NewFrame(App->window->window);
-	//ImGuizmo::BeginFrame();
 	for (std::list<Module*>::iterator item = list_modules.begin(); item != list_modules.cend(); ++item)
 	{
 		(*item)->DrawModuleImGui();
