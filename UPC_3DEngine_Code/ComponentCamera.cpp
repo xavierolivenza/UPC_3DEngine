@@ -182,15 +182,15 @@ void ComponentCamera::SetMainCamera(bool maincam)
 	MainCamera = maincam;
 }
 
-const float* ComponentCamera::GetViewMatrix() const
+float4x4 ComponentCamera::GetViewMatrix() const
 {
 	math::float4x4 matrix = frustum.ViewMatrix();
-	return matrix.Transposed().ptr();
+	return matrix.Transposed();
 }
 
-const float* ComponentCamera::GetViewProjMatrix() const
+float4x4 ComponentCamera::GetViewProjMatrix() const
 {
-	return frustum.ViewProjMatrix().Transposed().ptr();
+	return frustum.ViewProjMatrix().Transposed();
 }
 
 void ComponentCamera::SetFrame(float3& pos, float3& front, float3& up)

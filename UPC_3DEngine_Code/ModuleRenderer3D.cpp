@@ -179,14 +179,14 @@ update_status ModuleRenderer3D::PreUpdate(float dt)
 		const ComponentCamera* camera = App->scene->GetActiveCamera();
 		//If we have main camera, get matrix and load
 		if (camera != nullptr)
-			glLoadMatrixf(App->scene->GetActiveCamera()->GetViewProjMatrix());
+			glLoadMatrixf(App->scene->GetActiveCamera()->GetViewProjMatrix().ptr());
 		//If not, continue loading editor matrix
 		else
-			glLoadMatrixf(App->camera->GetViewProjMatrix());
+			glLoadMatrixf(App->camera->GetViewProjMatrix().ptr());
 	}
 	//Load editor camera matrix
 	else
-		glLoadMatrixf(App->camera->GetViewProjMatrix());
+		glLoadMatrixf(App->camera->GetViewProjMatrix().ptr());
 
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();

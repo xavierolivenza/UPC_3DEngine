@@ -50,6 +50,7 @@ private:
 	void RecursiveDrawDirectory(const char* directory);
 	void ImGuiSaveFilePopUp();
 	void ImGuiTimeManager();
+	void ImGuiCulling();
 
 private:
 	bool startAsGame = false;
@@ -66,6 +67,7 @@ private:
 	bool showLoadFilePopUp = false;
 	bool showSaveFilePopUp = false;
 	bool showTimeManager = true;
+	bool showCulling = false;
 	bool freezeplots = false;
 	bool active = false;
 	bool ScrollDownConsole = true;

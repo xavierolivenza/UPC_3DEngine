@@ -151,9 +151,6 @@ bool ModuleEngineUI::CleanUp()
 
 void ModuleEngineUI::DrawModuleImGui()
 {
-	//------------------------------------------//
-	//-----------------Menu Bar-----------------//
-	//------------------------------------------//
 	if ((App->input->GetKey(SDL_SCANCODE_0) == KEY_DOWN) && (App->input->GetKey(SDL_SCANCODE_LALT) == KEY_REPEAT)) showMenuBar = !showMenuBar;
 	if ((App->input->GetKey(SDL_SCANCODE_1) == KEY_DOWN) && (App->input->GetKey(SDL_SCANCODE_LALT) == KEY_REPEAT)) showHierarchyWindow = !showHierarchyWindow;
 	if ((App->input->GetKey(SDL_SCANCODE_2) == KEY_DOWN) && (App->input->GetKey(SDL_SCANCODE_LALT) == KEY_REPEAT)) showModuleVariablesWindow = !showModuleVariablesWindow;
@@ -162,6 +159,19 @@ void ModuleEngineUI::DrawModuleImGui()
 	if ((App->input->GetKey(SDL_SCANCODE_5) == KEY_DOWN) && (App->input->GetKey(SDL_SCANCODE_LALT) == KEY_REPEAT)) showConfigurationWindow = !showConfigurationWindow;
 	if ((App->input->GetKey(SDL_SCANCODE_6) == KEY_DOWN) && (App->input->GetKey(SDL_SCANCODE_LALT) == KEY_REPEAT)) showProfilerWindow = !showProfilerWindow;
 	if ((App->input->GetKey(SDL_SCANCODE_7) == KEY_DOWN) && (App->input->GetKey(SDL_SCANCODE_LALT) == KEY_REPEAT)) showTimeManager = !showTimeManager;
+	if ((App->input->GetKey(SDL_SCANCODE_8) == KEY_DOWN) && (App->input->GetKey(SDL_SCANCODE_LALT) == KEY_REPEAT)) showCulling= !showCulling;
+
+	/*
+	if ((App->input->GetKey(SDL_SCANCODE_9) == KEY_DOWN) && (App->input->GetKey(SDL_SCANCODE_LALT) == KEY_REPEAT)) startAsGame = !startAsGame;
+	if (startAsGame)
+		showMenuBar = showHierarchyWindow = showModuleVariablesWindow = showInspectorWindow = showConsoleWindow = showConfigurationWindow = showProfilerWindow = showTimeManager = false;
+	else
+		showMenuBar = showHierarchyWindow = showModuleVariablesWindow = showInspectorWindow = showConsoleWindow = showTimeManager = true;
+	*/
+
+	//------------------------------------------//
+	//-----------------Menu Bar-----------------//
+	//------------------------------------------//
 	if (showMenuBar)
 		ImGuiDrawMenuBar();
 
@@ -223,6 +233,12 @@ void ModuleEngineUI::DrawModuleImGui()
 		ImGuiTimeManager();
 
 	//------------------------------------------//
+	//-----------------Culling------------------//
+	//------------------------------------------//
+	if (showCulling)
+		ImGuiCulling();
+
+	//------------------------------------------//
 	//-----------------Rand Gen-----------------//
 	//------------------------------------------//
 	/*
@@ -263,6 +279,8 @@ void ModuleEngineUI::ImGuiDrawMenuBar()
 		ImGui::MenuItem("Console", "LALT + 4", &showConsoleWindow);
 		ImGui::MenuItem("Configuration", "LALT + 5", &showConfigurationWindow);
 		ImGui::MenuItem("Profiler", "LALT + 6", &showProfilerWindow);
+		ImGui::MenuItem("Time", "LALT + 7", &showTimeManager);
+		ImGui::MenuItem("Culling", "LALT + 8", &showCulling);
 		ImGui::EndMenu();
 	}
 	if (ImGui::BeginMenu("Help"))
@@ -810,6 +828,20 @@ void ModuleEngineUI::ImGuiTimeManager()
 	ImGui::End();
 }
 
+void ModuleEngineUI::ImGuiCulling()
+{
+	ImGui::Begin("Culling", false, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_HorizontalScrollbar);
+	//ImGui::Begin("Culling", false);
+
+	ImGui::Button("Calc Octree");
+	static bool showOctreeDebug = false;
+	ImGui::Checkbox("Show Octree Debug", &showOctreeDebug);
+
+	//Debug text about time when checking candidates, collision tests...
+
+	ImGui::End();
+}
+
 void ModuleEngineUI::PushNewConsoleLabel(std::string* newlabel)
 {
 	ScrollDownConsole = true;
@@ -842,19 +874,9 @@ bool ModuleEngineUI::LoadConf(JSON_Object * conf)
 {
 	startAsGame = App->parsonjson->GetBool(conf, "startAsGame", false);
 	if (startAsGame)
-	{
-		showMenuBar = false;
-		showTestWindow = false;
-		showProfilerWindow = false;
-		showModuleVariablesWindow = false;
-		showConfigurationWindow = false;
-		showConsoleWindow = false;
-		showInspectorWindow = false;
-		showHierarchyWindow = false;
-		showLoadFilePopUp = false;
-		showSaveFilePopUp = false;
-		showTimeManager = false;
-	}
+		showMenuBar = showHierarchyWindow = showModuleVariablesWindow = showInspectorWindow = showConsoleWindow = showConfigurationWindow = showProfilerWindow = showTimeManager = false;
+	else
+		showMenuBar = showHierarchyWindow = showModuleVariablesWindow = showInspectorWindow = showConsoleWindow = showTimeManager = true;
 	return true;
 }
 

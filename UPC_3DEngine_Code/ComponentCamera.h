@@ -23,8 +23,8 @@ public:
 	bool IsMainCamera() const;
 	void SetMainCamera(bool maincam);
 
-	const float* GetViewMatrix() const;
-	const float* GetViewProjMatrix() const;
+	float4x4 GetViewMatrix() const;
+	float4x4 GetViewProjMatrix() const;
 
 private:
 	bool FrustumCulling = false;

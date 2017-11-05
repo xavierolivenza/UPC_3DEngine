@@ -20,8 +20,8 @@ public:
 	void Look(const float3 &Position, const float3 &Reference, bool RotateAroundReference = false);
 	void LookAt(const float3 &Spot);
 	void Move(const float3 &Movement);
-	const float* GetViewMatrix() const;
-	const float* GetViewProjMatrix() const;
+	float4x4 GetViewMatrix() const;
+	float4x4 GetViewProjMatrix() const;
 	void CenterCameraToGeometry(const AABB* meshAABB);
 
 	void UpdateCamFov(int width, int height);
