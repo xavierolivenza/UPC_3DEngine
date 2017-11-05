@@ -733,15 +733,9 @@ bool ModuleRenderer3D::DrawComponentMeshMaterial(const ComponentTransform* trans
 	if (transform != nullptr)
 	{
 		glPushMatrix();
-		float4x4 matrixfloat = *transform->GetMatrix();
-		GLfloat matrix[16] =
-		{
-			matrixfloat[0][0],matrixfloat[0][1],matrixfloat[0][2],matrixfloat[0][3],
-			matrixfloat[1][0],matrixfloat[1][1],matrixfloat[1][2],matrixfloat[1][3],
-			matrixfloat[2][0],matrixfloat[2][1],matrixfloat[2][2],matrixfloat[2][3],
-			matrixfloat[3][0],matrixfloat[3][1],matrixfloat[3][2],matrixfloat[3][3]
-		};
-		glMultMatrixf(matrix);
+		float4x4 matrix = float4x4::identity;
+		matrix = transform->GetMatrix();
+		glMultMatrixf(matrix.ptr());
 	}
 
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, meshData->id_indices);

@@ -37,7 +37,7 @@ bool ComponentCamera::Update(float dt)
 		ComponentTransform* transform = parent->GetTransform();
 		if (transform != nullptr)
 		{
-			float4x4 matrix = *transform->GetMatrix();
+			float4x4 matrix = transform->GetMatrix();
 			frustum.pos = matrix.Row3(3);
 			frustum.front = matrix.Row3(2);
 			frustum.up = matrix.Row3(1);

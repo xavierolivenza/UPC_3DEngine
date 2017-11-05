@@ -118,6 +118,6 @@ void ComponentMesh::GetTransformedAABB(AABB& TransformedBox) const
 {
 	TransformedBox = MeshDataStruct.BoundBox;
 	ComponentTransform* transform = this->parent->GetTransform();
-	const float4x4 matrix = *transform->GetMatrix();
+	const float4x4 matrix = transform->GetMatrix();
 	TransformedBox.TransformAsAABB(matrix.Transposed());
 }

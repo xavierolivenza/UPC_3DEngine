@@ -145,7 +145,7 @@ float3 ComponentTransform::GetRotEuler()
 	return rot_euler;
 }
 
-const float4x4* ComponentTransform::GetMatrix() const
+float4x4 ComponentTransform::GetMatrix() const
 {
 	//TODO Don't do this every time only when modified?
 
@@ -168,7 +168,7 @@ const float4x4* ComponentTransform::GetMatrix() const
 
 	matrix.Transpose();
 
-	return &matrix;
+	return matrix;
 }
 
 const float4x4* ComponentTransform::GetLocalMatrix() const
