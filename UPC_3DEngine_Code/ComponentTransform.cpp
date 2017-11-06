@@ -25,21 +25,27 @@ bool ComponentTransform::PreUpdate(float dt)
 bool ComponentTransform::Update(float dt)
 {
 	/*
-	if (parent->IsActive())
-		ImGuizmo::Enable(true);
-	else
-		ImGuizmo::Enable(false);
+	ImGuizmo::Enable(!parent->IsStatic());
 
 	if ((parent != nullptr) && (App->engineUI->GetSelectedGameObject() == parent))
 	{
+		//float4x4 matrix = GetMatrix();
+		//ImGuizmo::DrawCube(App->camera->GetViewMatrix().ptr(), App->camera->GetViewProjMatrix().ptr(), matrix.ptr());
+
 		ImGuiIO& io = ImGui::GetIO();
 		ImGuizmo::SetRect(0, 0, io.DisplaySize.x, io.DisplaySize.y);
 		float4x4 matrix = GetMatrix();
-		ImGuizmo::Manipulate(App->camera->GetViewProjMatrix().ptr(), App->camera->GetViewProjMatrix().ptr(), gizmoOp, ImGuizmo::WORLD, matrix.ptr());
+
+		//Just debug purpose
+		//float4x4 viewmatrix = App->camera->GetViewMatrix();
+		//float4x4 projectionmatrix = App->camera->GetViewProjMatrix();
+
+		ImGuizmo::Manipulate(App->camera->GetViewMatrix().ptr(), App->camera->GetViewProjMatrix().ptr(), gizmoOp, ImGuizmo::LOCAL, matrix.ptr());
 
 		if (ImGuizmo::IsUsing())
 		{
 			matrix.Transpose();
+			matrix = GetMatrix().Inverted() * matrix;
 			float3 position = float3::zero;
 			float3 scale = float3::zero;
 			Quat rotation = Quat::identity;
@@ -49,8 +55,6 @@ bool ComponentTransform::Update(float dt)
 			SetScale(scale);
 		}
 	}
-
-	ImGuizmo::Enable(false);
 	*/
 	return true;
 }
