@@ -24,7 +24,7 @@ bool ComponentTransform::PreUpdate(float dt)
 
 bool ComponentTransform::Update(float dt)
 {
-	/*
+	/**/
 	ImGuizmo::Enable(!parent->IsStatic());
 
 	if ((parent != nullptr) && (App->engineUI->GetSelectedGameObject() == parent))
@@ -55,7 +55,7 @@ bool ComponentTransform::Update(float dt)
 			SetScale(scale);
 		}
 	}
-	*/
+	/**/
 	return true;
 }
 

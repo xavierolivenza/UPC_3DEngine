@@ -685,8 +685,13 @@ bool ModuleRenderer3D::DrawComponentMeshMaterial(const ComponentTransform* trans
 			glColor3f(1.0f, 0.0f, 0.0f);
 
 			glBegin(GL_LINES);
-			glVertex3f(meshData->vertices[i], meshData->vertices[i + 1], meshData->vertices[i + 2]);
-			glVertex3f(meshData->vertices[i] + meshData->normals[i] * (float)NormalLength, meshData->vertices[i + 1] + meshData->normals[i + 1] * (float)NormalLength, meshData->vertices[i + 2] + meshData->normals[i + 2] * (float)NormalLength);
+			float4x4 Transform = transform->GetMatrix().Transposed();
+			float4 BeginNormal = float4(meshData->vertices[i], meshData->vertices[i + 1], meshData->vertices[i + 2], 1);
+			BeginNormal = Transform * BeginNormal;
+			float4 EndNormal = float4(meshData->vertices[i] + meshData->normals[i] * (float)NormalLength, meshData->vertices[i + 1] + meshData->normals[i + 1] * (float)NormalLength, meshData->vertices[i + 2] + meshData->normals[i + 2] * (float)NormalLength, 1);
+			EndNormal = Transform * EndNormal;
+			glVertex3f(BeginNormal.x, BeginNormal.y, BeginNormal.z);
+			glVertex3f(EndNormal.x, EndNormal.y, EndNormal.z);
 			glEnd();
 
 			glLineWidth(1.0f);

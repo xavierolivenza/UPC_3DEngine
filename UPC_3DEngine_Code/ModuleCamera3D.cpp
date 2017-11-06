@@ -169,20 +169,17 @@ update_status ModuleCamera3D::Update(float dt)
 
 		//Check ray agains gameobjects Sphere - AABB (Optimaze with infrustrum gameobjects(quadtree/octree))
 		std::vector<GameObject*> SceneGameObjects;
-		std::map<float, const GameObject*> SceneGameObjectsHitted;
+		std::multimap<float, const GameObject*> SceneGameObjectsHitted;
 		App->scene->GetAllSceneGameObjects(SceneGameObjects);
 		for (std::vector<GameObject*>::const_iterator item = SceneGameObjects.cbegin(); item != SceneGameObjects.cend(); ++item)
 		{
 			ComponentMesh* MeshComp = (ComponentMesh*)(*item)->FindComponentFirst(ComponentType::Mesh_Component);
 			if (MeshComp != nullptr)
 			{
-				bool hit = false;
 				float Neardistance = 0.0f;
 				float Fardistance = 0.0f;
-
 				AABB GameObjectAABB;
 				MeshComp->GetTransformedAABB(GameObjectAABB);
-				hit = MousePickRay.Intersects(GameObjectAABB, Neardistance, Fardistance);
 				/*
 				hit = MousePickRay.Intersects(MeshComp->MeshDataStruct.BoundSphere);
 				if (hit)
@@ -190,7 +187,7 @@ update_status ModuleCamera3D::Update(float dt)
 				if (hit)
 					hit = MousePickRay.Intersects(MeshComp->MeshDataStruct.BoundOBox);
 				*/
-				if (hit)
+				if (MousePickRay.Intersects(GameObjectAABB, Neardistance, Fardistance))
 				{
 					//LOGP("Hit");
 					//Order hitted AABB by distance
@@ -205,7 +202,7 @@ update_status ModuleCamera3D::Update(float dt)
 		/**/
 		GameObject* BestCandidate = nullptr;
 		float BestCandidateDistance = 500.0f; //Initialize with big number so any triangle hit distance is minor to this.
-		for (std::map<float, const GameObject*>::const_iterator item = SceneGameObjectsHitted.cbegin(); item != SceneGameObjectsHitted.cend(); ++item)
+		for (std::multimap<float, const GameObject*>::const_iterator item = SceneGameObjectsHitted.cbegin(); item != SceneGameObjectsHitted.cend(); ++item)
 		{
 			//Transform Mouse to GameObject Local Space
 			//Copy it so we don't affect the original one
