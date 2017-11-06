@@ -246,8 +246,8 @@ bool ModuleSceneImporter::Import(std::string* file_to_import, std::string& outpu
 			MeshDataStruct.BoundBox.Enclose((float3*)MeshDataStruct.vertices,MeshDataStruct.num_vertices);
 			
 			// Generate Sphere
-			MeshDataStruct.BoundSphere.SetNegativeInfinity();
-			MeshDataStruct.BoundSphere.Enclose(MeshDataStruct.BoundBox);
+			//MeshDataStruct.BoundSphere.SetNegativeInfinity();
+			//MeshDataStruct.BoundSphere.Enclose(MeshDataStruct.BoundBox);
 
 			// Generate OBB
 			/*
@@ -284,7 +284,7 @@ bool ModuleSceneImporter::Import(std::string* file_to_import, std::string& outpu
 		}
 
 		//Save fbx_MeshComponents
-		ImportFBXComponents(file_to_import, &fbx_MeshComponents);
+		ImportFBXComponents(file_to_import, &fbx_MeshComponents, output_file);
 
 		WorkingPath.clear();
 		aiReleaseImport(scene);
@@ -299,15 +299,15 @@ bool ModuleSceneImporter::Import(std::string* file_to_import, std::string& outpu
 	return ret;
 }
 
-bool ModuleSceneImporter::ImportFBXComponents(const std::string* file_to_import, const std::vector<std::string>* FBXComponents)
+bool ModuleSceneImporter::ImportFBXComponents(const std::string* file_to_import, const std::vector<std::string>* FBXComponents, std::string& output_file)
 {
 	//Num strings / length of each / strings
 
 	size_t bar_pos = file_to_import->rfind("\\") + 1;
-	std::string FBXComponents_name = file_to_import->substr(bar_pos, file_to_import->rfind(".") - bar_pos);
-	FBXComponents_name += "." + FBXComponents_Extention;
+	output_file = file_to_import->substr(bar_pos, file_to_import->rfind(".") - bar_pos);
+	output_file += "." + FBXComponents_Extention;
 
-	std::string FBXComponents_path = Library_mesh_path + "\\" + FBXComponents_name;
+	std::string FBXComponents_path = Library_mesh_path + "\\" + output_file;
 	FILE* file = fopen(FBXComponents_path.c_str(), "r");
 	if (file != nullptr)
 	{
@@ -373,7 +373,18 @@ bool ModuleSceneImporter::Load(std::string* file_to_load)
 	//Check if this is a mesh file
 	std::string extention = file_to_load->substr(file_to_load->rfind(".") + 1, file_to_load->length());
 
-	if (extention == Mesh_Extention)
+	if (extention == "fbx")
+	{
+		std::string output_file;
+		if (Import(file_to_load, output_file))
+		{
+			LOGP("Mesh File found and Imported.");
+			if (Load(&(Library_mesh_path + "\\" + output_file)))
+				LOGP("Mesh File loaded.");
+		}
+		LOGP("Mesh File found andimport error.");
+	}
+	else if (extention == Mesh_Extention)
 	{
 		GameObject* NewGameObject = new GameObject("NewMesh", true, true);
 		ComponentMesh* NewMesh = NewGameObject->CreateMeshComponent(true);
@@ -389,7 +400,7 @@ bool ModuleSceneImporter::Load(std::string* file_to_load)
 	}
 	else
 	{
-		LOGP("The dropped file is not a .%s or .%s file", Mesh_Extention.c_str(), FBXComponents_Extention.c_str());
+		LOGP("The dropped file is not a .fbx or .%s or .%s file", Mesh_Extention.c_str(), FBXComponents_Extention.c_str());
 		return false;
 	}
 	return true;

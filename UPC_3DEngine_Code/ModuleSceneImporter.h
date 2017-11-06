@@ -46,7 +46,7 @@ public:
 private:
 	aiNode* SearchForMesh(const aiNode* root, uint mesh_id) const;
 	aiNode* SearchForMeshIterator(const aiNode* root, uint mesh_id) const;
-	bool ImportFBXComponents(const std::string* file_to_import, const std::vector<std::string>* FBXComponents);
+	bool ImportFBXComponents(const std::string* file_to_import, const std::vector<std::string>* FBXComponents, std::string& output_file);
 	bool LoadFBXComponents(const std::string* file_to_load);
 
 private:

@@ -694,7 +694,7 @@ void ModuleEngineUI::ImGuiLoadFilePopUp()
 		{
 			std::string extention = LoadFileNameFileBrowser.substr(LoadFileNameFileBrowser.rfind(".") + 1, LoadFileNameFileBrowser.length());
 			//if is a mesh file load
-			if ((extention == *App->importer->Get_Mesh_Extention()) || (extention == *App->importer->Get_FBXComponents_Extention()))
+			if ((extention == "fbx") || (extention == *App->importer->Get_Mesh_Extention()) || (extention == *App->importer->Get_FBXComponents_Extention()))
 			{
 				//Load Scene here
 				TCHAR directory[MAX_PATH + 1] = "";
