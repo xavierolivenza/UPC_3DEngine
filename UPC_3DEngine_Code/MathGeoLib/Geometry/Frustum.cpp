@@ -815,21 +815,19 @@ bool Frustum::ContainsAaBox(const AABB& refBox) const
 {
 	float3 vCorner[8];
 	int iTotalIn = 0;
-	refBox.GetCornerPoints(vCorner);
+	refBox.GetCornerPoints(vCorner); // get the corners of the box into the vCorner array
 
-	// get the corners of the box into the vCorner array
 	// test all 8 corners against the 6 sides
 	// if all points are behind 1 specific plane, we are out
 	// if we are in with all points, then we are fully in
-
+	Plane m_plane[6];
+	GetPlanes(m_plane);
 	for (int p = 0; p < 6; ++p) {
 		int iInCount = 8;
 		int iPtIn = 1;
 		for (int i = 0; i < 8; ++i) {
 			// test this point against the planes
-			Plane outArray[6];
-			GetPlanes(outArray);
-			if(!outArray[p].IsOnPositiveSide(vCorner[i])) //When testing, this may change if(outArray[p].IsOnPositiveSide(vCorner[i]))
+			if(m_plane[p].IsOnPositiveSide(vCorner[i])) //When testing, this may change if(outArray[p].IsOnPositiveSide(vCorner[i]))
 			{
 				iPtIn = 0;
 				--iInCount;

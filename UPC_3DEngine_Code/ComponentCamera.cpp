@@ -65,8 +65,12 @@ bool ComponentCamera::Update(float dt)
 			{
 				AABB Box;
 				mesh->GetTransformedAABB(Box);
-				if (frustum.ContainsAaBox(Box))
+
+				if (frustum.Contains(Box))
 					(*item)->DrawMesh = true;
+
+				//if (frustum.ContainsAaBox(Box))
+				//	(*item)->DrawMesh = true;
 			}
 		}
 		/**/

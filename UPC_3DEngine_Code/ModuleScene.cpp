@@ -39,8 +39,15 @@ update_status ModuleScene::PreUpdate(float dt)
 	//SetAll GameObjects DrawMesh to false(camera culling option will turn them on if in fov)
 	const ComponentCamera* camera = App->scene->GetActiveCamera();
 	if ((camera != nullptr) && (camera->IsCulling()))
+	{
 		for (std::vector<GameObject*>::const_iterator item = SceneGameObjects.cbegin(); item != SceneGameObjects.cend(); ++item)
 			(*item)->DrawMesh = false;
+	}
+	else
+	{
+		for (std::vector<GameObject*>::const_iterator item = SceneGameObjects.cbegin(); item != SceneGameObjects.cend(); ++item)
+			(*item)->DrawMesh = true;
+	}
 
 	root->PreUpdate(dt);
 	return UPDATE_CONTINUE;
