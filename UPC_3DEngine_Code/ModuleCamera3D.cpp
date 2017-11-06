@@ -208,14 +208,13 @@ update_status ModuleCamera3D::Update(float dt)
 			//Copy it so we don't affect the original one
 			RayLocal = MousePickRay;
 			float4x4 TransMatrix = ((*item).second)->GetTransform()->GetMatrix();
-			float4x4 InvertedTransMatrix = TransMatrix.Inverted().Transposed();
 			RayLocal.Transform(TransMatrix.Inverted().Transposed());
 
 			//Iterate mesh triangles to chechk if hit is real (using order by distance)
 			MeshData& Mesh = ((ComponentMesh*)(((*item).second)->FindComponentFirst(ComponentType::Mesh_Component)))->MeshDataStruct;
 
 			//Each 3 indices we have a triangle
-			for (uint i = 0; i < Mesh.num_indices; i += 3)
+			for (uint i = 0; i < Mesh.num_indices;)
 			{
 				Triangle tri;
 				tri.a.Set(&Mesh.vertices[Mesh.indices[i++] * 3]);
@@ -223,13 +222,10 @@ update_status ModuleCamera3D::Update(float dt)
 				tri.c.Set(&Mesh.vertices[Mesh.indices[i++] * 3]);
 				float distance = 0.0f;
 				float3 intersectionPoint = float3::zero;
-				if (RayLocal.Intersects(tri, &distance, &intersectionPoint))
+				if ((RayLocal.Intersects(tri, &distance, &intersectionPoint)) && (distance < BestCandidateDistance))
 				{
-					if (distance < BestCandidateDistance)
-					{
-						BestCandidate = (GameObject*)(*item).second;
-						BestCandidateDistance = distance;
-					}
+					BestCandidate = (GameObject*)(*item).second;
+					BestCandidateDistance = distance;
 				}
 			}
 		}
