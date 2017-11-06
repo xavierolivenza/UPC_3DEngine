@@ -492,9 +492,6 @@
     <ClInclude Include="ComponentCamera.h">
       <Filter>Sources\GameObject\Components</Filter>
     </ClInclude>
-    <ClInclude Include="imgui-1.51\ImGuizmo.h">
-      <Filter>Sources\Tools\ImGui</Filter>
-    </ClInclude>
     <ClInclude Include="Resource.h">
       <Filter>Sources\Resources</Filter>
     </ClInclude>
@@ -503,6 +500,9 @@
     </ClInclude>
     <ClInclude Include="ResourceTexture.h">
       <Filter>Sources\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui-1.51\ImGuizmo.h">
+      <Filter>Sources\Tools\ImGui</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -707,9 +707,6 @@
     <ClCompile Include="ComponentCamera.cpp">
       <Filter>Sources\GameObject\Components</Filter>
     </ClCompile>
-    <ClCompile Include="imgui-1.51\ImGuizmo.cpp">
-      <Filter>Sources\Tools\ImGui</Filter>
-    </ClCompile>
     <ClCompile Include="Resource.cpp">
       <Filter>Sources\Resources</Filter>
     </ClCompile>
@@ -718,6 +715,9 @@
     </ClCompile>
     <ClCompile Include="ResourceTexture.cpp">
       <Filter>Sources\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui-1.51\ImGuizmo.cpp">
+      <Filter>Sources\Tools\ImGui</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
