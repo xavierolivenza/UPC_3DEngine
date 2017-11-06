@@ -23,6 +23,8 @@ public:
 	bool IsMainCamera() const;
 	void SetMainCamera(bool maincam);
 
+	bool IsCulling() const;
+
 	float4x4 GetViewMatrix() const;
 	float4x4 GetViewProjMatrix() const;
 

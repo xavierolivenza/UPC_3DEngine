@@ -34,6 +34,14 @@ bool ModuleScene::Start()
 // PreUpdate: clear buffer
 update_status ModuleScene::PreUpdate(float dt)
 {
+	if (NewObjectAdded)
+		GetAllSceneGameObjectsCalc();
+	//SetAll GameObjects DrawMesh to false(camera culling option will turn them on if in fov)
+	const ComponentCamera* camera = App->scene->GetActiveCamera();
+	if ((camera != nullptr) && (camera->IsCulling()))
+		for (std::vector<GameObject*>::const_iterator item = SceneGameObjects.cbegin(); item != SceneGameObjects.cend(); ++item)
+			(*item)->DrawMesh = false;
+
 	root->PreUpdate(dt);
 	return UPDATE_CONTINUE;
 }
@@ -100,6 +108,7 @@ void ModuleScene::CleanUpGameObjectTree(GameObject* gameobject, bool cleanRoot)
 			gameobject->CleanUp();
 			RELEASE(gameobject);
 		}
+		NewObjectAdded = true;
 	}
 }
 
@@ -154,11 +163,13 @@ const GameObject* ModuleScene::GetRoot() const
 void ModuleScene::AddChildToRoot(GameObject* child)
 {
 	root->AddChild(child);
+	NewObjectAdded = true;
 }
 
 bool ModuleScene::RemoveChildFromRoot(GameObject* child)
 {
 	return root->RemoveChild(child);
+	App->scene->NewObjectAdded = true;
 }
 
 GameObject* ModuleScene::FindGameObjectWithUUID(u32 UUID_ToSearch)
@@ -198,7 +209,13 @@ const ComponentCamera* ModuleScene::GetActiveCameraIterator(GameObject* node) co
 	return nullptr;
 }
 
-void ModuleScene::GetAllSceneGameObjects(std::vector<GameObject*>& SceneGameObjects) const
+const std::vector<GameObject*>* ModuleScene::GetAllSceneGameObjects() const
 {
+	return &SceneGameObjects;
+}
+
+void ModuleScene::GetAllSceneGameObjectsCalc()
+{
+	SceneGameObjects.clear();
 	root->GetAllSceneGameObjects(SceneGameObjects);
 }

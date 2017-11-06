@@ -230,6 +230,7 @@ void GameObject::AddChild(GameObject* child)
 {
 	child->parent = this;
 	children.push_back(child);
+	App->scene->NewObjectAdded = true;
 }
 
 bool GameObject::RemoveChild(GameObject* child)
@@ -239,6 +240,7 @@ bool GameObject::RemoveChild(GameObject* child)
 		{
 			(*item)->CleanUp();
 			RELEASE(*item);
+			App->scene->NewObjectAdded = true;
 			return true;
 		}
 	return false;

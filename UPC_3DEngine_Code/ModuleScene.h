@@ -38,16 +38,21 @@ public:
 
 	const ComponentCamera* GetActiveCamera() const;
 
-	void GetAllSceneGameObjects(std::vector<GameObject*>& SceneGameObjects) const;
+	const std::vector<GameObject*>* GetAllSceneGameObjects() const;
 
 private:
 	const ComponentCamera* GetActiveCameraIterator(GameObject* node) const;
 	void CleanUpGameObjectTree(GameObject* gameobject, bool cleanRoot = true);
+	void GetAllSceneGameObjectsCalc();
+
+public:
+	bool NewObjectAdded = false;
 
 private:
 	GameObject* root = nullptr;
 	bool CleanScene = false;
 	bool SceneToLoad = false;
 	std::string EditorScene_ToLoad;
+	std::vector<GameObject*> SceneGameObjects;
 
 };

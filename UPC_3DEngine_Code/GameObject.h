@@ -63,6 +63,7 @@ private:
 
 public:
 	std::string name;
+	bool DrawMesh = true; //Used with culling options
 
 private:
 	u32 UUID = 0;

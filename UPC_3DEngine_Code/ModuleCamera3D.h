@@ -28,6 +28,8 @@ public:
 
 	void ImGuiModuleVariables();
 
+	//Store octree varable + one getter function(to get inview gameobjects)	bool GetGOInView(std::vector<ComponentMesh*>&)
+
 public:
 
 	float3 X, Y, Z, Position, Reference;

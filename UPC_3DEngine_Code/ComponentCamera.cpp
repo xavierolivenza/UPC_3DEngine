@@ -51,10 +51,14 @@ bool ComponentCamera::Update(float dt)
 	//Apply Frustum Culling
 	if (FrustumCulling)
 	{
-		/*
-		std::vector<GameObject*> SceneGameObjects;
-		App->scene->GetAllSceneGameObjects(SceneGameObjects);
-		for (std::vector<GameObject*>::iterator item = SceneGameObjects.begin(); item != SceneGameObjects.cend(); ++item)
+		//Get vector of candidates from octree
+		//Set DrawMesh to true
+
+		//Test code, brute force
+		/**/
+		const std::vector<GameObject*>* SceneGameObjects;
+		SceneGameObjects = App->scene->GetAllSceneGameObjects();
+		for (std::vector<GameObject*>::const_iterator item = SceneGameObjects->begin(); item != SceneGameObjects->cend(); ++item)
 		{
 			ComponentMesh* mesh = (ComponentMesh*)(*item)->FindComponentFirst(ComponentType::Mesh_Component);
 			if (mesh != nullptr)
@@ -62,12 +66,10 @@ bool ComponentCamera::Update(float dt)
 				AABB Box;
 				mesh->GetTransformedAABB(Box);
 				if (frustum.ContainsAaBox(Box))
-					(*item)->SetActiveLocal(true);
-				else
-					(*item)->SetActiveLocal(false);
+					(*item)->DrawMesh = true;
 			}
 		}
-		*/
+		/**/
 	}
 
 	return true;
@@ -98,9 +100,9 @@ void ComponentCamera::DrawComponentImGui()
 			//If this camera is the MainCamera
 			if (MainCamera)
 			{
-				std::vector<GameObject*> SceneGameObjects;
-				App->scene->GetAllSceneGameObjects(SceneGameObjects);
-				for (std::vector<GameObject*>::const_iterator item = SceneGameObjects.cbegin(); item != SceneGameObjects.cend(); ++item)
+				const std::vector<GameObject*>* SceneGameObjects;
+				SceneGameObjects = App->scene->GetAllSceneGameObjects();
+				for (std::vector<GameObject*>::const_iterator item = SceneGameObjects->cbegin(); item != SceneGameObjects->cend(); ++item)
 				{
 					//Search other cameras
 					ComponentCamera* CameraComp = (ComponentCamera*)(*item)->FindComponentFirst(ComponentType::Camera_Component);
@@ -180,6 +182,11 @@ bool ComponentCamera::IsMainCamera() const
 void ComponentCamera::SetMainCamera(bool maincam)
 {
 	MainCamera = maincam;
+}
+
+bool ComponentCamera::IsCulling() const
+{
+	return FrustumCulling;
 }
 
 float4x4 ComponentCamera::GetViewMatrix() const

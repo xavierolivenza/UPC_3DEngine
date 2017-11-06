@@ -168,10 +168,10 @@ update_status ModuleCamera3D::Update(float dt)
 		MousePickRay = CameraComp->frustum.UnProjectLineSegment(MouseNormX, MouseNormY);
 
 		//Check ray agains gameobjects Sphere - AABB (Optimaze with infrustrum gameobjects(quadtree/octree))
-		std::vector<GameObject*> SceneGameObjects;
+		const std::vector<GameObject*>* SceneGameObjects;
+		SceneGameObjects = App->scene->GetAllSceneGameObjects();
 		std::multimap<float, const GameObject*> SceneGameObjectsHitted;
-		App->scene->GetAllSceneGameObjects(SceneGameObjects);
-		for (std::vector<GameObject*>::const_iterator item = SceneGameObjects.cbegin(); item != SceneGameObjects.cend(); ++item)
+		for (std::vector<GameObject*>::const_iterator item = SceneGameObjects->cbegin(); item != SceneGameObjects->cend(); ++item)
 		{
 			ComponentMesh* MeshComp = (ComponentMesh*)(*item)->FindComponentFirst(ComponentType::Mesh_Component);
 			if (MeshComp != nullptr)

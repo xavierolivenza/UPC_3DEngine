@@ -23,21 +23,25 @@ bool ComponentMesh::PreUpdate(float dt)
 
 bool ComponentMesh::Update(float dt)
 {
-	const Component* MeshComponent = parent->FindComponentFirst(ComponentType::Mesh_Component);
-	if (MeshComponent != nullptr)
+	if (parent->DrawMesh)
 	{
-		const Component* MaterialComponent = parent->FindComponentFirst(ComponentType::Material_Component);
-		if (!MaterialComponent->IsActive())
-			MaterialComponent = nullptr;
-		App->renderer3D->DrawComponentMeshMaterial(parent->GetTransform(), (ComponentMesh*)MeshComponent, (ComponentMaterial*)MaterialComponent);
+		const Component* MeshComponent = parent->FindComponentFirst(ComponentType::Mesh_Component);
+		if (MeshComponent != nullptr)
+		{
+			const Component* MaterialComponent = parent->FindComponentFirst(ComponentType::Material_Component);
+			if (!MaterialComponent->IsActive())
+				MaterialComponent = nullptr;
+			App->renderer3D->DrawComponentMeshMaterial(parent->GetTransform(), (ComponentMesh*)MeshComponent, (ComponentMaterial*)MaterialComponent);
+		}
 	}
 
-	//Recalculate AABB of this mesh
-	AABB LocalCopy;
-	GetTransformedAABB(LocalCopy);
-
 	if (DebugDrawAABB)
+	{
+		//Recalculate AABB of this mesh
+		AABB LocalCopy;
+		GetTransformedAABB(LocalCopy);
 		App->renderer3D->DrawDebugBox(LocalCopy.CornerPoint(0), LocalCopy.CornerPoint(1), LocalCopy.CornerPoint(2), LocalCopy.CornerPoint(3), LocalCopy.CornerPoint(4), LocalCopy.CornerPoint(5), LocalCopy.CornerPoint(6), LocalCopy.CornerPoint(7), 1.0f, 1.0f, 0.0f);
+	}
 	if (DebugDrawOBB)
 		App->renderer3D->DrawDebugBox(MeshDataStruct.BoundOBox.CornerPoint(0), MeshDataStruct.BoundOBox.CornerPoint(1), MeshDataStruct.BoundOBox.CornerPoint(2), MeshDataStruct.BoundOBox.CornerPoint(3), MeshDataStruct.BoundOBox.CornerPoint(4), MeshDataStruct.BoundOBox.CornerPoint(5), MeshDataStruct.BoundOBox.CornerPoint(6), MeshDataStruct.BoundOBox.CornerPoint(7), 0.0f, 1.0f, 0.0f);
 
