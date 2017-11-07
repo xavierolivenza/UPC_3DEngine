@@ -209,6 +209,7 @@
     <ClInclude Include="ModuleScene.h" />
     <ClInclude Include="ModuleSceneIntro.h" />
     <ClInclude Include="ModuleWindow.h" />
+    <ClInclude Include="Octree.h" />
     <ClInclude Include="p2Log.h" />
     <ClInclude Include="p2Point.h" />
     <ClInclude Include="ModuleParson.h" />
@@ -284,6 +285,7 @@
     <ClCompile Include="ModuleScene.cpp" />
     <ClCompile Include="ModuleSceneIntro.cpp" />
     <ClCompile Include="ModuleWindow.cpp" />
+    <ClCompile Include="Octree.cpp" />
     <ClCompile Include="p2Log.cpp" />
     <ClCompile Include="ModuleParson.cpp" />
     <ClCompile Include="parson\parson.c" />

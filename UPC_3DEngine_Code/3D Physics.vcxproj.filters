@@ -507,6 +507,9 @@
     <ClInclude Include="ModuleResources.h">
       <Filter>Sources\Modules</Filter>
     </ClInclude>
+    <ClInclude Include="Octree.h">
+      <Filter>Sources\Containers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ModuleAudio.cpp">
@@ -724,6 +727,9 @@
     </ClCompile>
     <ClCompile Include="ModuleResources.cpp">
       <Filter>Sources\Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="Octree.cpp">
+      <Filter>Sources\Containers</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
