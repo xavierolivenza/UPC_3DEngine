@@ -504,6 +504,9 @@
     <ClInclude Include="imgui-1.51\ImGuizmo.h">
       <Filter>Sources\Tools\ImGui</Filter>
     </ClInclude>
+    <ClInclude Include="ModuleResources.h">
+      <Filter>Sources\Modules</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ModuleAudio.cpp">
@@ -718,6 +721,9 @@
     </ClCompile>
     <ClCompile Include="imgui-1.51\ImGuizmo.cpp">
       <Filter>Sources\Tools\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="ModuleResources.cpp">
+      <Filter>Sources\Modules</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

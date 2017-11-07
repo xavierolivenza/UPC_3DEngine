@@ -17,7 +17,8 @@ Application::Application()
 	engineUI = new ModuleEngineUI(this);
 	loadmesh = new ModuleLoadMesh(this);
 	scene = new ModuleScene(this);
-	importer = new  ModuleSceneImporter(this);
+	importer = new ModuleSceneImporter(this);
+	resources = new ModuleResources(this);
 
 	// The order of calls is very important!
 	// Modules will Init() Start() and Update in this order
@@ -31,6 +32,7 @@ Application::Application()
 	
 	AddModule(importer);
 	AddModule(loadmesh);
+	AddModule(resources);
 
 	// Scenes
 	AddModule(scene);
