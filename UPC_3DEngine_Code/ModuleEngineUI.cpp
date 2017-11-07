@@ -413,7 +413,7 @@ void ModuleEngineUI::ImGuiConfigurationWindow()
 	}
 	if (ImGui::CollapsingHeader("Time"))
 	{
-		TimeManager time = *App->GetTimeManagerStruct();
+		TimeManager& time = App->GetTimeManagerStruct();
 		char title[100];
 		uint title_size = sizeof title;
 		sprintf_s(title, title_size, "ms_timer: %i", time.ms_timer.Read());
@@ -437,6 +437,7 @@ void ModuleEngineUI::ImGuiConfigurationWindow()
 		ImGui::Text(title);
 		sprintf_s(title, title_size, "TimeUpdate: %.3f", time.TimeUpdate);
 		ImGui::Text(title);
+		ImGui::DragFloat("Time Distortion", &time.TimeDistortion, 0.05f, 0.1f, 3.0f, "%.2f");
 	}
 	if (ImGui::CollapsingHeader("Window"))
 	{
@@ -799,7 +800,6 @@ void ModuleEngineUI::ImGuiTimeManager()
 	{
 		if (ImGui::Button("Play"))
 		{
-			//TODO save scene
 			App->scene->SaveScene("EditorScene_Backup");
 			App->Play();
 		}

@@ -55,7 +55,8 @@ struct TimeManager
 	//GameTime
 	float GameSecSinceStartUp = 0.0f;
 	EngineTimeStatus TimeStatus = EngineTimeStatus::stop;
-	float TimeUpdate = 1.0f; //0.0f: pause, 1.0f: normal time, other: time distortion
+	float TimeUpdate = 0.0f; //0.0f: pause, 1.0f: normal time, other: time distortion
+	float TimeDistortion = 1.0f;
 	bool OneFrameForward = false;
 };
 
@@ -72,7 +73,7 @@ public:
 	const std::list<Module*>* GetModuleList() const;
 	uint& GetFramerateCapModif();
 	const PerformanceStruct* GetPerformanceStruct() const;
-	const TimeManager* GetTimeManagerStruct() const;
+	TimeManager& GetTimeManagerStruct();
 
 	void OpenLink(const char* link);
 	void WantToClose();

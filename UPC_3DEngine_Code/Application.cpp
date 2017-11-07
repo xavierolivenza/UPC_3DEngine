@@ -122,6 +122,8 @@ update_status Application::Update()
 
 	PrepareUpdate();
 	float modified_DT = Time.dt * Time.TimeUpdate;
+	if ((Time.TimeStatus == EngineTimeStatus::play_unpause) && (Time.TimeDistortion != 1.0f))
+		modified_DT = Time.dt * Time.TimeDistortion;
 
 	if (Time.OneFrameForward) // if it's true, means TimeUpdate is 0.0f;
 	{
@@ -202,9 +204,9 @@ const PerformanceStruct* Application::GetPerformanceStruct() const
 	return &performance;
 }
 
-const TimeManager* Application::GetTimeManagerStruct() const
+TimeManager& Application::GetTimeManagerStruct()
 {
-	return &Time;
+	return Time;
 }
 
 void Application::OpenLink(const char* link)
