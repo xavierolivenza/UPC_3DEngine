@@ -1,1 +1,9 @@
-{"Resource Mesh":{"uuid":1344339873,"file_assets":"..\\Game\\Assets\\BakerHouse.fbx","file_library":"BakerHouse.GameObjectMeshAlvOli","type":0}}
+{
+  "Resource Mesh": {
+    "uuid": 313644291,
+    "file_assets": "..\\Game\\Assets\\BakerHouse.fbx",
+    "file_library": "BakerHouse.GameObjectMeshAlvOli",
+    "type": 0,
+    "file_time": "Sun Sep 17 23:17:59 2017\n"
+  }
+}

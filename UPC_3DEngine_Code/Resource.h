@@ -29,6 +29,7 @@ protected:
 	uint uuid = 0;
 	std::string file;
 	std::string exported_file;
+	std::string file_date;
 	Type type = Type::null;
 	uint loaded = 0;
 };

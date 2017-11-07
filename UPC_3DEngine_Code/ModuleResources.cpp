@@ -94,14 +94,17 @@ uint ModuleResources::ImportFile(const char* new_file_in_assets, Resource::Type 
 		res->exported_file = output;
 		ret = res->GetUID();
 
-		std::experimental::filesystem::file_time_type Temp;
-		for (auto& file_in_path : std::experimental::filesystem::recursive_directory_iterator(App->importer->Get_Assets_path()->c_str()))
+		for (std::experimental::filesystem::recursive_directory_iterator::value_type file_in_path : std::experimental::filesystem::recursive_directory_iterator(App->importer->Get_Assets_path()->c_str()))
 		{
 			if (std::experimental::filesystem::is_regular_file(file_in_path.path()))
 			{
 				LOGP("%S", file_in_path.path().string().c_str());
-				if(res->file == file_in_path.path().string().c_str())
-					Temp = std::experimental::filesystem::last_write_time(file_in_path.path());
+				if (res->file == file_in_path.path().string().c_str())
+				{
+					std::experimental::filesystem::file_time_type ftime = std::experimental::filesystem::last_write_time(file_in_path.path());
+					std::time_t cftime = decltype(ftime)::clock::to_time_t(ftime);
+					res->file_date = std::asctime(std::localtime(&cftime));
+				}
 			}
 		}
 
