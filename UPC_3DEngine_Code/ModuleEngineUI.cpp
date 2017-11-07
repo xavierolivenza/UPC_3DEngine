@@ -579,7 +579,7 @@ void ModuleEngineUI::ImGuiModuleVariablesWindow()
 void ModuleEngineUI::ImGuiConsole()
 {
 	//Set window to good position
-	int w = 0; int h = 0; App->window->GetWindowSize(w, h); ImGui::SetNextWindowPos(ImVec2(w * 0.5f - 590 * 0.5f, h - 177)); //w/2 - console width/2, h - console height
+	int w = 0; int h = 0; App->window->GetWindowSize(w, h); ImGui::SetNextWindowPos(ImVec2(w * 0.5f - 600 * 0.5f, h - 177)); //w/2 - console width/2, h - console height
 	ImGui::Begin("Console", false, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize);
 	//ImGui::Begin("Console", false);
 	ImGui::BeginChild("ScrollingRegion", ImVec2(0, -ImGui::GetItemsLineHeightWithSpacing()), false, ImGuiWindowFlags_HorizontalScrollbar);
