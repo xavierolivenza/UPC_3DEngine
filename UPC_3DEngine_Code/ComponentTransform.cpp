@@ -45,8 +45,8 @@ bool ComponentTransform::Update(float dt)
 
 		ImGuizmo::DrawCube(viewmatrix.ptr(), projectionmatrix.ptr(), matrix.ptr());
 
-		LOGP("%f, %f, %f, %f", matrix.At(0,0), matrix.At(0,1), matrix.At(0,2), matrix.At(0,3));
-		ImGuizmo::Manipulate(viewmatrix.ptr(), projectionmatrix.ptr(), gizmoOp, ImGuizmo::WORLD, matrix.ptr());
+		LOGP("%f, %f, %f, %f", matrix.At(0, 0), matrix.At(0, 1), matrix.At(0, 2), matrix.At(0, 3));
+		ImGuizmo::Manipulate(viewmatrix.ptr(), projectionmatrix.ptr(), gizmoOp, ImGuizmo::LOCAL, matrix.ptr());
 		LOGP("%f, %f, %f, %f", matrix.At(0, 0), matrix.At(0, 1), matrix.At(0, 2), matrix.At(0, 3));
 
 		if (ImGuizmo::IsUsing())

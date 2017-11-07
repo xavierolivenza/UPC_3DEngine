@@ -92,13 +92,17 @@ uint ModuleResources::ImportFile(const char* new_file_in_assets, Resource::Type 
 		res->exported_file = output;
 		ret = res->GetUID();
 
-		ParsonJSON* parsonjson = new ParsonJSON(output.c_str(), true, true, false);
+		size_t bar_pos = res->file.rfind("\\") + 1;
+		std::string filepath_name = res->file.substr(0, bar_pos);
+		filepath_name += res->file.substr(bar_pos, res->file.length());
+		filepath_name += ".meta";
+		ParsonJSON* parsonjson = new ParsonJSON(filepath_name.c_str(), true, true, false);
 		bool MetaSaved = parsonjson->Init();
 		if (MetaSaved)
 			MetaSaved = parsonjson->SaveResource(res);
 		RELEASE(parsonjson);
-		if (MetaSaved) LOGP("SaveScene Success, file: %s", output.c_str());
-		else LOGP("SaveScene Failure, file: %s", output.c_str());
+		if (MetaSaved) LOGP("SaveScene Success, file: %s", filepath_name.c_str());
+		else LOGP("SaveScene Failure, file: %s", filepath_name.c_str());
 	}
 
 	return ret;

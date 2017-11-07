@@ -91,8 +91,13 @@ bool ModuleSceneImporter::Init()
 		if (std::experimental::filesystem::is_regular_file(file_in_path.path()))
 		{
 			std::string output_file;
+			if (App->resources->ImportFile(file_in_path.path().string().c_str(), Resource::Type::mesh)) LOGP("Regular File found and imported.");
+			LOGP("Regular File found and import error.");
+			/*
+			std::string output_file;
 			if(ImportFBX(&file_in_path.path().string(), output_file)) LOGP("Regular File found and imported.");
 			LOGP("Regular File found and import error.");
+			*/
 		}
 	}
 
