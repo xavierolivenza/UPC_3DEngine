@@ -25,10 +25,10 @@ public:
 	bool LoadConf(JSON_Object* conf);
 
 	uint Find(const char* file_in_assets) const;
-	uint ImportFile(const char* new_file_in_assets);
+	uint ImportFile(const char* new_file_in_assets, Resource::Type type);
 	const Resource* Get(uint uid) const;
 	Resource* Get(uint uid);
-	Resource* CreateNewResource(Resource::Type type, uint force_uid = 0);
+	Resource* CreateNewResource(Resource::Type type);
 
 private:
 	uint uuid = 0;

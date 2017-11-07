@@ -26,7 +26,7 @@ public:
 	void DrawModuleImGui();
 	void ImGuiModuleVariables();
 
-	bool Import(std::string* file_to_import, std::string& output_file);
+	bool ImportFBX(std::string* file_to_import, std::string& output_file);
 	bool Load(std::string* file_to_load);
 	bool LoadSimpleMesh(std::string* file_to_load, MeshData& Data);
 	bool LoadTexture(std::string* file_to_load, MaterialData& DataMaterial);
@@ -49,6 +49,10 @@ private:
 	bool ImportFBXComponents(const std::string* file_to_import, const std::vector<std::string>* FBXComponents, std::string& output_file);
 	bool LoadFBXComponents(const std::string* file_to_load);
 
+public:
+	ImporterMesh* MeshImporter = nullptr;
+	ImporterMaterial* MaterialImporter = nullptr;
+
 private:
 	std::string WorkingPath; //Used to load textures from same path as fbx
 	std::string Assets_path = "..\\Game\\Assets";
@@ -60,6 +64,4 @@ private:
 	std::string Mesh_Extention = "MeshAlvOli";
 	std::string FBXComponents_Extention = "GameObjectMeshAlvOli";
 
-	ImporterMesh* MeshImporter = nullptr;
-	ImporterMaterial* MaterialImporter = nullptr;
 };

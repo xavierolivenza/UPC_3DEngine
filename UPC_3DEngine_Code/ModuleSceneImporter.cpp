@@ -91,7 +91,7 @@ bool ModuleSceneImporter::Init()
 		if (std::experimental::filesystem::is_regular_file(file_in_path.path()))
 		{
 			std::string output_file;
-			if(Import(&file_in_path.path().string(), output_file)) LOGP("Regular File found and imported.");
+			if(ImportFBX(&file_in_path.path().string(), output_file)) LOGP("Regular File found and imported.");
 			LOGP("Regular File found and import error.");
 		}
 	}
@@ -141,7 +141,7 @@ void ModuleSceneImporter::ImGuiModuleVariables()
 
 }
 
-bool ModuleSceneImporter::Import(std::string* file_to_import, std::string& output_file)
+bool ModuleSceneImporter::ImportFBX(std::string* file_to_import, std::string& output_file)
 {
 	bool ret = true;
 
@@ -376,7 +376,7 @@ bool ModuleSceneImporter::Load(std::string* file_to_load)
 	if (extention == "fbx")
 	{
 		std::string output_file;
-		if (Import(file_to_load, output_file))
+		if (ImportFBX(file_to_load, output_file))
 		{
 			LOGP("Mesh File found and Imported.");
 			if (Load(&(Library_mesh_path + "\\" + output_file)))
