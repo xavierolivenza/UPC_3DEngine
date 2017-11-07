@@ -4,6 +4,10 @@
 #include "ModuleScene.h"
 #include "GameObject.h"
 
+#include "Resource.h"
+#include "ResourceMesh.h"
+#include "ResourceTexture.h"
+
 /*
 static int malloc_count;
 static void* counted_malloc(size_t size);
@@ -25,18 +29,23 @@ free(ptr);
 }
 */
 
-ParsonJSON::ParsonJSON(const char* filename, bool isScene, bool loadingScene) : isScene(isScene)
+ParsonJSON::ParsonJSON(const char* filename, bool nameWithPath, bool isScene, bool loadingScene) : isScene(isScene)
 {
 	//json_set_allocation_functions(counted_malloc, counted_free);
 	//root_value = json_value_init_object();
 	//root_object = json_value_get_object(root_value);
-	if (isScene)
-		if (loadingScene)
-			file_name = filename;
+	if (!nameWithPath)
+	{
+		if (isScene)
+			if (loadingScene)
+				file_name = filename;
+			else
+				file_name = *App->importer->Get_Scenes_path() + "\\" + filename + ".json";
 		else
-			file_name = *App->importer->Get_Scenes_path() + "\\" + filename + ".json";
+			file_name = *App->importer->Get_Settings_path() + "\\" + filename + ".json";
+	}
 	else
-		file_name = *App->importer->Get_Settings_path() + "\\" + filename + ".json";
+		file_name = std::string(filename) + ".json";
 }
 
 ParsonJSON::~ParsonJSON()
@@ -139,6 +148,30 @@ bool ParsonJSON::LoadScene(GameObject* root)
 	}
 	else
 		LOGP("No array GameObject Found when trying to load scene.");
+	return true;
+}
+
+bool ParsonJSON::SaveResource(const Resource* mesh) const
+{
+	JSON_Object* conf = nullptr;
+
+	//If this entry does not exist, create it
+	if (json_object_get_object(root_object, mesh->GetTypeStr()) == NULL)
+		json_object_set_value(root_object, mesh->GetTypeStr(), json_value_init_object());
+	//Save
+	conf = json_object_get_object(root_object, mesh->GetTypeStr());
+	mesh->Save(conf);
+
+	//json_serialize_to_string_pretty(root_value);
+	json_serialize_to_file(root_value, file_name.c_str());
+	return true;
+}
+
+bool ParsonJSON::LoadResource(Resource& mesh)
+{
+	JSON_Object* conf = nullptr;
+	conf = json_object_get_object(root_object, mesh.GetTypeStr());
+	mesh.Load(conf);
 	return true;
 }
 

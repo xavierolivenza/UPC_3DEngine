@@ -1,5 +1,6 @@
 #include "imgui-1.51\ImGuizmo.h"
 #include "ComponentTransform.h"
+#include "ComponentCamera.h"
 
 ComponentTransform::ComponentTransform(GameObject* parent, bool Active) : Component(parent, Active, 1, ComponentType::Transform_Component)
 {
@@ -34,22 +35,29 @@ bool ComponentTransform::Update(float dt)
 
 		ImGuiIO& io = ImGui::GetIO();
 		ImGuizmo::SetRect(0, 0, io.DisplaySize.x, io.DisplaySize.y);
-		float4x4 matrix = GetMatrix();
+		
+		float4x4 viewmatrix = App->camera->GetCameraComp()->frustum.ViewMatrix();
+		float4x4 projectionmatrix = App->camera->GetCameraComp()->frustum.ProjectionMatrix();
+		viewmatrix.Transpose();
+		projectionmatrix.Transpose();
 
-		//Just debug purpose
-		//float4x4 viewmatrix = App->camera->GetViewMatrix();
-		//float4x4 projectionmatrix = App->camera->GetViewProjMatrix();
+		float4x4 matrix = GetLocalMatrix().Transposed();
 
-		ImGuizmo::Manipulate(App->camera->GetViewMatrix().ptr(), App->camera->GetViewProjMatrix().ptr(), gizmoOp, ImGuizmo::LOCAL, matrix.ptr());
+		ImGuizmo::DrawCube(viewmatrix.ptr(), projectionmatrix.ptr(), matrix.ptr());
+
+		LOGP("%f, %f, %f, %f", matrix.At(0,0), matrix.At(0,1), matrix.At(0,2), matrix.At(0,3));
+		ImGuizmo::Manipulate(viewmatrix.ptr(), projectionmatrix.ptr(), gizmoOp, ImGuizmo::WORLD, matrix.ptr());
+		LOGP("%f, %f, %f, %f", matrix.At(0, 0), matrix.At(0, 1), matrix.At(0, 2), matrix.At(0, 3));
 
 		if (ImGuizmo::IsUsing())
 		{
 			matrix.Transpose();
-			matrix = GetMatrix().Inverted() * matrix;
+			//matrix = GetMatrix().Inverted() * matrix;
 			float3 position = float3::zero;
 			float3 scale = float3::zero;
 			Quat rotation = Quat::identity;
 			matrix.Decompose(position, rotation, scale);
+			//LOGP("%f, %f, %f", position.x, position.y, position.z);
 			SetPos(position);
 			SetRot(rotation);
 			SetScale(scale);
@@ -184,7 +192,7 @@ float4x4 ComponentTransform::GetMatrix() const
 
 	for (std::list<const GameObject*>::reverse_iterator item = parents.rbegin(); item != parents.crend(); ++item)
 	{
-		float4x4 other = *(*item)->GetTransform()->GetLocalMatrix();
+		float4x4 other = (*item)->GetTransform()->GetLocalMatrix();
 		matrix = matrix * other;
 	}
 
@@ -193,10 +201,10 @@ float4x4 ComponentTransform::GetMatrix() const
 	return matrix;
 }
 
-const float4x4* ComponentTransform::GetLocalMatrix() const
+float4x4 ComponentTransform::GetLocalMatrix() const
 {
 	float4x4 matrix = float4x4::identity;
 	matrix = float4x4::FromTRS(pos, rot, scale);
 	//matrix.Transpose();
-	return &matrix;
+	return matrix;
 }

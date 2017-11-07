@@ -133,7 +133,7 @@ bool ModuleScene::SaveScene(const char* filename) const
 {
 	bool ret = true;
 
-	ParsonJSON* parsonjson = new ParsonJSON(filename, true, false);
+	ParsonJSON* parsonjson = new ParsonJSON(filename, false, true, false);
 	ret = parsonjson->Init();
 	if (ret)
 		ret = parsonjson->SaveScene(root);
@@ -147,7 +147,7 @@ bool ModuleScene::SaveScene(const char* filename) const
 bool ModuleScene::LoadScene(const char* filename)
 {
 	bool ret = true;
-	ParsonJSON* parsonjson = new ParsonJSON(filename, true, true);
+	ParsonJSON* parsonjson = new ParsonJSON(filename, false, true, true);
 	ret = parsonjson->Init();
 	if (ret)
 		ret = parsonjson->LoadScene(root);

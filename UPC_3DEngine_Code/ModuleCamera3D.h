@@ -9,6 +9,7 @@ class ComponentCamera;
 
 class ModuleCamera3D : public Module
 {
+	friend class ComponentTransform;
 public:
 	ModuleCamera3D(Application* app, bool start_enabled = true);
 	~ModuleCamera3D();
@@ -27,6 +28,11 @@ public:
 	void UpdateCamFov(int width, int height);
 
 	void ImGuiModuleVariables();
+
+	const ComponentCamera* GetCameraComp() const
+	{
+		return CameraComp;
+	}
 
 	//Store octree varable + one getter function(to get inview gameobjects)	bool GetGOInView(std::vector<ComponentMesh*>&)
 

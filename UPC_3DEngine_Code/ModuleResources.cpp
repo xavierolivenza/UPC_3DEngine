@@ -91,6 +91,14 @@ uint ModuleResources::ImportFile(const char* new_file_in_assets, Resource::Type 
 		res->file = new_file_in_assets;
 		res->exported_file = output;
 		ret = res->GetUID();
+
+		ParsonJSON* parsonjson = new ParsonJSON(output.c_str(), true, true, false);
+		bool MetaSaved = parsonjson->Init();
+		if (MetaSaved)
+			MetaSaved = parsonjson->SaveResource(res);
+		RELEASE(parsonjson);
+		if (MetaSaved) LOGP("SaveScene Success, file: %s", output.c_str());
+		else LOGP("SaveScene Failure, file: %s", output.c_str());
 	}
 
 	return ret;

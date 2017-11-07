@@ -8,11 +8,12 @@
 #include "MathGeoLib\Math.h"
 
 class GameObject;
+class Resource;
 
 class ParsonJSON
 {
 public:
-	ParsonJSON(const char* filename, bool isScene, bool loadingScene);
+	ParsonJSON(const char* filename, bool nameWithPath, bool isScene, bool loadingScene);
 	~ParsonJSON();
 
 	bool Init();
@@ -22,6 +23,9 @@ public:
 
 	bool SaveScene(const GameObject* root) const;
 	bool LoadScene(GameObject* root);
+
+	bool SaveResource(const Resource* mesh) const;
+	bool LoadResource(Resource& mesh);
 
 	int GetInt(JSON_Object* conf, const char* field, int default = 0) const;
 	uint GetUInt(JSON_Object* conf, const char* field, uint default = 0) const;

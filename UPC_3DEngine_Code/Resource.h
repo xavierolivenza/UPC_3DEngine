@@ -20,6 +20,7 @@ public:
 
 	uint GetUID() const;
 	Type GetType() const;
+	const char* GetTypeStr() const;
 	
 	virtual void Save(JSON_Object* conf) const;
 	virtual void Load(JSON_Object* conf);

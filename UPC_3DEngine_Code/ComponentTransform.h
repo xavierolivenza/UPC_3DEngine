@@ -33,7 +33,7 @@ public:
 	float3 GetRotEuler();
 
 	float4x4 GetMatrix() const;
-	const float4x4* GetLocalMatrix() const;
+	float4x4 GetLocalMatrix() const;
 
 private:
 	bool Translate = true;

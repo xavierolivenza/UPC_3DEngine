@@ -21,6 +21,17 @@ Resource::Type Resource::GetType() const
 	return type;
 }
 
+const char* Resource::GetTypeStr() const
+{
+	switch (type)
+	{
+		case Resource::Type::mesh: return "Resource Mesh"; break;
+		case Resource::Type::texture: return "Resource Texture"; break;
+		case Resource::Type::null: return "Resource Null"; break;
+	}
+	return nullptr;
+}
+
 void Resource::Save(JSON_Object* conf) const
 {
 
