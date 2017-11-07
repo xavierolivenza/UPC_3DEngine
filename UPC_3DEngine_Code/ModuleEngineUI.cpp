@@ -578,6 +578,8 @@ void ModuleEngineUI::ImGuiModuleVariablesWindow()
 
 void ModuleEngineUI::ImGuiConsole()
 {
+	//Set window to good position
+	int w = 0; int h = 0; App->window->GetWindowSize(w, h); ImGui::SetNextWindowPos(ImVec2(w * 0.5f - 590 * 0.5f, h - 177)); //w/2 - console width/2, h - console height
 	ImGui::Begin("Console", false, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize);
 	//ImGui::Begin("Console", false);
 	ImGui::BeginChild("ScrollingRegion", ImVec2(0, -ImGui::GetItemsLineHeightWithSpacing()), false, ImGuiWindowFlags_HorizontalScrollbar);
@@ -604,6 +606,8 @@ void ModuleEngineUI::ImGuiConsole()
 
 void ModuleEngineUI::ImGuiInspectorWindow()
 {
+	//Set window to good position
+	int w = 0; int h = 0; App->window->GetWindowSize(w, h); ImGui::SetNextWindowPos(ImVec2(w-350, 23));//w - inspector window width, menu bar height
 	ImGui::Begin("Inspector", false, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_HorizontalScrollbar);
 	//ImGui::Begin("Inspector", false);
 	ImGui::Text("Click one GameObject to see its components.");
@@ -784,8 +788,10 @@ void ModuleEngineUI::ImGuiSaveFilePopUp()
 
 void ModuleEngineUI::ImGuiTimeManager()
 {
-	//ImGui::Begin("Time Manager", false, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse);
-	ImGui::Begin("Time Manager", false, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse);
+	//Set window to good position
+	int w = 0; int h = 0; App->window->GetWindowSize(w, h); ImGui::SetNextWindowPos(ImVec2(w * 0.5f - 170 * 0.5f, 23)); //w/2 - time width/2, menu height
+	ImGui::Begin("Time Manager", false, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse);
+	//ImGui::Begin("Time Manager", false, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse);
 
 	EngineTimeStatus state = App->GetEngineTimeStatus();
 
