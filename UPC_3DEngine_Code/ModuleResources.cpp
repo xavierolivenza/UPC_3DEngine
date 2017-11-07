@@ -1,3 +1,5 @@
+#include <experimental/filesystem>
+
 #include "Application.h"
 #include "ModuleSceneImporter.h"
 #include "ImporterMesh.h"
@@ -91,6 +93,17 @@ uint ModuleResources::ImportFile(const char* new_file_in_assets, Resource::Type 
 		res->file = new_file_in_assets;
 		res->exported_file = output;
 		ret = res->GetUID();
+
+		std::experimental::filesystem::file_time_type Temp;
+		for (auto& file_in_path : std::experimental::filesystem::recursive_directory_iterator(App->importer->Get_Assets_path()->c_str()))
+		{
+			if (std::experimental::filesystem::is_regular_file(file_in_path.path()))
+			{
+				LOGP("%S", file_in_path.path().string().c_str());
+				if(res->file == file_in_path.path().string().c_str())
+					Temp = std::experimental::filesystem::last_write_time(file_in_path.path());
+			}
+		}
 
 		size_t bar_pos = res->file.rfind("\\") + 1;
 		std::string filepath_name = res->file.substr(0, bar_pos);
