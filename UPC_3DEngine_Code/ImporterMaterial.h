@@ -15,4 +15,6 @@ public:
 	bool Load(MaterialData& DataMaterial, std::string* file_to_load);
 
 	int LoadImageFromFile(MaterialData& DataMaterial, std::string* file_to_load);
+
+	bool DevilCanLoad(const char* file);
 };

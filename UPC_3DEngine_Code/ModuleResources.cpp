@@ -75,11 +75,17 @@ uint ModuleResources::Find(const char* file_in_assets) const
 	return 0;
 }
 
-uint ModuleResources::ImportFile(const char* new_file_in_assets, Resource::Type type)
+uint ModuleResources::ImportFile(const char* new_file_in_assets)
 {
 	uint ret = 0;
 	bool imported = false;
 	std::string output;
+
+	Resource::Type type = Resource::Type::null;
+	if (App->importer->MeshImporter->AssimpCanLoad(new_file_in_assets))
+		type = Resource::Type::mesh;
+	else if (App->importer->MaterialImporter->DevilCanLoad(new_file_in_assets))
+		type = Resource::Type::texture;
 
 	switch (type)
 	{
@@ -98,7 +104,7 @@ uint ModuleResources::ImportFile(const char* new_file_in_assets, Resource::Type 
 		{
 			if (std::experimental::filesystem::is_regular_file(file_in_path.path()))
 			{
-				LOGP("%S", file_in_path.path().string().c_str());
+				//LOGP("%S", file_in_path.path().string().c_str());
 				if (res->file == file_in_path.path().string().c_str())
 				{
 					std::experimental::filesystem::file_time_type ftime = std::experimental::filesystem::last_write_time(file_in_path.path());

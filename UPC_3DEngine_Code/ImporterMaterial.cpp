@@ -200,3 +200,18 @@ int ImporterMaterial::LoadImageFromFile(MaterialData& DataMaterial, std::string*
 
 	return textureID; // Return the GLuint to the texture so you can use it!
 }
+
+bool ImporterMaterial::DevilCanLoad(const char* file)
+{
+	//Serialize MaterialData to file
+	uint imgID = 0;
+	ilGenImages(1, &imgID);
+	ilBindImage(imgID);
+	ILboolean success = ilLoadImage(file);
+	if (success == IL_TRUE)
+	{
+		ilDeleteImages(1, &imgID);
+		return true;
+	}
+	return false;
+}

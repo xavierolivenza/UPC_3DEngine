@@ -9,6 +9,10 @@
 #include "Assimp/include/LogStream.hpp"
 #include "Assimp/include/DefaultLogger.hpp"
 
+#include "Assimp/include/cimport.h"
+#include "Assimp/include/scene.h"
+#include "Assimp/include/postprocess.h"
+
 ImporterMesh::ImporterMesh()
 {
 	
@@ -481,4 +485,15 @@ bool ImporterMesh::Load(ComponentTransform& transform, MeshData& DataMesh, const
 	RELEASE_ARRAY(data);
 
 	return true;
+}
+
+bool ImporterMesh::AssimpCanLoad(const char * file)
+{
+	const aiScene* scene = aiImportFile(file, aiProcessPreset_TargetRealtime_MaxQuality);
+	if (scene != nullptr && scene->HasMeshes())
+	{
+		aiReleaseImport(scene);
+		return true;
+	}
+	return false;
 }
