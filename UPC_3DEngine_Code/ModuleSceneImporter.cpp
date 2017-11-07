@@ -101,6 +101,8 @@ bool ModuleSceneImporter::Init()
 		}
 	}
 
+	CheckAssetsImport.Start();
+
 	return true;
 }
 
@@ -124,6 +126,39 @@ update_status ModuleSceneImporter::Update(float dt)
 
 update_status ModuleSceneImporter::PostUpdate(float dt)
 {
+	//Assume all asets are in assets directory from begining of execution
+	if(CheckAssetsImport.Read() >= miliseconds_check)
+	{
+		/**/
+		//Iterate all Assets folder including files and directories
+		char title[1000] = "";
+		for (auto& file_in_path : std::experimental::filesystem::recursive_directory_iterator(Assets_path.c_str()))
+		{
+			LOGP("%S", file_in_path.path().c_str());
+			if (std::experimental::filesystem::is_regular_file(file_in_path.path()))
+			{
+				sprintf_s(title, 1000, "%S", file_in_path.path().c_str());
+				Resource* res = App->resources->GetResource(title);
+				if (res != nullptr)
+				{
+					std::experimental::filesystem::file_time_type ftime = std::experimental::filesystem::last_write_time(file_in_path.path());
+					std::time_t cftime = decltype(ftime)::clock::to_time_t(ftime);
+					if (res->file_date != std::asctime(std::localtime(&cftime)))
+					{
+						App->resources->ReimportResource(res);
+						res->file_date = std::asctime(std::localtime(&cftime));
+					}
+				}
+				else
+				{
+					//Reimport?
+				}
+			}
+		}
+		/**/
+		LOGP("Assets check.");
+		CheckAssetsImport.Start();
+	}
 	return UPDATE_CONTINUE;
 }
 

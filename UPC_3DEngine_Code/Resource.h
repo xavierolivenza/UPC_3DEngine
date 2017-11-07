@@ -6,6 +6,7 @@
 class Resource
 {
 	friend class ModuleResources;
+	friend class ModuleSceneImporter;
 public:
 	enum Type
 	{

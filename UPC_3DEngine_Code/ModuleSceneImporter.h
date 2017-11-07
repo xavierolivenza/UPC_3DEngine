@@ -64,4 +64,7 @@ private:
 	std::string Mesh_Extention = "MeshAlvOli";
 	std::string FBXComponents_Extention = "GameObjectMeshAlvOli";
 
+	Timer CheckAssetsImport;
+	uint miliseconds_check = 3000;
+
 };

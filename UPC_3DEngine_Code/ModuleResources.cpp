@@ -130,8 +130,21 @@ uint ModuleResources::ImportFile(const char* new_file_in_assets)
 	return ret;
 }
 
+void ModuleResources::ReimportResource(Resource* res)
+{
+	std::string output;
+	switch (res->type)
+	{
+	case Resource::mesh: App->importer->ImportFBX(&res->file, output); break;
+	case Resource::texture: App->importer->MaterialImporter->Save(&res->file, output); break;
+	}
+}
+
 const Resource* ModuleResources::Get(uint uid) const
 {
+	std::map<uint, Resource*>::const_iterator it = resources.find(uid);
+	if (it != resources.end())
+		return it->second;
 	return nullptr;
 }
 
@@ -154,4 +167,14 @@ Resource* ModuleResources::CreateNewResource(Resource::Type type)
 	if (ret != nullptr)
 		resources.insert(std::pair<uint, Resource*>(ret->GetUID(), ret));
 	return ret;
+}
+
+Resource* ModuleResources::GetResource(const char* path)
+{
+	for (std::map<uint, Resource*>::iterator item = resources.begin(); item != resources.end(); ++item)
+	{
+		if (item._Ptr->_Myval.second->file == path)
+			return item._Ptr->_Myval.second;
+	}
+	return nullptr;
 }
