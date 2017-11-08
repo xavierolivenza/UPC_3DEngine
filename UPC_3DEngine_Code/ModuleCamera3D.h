@@ -42,7 +42,7 @@ public:
 
 private:
 	bool			Cam_move_LOG = true;
-	bool			Cam_move = false;
+	bool			Cam_move = true;
 
 	ComponentCamera* CameraComp = nullptr;
 

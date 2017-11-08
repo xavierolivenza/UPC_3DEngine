@@ -49,12 +49,13 @@ update_status ModuleCamera3D::Update(float dt)
 {
 	//TODO
 	//When load geometry, auto resize cam(all geometry inside fov)
-
+	/*
 	if (App->input->GetMouseButton(SDL_BUTTON_RIGHT) == KEY_DOWN)
 	{
 		Cam_move = !Cam_move;
 		Cam_move_LOG = true;
 	}
+	*/
 	if (Cam_move)
 	{
 		if (Cam_move_LOG)
@@ -63,6 +64,7 @@ update_status ModuleCamera3D::Update(float dt)
 			Cam_move_LOG = false;
 		}
 	}
+	/*
 	else
 	{
 		if (Cam_move_LOG)
@@ -72,7 +74,7 @@ update_status ModuleCamera3D::Update(float dt)
 		}
 		return UPDATE_CONTINUE;
 	}
-
+	*/
 	float3 newPos(0, 0, 0);
 	float speed = 50.0f * dt;
 
@@ -81,19 +83,19 @@ update_status ModuleCamera3D::Update(float dt)
 		speed = 100.0f * dt;
 
 	//FPS like movement
-	if (App->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT) newPos -= Z * speed;
-	if (App->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT) newPos += Z * speed;
-	if (App->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT) newPos -= X * speed;
-	if (App->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT) newPos += X * speed;
+	if ((App->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT) && (App->input->GetMouseButton(SDL_BUTTON_RIGHT) == KEY_REPEAT)) newPos -= Z * speed;
+	if ((App->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT) && (App->input->GetMouseButton(SDL_BUTTON_RIGHT) == KEY_REPEAT)) newPos += Z * speed;
+	if ((App->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT) && (App->input->GetMouseButton(SDL_BUTTON_RIGHT) == KEY_REPEAT)) newPos -= X * speed;
+	if ((App->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT) && (App->input->GetMouseButton(SDL_BUTTON_RIGHT) == KEY_REPEAT)) newPos += X * speed;
 
 	//Elevator/lift like movement
-	if (App->input->GetKey(SDL_SCANCODE_Q) == KEY_REPEAT) newPos.y += speed;
-	if (App->input->GetKey(SDL_SCANCODE_E) == KEY_REPEAT) newPos.y -= speed;
+	if ((App->input->GetKey(SDL_SCANCODE_Q) == KEY_REPEAT) && (App->input->GetMouseButton(SDL_BUTTON_RIGHT) == KEY_REPEAT)) newPos.y += speed;
+	if ((App->input->GetKey(SDL_SCANCODE_E) == KEY_REPEAT) && (App->input->GetMouseButton(SDL_BUTTON_RIGHT) == KEY_REPEAT)) newPos.y -= speed;
 
 	bool zoomed = false;
 	if (App->input->GetMouseZ() != 0)
 	{
-		newPos += App->input->GetMouseZ() * Z * speed;
+		newPos -= App->input->GetMouseZ() * Z * speed;
 		zoomed = true;
 	}
 
@@ -102,7 +104,7 @@ update_status ModuleCamera3D::Update(float dt)
 	if (!zoomed)
 		Reference += newPos;
 
-	if ((App->input->GetKey(SDL_SCANCODE_LALT) == KEY_REPEAT) && (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_REPEAT))
+	if ((App->input->GetKey(SDL_SCANCODE_LALT) == KEY_REPEAT) && (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_REPEAT) || (App->input->GetMouseButton(SDL_BUTTON_RIGHT) == KEY_REPEAT))
 	{
 		int dx = -App->input->GetMouseXMotion();
 		int dy = -App->input->GetMouseYMotion();
