@@ -172,7 +172,7 @@ void Octree::DebugDraw()
 {
 	glBegin(GL_LINES);
 	glLineWidth(3.0f);
-	glColor4f(1.00f, 0.761f, 0.00f, 1.00f);
+	glColor3f(1.00f, 0.761f, 0.00f);
 
 	if (root_node != nullptr)
 	{
@@ -180,7 +180,7 @@ void Octree::DebugDraw()
 	}
 
 	glEnd();
-	glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+	glColor3f(1.0f, 1.0f, 1.0f);
 }
 
 // --------------------------------------
