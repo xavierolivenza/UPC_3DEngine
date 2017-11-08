@@ -336,7 +336,7 @@ bool ModuleSceneImporter::ImportFBX(std::string* file_to_import, std::string& ou
 		}
 
 		//Save fbx_MeshComponents
-		ImportFBXComponents(file_to_import, &fbx_MeshComponents, output_file);
+		ImportFBXComponents(scene, file_to_import, &fbx_MeshComponents, output_file);
 
 		WorkingPath.clear();
 		aiReleaseImport(scene);
@@ -351,10 +351,9 @@ bool ModuleSceneImporter::ImportFBX(std::string* file_to_import, std::string& ou
 	return ret;
 }
 
-bool ModuleSceneImporter::ImportFBXComponents(const std::string* file_to_import, const std::vector<std::string>* FBXComponents, std::string& output_file)
+bool ModuleSceneImporter::ImportFBXComponents(const aiScene* scene, const std::string* file_to_import, const std::vector<std::string>* FBXComponents, std::string& output_file)
 {
-	//Num strings / length of each / strings
-
+	//Num nodes / size of each / nodes(pos, rot, scale, own format file string)
 	size_t bar_pos = file_to_import->rfind("\\") + 1;
 	output_file = file_to_import->substr(bar_pos, file_to_import->rfind(".") - bar_pos);
 	output_file += "." + FBXComponents_Extention;
@@ -367,6 +366,55 @@ bool ModuleSceneImporter::ImportFBXComponents(const std::string* file_to_import,
 		LOGP("Mesh file already exists: %s", FBXComponents_path.c_str());
 		return false;
 	}
+	std::list<AssimpNodeTransOwnFile> AssimpNodeList;
+	std::list<const aiNode*> AllFBXNodes;
+	RecursiveIterateFBX(scene->mRootNode, AllFBXNodes);
+	for (std::list<const aiNode*>::const_iterator item = AllFBXNodes.cbegin(); item != AllFBXNodes.cend(); ++item)
+	{
+		if (item._Ptr->_Myval->mNumMeshes > 0)
+		{
+			AssimpNodeTransOwnFile AssimpNodeTransOwnFileStruct;
+			//Sum up all transformations from root node to the node where the mesh is stored
+			aiMatrix4x4 transform;
+			std::vector<const aiNode*> NodesVector;
+			NodesVector.clear();
+			for (const aiNode* iterator = item._Ptr->_Myval; iterator->mParent != nullptr; iterator = iterator->mParent)
+				NodesVector.push_back(iterator);
+			for (std::vector<const aiNode*>::reverse_iterator item = NodesVector.rbegin(); item != NodesVector.crend(); ++item)
+				transform *= (*item)->mTransformation;
+			aiVector3D translation;
+			aiVector3D scaling;
+			aiQuaternion rotation;
+			transform.Decompose(scaling, rotation, translation);
+			AssimpNodeTransOwnFileStruct.pos = { translation.x, translation.y, translation.z };
+			AssimpNodeTransOwnFileStruct.scale = { scaling.x, scaling.y, scaling.z };
+			AssimpNodeTransOwnFileStruct.rot = { rotation.x, rotation.y, rotation.z, rotation.w };
+			//Now we have the transform of this node
+			//Now we can evaluate the node meshes
+			for (int i = 0; i < item._Ptr->_Myval->mNumMeshes; i++)
+			{
+				//With this uint is we can do this: FBXComponents[item._Ptr->_Myval->mMeshes[i]] to get this node mesh ownformat file
+				AssimpNodeTransOwnFileStruct.mesh = item._Ptr->_Myval->mMeshes[i];
+				AssimpNodeList.push_back(AssimpNodeTransOwnFileStruct);
+			}
+		}
+	}
+	//Now we have all nodes + what mesh they use + their transform, we can serialize to file
+	/*
+	uint file_size = sizeof(uint); //Num nodes
+	for (std::list<AssimpNodeTransOwnFile>::const_iterator item = AssimpNodeList.cbegin(); item != AssimpNodeList.cend(); ++item)
+	{
+
+
+
+
+	}
+	//Num nodes / size of each / nodes(pos, rot, scale, own format file string)
+	*/
+
+
+
+
 
 	std::vector<uint> amount_of_each;
 	for (std::vector<std::string>::const_iterator item = FBXComponents->cbegin(); item != FBXComponents->cend(); ++item)
@@ -546,6 +594,13 @@ bool ModuleSceneImporter::LoadFBXComponents(const std::string* file_to_load)
 	App->scene->AddChildToRoot(NewGameObject);
 	RELEASE_ARRAY(data);
 	return true;
+}
+
+void ModuleSceneImporter::RecursiveIterateFBX(const aiNode * node, std::list<const aiNode*>& list)
+{
+	for (int i = 0; i < node->mNumChildren; i++)
+		RecursiveIterateFBX(node->mChildren[i], list);
+	list.push_back(node);
 }
 
 bool ModuleSceneImporter::SaveConf(JSON_Object* conf) const

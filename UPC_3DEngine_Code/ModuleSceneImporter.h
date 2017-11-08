@@ -8,9 +8,18 @@ struct MaterialData;
 class ImporterMesh;
 class ImporterMaterial;
 struct aiNode;
+struct aiScene;
 
 class ModuleSceneImporter : public Module
 {
+private:
+	struct AssimpNodeTransOwnFile
+	{
+		float3 pos = { 0.0f,0.0f,0.0f };
+		float3 scale = { 1.0f,1.0f,1.0f };
+		Quat rot = { 0.0f,0.0f,0.0f,1.0f };
+		uint mesh = 0;
+	};
 public:
 
 	ModuleSceneImporter(Application* parent, bool start_enabled = true);
@@ -46,8 +55,9 @@ public:
 private:
 	aiNode* SearchForMesh(const aiNode* root, uint mesh_id) const;
 	aiNode* SearchForMeshIterator(const aiNode* root, uint mesh_id) const;
-	bool ImportFBXComponents(const std::string* file_to_import, const std::vector<std::string>* FBXComponents, std::string& output_file);
+	bool ImportFBXComponents(const aiScene* scene, const std::string* file_to_import, const std::vector<std::string>* FBXComponents, std::string& output_file);
 	bool LoadFBXComponents(const std::string* file_to_load);
+	void RecursiveIterateFBX(const aiNode* node, std::list<const aiNode*>& list);
 
 public:
 	ImporterMesh* MeshImporter = nullptr;
