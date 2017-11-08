@@ -47,6 +47,9 @@ update_status ModuleResources::PostUpdate(float dt)
 
 bool ModuleResources::CleanUp()
 {
+	for (std::map<uint, Resource*>::iterator item = resources.begin(); item != resources.end(); ++item)
+		RELEASE(item->second);
+	resources.clear();
 	return true;
 }
 
@@ -81,12 +84,26 @@ uint ModuleResources::ImportFile(const char* new_file_in_assets)
 	bool imported = false;
 	std::string output;
 
+	std::string extention = new_file_in_assets;
+	size_t bar_pos = extention.rfind(".") + 1;
+	extention = extention.substr(bar_pos, extention.length());
+	Resource::Type type = Resource::Type::null;
+	if((extention == "fbx") || (extention == "FBX") || (extention == "obj") || (extention == "dae"))
+		type = Resource::Type::mesh;
+	if ((extention == "png") || (extention == "jpg") || (extention == "tga") || (extention == "dds"))
+		type = Resource::Type::texture;
+
+	/*
+	//Better but generates runtime memory leaks
+	//(when you leave the execution, all memeory is deallocated, but in runtime acumulates, we don't know why)
 	Resource::Type type = Resource::Type::null;
 	if (App->importer->MeshImporter->AssimpCanLoad(new_file_in_assets))
 		type = Resource::Type::mesh;
 	else if (App->importer->MaterialImporter->DevilCanLoad(new_file_in_assets))
 		type = Resource::Type::texture;
+	*/
 
+	/**/
 	switch (type)
 	{
 	case Resource::mesh: imported = App->importer->ImportFBX(&std::string(new_file_in_assets), output); break;
@@ -126,7 +143,7 @@ uint ModuleResources::ImportFile(const char* new_file_in_assets)
 		if (MetaSaved) LOGP("SaveScene Success, file: %s", filepath_name.c_str());
 		else LOGP("SaveScene Failure, file: %s", filepath_name.c_str());
 	}
-
+	/**/
 	return ret;
 }
 

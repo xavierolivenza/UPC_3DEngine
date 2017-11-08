@@ -490,7 +490,7 @@ bool ImporterMesh::Load(ComponentTransform& transform, MeshData& DataMesh, const
 bool ImporterMesh::AssimpCanLoad(const char * file)
 {
 	const aiScene* scene = aiImportFile(file, aiProcessPreset_TargetRealtime_MaxQuality);
-	if (scene != nullptr && scene->HasMeshes())
+	if (scene != nullptr)
 	{
 		aiReleaseImport(scene);
 		return true;

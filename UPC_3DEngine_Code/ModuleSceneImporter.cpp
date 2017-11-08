@@ -132,15 +132,18 @@ update_status ModuleSceneImporter::PostUpdate(float dt)
 		/**/
 		//Iterate all Assets folder including files and directories
 		char title[1000] = "";
-		for (auto& file_in_path : std::experimental::filesystem::recursive_directory_iterator(Assets_path.c_str()))
+		for (std::experimental::filesystem::recursive_directory_iterator::value_type file_in_path : std::experimental::filesystem::recursive_directory_iterator(Assets_path.c_str()))
 		{
-			LOGP("%S", file_in_path.path().c_str());
-			if (std::experimental::filesystem::is_regular_file(file_in_path.path()))
+			//LOGP("%S", file_in_path.path().c_str());
+			//LOGP("%S", file_in_path.path().extension().c_str());
+			if (std::experimental::filesystem::is_regular_file(file_in_path.path()) && (file_in_path.path().extension() != ".json"))
 			{
 				sprintf_s(title, 1000, "%S", file_in_path.path().c_str());
 				Resource* res = App->resources->GetResource(title);
+				/**/
 				if (res != nullptr)
 				{
+					/**/
 					//Reimport
 					std::experimental::filesystem::file_time_type ftime = std::experimental::filesystem::last_write_time(file_in_path.path());
 					std::time_t cftime = decltype(ftime)::clock::to_time_t(ftime);
@@ -149,18 +152,22 @@ update_status ModuleSceneImporter::PostUpdate(float dt)
 						App->resources->ReimportResource(res);
 						res->file_date = std::asctime(std::localtime(&cftime));
 					}
+					/**/
 				}
 				else
 				{
 					//Import
-					static std::string output_file;
-					if (App->resources->ImportFile(file_in_path.path().string().c_str())) LOGP("Regular File found and imported.");
-					LOGP("Regular File found and import error.");
+					std::string output_file;
+					App->resources->ImportFile(file_in_path.path().string().c_str());
+
+					//if (App->resources->ImportFile(file_in_path.path().string().c_str())) LOGP("Regular File found and imported.");
+					//LOGP("Regular File found and import error.");
 				}
+				/**/
 			}
 		}
 		/**/
-		LOGP("Assets check.");
+		//LOGP("Assets check.");
 		CheckAssetsImport.Start();
 	}
 	return UPDATE_CONTINUE;
@@ -219,7 +226,7 @@ bool ModuleSceneImporter::ImportFBX(std::string* file_to_import, std::string& ou
 				aiMatrix4x4 transform;
 				if (MeshNode != nullptr)
 				{
-					static std::vector<const aiNode*> NodesVector;
+					std::vector<const aiNode*> NodesVector;
 					NodesVector.clear();
 					for (const aiNode* iterator = MeshNode; iterator->mParent != nullptr; iterator = iterator->mParent)
 						NodesVector.push_back(iterator);
@@ -316,14 +323,14 @@ bool ModuleSceneImporter::ImportFBX(std::string* file_to_import, std::string& ou
 				//------------------------------------------//
 				//-------Serialize Tex To Own Format--------//
 				//------------------------------------------//
-				static std::string output;
+				std::string output;
 				MaterialImporter->Save(&(WorkingPath + material_path.C_Str()), output);
 			}
 
 			//------------------------------------------//
 			//-------Serialize Mesh To Own Format-------//
 			//------------------------------------------//
-			static std::string output;
+			std::string output;
 			MeshImporter->Save(pos, scale, rot, MeshDataStruct, output);
 			fbx_MeshComponents.push_back(output);
 		}
@@ -352,7 +359,7 @@ bool ModuleSceneImporter::ImportFBXComponents(const std::string* file_to_import,
 	output_file = file_to_import->substr(bar_pos, file_to_import->rfind(".") - bar_pos);
 	output_file += "." + FBXComponents_Extention;
 
-	static std::string FBXComponents_path = Library_mesh_path + "\\" + output_file;
+	std::string FBXComponents_path = Library_mesh_path + "\\" + output_file;
 	FILE* file = fopen(FBXComponents_path.c_str(), "r");
 	if (file != nullptr)
 	{
@@ -361,7 +368,7 @@ bool ModuleSceneImporter::ImportFBXComponents(const std::string* file_to_import,
 		return false;
 	}
 
-	static std::vector<uint> amount_of_each;
+	std::vector<uint> amount_of_each;
 	for (std::vector<std::string>::const_iterator item = FBXComponents->cbegin(); item != FBXComponents->cend(); ++item)
 		amount_of_each.push_back(item->length() + 1);
 
@@ -416,11 +423,11 @@ bool ModuleSceneImporter::Load(std::string* file_to_load)
 	}
 
 	//Check if this is a mesh file
-	static std::string extention = file_to_load->substr(file_to_load->rfind(".") + 1, file_to_load->length());
+	std::string extention = file_to_load->substr(file_to_load->rfind(".") + 1, file_to_load->length());
 
 	if (extention == "fbx")
 	{
-		static std::string output_file;
+		std::string output_file;
 		if (ImportFBX(file_to_load, output_file))
 		{
 			LOGP("Mesh File found and Imported.");

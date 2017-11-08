@@ -53,7 +53,7 @@ bool ImporterMaterial::Save(const std::string* texture_name, std::string& loaded
 	{
 		fclose(file);
 		LOGP("DDS file already exists: %s", tex_path.c_str());
-		return false;
+		return true;
 	}
 
 	//Serialize MaterialData to file
@@ -91,8 +91,10 @@ bool ImporterMaterial::Save(const std::string* texture_name, std::string& loaded
 		}
 		ilDeleteImages(1, &imgID);
 	}
+	else
+		return false;
 
-	return false;
+	return true;
 }
 
 bool ImporterMaterial::Load(MaterialData& DataMaterial, std::string* file_to_load)
