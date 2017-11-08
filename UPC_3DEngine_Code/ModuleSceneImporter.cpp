@@ -127,7 +127,7 @@ update_status ModuleSceneImporter::Update(float dt)
 update_status ModuleSceneImporter::PostUpdate(float dt)
 {
 	//Assume all asets are in assets directory from begining of execution
-	if(CheckAssetsImport.Read() >= miliseconds_check)
+	if((App->GetEngineTimeStatus() == EngineTimeStatus::stop) && (CheckAssetsImport.Read() >= miliseconds_check))
 	{
 		/**/
 		//Iterate all Assets folder including files and directories
