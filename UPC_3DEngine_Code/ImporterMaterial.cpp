@@ -53,6 +53,7 @@ bool ImporterMaterial::Save(const std::string* texture_name, std::string& loaded
 	{
 		fclose(file);
 		LOGP("DDS file already exists: %s", tex_path.c_str());
+		loaded_file = tex_path;
 		return true;
 	}
 

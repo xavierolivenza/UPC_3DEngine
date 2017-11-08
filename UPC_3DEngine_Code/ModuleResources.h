@@ -32,6 +32,8 @@ public:
 	Resource* CreateNewResource(Resource::Type type);
 	Resource* GetResource(const char* path);
 
+	const std::map<uint, Resource*>* GetResourcesMap() const;
+
 private:
 	uint uuid = 0;
 	std::map<uint, Resource*> resources;

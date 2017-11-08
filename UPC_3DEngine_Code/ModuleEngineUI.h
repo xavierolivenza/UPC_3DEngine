@@ -51,6 +51,7 @@ private:
 	void ImGuiSaveFilePopUp();
 	void ImGuiTimeManager();
 	void ImGuiCulling();
+	void ImGuiResources();
 
 private:
 	bool startAsGame = false;
@@ -68,6 +69,7 @@ private:
 	bool showSaveFilePopUp = false;
 	bool showTimeManager = true;
 	bool showCulling = false;
+	bool showResources = true;
 	bool freezeplots = false;
 	bool active = false;
 	bool ScrollDownConsole = true;

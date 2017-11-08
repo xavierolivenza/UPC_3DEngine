@@ -32,6 +32,11 @@ const char* Resource::GetTypeStr() const
 	return nullptr;
 }
 
+const std::string& Resource::GetFile() const
+{
+	return file;
+}
+
 void Resource::Save(JSON_Object* conf) const
 {
 

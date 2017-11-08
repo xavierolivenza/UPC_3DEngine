@@ -160,7 +160,7 @@ void ModuleEngineUI::DrawModuleImGui()
 	if ((App->input->GetKey(SDL_SCANCODE_6) == KEY_DOWN) && (App->input->GetKey(SDL_SCANCODE_LALT) == KEY_REPEAT)) showProfilerWindow = !showProfilerWindow;
 	if ((App->input->GetKey(SDL_SCANCODE_7) == KEY_DOWN) && (App->input->GetKey(SDL_SCANCODE_LALT) == KEY_REPEAT)) showTimeManager = !showTimeManager;
 	if ((App->input->GetKey(SDL_SCANCODE_8) == KEY_DOWN) && (App->input->GetKey(SDL_SCANCODE_LALT) == KEY_REPEAT)) showCulling= !showCulling;
-
+	if ((App->input->GetKey(SDL_SCANCODE_8) == KEY_DOWN) && (App->input->GetKey(SDL_SCANCODE_LALT) == KEY_REPEAT)) showResources = !showResources;
 	/*
 	if ((App->input->GetKey(SDL_SCANCODE_9) == KEY_DOWN) && (App->input->GetKey(SDL_SCANCODE_LALT) == KEY_REPEAT)) startAsGame = !startAsGame;
 	if (startAsGame)
@@ -237,6 +237,12 @@ void ModuleEngineUI::DrawModuleImGui()
 	//------------------------------------------//
 	if (showCulling)
 		ImGuiCulling();
+
+	//------------------------------------------//
+	//----------------Resources-----------------//
+	//------------------------------------------//
+	if (showResources)
+		ImGuiResources();
 
 	//------------------------------------------//
 	//-----------------Rand Gen-----------------//
@@ -354,7 +360,7 @@ void ModuleEngineUI::ImGuiConfigurationWindow()
 	const PerformanceStruct* PerformanceData = App->GetPerformanceStruct();
 	sMStats MemoryStats = m_getMemoryStatistics();
 	PushFPSandMSPlot(PerformanceData->frames_last_second, PerformanceData->miliseconds_per_frame, MemoryStats.totalReportedMemory);
-	ImGui::Begin("Configuration", false, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_HorizontalScrollbar);
+	ImGui::Begin("Configuration", false, ImGuiWindowFlags_HorizontalScrollbar);
 	//ImGui::Begin("Configuration", false, ImGuiWindowFlags_HorizontalScrollbar);
 	if (ImGui::CollapsingHeader("Application"))
 	{
@@ -541,7 +547,7 @@ void ModuleEngineUI::ImGuiConfigurationWindow()
 
 void  ModuleEngineUI::ImGuiProfierWindow()
 {
-	ImGui::Begin("Profiler", false, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize);
+	ImGui::Begin("Profiler", false);
 	//ImGui::Begin("Profiler", false);
 	char title[100];
 	uint title_size = sizeof title;
@@ -564,6 +570,7 @@ void  ModuleEngineUI::ImGuiProfierWindow()
 
 void ModuleEngineUI::ImGuiModuleVariablesWindow()
 {
+	int w = 0; int h = 0; App->window->GetWindowSize(w, h); ImGui::SetNextWindowPos(ImVec2(w - 350, 23 + 520));//w - inspector window width, menu bar height + inspector heigth
 	ImGui::Begin("Module Variables", false, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize);
 	//ImGui::Begin("Module Variables", false);
 	char title[50];
@@ -845,6 +852,39 @@ void ModuleEngineUI::ImGuiCulling()
 
 	//Debug text about time when checking candidates, collision tests...
 
+	ImGui::End();
+}
+
+void ModuleEngineUI::ImGuiResources()
+{
+	ImGui::Begin("Resources", false, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_HorizontalScrollbar);
+	//ImGui::Begin("Resources", false);
+
+	ImGui::BeginChild("Resources Created", ImVec2(0, 200), true, ImGuiWindowFlags_HorizontalScrollbar);
+	const std::map<uint, Resource*>* resources = App->resources->GetResourcesMap();
+	for (std::map<uint, Resource*>::const_iterator item = resources->cbegin(); item != resources->cend(); ++item)
+	{
+		ImGui::Text(item->second->GetFile().c_str());
+		if (ImGui::IsItemClicked())
+		{
+
+		}
+	}
+	ImGui::EndChild();
+	ImGui::BeginChild("Resources Options", ImVec2(0, 200), true, ImGuiWindowFlags_HorizontalScrollbar);
+	ImGui::Text("Here will be import settings of clicked\nresource above.");
+	/*
+	for (std::map<uint, Resource*>::const_iterator item = resources->cbegin(); item != resources->cend(); ++item)
+	{
+		ImGui::Text(item->second->GetFile().c_str());
+		if (ImGui::IsItemClicked())
+		{
+
+		}
+	}
+	*/
+	ImGui::EndChild();
+	
 	ImGui::End();
 }
 

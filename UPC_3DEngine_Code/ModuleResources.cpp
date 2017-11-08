@@ -196,3 +196,8 @@ Resource* ModuleResources::GetResource(const char* path)
 	}
 	return nullptr;
 }
+
+const std::map<uint, Resource*>* ModuleResources::GetResourcesMap() const
+{
+	return &resources;
+}
