@@ -26,38 +26,41 @@ bool ComponentTransform::PreUpdate(float dt)
 bool ComponentTransform::Update(float dt)
 {
 	/**/
-	ImGuizmo::Enable(!parent->IsStatic());
-
-	if ((parent != nullptr) && (App->engineUI->GetSelectedGameObject() == parent))
+	//ImGuizmo::Enable(!parent->IsStatic());
+	if (!parent->IsStatic())
 	{
-		ImGuiIO& io = ImGui::GetIO();
-		ImGuizmo::SetRect(0, 0, io.DisplaySize.x, io.DisplaySize.y);
-		
-		float4x4 viewmatrix = App->camera->GetCameraComp()->frustum.ViewMatrix();
-		float4x4 projectionmatrix = App->camera->GetCameraComp()->frustum.ProjectionMatrix();
-		viewmatrix.Transpose();
-		projectionmatrix.Transpose();
-
-		float4x4 matrix = GetLocalMatrix().Transposed();
-
-		ImGuizmo::DrawCube(viewmatrix.ptr(), projectionmatrix.ptr(), matrix.ptr());
-
-		LOGP("%f, %f, %f, %f", matrix.At(0, 0), matrix.At(0, 1), matrix.At(0, 2), matrix.At(0, 3));
-		ImGuizmo::Manipulate(viewmatrix.ptr(), projectionmatrix.ptr(), gizmoOp, ImGuizmo::LOCAL, matrix.ptr());
-		LOGP("%f, %f, %f, %f", matrix.At(0, 0), matrix.At(0, 1), matrix.At(0, 2), matrix.At(0, 3));
-
-		if (ImGuizmo::IsUsing())
+		ImGuizmo::Enable(true);
+		if ((parent != nullptr) && (App->engineUI->GetSelectedGameObject() == parent))
 		{
-			matrix.Transpose();
-			//matrix = GetMatrix().Inverted() * matrix;
-			float3 position = float3::zero;
-			float3 scale = float3::zero;
-			Quat rotation = Quat::identity;
-			matrix.Decompose(position, rotation, scale);
-			//LOGP("%f, %f, %f", position.x, position.y, position.z);
-			SetPos(position);
-			SetRot(rotation);
-			SetScale(scale);
+			ImGuiIO& io = ImGui::GetIO();
+			ImGuizmo::SetRect(0, 0, io.DisplaySize.x, io.DisplaySize.y);
+
+			float4x4 viewmatrix = App->camera->GetCameraComp()->frustum.ViewMatrix();
+			float4x4 projectionmatrix = App->camera->GetCameraComp()->frustum.ProjectionMatrix();
+			viewmatrix.Transpose();
+			projectionmatrix.Transpose();
+
+			float4x4 matrix = GetLocalMatrix().Transposed();
+
+			//ImGuizmo::DrawCube(viewmatrix.ptr(), projectionmatrix.ptr(), matrix.ptr());
+
+			LOGP("%f, %f, %f, %f", matrix.At(0, 0), matrix.At(0, 1), matrix.At(0, 2), matrix.At(0, 3));
+			ImGuizmo::Manipulate(viewmatrix.ptr(), projectionmatrix.ptr(), gizmoOp, ImGuizmo::LOCAL, matrix.ptr());
+			LOGP("%f, %f, %f, %f", matrix.At(0, 0), matrix.At(0, 1), matrix.At(0, 2), matrix.At(0, 3));
+
+			if (ImGuizmo::IsUsing())
+			{
+				matrix.Transpose();
+				//matrix = GetMatrix().Inverted() * matrix;
+				float3 position = float3::zero;
+				float3 scale = float3::zero;
+				Quat rotation = Quat::identity;
+				matrix.Decompose(position, rotation, scale);
+				//LOGP("%f, %f, %f", position.x, position.y, position.z);
+				SetPos(position);
+				SetRot(rotation);
+				SetScale(scale);
+			}
 		}
 	}
 	/**/
