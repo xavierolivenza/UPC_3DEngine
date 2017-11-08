@@ -257,7 +257,7 @@ bool ImporterMesh::Save(const float3& pos, const float3& scale, const Quat& rot,
 	return true;
 }
 
-bool ImporterMesh::Load(ComponentTransform& transform, MeshData& DataMesh, const std::string* file_to_load)
+bool ImporterMesh::Load(ComponentTransform& transform, MeshData& DataMesh, const std::string* file_to_load, bool settransform)
 {
 	//Get serialized MeshData from file
 	// amount of each / mesh name / transform:pos / transform:scale / transform:rot / num_faces / vertices / indices / normals / texture_coords / colors / Asociated Texture Name.dds / SpherePosition / SphereRadius  / BoundBoxMinPoint / BoundBoxMaxPoint / BoundOBox(WIP)
@@ -311,47 +311,80 @@ bool ImporterMesh::Load(ComponentTransform& transform, MeshData& DataMesh, const
 	current_loading_size = sizeof(char) * Mesh_name_size;
 	DataMesh.Mesh_name = cursor;
 
-	//Load transform:pos
-	float3 pos = float3::zero;
-	cursor += current_loading_size;
-	current_loading_size = sizeof(float);
-	memcpy(&pos.x, cursor, current_loading_size);
-	cursor += current_loading_size;
-	current_loading_size = sizeof(float);
-	memcpy(&pos.y, cursor, current_loading_size);
-	cursor += current_loading_size;
-	current_loading_size = sizeof(float);
-	memcpy(&pos.z, cursor, current_loading_size);
-	transform.SetPos(pos);
+	if (settransform)
+	{
+		//Load transform:pos
+		float3 pos = float3::zero;
+		cursor += current_loading_size;
+		current_loading_size = sizeof(float);
+		memcpy(&pos.x, cursor, current_loading_size);
+		cursor += current_loading_size;
+		current_loading_size = sizeof(float);
+		memcpy(&pos.y, cursor, current_loading_size);
+		cursor += current_loading_size;
+		current_loading_size = sizeof(float);
+		memcpy(&pos.z, cursor, current_loading_size);
+		transform.SetPos(pos);
 
-	//Load transform:scale
-	float3 scale = float3::zero;
-	cursor += current_loading_size;
-	current_loading_size = sizeof(float);
-	memcpy(&scale.x, cursor, current_loading_size);
-	cursor += current_loading_size;
-	current_loading_size = sizeof(float);
-	memcpy(&scale.y, cursor, current_loading_size);
-	cursor += current_loading_size;
-	current_loading_size = sizeof(float);
-	memcpy(&scale.z, cursor, current_loading_size);
-	transform.SetScale(scale);
+		//Load transform:scale
+		float3 scale = float3::zero;
+		cursor += current_loading_size;
+		current_loading_size = sizeof(float);
+		memcpy(&scale.x, cursor, current_loading_size);
+		cursor += current_loading_size;
+		current_loading_size = sizeof(float);
+		memcpy(&scale.y, cursor, current_loading_size);
+		cursor += current_loading_size;
+		current_loading_size = sizeof(float);
+		memcpy(&scale.z, cursor, current_loading_size);
+		transform.SetScale(scale);
 
-	//Load transform:rot
-	Quat rot = Quat::identity;
-	cursor += current_loading_size;
-	current_loading_size = sizeof(float);
-	memcpy(&rot.x, cursor, current_loading_size);
-	cursor += current_loading_size;
-	current_loading_size = sizeof(float);
-	memcpy(&rot.y, cursor, current_loading_size);
-	cursor += current_loading_size;
-	current_loading_size = sizeof(float);
-	memcpy(&rot.z, cursor, current_loading_size);
-	cursor += current_loading_size;
-	current_loading_size = sizeof(float);
-	memcpy(&rot.w, cursor, current_loading_size);
-	transform.SetRot(rot);
+		//Load transform:rot
+		Quat rot = Quat::identity;
+		cursor += current_loading_size;
+		current_loading_size = sizeof(float);
+		memcpy(&rot.x, cursor, current_loading_size);
+		cursor += current_loading_size;
+		current_loading_size = sizeof(float);
+		memcpy(&rot.y, cursor, current_loading_size);
+		cursor += current_loading_size;
+		current_loading_size = sizeof(float);
+		memcpy(&rot.z, cursor, current_loading_size);
+		cursor += current_loading_size;
+		current_loading_size = sizeof(float);
+		memcpy(&rot.w, cursor, current_loading_size);
+		transform.SetRot(rot);
+	}
+	else
+	{
+		//Load transform:pos
+		cursor += current_loading_size;
+		current_loading_size = sizeof(float);
+		cursor += current_loading_size;
+		current_loading_size = sizeof(float);
+		cursor += current_loading_size;
+		current_loading_size = sizeof(float);
+
+		//Load transform:scale
+		float3 scale = float3::zero;
+		cursor += current_loading_size;
+		current_loading_size = sizeof(float);
+		cursor += current_loading_size;
+		current_loading_size = sizeof(float);
+		cursor += current_loading_size;
+		current_loading_size = sizeof(float);
+
+		//Load transform:rot
+		Quat rot = Quat::identity;
+		cursor += current_loading_size;
+		current_loading_size = sizeof(float);
+		cursor += current_loading_size;
+		current_loading_size = sizeof(float);
+		cursor += current_loading_size;
+		current_loading_size = sizeof(float);
+		cursor += current_loading_size;
+		current_loading_size = sizeof(float);
+	}
 
 	//Load numfaces
 	cursor += current_loading_size;

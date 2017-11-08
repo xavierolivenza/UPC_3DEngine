@@ -353,7 +353,7 @@ bool ModuleSceneImporter::ImportFBX(std::string* file_to_import, std::string& ou
 
 bool ModuleSceneImporter::ImportFBXComponents(const aiScene* scene, const std::string* file_to_import, const std::vector<std::string>* FBXComponents, std::string& output_file)
 {
-	//Num nodes / size of each / nodes(pos, rot, scale, own format file string)
+	//Num nodes / size of each(only string) / nodes(pos, rot, scale, own format file string)
 
 	size_t bar_pos = file_to_import->rfind("\\") + 1;
 	output_file = file_to_import->substr(bar_pos, file_to_import->rfind(".") - bar_pos);
@@ -577,7 +577,7 @@ bool ModuleSceneImporter::LoadTexture(std::string* file_to_load, MaterialData& D
 
 bool ModuleSceneImporter::LoadFBXComponents(const std::string* file_to_load)
 {
-	//Num strings / length of each / strings
+	//Num nodes / size of each(only string) / nodes(pos, rot, scale, own format file string)
 	
 	char* data = nullptr;
 	std::ifstream file(file_to_load->c_str(), std::ifstream::binary);
@@ -609,6 +609,85 @@ bool ModuleSceneImporter::LoadFBXComponents(const std::string* file_to_load)
 	char* cursor = data;
 	uint current_loading_size = 0;
 
+	//Load amount of nodes
+	uint amount_of_nodes = 0;
+	current_loading_size = sizeof(uint);
+	memcpy(&amount_of_nodes, cursor, current_loading_size);
+
+	//Load node str size
+	std::vector<uint> size_of_each;
+	for (uint i = 0; i < amount_of_nodes; i++)
+	{
+		cursor += current_loading_size;
+		current_loading_size = sizeof(uint);
+		uint size = 0;
+		memcpy(&size, cursor, current_loading_size);
+		size_of_each.push_back(size);
+	}
+
+	//nodes(pos, rot, scale, own format file string)
+	size_t bar_pos = file_to_load->rfind("\\") + 1;
+	std::string gameobject_name = file_to_load->substr(bar_pos, file_to_load->rfind(".") - bar_pos);
+
+	GameObject* NewGameObject = new GameObject(gameobject_name.c_str(), true, true);
+	std::string file_string;
+	for (uint i = 0; i < amount_of_nodes; i++)
+	{
+		GameObject* NewMeshGameObject = new GameObject("NewMesh", true, true);
+
+		float3 position = float3::zero;
+		cursor += current_loading_size;
+		current_loading_size = sizeof(float);
+		memcpy(&position.x, cursor, current_loading_size);
+		cursor += current_loading_size;
+		current_loading_size = sizeof(float);
+		memcpy(&position.y, cursor, current_loading_size);
+		cursor += current_loading_size;
+		current_loading_size = sizeof(float);
+		memcpy(&position.z, cursor, current_loading_size);
+		NewMeshGameObject->GetTransform()->SetPos(position);
+
+		Quat rotation = Quat::identity;
+		cursor += current_loading_size;
+		current_loading_size = sizeof(float);
+		memcpy(&rotation.x, cursor, current_loading_size);
+		cursor += current_loading_size;
+		current_loading_size = sizeof(float);
+		memcpy(&rotation.y, cursor, current_loading_size);
+		cursor += current_loading_size;
+		current_loading_size = sizeof(float);
+		memcpy(&rotation.z, cursor, current_loading_size);
+		cursor += current_loading_size;
+		current_loading_size = sizeof(float);
+		memcpy(&rotation.w, cursor, current_loading_size);
+		NewMeshGameObject->GetTransform()->SetRot(rotation);
+
+		float3 scale = float3::zero;
+		cursor += current_loading_size;
+		current_loading_size = sizeof(float);
+		memcpy(&scale.x, cursor, current_loading_size);
+		cursor += current_loading_size;
+		current_loading_size = sizeof(float);
+		memcpy(&scale.y, cursor, current_loading_size);
+		cursor += current_loading_size;
+		current_loading_size = sizeof(float);
+		memcpy(&scale.z, cursor, current_loading_size);
+		NewMeshGameObject->GetTransform()->SetScale(scale);
+
+		cursor += current_loading_size;
+		ComponentMesh* NewMesh = NewMeshGameObject->CreateMeshComponent(true);
+		std::string name = cursor;
+		current_loading_size = name.size() + 1;
+		name = Library_mesh_path + "\\" + cursor;
+		MeshImporter->Load(*NewMeshGameObject->GetTransform(), NewMesh->MeshDataStruct, &name, false);
+		NewMeshGameObject->name = NewMesh->MeshDataStruct.Mesh_name;
+		ComponentMaterial* NewMaterial = NewMeshGameObject->CreateMaterialComponent(true);
+		MaterialImporter->Load(NewMaterial->MaterialDataStruct, &(Library_material_path + "\\" + NewMesh->MeshDataStruct.Asociated_texture_name));
+		NewGameObject->AddChild(NewMeshGameObject);
+	}
+	App->scene->AddChildToRoot(NewGameObject);
+
+	/*
 	//Load amount_of_strings
 	uint amount_of_strings = 0;
 	current_loading_size = sizeof(uint);
@@ -645,6 +724,7 @@ bool ModuleSceneImporter::LoadFBXComponents(const std::string* file_to_load)
 		NewGameObject->AddChild(NewMeshGameObject);
 	}
 	App->scene->AddChildToRoot(NewGameObject);
+	*/
 	RELEASE_ARRAY(data);
 	return true;
 }
