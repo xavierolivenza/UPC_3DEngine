@@ -846,9 +846,15 @@ void ModuleEngineUI::ImGuiCulling()
 	ImGui::Begin("Culling", false, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_HorizontalScrollbar);
 	//ImGui::Begin("Culling", false);
 
-	ImGui::Button("Calc Octree");
-	static bool showOctreeDebug = false;
-	ImGui::Checkbox("Show Octree Debug", &showOctreeDebug);
+	if (ImGui::Button("Calc Octree"))
+	{
+		const std::vector<GameObject*>* vec = App->scene->GetAllSceneGameObjects();
+		for (std::vector<GameObject*>::const_iterator item = vec->cbegin(); item != vec->cend(); ++item)
+			if ((*item)->IsStatic())
+				App->scene->scene_octree.root_node->Insert(*item);
+	}
+
+	ImGui::Checkbox("Show Octree Debug", &App->scene->octree_draw);
 
 	//Debug text about time when checking candidates, collision tests...
 

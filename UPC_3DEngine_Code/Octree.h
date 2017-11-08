@@ -42,6 +42,7 @@ public:
 	void Boundaries(AABB limits);
 	void Clear();
 	void Remove(GameObject* obj);
+	//void Insert();
 
 	void DebugDraw();
 

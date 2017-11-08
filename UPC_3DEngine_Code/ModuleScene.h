@@ -1,5 +1,6 @@
 #pragma once
 #include "Module.h"
+#include "Octree.h"
 
 class GameObject;
 class ComponentCamera;
@@ -40,6 +41,9 @@ public:
 
 	const std::vector<GameObject*>* GetAllSceneGameObjects() const;
 
+	Octree scene_octree;
+	bool octree_draw = false;
+
 private:
 	const ComponentCamera* GetActiveCameraIterator(GameObject* node) const;
 	void CleanUpGameObjectTree(GameObject* gameobject, bool cleanRoot = true);
@@ -54,5 +58,4 @@ private:
 	bool SceneToLoad = false;
 	std::string EditorScene_ToLoad;
 	std::vector<GameObject*> SceneGameObjects;
-
 };

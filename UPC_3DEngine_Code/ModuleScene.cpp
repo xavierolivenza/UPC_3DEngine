@@ -21,6 +21,7 @@ bool ModuleScene::Init()
 	bool ret = true;
 	root = new GameObject("Root", true, true);
 	GameObject* TestCamera = new GameObject("Camera", true, true);
+	scene_octree.Boundaries(AABB(float3(-50.0f, -50.0f, -50.0f), float3(50.0f, 50.0f, 50.0f)));
 	TestCamera->CreateCameraComponent(true);
 	AddChildToRoot(TestCamera);
 	return ret;
@@ -49,6 +50,8 @@ update_status ModuleScene::PreUpdate(float dt)
 			(*item)->DrawMesh = true;
 	}
 
+	if (App->input->GetKey(SDL_SCANCODE_F1) == KEY_DOWN) octree_draw = !octree_draw;
+
 	root->PreUpdate(dt);
 	return UPDATE_CONTINUE;
 }
@@ -56,6 +59,8 @@ update_status ModuleScene::PreUpdate(float dt)
 update_status ModuleScene::Update(float dt)
 {
 	root->Update(dt);
+	if (octree_draw)
+		scene_octree.DebugDraw();
 	return UPDATE_CONTINUE;
 }
 
