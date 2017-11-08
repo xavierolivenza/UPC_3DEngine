@@ -88,9 +88,9 @@ uint ModuleResources::ImportFile(const char* new_file_in_assets)
 	size_t bar_pos = extention.rfind(".") + 1;
 	extention = extention.substr(bar_pos, extention.length());
 	Resource::Type type = Resource::Type::null;
-	if((extention == "fbx") || (extention == "FBX") || (extention == "obj") || (extention == "dae"))
+	if((extention == "fbx") || (extention == "FBX") || (extention == "obj") || (extention == "OBJ") || (extention == "dae") || (extention == "DAE"))
 		type = Resource::Type::mesh;
-	if ((extention == "png") || (extention == "jpg") || (extention == "tga") || (extention == "dds"))
+	if ((extention == "png") || (extention == "PNG") || (extention == "jpg") || (extention == "JPG") || (extention == "tga") || (extention == "TGA") || (extention == "dds") || (extention == "DDS"))
 		type = Resource::Type::texture;
 
 	/*

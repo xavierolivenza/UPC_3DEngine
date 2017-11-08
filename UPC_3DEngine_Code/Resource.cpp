@@ -1,4 +1,5 @@
 #include "Resource.h"
+#include "Application.h"
 
 Resource::Resource(Resource::Type type) : type(type)
 {
@@ -37,6 +38,13 @@ const std::string& Resource::GetFile() const
 	return file;
 }
 
+bool Resource::LoadResource()
+{
+	if (loaded > 0) loaded++;
+	else loaded = LoadResourceToMemory();
+	return loaded > 0;
+}
+
 void Resource::Save(JSON_Object* conf) const
 {
 
@@ -45,4 +53,22 @@ void Resource::Save(JSON_Object* conf) const
 void Resource::Load(JSON_Object* conf)
 {
 
+}
+
+bool Resource::LoadResourceToMemory()
+{
+	bool ret = false;
+	switch (type)
+	{
+	case Resource::Type::mesh:
+		//Call mesh importer with this ppinter as reference
+		break;
+	case Resource::Type::texture:
+		//Call texture importer with this ppinter as reference
+		return "Resource Texture"; 
+		break;
+	case Resource::Type::null:
+		break;
+	}
+	return ret;
 }

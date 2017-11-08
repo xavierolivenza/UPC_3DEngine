@@ -24,8 +24,13 @@ public:
 	const char* GetTypeStr() const;
 	const std::string& GetFile() const;
 	
+	bool LoadResource();
+
 	virtual void Save(JSON_Object* conf) const;
 	virtual void Load(JSON_Object* conf);
+
+protected:
+	virtual bool LoadResourceToMemory();
 
 protected:
 	uint uuid = 0;
