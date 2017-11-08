@@ -78,7 +78,7 @@ uint ModuleResources::Find(const char* file_in_assets) const
 	return 0;
 }
 
-uint ModuleResources::ImportFile(const char* new_file_in_assets)
+uint ModuleResources::ImportFile(const char* new_file_in_assets, bool saveResource)
 {
 	uint ret = 0;
 	bool imported = false;
@@ -142,6 +142,9 @@ uint ModuleResources::ImportFile(const char* new_file_in_assets)
 		RELEASE(parsonjson);
 		if (MetaSaved) LOGP("SaveScene Success, file: %s", filepath_name.c_str());
 		else LOGP("SaveScene Failure, file: %s", filepath_name.c_str());
+
+		if (!saveResource)
+			resources.erase(res->GetUID());
 	}
 	/**/
 	return ret;
@@ -182,7 +185,7 @@ Resource* ModuleResources::CreateNewResource(Resource::Type type)
 	case Resource::texture: ret = (Resource*) new ResourceTexture(); break;
 	case Resource::mesh: ret = (Resource*) new ResourceMesh(); break;
 	}
-	if (ret != nullptr)
+	if (ret != nullptr) 
 		resources.insert(std::pair<uint, Resource*>(ret->GetUID(), ret));
 	return ret;
 }
