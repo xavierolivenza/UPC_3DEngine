@@ -733,7 +733,7 @@ void ModuleEngineUI::RecursiveDrawDirectory(const char* directory)
 	for (std::experimental::filesystem::directory_iterator::value_type file_in_path : std::experimental::filesystem::directory_iterator(directory))
 	{
 		char title[1000] = "";
-		if (std::experimental::filesystem::is_directory(file_in_path.path()))
+		if (std::experimental::filesystem::is_directory(file_in_path.path()) && (file_in_path.path().string().length() < 1000))
 		{
 			sprintf_s(title, 1000, "%S", file_in_path.path().filename().c_str());
 			if (ImGui::TreeNodeEx(title, 0))
@@ -743,7 +743,7 @@ void ModuleEngineUI::RecursiveDrawDirectory(const char* directory)
 				ImGui::TreePop();
 			}
 		}
-		if (std::experimental::filesystem::is_regular_file(file_in_path.path()))
+		if (std::experimental::filesystem::is_regular_file(file_in_path.path()) && (file_in_path.path().string().length() < 1000))
 		{
 			sprintf_s(title, 1000, "%S", file_in_path.path().filename().c_str());
 			if (ImGui::TreeNodeEx(title, ImGuiTreeNodeFlags_Leaf))

@@ -136,7 +136,7 @@ update_status ModuleSceneImporter::PostUpdate(float dt)
 		{
 			//LOGP("%S", file_in_path.path().c_str());
 			//LOGP("%S", file_in_path.path().extension().c_str());
-			if (std::experimental::filesystem::is_regular_file(file_in_path.path()) && (file_in_path.path().extension() != ".json"))
+			if (std::experimental::filesystem::is_regular_file(file_in_path.path()) && (file_in_path.path().extension() != ".json") && (file_in_path.path().string().length() < 1000))
 			{
 				sprintf_s(title, 1000, "%S", file_in_path.path().c_str());
 				Resource* res = App->resources->GetResource(title);
