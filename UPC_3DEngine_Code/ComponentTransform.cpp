@@ -30,9 +30,6 @@ bool ComponentTransform::Update(float dt)
 
 	if ((parent != nullptr) && (App->engineUI->GetSelectedGameObject() == parent))
 	{
-		//float4x4 matrix = GetMatrix();
-		//ImGuizmo::DrawCube(App->camera->GetViewMatrix().ptr(), App->camera->GetViewProjMatrix().ptr(), matrix.ptr());
-
 		ImGuiIO& io = ImGui::GetIO();
 		ImGuizmo::SetRect(0, 0, io.DisplaySize.x, io.DisplaySize.y);
 		
