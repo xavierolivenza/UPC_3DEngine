@@ -149,7 +149,7 @@ update_status ModuleSceneImporter::PostUpdate(float dt)
 					std::time_t cftime = decltype(ftime)::clock::to_time_t(ftime);
 					if (res->file_date != std::asctime(std::localtime(&cftime)))
 					{
-						App->resources->ReimportResource(res);
+						App->resources->ReimportResource(*res);
 						res->file_date = std::asctime(std::localtime(&cftime));
 					}
 					/**/

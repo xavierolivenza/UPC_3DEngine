@@ -95,7 +95,7 @@ uint ModuleResources::ImportFile(const char* new_file_in_assets)
 
 	/*
 	//Better but generates runtime memory leaks
-	//(when you leave the execution, all memeory is deallocated, but in runtime acumulates, we don't know why)
+	//(when you leave the execution, all memeory are deallocated, but in runtime acumulate, we don't underestand why)
 	Resource::Type type = Resource::Type::null;
 	if (App->importer->MeshImporter->AssimpCanLoad(new_file_in_assets))
 		type = Resource::Type::mesh;
@@ -147,14 +147,15 @@ uint ModuleResources::ImportFile(const char* new_file_in_assets)
 	return ret;
 }
 
-void ModuleResources::ReimportResource(Resource* res)
+bool ModuleResources::ReimportResource(Resource& res)
 {
-	std::string output;
-	switch (res->type)
+	bool ret = false;
+	switch (res.type)
 	{
-	case Resource::mesh: App->importer->ImportFBX(&res->file, output); break;
-	case Resource::texture: App->importer->MaterialImporter->Save(&res->file, output); break;
+	case Resource::mesh: ret = App->importer->ImportFBX(&res.file, res.exported_file); break;
+	case Resource::texture: ret = App->importer->MaterialImporter->Save(&res.file, res.exported_file); break;
 	}
+	return ret;
 }
 
 const Resource* ModuleResources::Get(uint uid) const
