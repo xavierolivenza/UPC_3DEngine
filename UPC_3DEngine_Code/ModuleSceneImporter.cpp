@@ -354,6 +354,7 @@ bool ModuleSceneImporter::ImportFBX(std::string* file_to_import, std::string& ou
 bool ModuleSceneImporter::ImportFBXComponents(const aiScene* scene, const std::string* file_to_import, const std::vector<std::string>* FBXComponents, std::string& output_file)
 {
 	//Num nodes / size of each / nodes(pos, rot, scale, own format file string)
+
 	size_t bar_pos = file_to_import->rfind("\\") + 1;
 	output_file = file_to_import->substr(bar_pos, file_to_import->rfind(".") - bar_pos);
 	output_file += "." + FBXComponents_Extention;
@@ -399,23 +400,74 @@ bool ModuleSceneImporter::ImportFBXComponents(const aiScene* scene, const std::s
 			}
 		}
 	}
+
 	//Now we have all nodes + what mesh they use + their transform, we can serialize to file
-	/*
-	uint file_size = sizeof(uint); //Num nodes
+
+	//Calc file size
+	//Num nodes
+	uint file_size = sizeof(uint);
+	//size of each (only string)
+	file_size += sizeof(uint) * AssimpNodeList.size();
+	//Size of each + nodes(pos, rot, scale, own format file string)
 	for (std::list<AssimpNodeTransOwnFile>::const_iterator item = AssimpNodeList.cbegin(); item != AssimpNodeList.cend(); ++item)
 	{
-
-
-
-
+		file_size += sizeof(float) * 10; //3pos, 3 scale, 4 rot
+		file_size += sizeof(char) * (FBXComponents->at(item._Ptr->_Myval.mesh).length() + 1);
 	}
-	//Num nodes / size of each / nodes(pos, rot, scale, own format file string)
-	*/
 
+	//Serialize
+	//Create char* to allocate data and another char* to move around the previous one
+	char* data = new char[file_size];
+	char* cursor = data;
+	uint current_allocation_size = 0;
 
+	//Num nodes
+	current_allocation_size = sizeof(uint);
+	uint numnodes = AssimpNodeList.size();
+	memcpy(cursor, &numnodes, current_allocation_size);
 
+	// size of each (only string)
+	for (std::list<AssimpNodeTransOwnFile>::const_iterator item = AssimpNodeList.cbegin(); item != AssimpNodeList.cend(); ++item)
+	{
+		cursor += current_allocation_size;
+		current_allocation_size = sizeof(uint);
+		uint leng = FBXComponents->at(item._Ptr->_Myval.mesh).length() + 1;
+		memcpy(cursor, &leng, current_allocation_size);
+	}
 
+	//nodes(pos, rot, scale, own format file string)
+	for (std::list<AssimpNodeTransOwnFile>::const_iterator item = AssimpNodeList.cbegin(); item != AssimpNodeList.cend(); ++item)
+	{
+		cursor += current_allocation_size;
+		current_allocation_size = sizeof(float);
+		memcpy(cursor, &item._Ptr->_Myval.pos.x, current_allocation_size);
+		cursor += current_allocation_size;
+		memcpy(cursor, &item._Ptr->_Myval.pos.y, current_allocation_size);
+		cursor += current_allocation_size;
+		memcpy(cursor, &item._Ptr->_Myval.pos.z, current_allocation_size);
 
+		cursor += current_allocation_size;
+		memcpy(cursor, &item._Ptr->_Myval.rot.x, current_allocation_size);
+		cursor += current_allocation_size;
+		memcpy(cursor, &item._Ptr->_Myval.rot.y, current_allocation_size);
+		cursor += current_allocation_size;
+		memcpy(cursor, &item._Ptr->_Myval.rot.z, current_allocation_size);
+		cursor += current_allocation_size;
+		memcpy(cursor, &item._Ptr->_Myval.rot.w, current_allocation_size);
+
+		cursor += current_allocation_size;
+		memcpy(cursor, &item._Ptr->_Myval.scale.x, current_allocation_size);
+		cursor += current_allocation_size;
+		memcpy(cursor, &item._Ptr->_Myval.scale.y, current_allocation_size);
+		cursor += current_allocation_size;
+		memcpy(cursor, &item._Ptr->_Myval.scale.z, current_allocation_size);
+
+		cursor += current_allocation_size;
+		current_allocation_size = sizeof(char) * (FBXComponents->at(item._Ptr->_Myval.mesh).length() + 1);
+		memcpy(cursor, FBXComponents->at(item._Ptr->_Myval.mesh).c_str(), current_allocation_size);
+	}
+
+	/*
 	std::vector<uint> amount_of_each;
 	for (std::vector<std::string>::const_iterator item = FBXComponents->cbegin(); item != FBXComponents->cend(); ++item)
 		amount_of_each.push_back(item->length() + 1);
@@ -448,6 +500,7 @@ bool ModuleSceneImporter::ImportFBXComponents(const aiScene* scene, const std::s
 		current_allocation_size = sizeof(char) * (item->length() + 1);
 		memcpy(cursor, item->c_str(), current_allocation_size);
 	}
+	*/
 
 	//Write to file
 	std::ofstream outfile(FBXComponents_path, std::ofstream::binary);
@@ -456,7 +509,7 @@ bool ModuleSceneImporter::ImportFBXComponents(const aiScene* scene, const std::s
 	else
 		LOGP("Failed to write the file with path: %s", FBXComponents_path.c_str());
 	outfile.close();
-
+	
 	RELEASE_ARRAY(data);
 
 	return true;
@@ -525,7 +578,7 @@ bool ModuleSceneImporter::LoadTexture(std::string* file_to_load, MaterialData& D
 bool ModuleSceneImporter::LoadFBXComponents(const std::string* file_to_load)
 {
 	//Num strings / length of each / strings
-
+	
 	char* data = nullptr;
 	std::ifstream file(file_to_load->c_str(), std::ifstream::binary);
 	if (file) {
