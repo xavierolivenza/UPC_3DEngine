@@ -91,7 +91,7 @@ bool ModuleSceneImporter::Init()
 		if (std::experimental::filesystem::is_regular_file(file_in_path.path()))
 		{
 			std::string output_file;
-			if (App->resources->ImportFile(file_in_path.path().string().c_str(), false)) LOGP("Regular File found and imported.");
+			if (App->resources->ImportFile(file_in_path.path().string().c_str())) LOGP("Regular File found and imported.");
 			LOGP("Regular File found and import error.");
 			/*
 			std::string output_file;
@@ -467,41 +467,6 @@ bool ModuleSceneImporter::ImportFBXComponents(const aiScene* scene, const std::s
 		current_allocation_size = sizeof(char) * (FBXComponents->at(item._Ptr->_Myval.mesh).length() + 1);
 		memcpy(cursor, FBXComponents->at(item._Ptr->_Myval.mesh).c_str(), current_allocation_size);
 	}
-
-	/*
-	std::vector<uint> amount_of_each;
-	for (std::vector<std::string>::const_iterator item = FBXComponents->cbegin(); item != FBXComponents->cend(); ++item)
-		amount_of_each.push_back(item->length() + 1);
-
-	uint file_size = sizeof(uint);
-	file_size += sizeof(uint) * amount_of_each.size();
-	for (std::vector<uint>::const_iterator item = amount_of_each.cbegin(); item != amount_of_each.cend(); ++item)
-		file_size += sizeof(char) * (*item);
-
-	//Create char* to allocate data and another char* to move around the previous one
-	char* data = new char[file_size];
-	char* cursor = data;
-	uint current_allocation_size = 0;
-
-	current_allocation_size = sizeof(uint);
-	uint amount_of_each_size = amount_of_each.size();
-	memcpy(cursor, &amount_of_each_size, current_allocation_size);
-
-	for (std::vector<std::string>::const_iterator item = FBXComponents->cbegin(); item != FBXComponents->cend(); ++item)
-	{
-		cursor += current_allocation_size;
-		current_allocation_size = sizeof(uint);
-		uint leng = item->length() + 1;
-		memcpy(cursor, &leng, current_allocation_size);
-	}
-
-	for (std::vector<std::string>::const_iterator item = FBXComponents->cbegin(); item != FBXComponents->cend(); ++item)
-	{
-		cursor += current_allocation_size;
-		current_allocation_size = sizeof(char) * (item->length() + 1);
-		memcpy(cursor, item->c_str(), current_allocation_size);
-	}
-	*/
 
 	//Write to file
 	std::ofstream outfile(FBXComponents_path, std::ofstream::binary);

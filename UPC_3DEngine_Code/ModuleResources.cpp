@@ -78,9 +78,8 @@ uint ModuleResources::Find(const char* file_in_assets) const
 	return 0;
 }
 
-uint ModuleResources::ImportFile(const char* new_file_in_assets, bool saveResource)
+bool ModuleResources::ImportFile(const char* new_file_in_assets)
 {
-	uint ret = 0;
 	bool imported = false;
 	std::string output;
 
@@ -115,6 +114,80 @@ uint ModuleResources::ImportFile(const char* new_file_in_assets, bool saveResour
 		Resource* res = CreateNewResource(type);
 		res->file = new_file_in_assets;
 		res->exported_file = output;
+
+		for (std::experimental::filesystem::recursive_directory_iterator::value_type file_in_path : std::experimental::filesystem::recursive_directory_iterator(App->importer->Get_Assets_path()->c_str()))
+		{
+			if (std::experimental::filesystem::is_regular_file(file_in_path.path()))
+			{
+				//LOGP("%S", file_in_path.path().string().c_str());
+				if (res->file == file_in_path.path().string().c_str())
+				{
+					std::experimental::filesystem::file_time_type ftime = std::experimental::filesystem::last_write_time(file_in_path.path());
+					std::time_t cftime = decltype(ftime)::clock::to_time_t(ftime);
+					res->file_date = std::asctime(std::localtime(&cftime));
+				}
+			}
+		}
+
+		//Save Meta file
+		size_t bar_pos = res->file.rfind("\\") + 1;
+		std::string filepath_name = res->file.substr(0, bar_pos);
+		filepath_name += res->file.substr(bar_pos, res->file.length());
+		filepath_name += ".meta";
+		ParsonJSON* parsonjson = new ParsonJSON(filepath_name.c_str(), true, true, false);
+		bool MetaSaved = parsonjson->Init();
+		if (MetaSaved)
+			MetaSaved = parsonjson->SaveResource(res);
+		RELEASE(parsonjson);
+		if (MetaSaved) LOGP("SaveScene Success, file: %s", filepath_name.c_str());
+		else LOGP("SaveScene Failure, file: %s", filepath_name.c_str());
+
+		//delete res created
+		for (std::map<uint, Resource*>::iterator itr = resources.begin(); itr != resources.end(); itr++)
+			RELEASE(itr->second);
+		resources.clear();
+
+		/*
+		Resource* to_delete = resources.at(res->GetUID());
+		RELEASE(to_delete);
+		resources.erase(res->GetUID());
+		*/
+	}
+	/**/
+	return imported;
+}
+
+bool ModuleResources::ReimportResource(Resource& res)
+{
+	bool ret = false;
+	switch (res.type)
+	{
+	case Resource::mesh: ret = App->importer->ImportFBX(&res.file, res.exported_file); break;
+	case Resource::texture: ret = App->importer->MaterialImporter->Save(&res.file, res.exported_file); break;
+	}
+	return ret;
+}
+
+uint ModuleResources::LoadResource(const char* file)
+{
+	uint ret = 0;
+	Resource* res = nullptr;
+	std::string output;
+
+	std::string extention = file;
+	size_t bar_pos = extention.rfind(".") + 1;
+	extention = extention.substr(bar_pos, extention.length());
+	Resource::Type type = Resource::Type::null;
+	if ((extention == "fbx") || (extention == "FBX") || (extention == "obj") || (extention == "OBJ") || (extention == "dae") || (extention == "DAE"))
+		type = Resource::Type::mesh;
+	if ((extention == "png") || (extention == "PNG") || (extention == "jpg") || (extention == "JPG") || (extention == "tga") || (extention == "TGA") || (extention == "dds") || (extention == "DDS"))
+		type = Resource::Type::texture;
+
+	if (type != Resource::Type::null)
+	{
+		//If mesh, iterate all simple meshes of GameObjectMeshAlvOli, create one resource for each
+		res = CreateNewResource(type);
+		res->file = file;
 		ret = res->GetUID();
 
 		for (std::experimental::filesystem::recursive_directory_iterator::value_type file_in_path : std::experimental::filesystem::recursive_directory_iterator(App->importer->Get_Assets_path()->c_str()))
@@ -131,32 +204,26 @@ uint ModuleResources::ImportFile(const char* new_file_in_assets, bool saveResour
 			}
 		}
 
-		size_t bar_pos = res->file.rfind("\\") + 1;
-		std::string filepath_name = res->file.substr(0, bar_pos);
-		filepath_name += res->file.substr(bar_pos, res->file.length());
-		filepath_name += ".meta";
-		ParsonJSON* parsonjson = new ParsonJSON(filepath_name.c_str(), true, true, false);
-		bool MetaSaved = parsonjson->Init();
-		if (MetaSaved)
-			MetaSaved = parsonjson->SaveResource(res);
-		RELEASE(parsonjson);
-		if (MetaSaved) LOGP("SaveScene Success, file: %s", filepath_name.c_str());
-		else LOGP("SaveScene Failure, file: %s", filepath_name.c_str());
 
-		if (!saveResource)
-			resources.erase(res->GetUID());
-	}
-	/**/
-	return ret;
-}
+		switch (type)
+		{
+		case Resource::mesh:
+		{
+			//Load .meshAlvOli file
+			//Save it to resource struct
+			res->LoadResource();
+			break;
+		}
+		case Resource::texture:
+		{
+			//Load .dds file
+			//Save it to resource struct
+			res->LoadResource();
+			break;
+		}
+		}
 
-bool ModuleResources::ReimportResource(Resource& res)
-{
-	bool ret = false;
-	switch (res.type)
-	{
-	case Resource::mesh: ret = App->importer->ImportFBX(&res.file, res.exported_file); break;
-	case Resource::texture: ret = App->importer->MaterialImporter->Save(&res.file, res.exported_file); break;
+		res->exported_file = output;
 	}
 	return ret;
 }
