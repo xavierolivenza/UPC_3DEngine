@@ -1,6 +1,8 @@
 #pragma once
 #include "Component.h"
 
+class ResourceTexture;
+
 struct MaterialData
 {
 	uint id_texture = 0; // id in VRAM
@@ -36,9 +38,12 @@ public:
 	bool CleanUp();
 	void DrawComponentImGui();
 
+	void SetResource(uint uuid);
+
 	bool SaveComponent(JSON_Object* conf) const;
 	bool LoadComponent(JSON_Object* conf);
 
 public:
+	ResourceTexture* resourceTexture = nullptr;
 	MaterialData MaterialDataStruct;
 };

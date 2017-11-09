@@ -68,6 +68,11 @@ void ComponentMaterial::DrawComponentImGui()
 	}
 }
 
+void ComponentMaterial::SetResource(uint uuid)
+{
+	resourceTexture = (ResourceTexture*)App->resources->Get(uuid);
+}
+
 bool ComponentMaterial::SaveComponent(JSON_Object* conf) const
 {
 	App->parsonjson->SetUInt(conf, "UUID", UUID);

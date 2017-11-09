@@ -508,13 +508,16 @@ bool ModuleSceneImporter::Load(std::string* file_to_load)
 		//Create GameObject
 		GameObject* NewGameObject = new GameObject("NewMesh", true, true);
 		//Load resource
-		//Vinculate resource with GameObject
-
+		uint uuid = App->resources->LoadResource(file_to_load->c_str());
+		//Vinculate resource with component
 		ComponentMesh* NewMesh = NewGameObject->CreateMeshComponent(true);
-		MeshImporter->Load(*NewGameObject->GetTransform(), NewMesh->MeshDataStruct, file_to_load);
+		NewMesh->SetResource(uuid);
 		NewGameObject->name = NewMesh->MeshDataStruct.Mesh_name;
+		//Load resource
+		uuid = App->resources->LoadResource((Library_material_path + "\\" + NewMesh->MeshDataStruct.Asociated_texture_name).c_str());
+		//Vinculate resource with component
 		ComponentMaterial* NewMaterial = NewGameObject->CreateMaterialComponent(true);
-		MaterialImporter->Load(NewMaterial->MaterialDataStruct, &(Library_material_path + "\\" + NewMesh->MeshDataStruct.Asociated_texture_name));
+		NewMaterial->SetResource(uuid);
 		App->scene->AddChildToRoot(NewGameObject);
 	}
 	else if (extention == FBXComponents_Extention)

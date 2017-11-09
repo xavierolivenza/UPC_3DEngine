@@ -185,7 +185,10 @@ uint ModuleResources::LoadResource(const char* file)
 		for (std::map<uint, Resource*>::iterator item = resources.begin(); item != resources.end(); ++item)
 		{
 			if (item._Ptr->_Myval.second->exported_file == file)
+			{
+				item._Ptr->_Myval.second->LoadResource();
 				return item._Ptr->_Myval.second->GetUID();
+			}
 		}
 
 		//If mesh, iterate all simple meshes of GameObjectMeshAlvOli, create one resource for each
@@ -206,7 +209,6 @@ uint ModuleResources::LoadResource(const char* file)
 				}
 			}
 		}
-
 
 		switch (type)
 		{

@@ -1,6 +1,8 @@
 #pragma once
 #include "Component.h"
 
+class ResourceMesh;
+
 struct MeshData
 {
 	Sphere BoundSphere;
@@ -81,12 +83,15 @@ public:
 	bool CleanUp();
 	void DrawComponentImGui();
 
+	void SetResource(uint uuid);
+
 	bool SaveComponent(JSON_Object* conf) const;
 	bool LoadComponent(JSON_Object* conf);
 
 	void GetTransformedAABB(AABB& TransformedBox) const;
 
 public:
+	ResourceMesh* resourceMesh = nullptr;
 	MeshData MeshDataStruct;
 
 private:

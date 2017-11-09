@@ -98,6 +98,11 @@ void ComponentMesh::DrawComponentImGui()
 	}
 }
 
+void ComponentMesh::SetResource(uint uuid)
+{
+	resourceMesh = (ResourceMesh*)App->resources->Get(uuid);
+}
+
 bool ComponentMesh::SaveComponent(JSON_Object* conf) const
 {
 	App->parsonjson->SetUInt(conf, "UUID", UUID);
