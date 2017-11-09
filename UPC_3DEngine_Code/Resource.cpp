@@ -1,6 +1,8 @@
 #include "Resource.h"
 #include "Application.h"
 #include "ImporterMaterial.h"
+#include "ResourceMesh.h"
+#include "ResourceTexture.h"
 
 Resource::Resource(Resource::Type type) : type(type)
 {
@@ -64,12 +66,12 @@ bool Resource::LoadResourceToMemory()
 	case Resource::Type::mesh:
 		//Clean resource if you are reimporting this
 		//Call mesh importer with this ppinter as reference
-		//App->importer->LoadSimpleMesh(&this->exported_file, this->DataMesh);
+		//App->importer->LoadSimpleMesh(&this->exported_file, ((ResourceMesh*)this)->SimpleMeshDataStruct);
 		break;
 	case Resource::Type::texture:
 		//Clean resource if you are reimporting this
 		//Call texture importer with this ppinter as reference
-		//this->DataMaterial.id_texture = App->importer->MaterialImporter->LoadImageFromFile(this->DataMaterial, &this->exported_file);
+		//((ResourceTexture*)this)->TextureDataStruct.id_texture = App->importer->MaterialImporter->LoadImageFromFile(((ResourceTexture*)this)->TextureDataStruct, &this->exported_file);
 		break;
 	case Resource::Type::null:
 		break;

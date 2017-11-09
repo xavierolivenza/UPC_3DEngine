@@ -1,25 +1,9 @@
 #pragma once
 
 #include "Resource.h"
+#include "Glew\include\glew.h"
 
-//By now commented, because this will collide with component mesh meshdata
-//struct MeshData;
-
-class ResourceMesh : public Resource
-{
-public:
-	ResourceMesh();
-	~ResourceMesh();
-
-	void Save(JSON_Object* conf) const;
-	void Load(JSON_Object* conf);
-
-public:
-	//MeshData DataMesh;
-
-};
-/*
-struct MeshData
+struct SimpleMeshData
 {
 	Sphere BoundSphere;
 	AABB BoundBox;
@@ -42,12 +26,12 @@ struct MeshData
 	std::string Asociated_texture_name;
 	std::string Mesh_File;
 
-	MeshData()
+	SimpleMeshData()
 	{
 
 	}
 
-	~MeshData()
+	~SimpleMeshData()
 	{
 		BoundSphere.SetNegativeInfinity();
 		BoundBox.SetNegativeInfinity();
@@ -84,4 +68,17 @@ struct MeshData
 		}
 	}
 };
-*/
+
+class ResourceMesh : public Resource
+{
+public:
+	ResourceMesh();
+	~ResourceMesh();
+
+	void Save(JSON_Object* conf) const;
+	void Load(JSON_Object* conf);
+
+public:
+	SimpleMeshData SimpleMeshDataStruct;
+
+};
