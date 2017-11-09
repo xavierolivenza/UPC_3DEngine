@@ -7,6 +7,9 @@
 #include "ComponentTransform.h"
 #include "ComponentMesh.h"
 
+#include "ResourceMesh.h"
+#include "ResourceTexture.h"
+
 //Assimp includes here because the main core of 3dmodel file read action is done here
 #include "Assimp/include/cimport.h"
 #include "Assimp/include/scene.h"
@@ -512,9 +515,9 @@ bool ModuleSceneImporter::Load(std::string* file_to_load)
 		//Vinculate resource with component
 		ComponentMesh* NewMesh = NewGameObject->CreateMeshComponent(true);
 		NewMesh->SetResource(uuid);
-		NewGameObject->name = NewMesh->MeshDataStruct.Mesh_name;
+		NewGameObject->name = NewMesh->resourceMesh->SimpleMeshDataStruct.Mesh_name;
 		//Load resource
-		uuid = App->resources->LoadResource((Library_material_path + "\\" + NewMesh->MeshDataStruct.Asociated_texture_name).c_str());
+		uuid = App->resources->LoadResource((Library_material_path + "\\" + NewMesh->resourceMesh->SimpleMeshDataStruct.Asociated_texture_name).c_str());
 		//Vinculate resource with component
 		ComponentMaterial* NewMaterial = NewGameObject->CreateMaterialComponent(true);
 		NewMaterial->SetResource(uuid);

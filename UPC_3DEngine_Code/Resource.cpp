@@ -71,7 +71,7 @@ bool Resource::LoadResourceToMemory()
 	case Resource::Type::texture:
 		//Clean resource if you are reimporting this
 		//Call texture importer with this ppinter as reference
-		//((ResourceTexture*)this)->TextureDataStruct.id_texture = App->importer->MaterialImporter->LoadImageFromFile(((ResourceTexture*)this)->TextureDataStruct, &this->exported_file);
+		((ResourceTexture*)this)->TextureDataStruct.id_texture = App->importer->MaterialImporter->LoadImageFromFile(((ResourceTexture*)this)->TextureDataStruct, &this->exported_file);
 		break;
 	case Resource::Type::null:
 		break;

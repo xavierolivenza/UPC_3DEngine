@@ -3,7 +3,10 @@
 #include "Resource.h"
 #include "Glew\include\glew.h"
 
-struct TextureData
+#include "ComponentMaterial.h" //will be deleted and MeshData defined here
+
+/*
+struct MaterialData
 {
 	uint id_texture = 0; // id in VRAM
 	std::string texture_name = "";
@@ -11,18 +14,19 @@ struct TextureData
 	uint texture_h = 0;
 	uint texture_d = 0;
 
-	TextureData()
+	MaterialData()
 	{
 
 	}
 
-	~TextureData()
+	~MaterialData()
 	{
 		texture_name.clear();
 		if ((texture_name != "") && (id_texture > 0))
 			glDeleteTextures(1, &id_texture);
 	}
 };
+*/
 
 class ResourceTexture : public Resource
 {
@@ -34,6 +38,6 @@ public:
 	void Load(JSON_Object* conf);
 
 public:
-	TextureData TextureDataStruct;
+	MaterialData TextureDataStruct;
 
 };
