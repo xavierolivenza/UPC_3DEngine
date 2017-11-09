@@ -78,6 +78,7 @@ uint ModuleResources::Find(const char* file_in_assets) const
 	return 0;
 }
 
+//Import files from assets to library, creating base meta file
 bool ModuleResources::ImportFile(const char* new_file_in_assets)
 {
 	bool imported = false;
@@ -111,7 +112,7 @@ bool ModuleResources::ImportFile(const char* new_file_in_assets)
 
 	if (imported)
 	{
-		Resource* res = CreateNewResource(type);
+		Resource* res = CreateNewResource(type, false);
 		res->file = new_file_in_assets;
 		res->exported_file = output;
 
@@ -143,15 +144,7 @@ bool ModuleResources::ImportFile(const char* new_file_in_assets)
 		else LOGP("SaveScene Failure, file: %s", filepath_name.c_str());
 
 		//delete res created
-		for (std::map<uint, Resource*>::iterator itr = resources.begin(); itr != resources.end(); itr++)
-			RELEASE(itr->second);
-		resources.clear();
-
-		/*
-		Resource* to_delete = resources.at(res->GetUID());
-		RELEASE(to_delete);
-		resources.erase(res->GetUID());
-		*/
+		RELEASE(res);
 	}
 	/**/
 	return imported;
@@ -168,6 +161,8 @@ bool ModuleResources::ReimportResource(Resource& res)
 	return ret;
 }
 
+//Called from loading process of a .GameObjectMeshAlvOli or .dds, so files from library
+//.GameObjectMeshAlvOli loading process opens .GameObjectMeshAlvOli and sends here to load the .MeshAlvOli files
 uint ModuleResources::LoadResource(const char* file)
 {
 	uint ret = 0;
@@ -178,13 +173,21 @@ uint ModuleResources::LoadResource(const char* file)
 	size_t bar_pos = extention.rfind(".") + 1;
 	extention = extention.substr(bar_pos, extention.length());
 	Resource::Type type = Resource::Type::null;
-	if ((extention == "fbx") || (extention == "FBX") || (extention == "obj") || (extention == "OBJ") || (extention == "dae") || (extention == "DAE"))
+
+	if (extention == *App->importer->Get_Mesh_Extention())
 		type = Resource::Type::mesh;
-	if ((extention == "png") || (extention == "PNG") || (extention == "jpg") || (extention == "JPG") || (extention == "tga") || (extention == "TGA") || (extention == "dds") || (extention == "DDS"))
+	if ((extention == "dds") || (extention == "DDS"))
 		type = Resource::Type::texture;
 
 	if (type != Resource::Type::null)
 	{
+		//Check if already exists
+		for (std::map<uint, Resource*>::iterator item = resources.begin(); item != resources.end(); ++item)
+		{
+			if (item._Ptr->_Myval.second->exported_file == file)
+				return item._Ptr->_Myval.second->GetUID();
+		}
+
 		//If mesh, iterate all simple meshes of GameObjectMeshAlvOli, create one resource for each
 		res = CreateNewResource(type);
 		res->file = file;
@@ -244,7 +247,7 @@ Resource* ModuleResources::Get(uint uid)
 	return nullptr;
 }
 
-Resource* ModuleResources::CreateNewResource(Resource::Type type)
+Resource* ModuleResources::CreateNewResource(Resource::Type type, bool AddToMap)
 {
 	Resource* ret = nullptr;
 	switch (type)
@@ -252,7 +255,7 @@ Resource* ModuleResources::CreateNewResource(Resource::Type type)
 	case Resource::texture: ret = (Resource*) new ResourceTexture(); break;
 	case Resource::mesh: ret = (Resource*) new ResourceMesh(); break;
 	}
-	if (ret != nullptr) 
+	if ((ret != nullptr) && AddToMap)
 		resources.insert(std::pair<uint, Resource*>(ret->GetUID(), ret));
 	return ret;
 }

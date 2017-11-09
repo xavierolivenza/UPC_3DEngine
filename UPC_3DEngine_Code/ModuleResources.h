@@ -30,7 +30,7 @@ public:
 	uint LoadResource(const char* file);
 	const Resource* Get(uint uid) const;
 	Resource* Get(uint uid);
-	Resource* CreateNewResource(Resource::Type type);
+	Resource* CreateNewResource(Resource::Type type, bool AddToMap = true);
 	Resource* GetResource(const char* path);
 
 	const std::map<uint, Resource*>* GetResourcesMap() const;

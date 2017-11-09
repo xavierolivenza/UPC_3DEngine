@@ -505,7 +505,11 @@ bool ModuleSceneImporter::Load(std::string* file_to_load)
 	}
 	else if (extention == Mesh_Extention)
 	{
+		//Create GameObject
 		GameObject* NewGameObject = new GameObject("NewMesh", true, true);
+		//Load resource
+		//Vinculate resource with GameObject
+
 		ComponentMesh* NewMesh = NewGameObject->CreateMeshComponent(true);
 		MeshImporter->Load(*NewGameObject->GetTransform(), NewMesh->MeshDataStruct, file_to_load);
 		NewGameObject->name = NewMesh->MeshDataStruct.Mesh_name;
@@ -515,7 +519,7 @@ bool ModuleSceneImporter::Load(std::string* file_to_load)
 	}
 	else if (extention == FBXComponents_Extention)
 	{
-		LoadFBXComponents(file_to_load);
+		LoadFBXComponents(file_to_load); //Insice here do the same as in lines 508-518 of this file
 	}
 	else
 	{
