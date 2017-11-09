@@ -851,7 +851,7 @@ void ModuleEngineUI::ImGuiCulling()
 		const std::vector<GameObject*>* vec = App->scene->GetAllSceneGameObjects();
 		for (std::vector<GameObject*>::const_iterator item = vec->cbegin(); item != vec->cend(); ++item)
 			if ((*item)->IsStatic())
-				App->scene->scene_octree.root_node->Insert(*item);
+				App->scene->scene_octree.Insert(*item);
 	}
 
 	ImGui::Checkbox("Show Octree Debug", &App->scene->octree_draw);

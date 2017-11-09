@@ -7,6 +7,7 @@
 #define Octree_MIN_SIZE 10.0f
 
 class GameObject;
+class ComponentMesh;
 
 class OctreeNode
 {
@@ -16,7 +17,7 @@ public:
 
 	bool isLeaf() const;
 
-	void Insert(GameObject* obj);
+	void Insert(ComponentMesh* obj);
 	void Remove(GameObject* obj);
 
 	void DebugDraw();
@@ -42,14 +43,14 @@ public:
 	void Boundaries(AABB limits);
 	void Clear();
 	void Remove(GameObject* obj);
-	//void Insert();
+	void Insert(GameObject* obj);
 
 	void DebugDraw();
 
 	template<typename TYPE>
 	void CollectIntersections(std::vector<GameObject*>& objects, const TYPE& primitive) const;
 
-public:
+private:
 	OctreeNode* root_node = nullptr;
 };
 

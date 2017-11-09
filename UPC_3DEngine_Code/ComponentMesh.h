@@ -71,6 +71,8 @@ struct MeshData
 
 class ComponentMesh : public Component
 {
+	friend class OctreeNode;
+
 public:
 	ComponentMesh(GameObject* parent, bool Active);
 	~ComponentMesh();
