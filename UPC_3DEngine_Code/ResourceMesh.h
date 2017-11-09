@@ -3,7 +3,9 @@
 #include "Resource.h"
 #include "Glew\include\glew.h"
 
-struct SimpleMeshData
+#include "ComponentMesh.h" //will be deleted and MeshData defined here
+/*
+struct MeshData
 {
 	Sphere BoundSphere;
 	AABB BoundBox;
@@ -26,12 +28,12 @@ struct SimpleMeshData
 	std::string Asociated_texture_name;
 	std::string Mesh_File;
 
-	SimpleMeshData()
+	MeshData()
 	{
 
 	}
 
-	~SimpleMeshData()
+	~MeshData()
 	{
 		BoundSphere.SetNegativeInfinity();
 		BoundBox.SetNegativeInfinity();
@@ -68,7 +70,7 @@ struct SimpleMeshData
 		}
 	}
 };
-
+*/
 class ResourceMesh : public Resource
 {
 public:
@@ -79,6 +81,6 @@ public:
 	void Load(JSON_Object* conf);
 
 public:
-	SimpleMeshData SimpleMeshDataStruct;
+	MeshData SimpleMeshDataStruct;
 
 };

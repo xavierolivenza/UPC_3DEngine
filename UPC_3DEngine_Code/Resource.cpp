@@ -66,7 +66,7 @@ bool Resource::LoadResourceToMemory()
 	case Resource::Type::mesh:
 		//Clean resource if you are reimporting this
 		//Call mesh importer with this ppinter as reference
-		//App->importer->LoadSimpleMesh(&this->exported_file, ((ResourceMesh*)this)->SimpleMeshDataStruct);
+		App->importer->LoadSimpleMesh(&this->exported_file, ((ResourceMesh*)this)->SimpleMeshDataStruct);
 		break;
 	case Resource::Type::texture:
 		//Clean resource if you are reimporting this

@@ -167,7 +167,6 @@ uint ModuleResources::LoadResource(const char* file)
 {
 	uint ret = 0;
 	Resource* res = nullptr;
-	std::string output;
 
 	std::string extention = file;
 	size_t bar_pos = extention.rfind(".") + 1;
@@ -210,10 +209,16 @@ uint ModuleResources::LoadResource(const char* file)
 			}
 		}
 
+		std::string filename = file;
+		bar_pos = filename.rfind("\\") + 1;
+		filename = filename.substr(bar_pos, filename.length());
+		
 		switch (type)
 		{
 		case Resource::mesh:
 		{
+			std::string path = *App->importer->Get_Library_mesh_path() + "\\" + filename;
+			res->exported_file = path;
 			//Load .meshAlvOli file
 			//Save it to resource struct
 			res->LoadResource();
@@ -221,6 +226,8 @@ uint ModuleResources::LoadResource(const char* file)
 		}
 		case Resource::texture:
 		{
+			std::string path = *App->importer->Get_Library_material_path() + "\\" + filename;
+			res->exported_file = path;
 			//Load .dds file
 			//Save it to resource struct
 			res->LoadResource();
@@ -228,7 +235,7 @@ uint ModuleResources::LoadResource(const char* file)
 		}
 		}
 
-		res->exported_file = output;
+		
 	}
 	return ret;
 }

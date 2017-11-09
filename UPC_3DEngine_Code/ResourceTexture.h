@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Resource.h"
+#include "Glew\include\glew.h"
 
 struct TextureData
 {
