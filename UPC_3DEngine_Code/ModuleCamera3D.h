@@ -36,14 +36,14 @@ public:
 
 	//Store octree varable + one getter function(to get inview gameobjects)	bool GetGOInView(std::vector<ComponentMesh*>&)
 
+private:
+	void MousePicking();
+
 public:
 
 	float3 X, Y, Z, Position, Reference;
 
 private:
-	bool			Cam_move_LOG = true;
-	bool			Cam_move = true;
-
 	ComponentCamera* CameraComp = nullptr;
 
 	LineSegment		MousePickRay;

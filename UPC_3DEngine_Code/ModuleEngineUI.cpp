@@ -10,6 +10,7 @@
 #include "DeviceId\DeviceId.h"
 
 #include "GameObject.h"
+#include "ComponentMesh.h"
 
 ModuleEngineUI::ModuleEngineUI(Application* app, bool start_enabled) : Module(app, start_enabled),
 	fpsPlotData(FPS_AND_MS_PLOT_DATA_LENGTH), msPlotData(FPS_AND_MS_PLOT_DATA_LENGTH), memPlotData(FPS_AND_MS_PLOT_DATA_LENGTH)
@@ -849,6 +850,22 @@ void ModuleEngineUI::ImGuiCulling()
 	if (ImGui::Button("Calc Octree"))
 	{
 		const std::vector<GameObject*>* vec = App->scene->GetAllSceneGameObjects();
+		//Clac adaptative size of scene octree
+		/*
+		AABB AdaptativeAABB;
+		AdaptativeAABB.SetNegativeInfinity();
+		for (std::vector<GameObject*>::const_iterator item = vec->cbegin(); item != vec->cend(); ++item)
+		{
+			if ((*item)->IsStatic())
+			{
+				ComponentMesh* mesh = (ComponentMesh*)(*item)->FindComponentFirst(ComponentType::Mesh_Component);
+				if (mesh != nullptr)
+					AdaptativeAABB.Enclose(mesh->MeshDataStruct.BoundBox);
+			}
+		}
+		App->scene->scene_octree.Boundaries(AdaptativeAABB);
+		*/
+		//Insert AABBs to octree
 		for (std::vector<GameObject*>::const_iterator item = vec->cbegin(); item != vec->cend(); ++item)
 			if ((*item)->IsStatic())
 				App->scene->scene_octree.Insert(*item);

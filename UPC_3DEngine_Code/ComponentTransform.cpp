@@ -51,6 +51,8 @@ bool ComponentTransform::Update(float dt)
 			if (ImGuizmo::IsUsing())
 			{
 				matrix.Transpose();
+				//To test 
+				//matrix = parent->GetParent()->GetTransform()->GetMatrix() * matrix;
 				//matrix = GetMatrix().Inverted() * matrix;
 				float3 position = float3::zero;
 				float3 scale = float3::zero;

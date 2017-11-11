@@ -47,34 +47,6 @@ bool ModuleCamera3D::CleanUp()
 // -----------------------------------------------------------------
 update_status ModuleCamera3D::Update(float dt)
 {
-	//TODO
-	//When load geometry, auto resize cam(all geometry inside fov)
-	/*
-	if (App->input->GetMouseButton(SDL_BUTTON_RIGHT) == KEY_DOWN)
-	{
-		Cam_move = !Cam_move;
-		Cam_move_LOG = true;
-	}
-	*/
-	if (Cam_move)
-	{
-		if (Cam_move_LOG)
-		{
-			LOGP("Camera movement: Active");
-			Cam_move_LOG = false;
-		}
-	}
-	/*
-	else
-	{
-		if (Cam_move_LOG)
-		{
-			LOGP("Camera movement: Disabled");
-			Cam_move_LOG = false;
-		}
-		return UPDATE_CONTINUE;
-	}
-	*/
 	float3 newPos(0, 0, 0);
 	float speed = 50.0f * dt;
 
@@ -160,85 +132,7 @@ update_status ModuleCamera3D::Update(float dt)
 
 	//Mouse Picking
 	if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_DOWN)
-	{
-		//Create Ray
-		int w = 0;
-		int h = 0;
-		App->window->GetWindowSize(w, h);
-		float MouseNormX = -(1.0f - (float(App->input->GetMouseX()) * 2.0f) / (float)w);
-		float MouseNormY = 1.0f - (float(App->input->GetMouseY()) * 2.0f) / (float)h;
-		MousePickRay = CameraComp->frustum.UnProjectLineSegment(MouseNormX, MouseNormY);
-
-		//Check ray agains gameobjects Sphere - AABB (Optimaze with infrustrum gameobjects(quadtree/octree))
-		const std::vector<GameObject*>* SceneGameObjects;
-		SceneGameObjects = App->scene->GetAllSceneGameObjects();
-		std::multimap<float, const GameObject*> SceneGameObjectsHitted;
-		for (std::vector<GameObject*>::const_iterator item = SceneGameObjects->cbegin(); item != SceneGameObjects->cend(); ++item)
-		{
-			ComponentMesh* MeshComp = (ComponentMesh*)(*item)->FindComponentFirst(ComponentType::Mesh_Component);
-			if (MeshComp != nullptr)
-			{
-				float Neardistance = 0.0f;
-				float Fardistance = 0.0f;
-				AABB GameObjectAABB;
-				MeshComp->GetTransformedAABB(GameObjectAABB);
-				/*
-				hit = MousePickRay.Intersects(MeshComp->MeshDataStruct.BoundSphere);
-				if (hit)
-					hit = MousePickRay.Intersects(MeshComp->MeshDataStruct.BoundBox);
-				if (hit)
-					hit = MousePickRay.Intersects(MeshComp->MeshDataStruct.BoundOBox);
-				*/
-				if (MousePickRay.Intersects(GameObjectAABB, Neardistance, Fardistance))
-				{
-					//LOGP("Hit");
-					//Order hitted AABB by distance
-					SceneGameObjectsHitted.insert(std::pair<float, const GameObject*>(Neardistance, *item));
-				}
-			}
-		}
-		/*
-		if (SceneGameObjectsHitted.size() > 0)
-			App->engineUI->SetSelectedInspectorGO((GameObject*)(*SceneGameObjectsHitted.begin()).second);
-		*/
-		/**/
-		GameObject* BestCandidate = nullptr;
-		float BestCandidateDistance = 500.0f; //Initialize with big number so any triangle hit distance is minor to this.
-		for (std::multimap<float, const GameObject*>::const_iterator item = SceneGameObjectsHitted.cbegin(); item != SceneGameObjectsHitted.cend(); ++item)
-		{
-			//Transform Mouse to GameObject Local Space
-			//Copy it so we don't affect the original one
-			RayLocal = MousePickRay;
-			float4x4 TransMatrix = ((*item).second)->GetTransform()->GetMatrix();
-			RayLocal.Transform(TransMatrix.Inverted().Transposed());
-
-			//Iterate mesh triangles to chechk if hit is real (using order by distance)
-			MeshData& Mesh = ((ComponentMesh*)(((*item).second)->FindComponentFirst(ComponentType::Mesh_Component)))->MeshDataStruct;
-
-			//Each 3 indices we have a triangle
-			for (uint i = 0; i < Mesh.num_indices;)
-			{
-				Triangle tri;
-				tri.a.Set(&Mesh.vertices[Mesh.indices[i++] * 3]);
-				tri.b.Set(&Mesh.vertices[Mesh.indices[i++] * 3]);
-				tri.c.Set(&Mesh.vertices[Mesh.indices[i++] * 3]);
-				float distance = 0.0f;
-				float3 intersectionPoint = float3::zero;
-				if ((RayLocal.Intersects(tri, &distance, &intersectionPoint)) && (distance < BestCandidateDistance))
-				{
-					BestCandidate = (GameObject*)(*item).second;
-					BestCandidateDistance = distance;
-				}
-			}
-		}
-		//Assign BestCandidate to selected gameobject
-		if (BestCandidate != nullptr)
-		{
-			//App->engineUI->SetSelectedInspectorGO(const_cast<GameObject*>((*item).second)); //Warning const cast
-			App->engineUI->SetSelectedInspectorGO(BestCandidate);
-		}
-		/**/
-	}
+		MousePicking();
 
 	/**/
 	if (RayDebugDraw)
@@ -360,4 +254,80 @@ void ModuleCamera3D::ImGuiModuleVariables()
 {
 	ImGui::Checkbox("Ray Debug Draw Active", &RayDebugDraw);
 	CameraComp->DrawComponentImGui();
+}
+
+void ModuleCamera3D::MousePicking()
+{
+	//Create Ray
+	int w = 0;
+	int h = 0;
+	App->window->GetWindowSize(w, h);
+	float MouseNormX = -(1.0f - (float(App->input->GetMouseX()) * 2.0f) / (float)w);
+	float MouseNormY = 1.0f - (float(App->input->GetMouseY()) * 2.0f) / (float)h;
+	MousePickRay = CameraComp->frustum.UnProjectLineSegment(MouseNormX, MouseNormY);
+
+	//Check ray agains gameobjects Sphere - AABB (Optimaze with infrustrum gameobjects(quadtree/octree))
+	const std::vector<GameObject*>* SceneGameObjects;
+	SceneGameObjects = App->scene->GetAllSceneGameObjects();
+	std::multimap<float, const GameObject*> SceneGameObjectsHitted;
+	for (std::vector<GameObject*>::const_iterator item = SceneGameObjects->cbegin(); item != SceneGameObjects->cend(); ++item)
+	{
+		ComponentMesh* MeshComp = (ComponentMesh*)(*item)->FindComponentFirst(ComponentType::Mesh_Component);
+		if (MeshComp != nullptr)
+		{
+			float Neardistance = 0.0f;
+			float Fardistance = 0.0f;
+			AABB GameObjectAABB;
+			MeshComp->GetTransformedAABB(GameObjectAABB);
+			/*
+			hit = MousePickRay.Intersects(MeshComp->MeshDataStruct.BoundSphere);
+			if (hit)
+			hit = MousePickRay.Intersects(MeshComp->MeshDataStruct.BoundBox);
+			if (hit)
+			hit = MousePickRay.Intersects(MeshComp->MeshDataStruct.BoundOBox);
+			*/
+			if (MousePickRay.Intersects(GameObjectAABB, Neardistance, Fardistance))
+			{
+				//LOGP("Hit");
+				//Order hitted AABB by distance
+				SceneGameObjectsHitted.insert(std::pair<float, const GameObject*>(Neardistance, *item));
+			}
+		}
+	}
+
+	GameObject* BestCandidate = nullptr;
+	float BestCandidateDistance = 500.0f; //Initialize with big number so any triangle hit distance is minor to this.
+	for (std::multimap<float, const GameObject*>::const_iterator item = SceneGameObjectsHitted.cbegin(); item != SceneGameObjectsHitted.cend(); ++item)
+	{
+		//Transform Mouse to GameObject Local Space
+		//Copy it so we don't affect the original one
+		RayLocal = MousePickRay;
+		float4x4 TransMatrix = ((*item).second)->GetTransform()->GetMatrix();
+		RayLocal.Transform(TransMatrix.Inverted().Transposed());
+
+		//Iterate mesh triangles to chechk if hit is real (using order by distance)
+		MeshData& Mesh = ((ComponentMesh*)(((*item).second)->FindComponentFirst(ComponentType::Mesh_Component)))->MeshDataStruct;
+
+		//Each 3 indices we have a triangle
+		for (uint i = 0; i < Mesh.num_indices;)
+		{
+			Triangle tri;
+			tri.a.Set(&Mesh.vertices[Mesh.indices[i++] * 3]);
+			tri.b.Set(&Mesh.vertices[Mesh.indices[i++] * 3]);
+			tri.c.Set(&Mesh.vertices[Mesh.indices[i++] * 3]);
+			float distance = 0.0f;
+			float3 intersectionPoint = float3::zero;
+			if ((RayLocal.Intersects(tri, &distance, &intersectionPoint)) && (distance < BestCandidateDistance))
+			{
+				BestCandidate = (GameObject*)(*item).second;
+				BestCandidateDistance = distance;
+			}
+		}
+	}
+	//Assign BestCandidate to selected gameobject
+	if (BestCandidate != nullptr)
+	{
+		//App->engineUI->SetSelectedInspectorGO(const_cast<GameObject*>((*item).second)); //Warning const cast
+		App->engineUI->SetSelectedInspectorGO(BestCandidate);
+	}
 }
