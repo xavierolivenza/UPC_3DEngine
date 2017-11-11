@@ -860,7 +860,7 @@ void ModuleEngineUI::ImGuiCulling()
 			{
 				ComponentMesh* mesh = (ComponentMesh*)(*item)->FindComponentFirst(ComponentType::Mesh_Component);
 				if (mesh != nullptr)
-					AdaptativeAABB.Enclose(mesh->MeshDataStruct.BoundBox);
+					AdaptativeAABB.Enclose(mesh->GetTransformedAABB);
 			}
 		}
 		App->scene->scene_octree.Boundaries(AdaptativeAABB);
