@@ -8,6 +8,7 @@
 #include "ComponentMesh.h"
 #include "ComponentMaterial.h"
 #include "ComponentCamera.h"
+#include "ResourceMesh.h"
 
 #include "DevIL\include\il.h"
 #include "DevIL\include\ilu.h"
@@ -668,10 +669,10 @@ bool ModuleRenderer3D::Draw(const std::vector<GeometryData>* meshData) const
 
 bool ModuleRenderer3D::DrawComponentMeshMaterial(const ComponentTransform* transform, const ComponentMesh* mesh, const ComponentMaterial* material) const
 {
-	if ((mesh == nullptr) || ((mesh->MeshDataStruct.vertices == nullptr) || (mesh->MeshDataStruct.indices == nullptr)))
+	if ((mesh == nullptr) || (mesh->resourceMesh == nullptr) || ((mesh->resourceMesh->SimpleMeshDataStruct.vertices == nullptr) || (mesh->resourceMesh->SimpleMeshDataStruct.indices == nullptr)))
 		return false;
 
-	const MeshData* meshData = &mesh->MeshDataStruct;
+	const MeshData* meshData = &mesh->resourceMesh->SimpleMeshDataStruct;
 	
 	if (GL_Wireframe)
 		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);

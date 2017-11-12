@@ -180,10 +180,29 @@ uint ModuleResources::LoadResource(const char* file)
 
 	if (type != Resource::Type::null)
 	{
+		std::string filename = file;
+		bar_pos = filename.rfind("\\") + 1;
+		filename = filename.substr(bar_pos, filename.length());
+		std::string path;
+
+		switch (type)
+		{
+		case Resource::mesh:
+		{
+			path = *App->importer->Get_Library_mesh_path() + "\\" + filename;
+			break;
+		}
+		case Resource::texture:
+		{
+			path = *App->importer->Get_Library_material_path() + "\\" + filename;
+			break;
+		}
+		}
+
 		//Check if already exists
 		for (std::map<uint, Resource*>::iterator item = resources.begin(); item != resources.end(); ++item)
 		{
-			if (item._Ptr->_Myval.second->exported_file == file)
+			if (item._Ptr->_Myval.second->exported_file == path)
 			{
 				item._Ptr->_Myval.second->LoadResource();
 				return item._Ptr->_Myval.second->GetUID();
@@ -209,15 +228,11 @@ uint ModuleResources::LoadResource(const char* file)
 			}
 		}
 
-		std::string filename = file;
-		bar_pos = filename.rfind("\\") + 1;
-		filename = filename.substr(bar_pos, filename.length());
-		
 		switch (type)
 		{
 		case Resource::mesh:
 		{
-			std::string path = *App->importer->Get_Library_mesh_path() + "\\" + filename;
+			//std::string path = *App->importer->Get_Library_mesh_path() + "\\" + filename;
 			res->exported_file = path;
 			//Load .meshAlvOli file
 			//Save it to resource struct
@@ -226,7 +241,7 @@ uint ModuleResources::LoadResource(const char* file)
 		}
 		case Resource::texture:
 		{
-			std::string path = *App->importer->Get_Library_material_path() + "\\" + filename;
+			//std::string path = *App->importer->Get_Library_material_path() + "\\" + filename;
 			res->exported_file = path;
 			//Load .dds file
 			//Save it to resource struct
