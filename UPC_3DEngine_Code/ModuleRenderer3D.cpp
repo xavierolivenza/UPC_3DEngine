@@ -9,6 +9,7 @@
 #include "ComponentMaterial.h"
 #include "ComponentCamera.h"
 #include "ResourceMesh.h"
+#include "ResourceTexture.h"
 
 #include "DevIL\include\il.h"
 #include "DevIL\include\ilu.h"
@@ -699,9 +700,9 @@ bool ModuleRenderer3D::DrawComponentMeshMaterial(const ComponentTransform* trans
 			glColor3f(1.0f, 1.0f, 1.0f);
 		}
 
-	if (material != nullptr)
+	if ((material != nullptr) && (material->resourceTexture))
 	{
-		const MaterialData* materialData = &material->MaterialDataStruct;
+		const MaterialData* materialData = &material->resourceTexture->TextureDataStruct;
 		if ((materialData != nullptr) && glIsEnabled(GL_TEXTURE_2D))
 		{
 			if (materialData->texture_name != "")

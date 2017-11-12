@@ -1,4 +1,5 @@
 #include "ComponentMaterial.h"
+#include "ResourceTexture.h"
 
 ComponentMaterial::ComponentMaterial(GameObject* parent, bool Active) : Component(parent, Active, 1, ComponentType::Material_Component)
 {
@@ -45,25 +46,27 @@ void ComponentMaterial::DrawComponentImGui()
 	{
 		ImGui::Checkbox("Material Component Active", &Active);
 
+		if (resourceTexture == nullptr) return;
+
 		char data[100] = "";
 		uint data_size = sizeof data;
 
-		sprintf_s(data, data_size, "Texture ID: %i", MaterialDataStruct.id_texture);
+		sprintf_s(data, data_size, "Texture ID: %i", resourceTexture->TextureDataStruct.id_texture);
 		ImGui::Text(data);
-		if (MaterialDataStruct.id_texture > 0)
+		if (resourceTexture->TextureDataStruct.id_texture > 0)
 		{
 			static float texSize = 0.2f;
 			ImGui::SliderFloat("Image Preview Size", &texSize, 0.0f, 1.0f, "%.2f");
-			ImGui::Image((void*)MaterialDataStruct.id_texture, ImVec2(MaterialDataStruct.texture_w * texSize, MaterialDataStruct.texture_h * texSize), ImVec2(1, 1), ImVec2(0, 0));
+			ImGui::Image((void*)resourceTexture->TextureDataStruct.id_texture, ImVec2(resourceTexture->TextureDataStruct.texture_w * texSize, resourceTexture->TextureDataStruct.texture_h * texSize), ImVec2(1, 1), ImVec2(0, 0));
 		}
 		char title[1000] = "";
-		sprintf_s(title, 1000, "Texture path: %s", MaterialDataStruct.texture_name.c_str());
+		sprintf_s(title, 1000, "Texture path: %s", resourceTexture->TextureDataStruct.texture_name.c_str());
 		ImGui::Text(title);
-		sprintf_s(data, data_size, "Texture W: %i", MaterialDataStruct.texture_w);
+		sprintf_s(data, data_size, "Texture W: %i", resourceTexture->TextureDataStruct.texture_w);
 		ImGui::Text(data);
-		sprintf_s(data, data_size, "Texture H: %i", MaterialDataStruct.texture_h);
+		sprintf_s(data, data_size, "Texture H: %i", resourceTexture->TextureDataStruct.texture_h);
 		ImGui::Text(data);
-		sprintf_s(data, data_size, "Texture D: %i", MaterialDataStruct.texture_d);
+		sprintf_s(data, data_size, "Texture D: %i", resourceTexture->TextureDataStruct.texture_d);
 		ImGui::Text(data);
 	}
 }
