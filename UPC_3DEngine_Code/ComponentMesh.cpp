@@ -1,5 +1,6 @@
 #include "ComponentMesh.h"
 #include "ComponentTransform.h"
+#include "ResourceMesh.h"
 
 ComponentMesh::ComponentMesh(GameObject* parent, bool Active) : Component(parent, Active, 1, ComponentType::Mesh_Component)
 {
@@ -73,25 +74,25 @@ void ComponentMesh::DrawComponentImGui()
 		char data[100] = "";
 		uint data_size = sizeof data;
 
-		sprintf_s(data, data_size, "Number of faces: %i", MeshDataStruct.num_faces);
+		sprintf_s(data, data_size, "Number of faces: %i", resourceMesh->SimpleMeshDataStruct.num_faces);
 		ImGui::Text(data);
-		sprintf_s(data, data_size, "Vertices number: %i", MeshDataStruct.num_vertices);
+		sprintf_s(data, data_size, "Vertices number: %i", resourceMesh->SimpleMeshDataStruct.num_vertices);
 		ImGui::Text(data);
-		sprintf_s(data, data_size, "Vertices ID: %i", MeshDataStruct.id_vertices);
+		sprintf_s(data, data_size, "Vertices ID: %i", resourceMesh->SimpleMeshDataStruct.id_vertices);
 		ImGui::Text(data);
-		sprintf_s(data, data_size, "Indices number: %i", MeshDataStruct.num_indices);
+		sprintf_s(data, data_size, "Indices number: %i", resourceMesh->SimpleMeshDataStruct.num_indices);
 		ImGui::Text(data);
-		sprintf_s(data, data_size, "Indices ID: %i", MeshDataStruct.id_indices);
+		sprintf_s(data, data_size, "Indices ID: %i", resourceMesh->SimpleMeshDataStruct.id_indices);
 		ImGui::Text(data);
-		sprintf_s(data, data_size, "Normals ID: %i", MeshDataStruct.id_normals);
+		sprintf_s(data, data_size, "Normals ID: %i", resourceMesh->SimpleMeshDataStruct.id_normals);
 		ImGui::Text(data);
-		sprintf_s(data, data_size, "Texture Coords ID: %i", MeshDataStruct.id_texture_coords);
+		sprintf_s(data, data_size, "Texture Coords ID: %i", resourceMesh->SimpleMeshDataStruct.id_texture_coords);
 		ImGui::Text(data);
-		sprintf_s(data, data_size, "Colors ID: %i", MeshDataStruct.id_colors);
+		sprintf_s(data, data_size, "Colors ID: %i", resourceMesh->SimpleMeshDataStruct.id_colors);
 		ImGui::Text(data);
 
-		ImGui::InputFloat3("AABB Max Point", &MeshDataStruct.BoundBox.maxPoint[0], 3, ImGuiInputTextFlags_CharsDecimal | ImGuiInputTextFlags_ReadOnly);
-		ImGui::InputFloat3("AABB Min Point", &MeshDataStruct.BoundBox.minPoint[0], 3, ImGuiInputTextFlags_CharsDecimal | ImGuiInputTextFlags_ReadOnly);
+		ImGui::InputFloat3("AABB Max Point", &resourceMesh->SimpleMeshDataStruct.BoundBox.maxPoint[0], 3, ImGuiInputTextFlags_CharsDecimal | ImGuiInputTextFlags_ReadOnly);
+		ImGui::InputFloat3("AABB Min Point", &resourceMesh->SimpleMeshDataStruct.BoundBox.minPoint[0], 3, ImGuiInputTextFlags_CharsDecimal | ImGuiInputTextFlags_ReadOnly);
 
 		ImGui::Checkbox("Debug Draw AABB", &DebugDrawAABB);
 		ImGui::Checkbox("Debug Draw OBB", &DebugDrawOBB);
@@ -125,7 +126,7 @@ bool ComponentMesh::LoadComponent(JSON_Object* conf)
 
 void ComponentMesh::GetTransformedAABB(AABB& TransformedBox) const
 {
-	TransformedBox = MeshDataStruct.BoundBox;
+	TransformedBox = resourceMesh->SimpleMeshDataStruct.BoundBox;
 	ComponentTransform* transform = this->parent->GetTransform();
 	const float4x4 matrix = transform->GetMatrix();
 	TransformedBox.TransformAsAABB(matrix.Transposed());
