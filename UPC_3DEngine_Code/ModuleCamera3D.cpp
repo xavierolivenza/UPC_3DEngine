@@ -258,6 +258,8 @@ void ModuleCamera3D::ImGuiModuleVariables()
 
 void ModuleCamera3D::MousePicking()
 {
+	return;
+
 	//Create Ray
 	int w = 0;
 	int h = 0;

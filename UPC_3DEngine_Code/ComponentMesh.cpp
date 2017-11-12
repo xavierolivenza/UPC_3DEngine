@@ -71,6 +71,8 @@ void ComponentMesh::DrawComponentImGui()
 	{
 		ImGui::Checkbox("Mesh Component Active", &Active);
 
+		if (resourceMesh == nullptr) return;
+
 		char data[100] = "";
 		uint data_size = sizeof data;
 
@@ -126,8 +128,12 @@ bool ComponentMesh::LoadComponent(JSON_Object* conf)
 
 void ComponentMesh::GetTransformedAABB(AABB& TransformedBox) const
 {
-	TransformedBox = resourceMesh->SimpleMeshDataStruct.BoundBox;
-	ComponentTransform* transform = this->parent->GetTransform();
-	const float4x4 matrix = transform->GetMatrix();
-	TransformedBox.TransformAsAABB(matrix.Transposed());
+	TransformedBox.SetNegativeInfinity();
+	if (resourceMesh != nullptr)
+	{
+		TransformedBox = resourceMesh->SimpleMeshDataStruct.BoundBox;
+		ComponentTransform* transform = this->parent->GetTransform();
+		const float4x4 matrix = transform->GetMatrix();
+		TransformedBox.TransformAsAABB(matrix.Transposed());
+	}
 }
