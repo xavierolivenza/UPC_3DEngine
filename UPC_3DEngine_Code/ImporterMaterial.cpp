@@ -1,6 +1,7 @@
 #include <fstream>
 
 #include "ImporterMaterial.h"
+#include "ResourceTexture.h"
 
 #include "DevIL\include\il.h"
 #include "DevIL\include\ilu.h"

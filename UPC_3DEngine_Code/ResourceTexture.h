@@ -5,7 +5,6 @@
 
 #include "ComponentMaterial.h" //will be deleted and MeshData defined here
 
-/*
 struct MaterialData
 {
 	uint id_texture = 0; // id in VRAM
@@ -26,7 +25,6 @@ struct MaterialData
 			glDeleteTextures(1, &id_texture);
 	}
 };
-*/
 
 class ResourceTexture : public Resource
 {

@@ -4,6 +4,7 @@
 
 #include "ComponentMesh.h"
 #include "ComponentTransform.h"
+#include "ResourceMesh.h"
 
 #include "Assimp/include/Logger.hpp"
 #include "Assimp/include/LogStream.hpp"

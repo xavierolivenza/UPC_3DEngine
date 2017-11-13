@@ -4,7 +4,7 @@
 #include "Glew\include\glew.h"
 
 #include "ComponentMesh.h" //will be deleted and MeshData defined here
-/*
+
 struct MeshData
 {
 	Sphere BoundSphere;
@@ -70,7 +70,7 @@ struct MeshData
 		}
 	}
 };
-*/
+
 class ResourceMesh : public Resource
 {
 public:
