@@ -127,7 +127,6 @@
     <ClInclude Include="Fluid_Studios_Memory_Manager\mmgr.h" />
     <ClInclude Include="Fluid_Studios_Memory_Manager\nommgr.h" />
     <ClInclude Include="GameObject.h" />
-    <ClInclude Include="glmath.h" />
     <ClInclude Include="Globals.h" />
     <ClInclude Include="imgui-1.51\imconfig.h" />
     <ClInclude Include="imgui-1.51\imgui.h" />
@@ -229,7 +228,6 @@
     <ClCompile Include="DeviceId\DeviceId.cpp" />
     <ClCompile Include="Fluid_Studios_Memory_Manager\mmgr.cpp" />
     <ClCompile Include="GameObject.cpp" />
-    <ClCompile Include="glmath.cpp" />
     <ClCompile Include="imgui-1.51\imgui.cpp" />
     <ClCompile Include="imgui-1.51\ImGuizmo.cpp" />
     <ClCompile Include="imgui-1.51\imgui_demo.cpp" />
