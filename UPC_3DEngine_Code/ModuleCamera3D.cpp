@@ -2,7 +2,6 @@
 
 #include "Globals.h"
 #include "Application.h"
-#include "PhysBody3D.h"
 #include "ModuleCamera3D.h"
 #include "ComponentCamera.h"
 #include "ComponentMesh.h"
@@ -132,7 +131,7 @@ update_status ModuleCamera3D::Update(float dt)
 	CameraComp->SetFrame(Position, -Z, Y);
 
 	//Mouse Picking
-	if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_DOWN)
+	if ((App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_DOWN) && (!ImGuizmo::IsUsing()))
 		MousePicking();
 
 	/**/

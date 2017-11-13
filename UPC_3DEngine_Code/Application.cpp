@@ -13,7 +13,6 @@ Application::Application()
 	renderer3D = new ModuleRenderer3D(this);
 	camera = new ModuleCamera3D(this);
 	physics = new ModulePhysics3D(this);
-	player = new ModulePlayer(this);
 	engineUI = new ModuleEngineUI(this);
 	loadmesh = new ModuleLoadMesh(this);
 	scene = new ModuleScene(this);
@@ -37,7 +36,6 @@ Application::Application()
 	// Scenes
 	AddModule(scene);
 	AddModule(scene_intro);
-	AddModule(player);
 	
 	//camera need to be below player
 	AddModule(camera);

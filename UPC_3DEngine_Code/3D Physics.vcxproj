@@ -201,7 +201,6 @@
     <ClInclude Include="ModuleSceneImporter.h" />
     <ClInclude Include="ModuleLoadMesh.h" />
     <ClInclude Include="ModulePhysics3D.h" />
-    <ClInclude Include="ModulePlayer.h" />
     <ClInclude Include="ModuleRenderer3D.h" />
     <ClInclude Include="Module.h" />
     <ClInclude Include="ModuleAudio.h" />
@@ -214,7 +213,6 @@
     <ClInclude Include="p2Point.h" />
     <ClInclude Include="ModuleParson.h" />
     <ClInclude Include="parson\parson.h" />
-    <ClInclude Include="PhysBody3D.h" />
     <ClInclude Include="Primitive.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="ResourceMesh.h" />
@@ -280,7 +278,6 @@
     <ClCompile Include="ModuleInput.cpp" />
     <ClCompile Include="ModuleLoadMesh.cpp" />
     <ClCompile Include="ModulePhysics3D.cpp" />
-    <ClCompile Include="ModulePlayer.cpp" />
     <ClCompile Include="ModuleRenderer3D.cpp" />
     <ClCompile Include="ModuleScene.cpp" />
     <ClCompile Include="ModuleSceneIntro.cpp" />
@@ -289,7 +286,6 @@
     <ClCompile Include="p2Log.cpp" />
     <ClCompile Include="ModuleParson.cpp" />
     <ClCompile Include="parson\parson.c" />
-    <ClCompile Include="PhysBody3D.cpp" />
     <ClCompile Include="Primitive.cpp" />
     <ClCompile Include="Resource.cpp" />
     <ClCompile Include="ResourceMesh.cpp" />
