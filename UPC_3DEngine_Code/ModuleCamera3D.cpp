@@ -7,6 +7,7 @@
 #include "ComponentCamera.h"
 #include "ComponentMesh.h"
 #include "ComponentTransform.h"
+#include "ResourceMesh.h"
 
 ModuleCamera3D::ModuleCamera3D(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
@@ -258,8 +259,6 @@ void ModuleCamera3D::ImGuiModuleVariables()
 
 void ModuleCamera3D::MousePicking()
 {
-	return;
-
 	//Create Ray
 	int w = 0;
 	int h = 0;
@@ -308,7 +307,7 @@ void ModuleCamera3D::MousePicking()
 		RayLocal.Transform(TransMatrix.Inverted().Transposed());
 
 		//Iterate mesh triangles to chechk if hit is real (using order by distance)
-		MeshData& Mesh = ((ComponentMesh*)(((*item).second)->FindComponentFirst(ComponentType::Mesh_Component)))->MeshDataStruct;
+		MeshData& Mesh = ((ComponentMesh*)(((*item).second)->FindComponentFirst(ComponentType::Mesh_Component)))->resourceMesh->SimpleMeshDataStruct;
 
 		//Each 3 indices we have a triangle
 		for (uint i = 0; i < Mesh.num_indices;)

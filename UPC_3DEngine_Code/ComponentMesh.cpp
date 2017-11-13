@@ -1,5 +1,6 @@
 #include "ComponentMesh.h"
 #include "ComponentTransform.h"
+#include "ComponentMaterial.h"
 #include "ResourceMesh.h"
 
 ComponentMesh::ComponentMesh(GameObject* parent, bool Active) : Component(parent, Active, 1, ComponentType::Mesh_Component)
@@ -27,10 +28,10 @@ bool ComponentMesh::Update(float dt)
 	if (parent->DrawMesh)
 	{
 		const Component* MeshComponent = parent->FindComponentFirst(ComponentType::Mesh_Component);
-		if (MeshComponent != nullptr)
+		if ((MeshComponent != nullptr) && (((ComponentMesh*)MeshComponent)->resourceMesh != nullptr))
 		{
 			const Component* MaterialComponent = parent->FindComponentFirst(ComponentType::Material_Component);
-			if (!MaterialComponent->IsActive())
+			if ((MaterialComponent != nullptr) && (((ComponentMaterial*)MaterialComponent)->resourceTexture != nullptr) && (!MaterialComponent->IsActive()))
 				MaterialComponent = nullptr;
 			App->renderer3D->DrawComponentMeshMaterial(parent->GetTransform(), (ComponentMesh*)MeshComponent, (ComponentMaterial*)MaterialComponent);
 		}
