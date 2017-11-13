@@ -14,7 +14,6 @@ Application::Application()
 	camera = new ModuleCamera3D(this);
 	physics = new ModulePhysics3D(this);
 	engineUI = new ModuleEngineUI(this);
-	loadmesh = new ModuleLoadMesh(this);
 	scene = new ModuleScene(this);
 	importer = new ModuleSceneImporter(this);
 	resources = new ModuleResources(this);
@@ -30,7 +29,6 @@ Application::Application()
 	AddModule(physics);
 	
 	AddModule(importer);
-	AddModule(loadmesh);
 	AddModule(resources);
 
 	// Scenes

@@ -324,9 +324,6 @@
     <ClInclude Include="ModuleParson.h">
       <Filter>Sources\Modules</Filter>
     </ClInclude>
-    <ClInclude Include="ModuleLoadMesh.h">
-      <Filter>Sources\Modules</Filter>
-    </ClInclude>
     <ClInclude Include="Assimp\include\cfileio.h">
       <Filter>Sources\Tools\Assimp</Filter>
     </ClInclude>
@@ -663,9 +660,6 @@
       <Filter>Sources\Tools\parson</Filter>
     </ClCompile>
     <ClCompile Include="ModuleParson.cpp">
-      <Filter>Sources\Modules</Filter>
-    </ClCompile>
-    <ClCompile Include="ModuleLoadMesh.cpp">
       <Filter>Sources\Modules</Filter>
     </ClCompile>
     <ClCompile Include="ModuleScene.cpp">

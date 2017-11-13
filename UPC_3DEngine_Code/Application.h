@@ -14,11 +14,12 @@
 #include "ModulePhysics3D.h"
 #include "ModuleEngineUI.h"
 #include "ModuleParson.h"
-#include "ModuleLoadMesh.h"
 #include "ModuleScene.h"
 #include "ModuleSceneImporter.h"
 #include "ModuleResources.h"
 #include "p2Log.h"
+
+#include "Timer.h"
 
 #include "Glew\include\glew.h"
 #include "imgui-1.51\imgui.h"
@@ -102,7 +103,6 @@ public:
 	ModuleCamera3D* camera;
 	ModulePhysics3D* physics;
 	ModuleEngineUI* engineUI;
-	ModuleLoadMesh* loadmesh;
 	ModuleScene* scene;
 	ModuleSceneImporter* importer;
 	ModuleResources* resources;

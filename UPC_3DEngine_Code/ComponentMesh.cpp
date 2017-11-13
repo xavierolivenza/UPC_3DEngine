@@ -37,15 +37,18 @@ bool ComponentMesh::Update(float dt)
 		}
 	}
 
-	if (DebugDrawAABB)
+	if (resourceMesh != nullptr)
 	{
-		//Recalculate AABB of this mesh
-		AABB LocalCopy;
-		GetTransformedAABB(LocalCopy);
-		App->renderer3D->DrawDebugBox(LocalCopy.CornerPoint(0), LocalCopy.CornerPoint(1), LocalCopy.CornerPoint(2), LocalCopy.CornerPoint(3), LocalCopy.CornerPoint(4), LocalCopy.CornerPoint(5), LocalCopy.CornerPoint(6), LocalCopy.CornerPoint(7), 1.0f, 1.0f, 0.0f);
+		if (DebugDrawAABB)
+		{
+			//Recalculate AABB of this mesh
+			AABB LocalCopy;
+			GetTransformedAABB(LocalCopy);
+			App->renderer3D->DrawDebugBox(LocalCopy.CornerPoint(0), LocalCopy.CornerPoint(1), LocalCopy.CornerPoint(2), LocalCopy.CornerPoint(3), LocalCopy.CornerPoint(4), LocalCopy.CornerPoint(5), LocalCopy.CornerPoint(6), LocalCopy.CornerPoint(7), 1.0f, 1.0f, 0.0f);
+		}
+		if (DebugDrawOBB)
+			App->renderer3D->DrawDebugBox(resourceMesh->SimpleMeshDataStruct.BoundOBox.CornerPoint(0), resourceMesh->SimpleMeshDataStruct.BoundOBox.CornerPoint(1), resourceMesh->SimpleMeshDataStruct.BoundOBox.CornerPoint(2), resourceMesh->SimpleMeshDataStruct.BoundOBox.CornerPoint(3), resourceMesh->SimpleMeshDataStruct.BoundOBox.CornerPoint(4), resourceMesh->SimpleMeshDataStruct.BoundOBox.CornerPoint(5), resourceMesh->SimpleMeshDataStruct.BoundOBox.CornerPoint(6), resourceMesh->SimpleMeshDataStruct.BoundOBox.CornerPoint(7), 0.0f, 1.0f, 0.0f);
 	}
-	if (DebugDrawOBB)
-		App->renderer3D->DrawDebugBox(MeshDataStruct.BoundOBox.CornerPoint(0), MeshDataStruct.BoundOBox.CornerPoint(1), MeshDataStruct.BoundOBox.CornerPoint(2), MeshDataStruct.BoundOBox.CornerPoint(3), MeshDataStruct.BoundOBox.CornerPoint(4), MeshDataStruct.BoundOBox.CornerPoint(5), MeshDataStruct.BoundOBox.CornerPoint(6), MeshDataStruct.BoundOBox.CornerPoint(7), 0.0f, 1.0f, 0.0f);
 
 	return true;
 }
@@ -62,7 +65,6 @@ bool ComponentMesh::Disable()
 
 bool ComponentMesh::CleanUp()
 {
-	MeshDataStruct.~MeshData();
 	return true;
 }
 
@@ -113,7 +115,10 @@ bool ComponentMesh::SaveComponent(JSON_Object* conf) const
 	App->parsonjson->SetUInt(conf, "UUID_Parent", parent->GetUUID());
 	App->parsonjson->SetBool(conf, "Active", Active);
 	App->parsonjson->SetUInt(conf, "Type", type);
-	App->parsonjson->SetString(conf, "Mesh_File_Name", MeshDataStruct.Mesh_File.c_str());
+	if (resourceMesh != nullptr)
+		App->parsonjson->SetString(conf, "Mesh_File_Name", resourceMesh->SimpleMeshDataStruct.Mesh_File.c_str());
+	else
+		App->parsonjson->SetString(conf, "Mesh_File_Name", resourceMesh->SimpleMeshDataStruct.Mesh_File.c_str());
 	return true;
 }
 
@@ -121,9 +126,12 @@ bool ComponentMesh::LoadComponent(JSON_Object* conf)
 {
 	UUID = App->parsonjson->GetUInt(conf, "UUID", 0);
 	Active = App->parsonjson->GetBool(conf, "Active", true);
-	const char* MeshFile = App->parsonjson->GetString(conf, "Mesh_File_Name", "");
-	std::string File_path = *App->importer->Get_Library_mesh_path() + "\\" + MeshFile;
-	App->importer->LoadSimpleMesh(&File_path, MeshDataStruct);
+	if (resourceMesh != nullptr)
+	{
+		const char* MeshFile = App->parsonjson->GetString(conf, "Mesh_File_Name", "");
+		std::string File_path = *App->importer->Get_Library_mesh_path() + "\\" + MeshFile;
+		App->importer->LoadSimpleMesh(&File_path, resourceMesh->SimpleMeshDataStruct);
+	}
 	return true;
 }
 

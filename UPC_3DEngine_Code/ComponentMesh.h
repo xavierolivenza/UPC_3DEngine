@@ -94,7 +94,6 @@ public:
 
 public:
 	ResourceMesh* resourceMesh = nullptr;
-	MeshData MeshDataStruct;
 
 private:
 	bool DebugDrawAABB = false;

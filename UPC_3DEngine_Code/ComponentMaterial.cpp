@@ -36,7 +36,6 @@ bool ComponentMaterial::Disable()
 
 bool ComponentMaterial::CleanUp()
 {
-	MaterialDataStruct.~MaterialDataStruct();
 	return true;
 }
 
@@ -82,9 +81,14 @@ bool ComponentMaterial::SaveComponent(JSON_Object* conf) const
 	App->parsonjson->SetUInt(conf, "UUID_Parent", parent->GetUUID());
 	App->parsonjson->SetBool(conf, "Active", Active);
 	App->parsonjson->SetUInt(conf, "Type", type);
-	size_t bar_pos = MaterialDataStruct.texture_name.rfind("\\") + 1;
-	std::string tex_name = MaterialDataStruct.texture_name.substr(bar_pos, MaterialDataStruct.texture_name.length());
-	App->parsonjson->SetString(conf, "Texture_Path", tex_name.c_str());
+	if (resourceTexture != nullptr)
+	{
+		size_t bar_pos = resourceTexture->TextureDataStruct.texture_name.rfind("\\") + 1;
+		std::string tex_name = resourceTexture->TextureDataStruct.texture_name.substr(bar_pos, resourceTexture->TextureDataStruct.texture_name.length());
+		App->parsonjson->SetString(conf, "Texture_Path", tex_name.c_str());
+	}
+	else
+		App->parsonjson->SetString(conf, "Texture_Path", "");
 	return true;
 }
 
@@ -92,8 +96,11 @@ bool ComponentMaterial::LoadComponent(JSON_Object* conf)
 {
 	UUID = App->parsonjson->GetUInt(conf, "UUID", 0);
 	Active = App->parsonjson->GetBool(conf, "Active", true);
-	const char* texture_name = App->parsonjson->GetString(conf, "Texture_Path", "");
-	std::string tex_path = *App->importer->Get_Library_material_path() + "\\" + texture_name;
-	App->importer->LoadTexture(&tex_path, MaterialDataStruct);
+	if (resourceTexture != nullptr)
+	{
+		const char* texture_name = App->parsonjson->GetString(conf, "Texture_Path", "");
+		std::string tex_path = *App->importer->Get_Library_material_path() + "\\" + texture_name;
+		App->importer->LoadTexture(&tex_path, resourceTexture->TextureDataStruct);
+	}
 	return true;
 }

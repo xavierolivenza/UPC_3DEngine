@@ -45,5 +45,4 @@ public:
 
 public:
 	ResourceTexture* resourceTexture = nullptr;
-	MaterialData MaterialDataStruct;
 };
