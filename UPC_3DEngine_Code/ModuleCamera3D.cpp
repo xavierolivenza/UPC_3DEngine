@@ -306,8 +306,12 @@ void ModuleCamera3D::MousePicking()
 		float4x4 TransMatrix = ((*item).second)->GetTransform()->GetMatrix();
 		RayLocal.Transform(TransMatrix.Inverted().Transposed());
 
+		ResourceMesh* MeshRes = ((ComponentMesh*)(((*item).second)->FindComponentFirst(ComponentType::Mesh_Component)))->resourceMesh;
+
+		if (MeshRes == nullptr) continue;
+
 		//Iterate mesh triangles to chechk if hit is real (using order by distance)
-		MeshData& Mesh = ((ComponentMesh*)(((*item).second)->FindComponentFirst(ComponentType::Mesh_Component)))->resourceMesh->SimpleMeshDataStruct;
+		MeshData& Mesh = MeshRes->SimpleMeshDataStruct;
 
 		//Each 3 indices we have a triangle
 		for (uint i = 0; i < Mesh.num_indices;)
