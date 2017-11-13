@@ -56,6 +56,7 @@ private:
 private:
 	bool startAsGame = false;
 	GameObject* GameObjectSelected = nullptr;
+	Resource* ResouceSelected = nullptr;
 	std::string Modes3D;
 	bool showMenuBar = true;
 	bool showTestWindow = false;

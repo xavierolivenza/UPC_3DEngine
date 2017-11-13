@@ -889,23 +889,13 @@ void ModuleEngineUI::ImGuiResources()
 	{
 		ImGui::Text(item->second->GetFile().c_str());
 		if (ImGui::IsItemClicked())
-		{
-
-		}
+			ResouceSelected = item._Ptr->_Myval.second;
 	}
 	ImGui::EndChild();
 	ImGui::BeginChild("Resources Options", ImVec2(0, 200), true, ImGuiWindowFlags_HorizontalScrollbar);
-	ImGui::Text("Here will be import settings of clicked\nresource above.");
-	/*
-	for (std::map<uint, Resource*>::const_iterator item = resources->cbegin(); item != resources->cend(); ++item)
-	{
-		ImGui::Text(item->second->GetFile().c_str());
-		if (ImGui::IsItemClicked())
-		{
-
-		}
-	}
-	*/
+	//ImGui::Text("Here will be import settings of clicked\nresource above.");
+	if (ResouceSelected != nullptr)
+		ResouceSelected->DrawResourceOptionsAndData();
 	ImGui::EndChild();
 	
 	ImGui::End();

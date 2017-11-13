@@ -26,6 +26,8 @@ public:
 	
 	bool LoadResource();
 
+	virtual void DrawResourceOptionsAndData();
+
 	virtual void Save(JSON_Object* conf) const;
 	virtual void Load(JSON_Object* conf);
 

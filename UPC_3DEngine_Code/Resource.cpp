@@ -48,6 +48,11 @@ bool Resource::LoadResource()
 	return loaded > 0;
 }
 
+void Resource::DrawResourceOptionsAndData()
+{
+
+}
+
 void Resource::Save(JSON_Object* conf) const
 {
 

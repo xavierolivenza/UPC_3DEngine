@@ -12,6 +12,18 @@ ResourceTexture::~ResourceTexture()
 
 }
 
+void ResourceTexture::DrawResourceOptionsAndData()
+{
+	char title[50] = "";
+	sprintf_s(title, 50, "UUID: %i", uuid);
+	ImGui::Text(title);
+	ImGui::Text(file.c_str());
+	ImGui::Text(exported_file.c_str());
+	ImGui::Text(file_date.c_str());
+	sprintf_s(title, 50, "Type: %i", type);
+	ImGui::Text(title);
+}
+
 void ResourceTexture::Save(JSON_Object* conf) const
 {
 	App->parsonjson->SetUInt(conf, "uuid", uuid);
