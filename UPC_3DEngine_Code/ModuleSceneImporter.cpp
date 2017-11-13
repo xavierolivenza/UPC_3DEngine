@@ -609,6 +609,7 @@ bool ModuleSceneImporter::LoadFBXComponents(const std::string* file_to_load)
 	std::string file_string;
 	for (uint i = 0; i < amount_of_nodes; i++)
 	{
+		//Create GameObject
 		GameObject* NewMeshGameObject = new GameObject("NewMesh", true, true);
 
 		float3 position = float3::zero;
@@ -651,14 +652,21 @@ bool ModuleSceneImporter::LoadFBXComponents(const std::string* file_to_load)
 		NewMeshGameObject->GetTransform()->SetScale(scale);
 
 		cursor += current_loading_size;
-		ComponentMesh* NewMesh = NewMeshGameObject->CreateMeshComponent(true);
+
 		std::string name = cursor;
 		current_loading_size = name.size() + 1;
 		name = Library_mesh_path + "\\" + cursor;
-		MeshImporter->Load(*NewMeshGameObject->GetTransform(), NewMesh->MeshDataStruct, &name, false);
-		NewMeshGameObject->name = NewMesh->MeshDataStruct.Mesh_name;
+		//Load resource
+		uint uuid = App->resources->LoadResource(name.c_str());
+		//Vinculate resource with component
+		ComponentMesh* NewMesh = NewMeshGameObject->CreateMeshComponent(true);
+		NewMesh->SetResource(uuid);
+		NewMeshGameObject->name = NewMesh->resourceMesh->SimpleMeshDataStruct.Mesh_name;
+		//Load resource
+		uuid = App->resources->LoadResource((Library_material_path + "\\" + NewMesh->resourceMesh->SimpleMeshDataStruct.Asociated_texture_name).c_str());
+		//Vinculate resource with component
 		ComponentMaterial* NewMaterial = NewMeshGameObject->CreateMaterialComponent(true);
-		MaterialImporter->Load(NewMaterial->MaterialDataStruct, &(Library_material_path + "\\" + NewMesh->MeshDataStruct.Asociated_texture_name));
+		NewMaterial->SetResource(uuid);
 		NewGameObject->AddChild(NewMeshGameObject);
 	}
 	App->scene->AddChildToRoot(NewGameObject);
