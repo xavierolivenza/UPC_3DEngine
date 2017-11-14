@@ -41,22 +41,12 @@ public:
 	virtual ~Octree();
 
 	void Boundaries(AABB limits);
-	void Clear();
+	void Clear(bool fullclear = true);
 	void Remove(GameObject* obj);
 	void Insert(GameObject* obj);
 
 	void DebugDraw();
 
-	template<typename TYPE>
-	void CollectIntersections(std::vector<GameObject*>& objects, const TYPE& primitive) const;
-
 private:
 	OctreeNode* root_node = nullptr;
 };
-
-template<typename TYPE>
-inline void Octree::CollectIntersections(std::vector<GameObject*>& objects, const TYPE& primitive) const
-{
-	if (root_node != nullptr)
-		root_node->CollectIntersections(objects, primitive);
-}

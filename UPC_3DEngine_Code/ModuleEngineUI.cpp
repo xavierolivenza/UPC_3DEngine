@@ -866,6 +866,7 @@ void ModuleEngineUI::ImGuiCulling()
 		App->scene->scene_octree.Boundaries(AdaptativeAABB);
 		*/
 		//Insert AABBs to octree
+		App->scene->scene_octree.Clear(false);
 		for (std::vector<GameObject*>::const_iterator item = vec->cbegin(); item != vec->cend(); ++item)
 			if ((*item)->IsStatic())
 				App->scene->scene_octree.Insert(*item);

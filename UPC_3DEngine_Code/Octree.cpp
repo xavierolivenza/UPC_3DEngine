@@ -17,7 +17,11 @@ OctreeNode::~OctreeNode()
 {
 	for (uint i = 0; i < 8; i++)
 		if (childs[i] != nullptr)
+		{
+			childs[i]->objects.clear();
 			RELEASE(childs[i]);
+		}
+		
 }
 
 bool OctreeNode::isLeaf() const
@@ -30,8 +34,7 @@ bool OctreeNode::isLeaf() const
 
 void OctreeNode::Insert(ComponentMesh* mesh)
 {
-	if (isLeaf() && (objects.size() < Octree_MAX_ITEMS ||
-		(box.HalfSize().LengthSq() <= Octree_MIN_SIZE * Octree_MIN_SIZE)))
+	if (isLeaf() && (objects.size() <= Octree_MAX_ITEMS || (box.HalfSize().LengthSq() <= Octree_MIN_SIZE * Octree_MIN_SIZE)))
 	{
 		AABB otherBox;
 		mesh->GetTransformedAABB(otherBox);
@@ -64,15 +67,15 @@ void OctreeNode::Remove(GameObject* obj)
 
 void OctreeNode::DebugDraw()
 {
-	App->renderer3D->DrawDebugBox(box.CornerPoint(0), box.CornerPoint(1), box.CornerPoint(2), box.CornerPoint(3), box.CornerPoint(4), box.CornerPoint(5), box.CornerPoint(6), box.CornerPoint(7));
+	//App->renderer3D->DrawDebugBox(box.CornerPoint(0), box.CornerPoint(1), box.CornerPoint(2), box.CornerPoint(3), box.CornerPoint(4), box.CornerPoint(5), box.CornerPoint(6), box.CornerPoint(7));
 	
-	/*
+	
 	for (uint i = 0; i < 12; i++)
 	{
 		glVertex3f(box.Edge(i).a.x, box.Edge(i).a.y, box.Edge(i).a.z);
 		glVertex3f(box.Edge(i).b.x, box.Edge(i).b.y, box.Edge(i).b.z);
 	}
-	*/
+	
 
 	if (childs[0] != nullptr)
 		for (uint i = 0; i < 8; i++)
@@ -102,7 +105,7 @@ void OctreeNode::CreateChilds()
 	childs[1] = new OctreeNode(box_new);
 
 	// -X / +Y / -Z
-	center_new.Set(center.x + size_new.x * 0.5f, center.y + size_new.y * 0.5f, center.z + size_new.z * 0.5f);
+	center_new.Set(center.x - size_new.x * 0.5f, center.y + size_new.y * 0.5f, center.z - size_new.z * 0.5f);
 	box_new.SetFromCenterAndSize(center_new, size_new);
 	childs[2] = new OctreeNode(box_new);
 
@@ -148,9 +151,25 @@ void Octree::Boundaries(AABB limits)
 	root_node = new OctreeNode(limits);
 }
 
-void Octree::Clear()
+void Octree::Clear(bool fullclear)
 {
-	RELEASE(root_node);
+	if (fullclear)
+	{
+		if (root_node != nullptr)
+			root_node->objects.clear();
+		RELEASE(root_node);
+	}
+	else
+	{
+		if ((root_node != nullptr) && (root_node->childs[0] != nullptr))
+		{
+			for (uint i = 0; i < 8; i++)
+				RELEASE(root_node->childs[i]);
+		}
+		if (root_node != nullptr)
+			root_node->objects.clear();
+	}
+	
 }
 
 void Octree::Remove(GameObject* obj)
