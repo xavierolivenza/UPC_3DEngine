@@ -47,6 +47,23 @@ void OctreeNode::Insert(ComponentMesh* mesh)
 		if (isLeaf())
 		{
 			CreateChilds();
+			for (std::list<GameObject*>::iterator item = objects.begin(); item != objects.cend(); ++item)
+			{
+				ComponentMesh* mesh2 = (ComponentMesh*) (*item)->FindComponentFirst(ComponentType::Mesh_Component);
+				AABB meshBox;
+				mesh2->GetTransformedAABB(meshBox);
+
+				if (mesh2 != nullptr)
+				{
+					for (uint i = 0; i < 8; i++)
+					{
+						if (childs[i]->box.Contains(meshBox))
+							childs[i]->objects.push_back(mesh2->parent);
+					}
+				}
+					
+			}
+			objects.clear();
 			for (uint i = 0; i < 8; i++)
 				childs[i]->Insert(mesh);
 		}
