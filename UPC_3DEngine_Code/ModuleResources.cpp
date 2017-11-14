@@ -155,8 +155,24 @@ bool ModuleResources::ReimportResource(Resource& res)
 	bool ret = false;
 	switch (res.type)
 	{
-	case Resource::mesh: ret = App->importer->ImportFBX(&res.file, res.exported_file); break;
-	case Resource::texture: ret = App->importer->MaterialImporter->Save(&res.file, res.exported_file); break;
+	case Resource::mesh:
+	{
+		ret = App->importer->ImportFBX(&res.file, res.exported_file);
+		if (ret)
+		{
+
+		}
+		break;
+	}
+	case Resource::texture:
+	{
+		ret = App->importer->MaterialImporter->Save(&res.file, res.exported_file);
+		if (ret)
+		{
+
+		}
+		break;
+	}
 	}
 	return ret;
 }
