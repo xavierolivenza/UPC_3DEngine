@@ -63,9 +63,9 @@ void OctreeNode::Insert(ComponentMesh* mesh)
 				}
 			}
 			objects.clear();
-			for (uint i = 0; i < 8; i++)
-				childs[i]->Insert(mesh);
 		}
+		for (uint i = 0; i < 8; i++)
+			childs[i]->Insert(mesh);
 	}
 }
 
@@ -100,7 +100,7 @@ void OctreeNode::DebugDraw()
 
 void OctreeNode::CreateChilds()
 {
-	LOGP("subdivide");
+	//LOGP("subdivide");
 	// We divide the node into 8 equal parts
 	float3 size_new = box.HalfSize();
 

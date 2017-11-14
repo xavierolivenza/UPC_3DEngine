@@ -118,7 +118,7 @@ bool ComponentMesh::SaveComponent(JSON_Object* conf) const
 	if (resourceMesh != nullptr)
 		App->parsonjson->SetString(conf, "Mesh_File_Name", resourceMesh->SimpleMeshDataStruct.Mesh_File.c_str());
 	else
-		App->parsonjson->SetString(conf, "Mesh_File_Name", resourceMesh->SimpleMeshDataStruct.Mesh_File.c_str());
+		App->parsonjson->SetString(conf, "Mesh_File_Name", "");
 	return true;
 }
 
