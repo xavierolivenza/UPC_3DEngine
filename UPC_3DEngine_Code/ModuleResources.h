@@ -27,7 +27,7 @@ public:
 	uint Find(const char* file_in_assets) const;
 	bool ImportFile(const char* new_file_in_assets);
 	bool ReimportResource(Resource& res);
-	uint LoadResource(const char* file);
+	uint LoadResource(const char* file, const char* originalFile = nullptr);
 	const Resource* Get(uint uid) const;
 	Resource* Get(uint uid);
 	Resource* CreateNewResource(Resource::Type type, bool AddToMap = true);

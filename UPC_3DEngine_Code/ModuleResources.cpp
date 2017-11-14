@@ -163,7 +163,7 @@ bool ModuleResources::ReimportResource(Resource& res)
 
 //Called from loading process of a .GameObjectMeshAlvOli or .dds, so files from library
 //.GameObjectMeshAlvOli loading process opens .GameObjectMeshAlvOli and sends here to load the .MeshAlvOli files
-uint ModuleResources::LoadResource(const char* file)
+uint ModuleResources::LoadResource(const char* file, const char* originalFile)
 {
 	uint ret = 0;
 	Resource* res = nullptr;
@@ -211,7 +211,8 @@ uint ModuleResources::LoadResource(const char* file)
 
 		//If mesh, iterate all simple meshes of GameObjectMeshAlvOli, create one resource for each
 		res = CreateNewResource(type);
-		res->file = file;
+		if (originalFile != nullptr)
+			res->file = originalFile;
 		ret = res->GetUID();
 
 		for (std::experimental::filesystem::recursive_directory_iterator::value_type file_in_path : std::experimental::filesystem::recursive_directory_iterator(App->importer->Get_Assets_path()->c_str()))

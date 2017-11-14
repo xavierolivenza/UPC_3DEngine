@@ -38,7 +38,7 @@ const char* Resource::GetTypeStr() const
 
 const std::string& Resource::GetFile() const
 {
-	return file;
+	return exported_file;
 }
 
 bool Resource::LoadResource()

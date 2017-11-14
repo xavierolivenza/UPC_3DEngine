@@ -408,8 +408,12 @@ bool ModuleSceneImporter::ImportFBXComponents(const aiScene* scene, const std::s
 	//Now we have all nodes + what mesh they use + their transform, we can serialize to file
 
 	//Calc file size
-	//Num nodes
+	//original file size
 	uint file_size = sizeof(uint);
+	//original path
+	file_size += sizeof(char) * (file_to_import->length() + 1);
+	//Num nodes
+	file_size += sizeof(uint);
 	//size of each (only string)
 	file_size += sizeof(uint) * AssimpNodeList.size();
 	//Size of each + nodes(pos, rot, scale, own format file string)
@@ -425,7 +429,18 @@ bool ModuleSceneImporter::ImportFBXComponents(const aiScene* scene, const std::s
 	char* cursor = data;
 	uint current_allocation_size = 0;
 
+	//original file size
+	current_allocation_size = sizeof(uint);
+	uint originlen = file_to_import->length() + 1;
+	memcpy(cursor, &originlen, current_allocation_size);
+
+	//original path
+	cursor += current_allocation_size;
+	current_allocation_size = file_to_import->length() + 1;
+	memcpy(cursor, file_to_import->c_str(), current_allocation_size);
+
 	//Num nodes
+	cursor += current_allocation_size;
 	current_allocation_size = sizeof(uint);
 	uint numnodes = AssimpNodeList.size();
 	memcpy(cursor, &numnodes, current_allocation_size);
@@ -585,7 +600,18 @@ bool ModuleSceneImporter::LoadFBXComponents(const std::string* file_to_load)
 	char* cursor = data;
 	uint current_loading_size = 0;
 
+	//original file size
+	uint originfileSize = 0;
+	current_loading_size = sizeof(uint);
+	memcpy(&originfileSize, cursor, current_loading_size);
+
+	//original path
+	cursor += current_loading_size;
+	std::string originalPath = cursor;
+	current_loading_size = originalPath.length() + 1;
+
 	//Load amount of nodes
+	cursor += current_loading_size;
 	uint amount_of_nodes = 0;
 	current_loading_size = sizeof(uint);
 	memcpy(&amount_of_nodes, cursor, current_loading_size);
@@ -657,7 +683,7 @@ bool ModuleSceneImporter::LoadFBXComponents(const std::string* file_to_load)
 		current_loading_size = name.size() + 1;
 		name = Library_mesh_path + "\\" + cursor;
 		//Load resource
-		uint uuid = App->resources->LoadResource(name.c_str());
+		uint uuid = App->resources->LoadResource(name.c_str(), originalPath.c_str());
 		//Vinculate resource with component
 		ComponentMesh* NewMesh = NewMeshGameObject->CreateMeshComponent(true);
 		NewMesh->SetResource(uuid);
@@ -665,7 +691,7 @@ bool ModuleSceneImporter::LoadFBXComponents(const std::string* file_to_load)
 		{
 			NewMeshGameObject->name = NewMesh->resourceMesh->SimpleMeshDataStruct.Mesh_name;
 			//Load resource
-			uuid = App->resources->LoadResource((Library_material_path + "\\" + NewMesh->resourceMesh->SimpleMeshDataStruct.Asociated_texture_name).c_str());
+			uuid = App->resources->LoadResource((Library_material_path + "\\" + NewMesh->resourceMesh->SimpleMeshDataStruct.Asociated_texture_name).c_str(), originalPath.c_str());
 			//Vinculate resource with component
 			ComponentMaterial* NewMaterial = NewMeshGameObject->CreateMaterialComponent(true);
 			NewMaterial->SetResource(uuid);
