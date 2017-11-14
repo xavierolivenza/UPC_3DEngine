@@ -34,34 +34,33 @@ bool OctreeNode::isLeaf() const
 
 void OctreeNode::Insert(ComponentMesh* mesh)
 {
-	if (isLeaf() && (objects.size() <= Octree_MAX_ITEMS || (box.HalfSize().LengthSq() <= Octree_MIN_SIZE * Octree_MIN_SIZE)))
-	{
-		AABB otherBox;
-		mesh->GetTransformedAABB(otherBox);
-		if(box.Contains(otherBox))
-			objects.push_back(mesh->parent);
-	}
+	AABB otherBox;
+	mesh->GetTransformedAABB(otherBox);
+	if (!box.Intersects(otherBox))
+		return;
 
+	if (isLeaf() && (objects.size() < Octree_MAX_ITEMS || (box.HalfSize().LengthSq() <= Octree_MIN_SIZE * Octree_MIN_SIZE)))
+		objects.push_back(mesh->parent);
 	else
 	{
 		if (isLeaf())
 		{
-			CreateChilds();
+			if (childs[0] == nullptr)
+				CreateChilds();
 			for (std::list<GameObject*>::iterator item = objects.begin(); item != objects.cend(); ++item)
 			{
 				ComponentMesh* mesh2 = (ComponentMesh*) (*item)->FindComponentFirst(ComponentType::Mesh_Component);
 				AABB meshBox;
-				mesh2->GetTransformedAABB(meshBox);
-
+				
 				if (mesh2 != nullptr)
 				{
+					mesh2->GetTransformedAABB(meshBox);
 					for (uint i = 0; i < 8; i++)
 					{
-						if (childs[i]->box.Contains(meshBox))
-							childs[i]->objects.push_back(mesh2->parent);
+						if (childs[i]->box.Intersects(meshBox))
+							childs[i]->Insert(mesh2);
 					}
 				}
-					
 			}
 			objects.clear();
 			for (uint i = 0; i < 8; i++)
@@ -93,7 +92,6 @@ void OctreeNode::DebugDraw()
 		glVertex3f(box.Edge(i).b.x, box.Edge(i).b.y, box.Edge(i).b.z);
 	}
 	
-
 	if (childs[0] != nullptr)
 		for (uint i = 0; i < 8; i++)
 			childs[i]->DebugDraw();
@@ -102,9 +100,9 @@ void OctreeNode::DebugDraw()
 
 void OctreeNode::CreateChilds()
 {
+	LOGP("subdivide");
 	// We divide the node into 8 equal parts
-	float3 size(box.Size());
-	float3 size_new(size.x * 0.5f, size.y * 0.5f, size.z * 0.5f);
+	float3 size_new = box.HalfSize();
 
 	float3 center(box.CenterPoint());
 	float3 center_new;

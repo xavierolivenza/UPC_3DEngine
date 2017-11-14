@@ -850,8 +850,9 @@ void ModuleEngineUI::ImGuiCulling()
 	if (ImGui::Button("Calc Octree"))
 	{
 		const std::vector<GameObject*>* vec = App->scene->GetAllSceneGameObjects();
+		App->scene->scene_octree.Clear(false);
 		//Clac adaptative size of scene octree
-		/*
+		/**/
 		AABB AdaptativeAABB;
 		AdaptativeAABB.SetNegativeInfinity();
 		for (std::vector<GameObject*>::const_iterator item = vec->cbegin(); item != vec->cend(); ++item)
@@ -860,13 +861,16 @@ void ModuleEngineUI::ImGuiCulling()
 			{
 				ComponentMesh* mesh = (ComponentMesh*)(*item)->FindComponentFirst(ComponentType::Mesh_Component);
 				if (mesh != nullptr)
-					AdaptativeAABB.Enclose(mesh->GetTransformedAABB);
+				{
+					AABB Box;
+					mesh->GetTransformedAABB(Box);
+					AdaptativeAABB.Enclose(Box);
+				}
 			}
 		}
 		App->scene->scene_octree.Boundaries(AdaptativeAABB);
-		*/
+		/**/
 		//Insert AABBs to octree
-		App->scene->scene_octree.Clear(false);
 		for (std::vector<GameObject*>::const_iterator item = vec->cbegin(); item != vec->cend(); ++item)
 			if ((*item)->IsStatic())
 				App->scene->scene_octree.Insert(*item);
