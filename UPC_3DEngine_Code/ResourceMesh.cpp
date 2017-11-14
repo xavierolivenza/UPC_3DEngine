@@ -22,6 +22,8 @@ void ResourceMesh::DrawResourceOptionsAndData()
 	ImGui::Text(file_date.c_str());
 	sprintf_s(title, 50, "Type: %i", type);
 	ImGui::Text(title);
+	sprintf_s(title, 50, "Used: %i", loaded);
+	ImGui::Text(title);
 }
 
 void ResourceMesh::Save(JSON_Object* conf) const

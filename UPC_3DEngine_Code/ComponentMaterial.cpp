@@ -96,11 +96,12 @@ bool ComponentMaterial::LoadComponent(JSON_Object* conf)
 {
 	UUID = App->parsonjson->GetUInt(conf, "UUID", 0);
 	Active = App->parsonjson->GetBool(conf, "Active", true);
-	if (resourceTexture != nullptr)
-	{
-		const char* texture_name = App->parsonjson->GetString(conf, "Texture_Path", "");
-		std::string tex_path = *App->importer->Get_Library_material_path() + "\\" + texture_name;
-		App->importer->LoadTexture(&tex_path, resourceTexture->TextureDataStruct);
-	}
+	const char* texture_name = App->parsonjson->GetString(conf, "Texture_Path", "");
+	std::string tex_path = *App->importer->Get_Library_material_path() + "\\" + texture_name;
+	//Load resource
+	uint uuid = App->resources->LoadResource(tex_path.c_str());
+	//Vinculate resource with component
+	SetResource(uuid);
+	//App->importer->LoadTexture(&tex_path, resourceTexture->TextureDataStruct);
 	return true;
 }
