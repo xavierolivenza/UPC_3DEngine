@@ -495,7 +495,7 @@ bool ModuleSceneImporter::Load(std::string* file_to_load)
 	//Check if this is a mesh file
 	std::string extention = file_to_load->substr(file_to_load->rfind(".") + 1, file_to_load->length());
 
-	if (extention == "fbx")
+	if ((extention == "fbx") || (extention == "FBX") || (extention == "obj") || (extention == "OBJ"))
 	{
 		std::string output_file;
 		if (ImportFBX(file_to_load, output_file))
@@ -504,7 +504,7 @@ bool ModuleSceneImporter::Load(std::string* file_to_load)
 			if (Load(&(Library_mesh_path + "\\" + output_file)))
 				LOGP("Mesh File loaded.");
 		}
-		LOGP("Mesh File found andimport error.");
+		LOGP("Mesh File found and import error.");
 	}
 	else if (extention == Mesh_Extention)
 	{

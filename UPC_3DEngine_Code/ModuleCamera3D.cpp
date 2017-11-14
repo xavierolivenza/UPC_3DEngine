@@ -131,7 +131,8 @@ update_status ModuleCamera3D::Update(float dt)
 	CameraComp->SetFrame(Position, -Z, Y);
 
 	//Mouse Picking
-	if ((App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_DOWN) && (!ImGuizmo::IsUsing()))
+	ImGuiIO& io = ImGui::GetIO();
+	if ((App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_DOWN) && (!ImGuizmo::IsUsing()) && (!io.WantCaptureMouse))
 		MousePicking();
 
 	/**/
