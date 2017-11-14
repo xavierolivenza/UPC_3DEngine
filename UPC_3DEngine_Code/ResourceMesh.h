@@ -26,6 +26,7 @@ struct MeshData
 
 	std::string Mesh_name;
 	std::string Asociated_texture_name;
+	std::string Asociated_texture_OriginalPath;
 	std::string Mesh_File;
 
 	MeshData()

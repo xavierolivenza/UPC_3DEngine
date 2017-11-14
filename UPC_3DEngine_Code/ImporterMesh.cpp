@@ -79,7 +79,7 @@ bool ImporterMesh::Save(const float3& pos, const float3& scale, const Quat& rot,
 	if (DataMesh.colors != nullptr)
 		colors_amount = DataMesh.num_vertices;
 
-	uint amount_of_each[7] =
+	uint amount_of_each[8] =
 	{
 		DataMesh.num_vertices,
 		DataMesh.num_indices,
@@ -87,11 +87,13 @@ bool ImporterMesh::Save(const float3& pos, const float3& scale, const Quat& rot,
 		texture_coords_amount,
 		colors_amount,
 		(uint)DataMesh.Mesh_name.length() + 1,
+		(uint)DataMesh.Asociated_texture_OriginalPath.length() + 1,
 		(uint)tex_name.length() + 1
 	};
 
 	uint file_size = sizeof(amount_of_each);
 	file_size += sizeof(char) * (DataMesh.Mesh_name.length() + 1);// Mesh Name
+	file_size += sizeof(char) * (DataMesh.Asociated_texture_OriginalPath.length() + 1);// Texture original path
 	file_size += sizeof(float) * 3;								// transform:pos
 	file_size += sizeof(float) * 3;								// transform:scale 
 	file_size += sizeof(float) * 4;								// transform:rot	//Quaternion 4 float
@@ -121,6 +123,11 @@ bool ImporterMesh::Save(const float3& pos, const float3& scale, const Quat& rot,
 	cursor += current_allocation_size;
 	current_allocation_size = sizeof(char) * (DataMesh.Mesh_name.length() + 1);
 	memcpy(cursor, DataMesh.Mesh_name.c_str(), current_allocation_size);
+
+	// Texture original path
+	cursor += current_allocation_size;
+	current_allocation_size = sizeof(char) * (DataMesh.Asociated_texture_OriginalPath.length() + 1);
+	memcpy(cursor, DataMesh.Asociated_texture_OriginalPath.c_str(), current_allocation_size);
 
 	//Store transform:pos
 	cursor += current_allocation_size;
@@ -296,7 +303,7 @@ bool ImporterMesh::Load(ComponentTransform& transform, MeshData& DataMesh, const
 	DataMesh.Mesh_File = file_to_load->substr(bar_pos, file_to_load->length());
 
 	//Load amount_of_each
-	uint amount_of_each[7];
+	uint amount_of_each[8];
 	current_loading_size = sizeof(amount_of_each);
 	memcpy(amount_of_each, cursor, current_loading_size);
 	DataMesh.num_vertices = amount_of_each[0];
@@ -305,12 +312,18 @@ bool ImporterMesh::Load(ComponentTransform& transform, MeshData& DataMesh, const
 	uint Texture_Coords_amount = amount_of_each[3];
 	uint Colors_amount = amount_of_each[4];
 	uint Mesh_name_size = amount_of_each[5];
-	uint Tex_name_size = amount_of_each[6];
+	uint TexOrigin = amount_of_each[6];
+	uint Tex_name_size = amount_of_each[7];
 
 	// Mesh Name
 	cursor += current_loading_size;
 	current_loading_size = sizeof(char) * Mesh_name_size;
 	DataMesh.Mesh_name = cursor;
+
+	// TexOrigin
+	cursor += current_loading_size;
+	current_loading_size = sizeof(char) * TexOrigin;
+	DataMesh.Asociated_texture_OriginalPath = cursor;
 
 	if (settransform)
 	{
