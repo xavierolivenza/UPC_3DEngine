@@ -48,6 +48,17 @@ bool Resource::LoadResource()
 	return loaded > 0;
 }
 
+bool Resource::ReLoadResource()
+{
+	if (loaded > 0)
+	{
+		//Clean loaded resource
+		//TODO
+		//Load resource
+		LoadResourceToMemory();
+	}
+}
+
 bool Resource::UnLoad()
 {
 	if (loaded > 0) loaded--;

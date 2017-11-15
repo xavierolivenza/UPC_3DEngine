@@ -25,6 +25,7 @@ public:
 	const std::string& GetFile() const;
 	
 	bool LoadResource();
+	bool ReLoadResource();
 
 	bool UnLoad();
 
