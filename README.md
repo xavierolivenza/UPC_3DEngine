@@ -11,6 +11,10 @@ In assets folder, you can find some models to test the engine.
 
 ## USAGE
 
+FRUSTUM CULLING:
+
+Load any geometry, open culling window with LAlt + 8 or manually. You can draw octree by pressing F1 or in culling window. Press calc octree button. Then choose one camera, set it to main camera and enable frustum culling in the component camera window. If you add new geometry calculate octree again.
+
 WARNING: 
 
 -If you charge a huge model or a model that has errors, the camera is moved to a far distance without sight of the plane and the axis. Charging a new smaller/correct one will make the camera return to a normal position. You can also open camera options and change position and reference variables to force the camera move where you want.
@@ -21,13 +25,15 @@ WARNING:
 
 -Camera controls
 
-	-Right click turns on “WASD” fps-like movement
+	-Right click+“WASD” fps-like movement
 	
 	-Mouse wheel zooms in and out
 	
-	-Alt+Left click to orbit the object
+	-Alt+Left click to orbit the object or right click
 	
 	-F focus the camera around the geometry
+	
+	-Right click + "QE" lift movement. Q up, E down
 	
 -Drag any FBX and drop it into the executable to load it
 
@@ -62,6 +68,15 @@ WARNING:
 -Close: Closes the engine
 
 ## CHANGELOG
+
+v0.7(Second Assignment):
+
+	-Resource manager implemented
+	-Frustum culling working with adaptative octree
+	-Added gizmos to dynamic geometry (WIP)
+	-Added time window with play, stop and pause
+	-Added mouse picking
+	-Save and Load process enhanced
 
 v0.6:
 
