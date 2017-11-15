@@ -17,7 +17,7 @@ public:
 
 public:
 	Resource(Type type);
-	~Resource();
+	virtual ~Resource();
 
 	uint GetUID() const;
 	Type GetType() const;

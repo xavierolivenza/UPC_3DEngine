@@ -75,6 +75,8 @@ update_status ModuleScene::PostUpdate(float dt)
 	}
 	if (SceneToLoad)
 	{
+		//First reset resources
+		App->resources->CleanUp();
 		LoadScene(EditorScene_ToLoad.c_str());
 		EditorScene_ToLoad.clear();
 		SceneToLoad = false;
