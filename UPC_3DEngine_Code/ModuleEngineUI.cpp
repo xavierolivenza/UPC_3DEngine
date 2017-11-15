@@ -710,13 +710,15 @@ void ModuleEngineUI::ImGuiLoadFilePopUp()
 			if ((extention == "fbx") || (extention == "FBX") || (extention == "obj") || (extention == "OBJ") || (extention == *App->importer->Get_Mesh_Extention()) || (extention == *App->importer->Get_FBXComponents_Extention()))
 			{
 				//Load Scene here
+				/*
 				TCHAR directory[MAX_PATH + 1] = "";
 				DWORD len = GetCurrentDirectory(MAX_PATH, directory);
 				size_t bar_pos = LoadFileNameFileBrowser.find("\\") + 1;
 				LoadFileNameFileBrowser = LoadFileNameFileBrowser.substr(bar_pos, LoadFileNameFileBrowser.length());
 				bar_pos = LoadFileNameFileBrowser.find("\\");
 				LoadFileNameFileBrowser = LoadFileNameFileBrowser.substr(bar_pos, LoadFileNameFileBrowser.length());
-				App->importer->Load(&(directory + LoadFileNameFileBrowser));
+				*/
+				App->importer->Load(&LoadFileNameFileBrowser);
 			}
 			//Scene file
 			else if (extention == "json")
