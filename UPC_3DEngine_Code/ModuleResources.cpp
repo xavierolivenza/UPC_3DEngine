@@ -187,20 +187,25 @@ bool ModuleResources::ReimportResource(Resource& res)
 		ret = ImportFile(res.file.c_str());
 		if (ret)
 		{
-			for (std::experimental::filesystem::recursive_directory_iterator::value_type file_in_path : std::experimental::filesystem::recursive_directory_iterator(App->importer->Get_Assets_path()->c_str()))
+			switch (res.GetType())
 			{
-				if (std::experimental::filesystem::is_regular_file(file_in_path.path()))
-				{
-					//LOGP("%S", file_in_path.path().string().c_str());
-					if (res.file == file_in_path.path().string().c_str())
-					{
-						std::experimental::filesystem::file_time_type ftime = std::experimental::filesystem::last_write_time(file_in_path.path());
-						std::time_t cftime = decltype(ftime)::clock::to_time_t(ftime);
-						res.file_date = std::asctime(std::localtime(&cftime));
-					}
-				}
+			case Resource::Type::mesh:
+				//Clean resource if you are reimporting this
+
+				//Call mesh importer with this ppinter as reference
+				App->importer->LoadSimpleMesh(&res.exported_file, ((ResourceMesh*)&res)->SimpleMeshDataStruct);
+				ret = true;
+				break;
+			case Resource::Type::texture:
+				//Clean resource if you are reimporting this
+
+				//Call texture importer with this ppinter as reference
+				((ResourceTexture*)this)->TextureDataStruct.id_texture = App->importer->MaterialImporter->LoadImageFromFile(((ResourceTexture*)&res)->TextureDataStruct, &res.exported_file);
+				ret = true;
+				break;
+			case Resource::Type::null:
+				break;
 			}
-			//res.LoadResource();
 		}
 	}
 	return ret;

@@ -40,7 +40,7 @@ bool ImporterMaterial::CleanUp()
 	return true;
 }
 
-bool ImporterMaterial::Save(const std::string* texture_name, std::string& loaded_file)
+bool ImporterMaterial::Save(const std::string* texture_name, std::string& loaded_file, bool Reimporting)
 {
 	//Check if the file exists
 	size_t bar_pos = texture_name->rfind("\\");
@@ -49,15 +49,18 @@ bool ImporterMaterial::Save(const std::string* texture_name, std::string& loaded
 
 	LOGP("Importing dds process start, to file: %s", tex_path.c_str());
 
-	FILE* file = fopen(tex_path.c_str(), "r");
-	if (file != nullptr)
+	if (!Reimporting)
 	{
-		fclose(file);
-		LOGP("DDS file already exists: %s", tex_path.c_str());
-		loaded_file = tex_path;
-		return true;
+		FILE* file = fopen(tex_path.c_str(), "r");
+		if (file != nullptr)
+		{
+			fclose(file);
+			LOGP("DDS file already exists: %s", tex_path.c_str());
+			loaded_file = tex_path;
+			return true;
+		}
 	}
-
+	
 	//Serialize MaterialData to file
 	uint imgID = 0;
 	ilGenImages(1, &imgID);
