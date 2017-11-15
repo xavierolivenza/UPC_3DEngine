@@ -13,7 +13,7 @@ class OctreeNode
 {
 public:
 	OctreeNode(const AABB& box);
-	virtual ~OctreeNode();
+	~OctreeNode();
 
 	bool isLeaf() const;
 
@@ -39,7 +39,7 @@ class Octree
 {
 public:
 	Octree();
-	virtual ~Octree();
+	~Octree();
 
 	void Boundaries(AABB limits);
 	void Clear(bool fullclear = true);

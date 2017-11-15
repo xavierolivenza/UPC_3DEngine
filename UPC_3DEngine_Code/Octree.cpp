@@ -21,7 +21,6 @@ OctreeNode::~OctreeNode()
 			childs[i]->objects.clear();
 			RELEASE(childs[i]);
 		}
-		
 }
 
 bool OctreeNode::isLeaf() const
@@ -181,6 +180,7 @@ Octree::Octree()
 
 Octree::~Octree()
 {
+	Clear();
 }
 
 void Octree::Boundaries(AABB limits)
