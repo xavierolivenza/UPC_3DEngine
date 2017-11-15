@@ -150,8 +150,13 @@ void OctreeNode::CreateChilds()
 	childs[7] = new OctreeNode(box_new);
 }
 
-// Octree ------------------------------
+template<typename TYPE>
+int OctreeNode::CollectIntersections(std::list<GameObject*>& nodes, const TYPE & frustum) const
+{
+	return 0;
+}
 
+// Octree ------------------------------
 Octree::Octree()
 {
 }
@@ -211,6 +216,12 @@ void Octree::DebugDraw()
 
 	glEnd();
 	glColor3f(1.0f, 1.0f, 1.0f);
+}
+
+template<typename TYPE>
+int Octree::CollectIntersections(std::list<GameObject*>& nodes, const TYPE & frustum) const
+{
+	return 0;
 }
 
 // --------------------------------------

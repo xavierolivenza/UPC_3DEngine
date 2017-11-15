@@ -24,6 +24,8 @@ public:
 
 	void CreateChilds();
 
+	template<typename TYPE>
+	int CollectIntersections(std::list<GameObject*>& nodes, const TYPE& frustum) const;
 
 public:
 	AABB box;
@@ -32,7 +34,6 @@ public:
 	OctreeNode* childs[8];
 
 };
-
 
 class Octree
 {
@@ -46,6 +47,9 @@ public:
 	void Insert(GameObject* obj);
 
 	void DebugDraw();
+
+	template<typename TYPE>
+	int CollectIntersections(std::list<GameObject*>& nodes, const TYPE& frustum) const;
 
 private:
 	OctreeNode* root_node = nullptr;
