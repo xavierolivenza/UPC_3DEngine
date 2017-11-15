@@ -18,18 +18,18 @@ public:
 	bool isLeaf() const;
 
 	void Insert(ComponentMesh* obj);
-	void Remove(GameObject* obj);
+	void Remove(ComponentMesh* obj);
 
 	void DebugDraw();
 
 	void CreateChilds();
 
 	//template<typename TYPE>
-	int CollectIntersections(std::list<GameObject*>& nodes, const Frustum& frustum) const;
+	int CollectIntersections(std::list<ComponentMesh*>& nodes, const Frustum& frustum) const;
 
 public:
 	AABB box;
-	std::list<GameObject*> objects;
+	std::list<ComponentMesh*> objects;
 	OctreeNode* parent = nullptr;
 	OctreeNode* childs[8];
 
@@ -43,13 +43,14 @@ public:
 
 	void Boundaries(AABB limits);
 	void Clear(bool fullclear = true);
-	void Remove(GameObject* obj);
+	void Remove(ComponentMesh* mesh);
 	void Insert(GameObject* obj);
+	void Insert(ComponentMesh* mesh);
 
 	void DebugDraw();
 
 	//template<typename TYPE>
-	int CollectIntersections(std::list<GameObject*>& nodes, const Frustum& frustum) const;
+	int CollectIntersections(std::list<ComponentMesh*>& nodes, const Frustum& frustum) const;
 
 private:
 	OctreeNode* root_node = nullptr;

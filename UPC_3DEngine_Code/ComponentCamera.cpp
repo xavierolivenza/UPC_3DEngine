@@ -53,11 +53,28 @@ bool ComponentCamera::Update(float dt)
 	{
 		//Get vector of candidates from octree
 		//Set DrawMesh to true
-		std::list<GameObject*> nodes;
+		std::list<ComponentMesh*> nodes;
 		App->scene->scene_octree.CollectIntersections(nodes, frustum);
-		for (std::list<GameObject*>::const_iterator item = nodes.begin(); item != nodes.cend(); ++item)
-			(*item)->DrawMesh = true;
+		for (std::list<ComponentMesh*>::iterator item = nodes.begin(); item != nodes.cend(); ++item)
+			(*item)->parent->DrawMesh = true;
 
+		const std::vector<GameObject*>* SceneGameObjects;
+		SceneGameObjects = App->scene->GetAllSceneGameObjects();
+		for (std::vector<GameObject*>::const_iterator item = SceneGameObjects->begin(); item != SceneGameObjects->cend(); ++item)
+		{
+			if (!(*item)->IsStatic())
+			{
+				ComponentMesh* mesh = (ComponentMesh*)(*item)->FindComponentFirst(ComponentType::Mesh_Component);
+				if (mesh != nullptr)
+				{
+					AABB Box;
+					mesh->GetTransformedAABB(Box);
+
+					if (frustum.Contains(Box))
+						(*item)->DrawMesh = true;
+				}
+			}
+		}
 		//Test code, brute force
 		/*
 		const std::vector<GameObject*>* SceneGameObjects;

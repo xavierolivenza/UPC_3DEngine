@@ -71,6 +71,7 @@ update_status ModuleScene::PostUpdate(float dt)
 	if (CleanScene)
 	{
 		CleanUpGameObjectTree(root, false);
+		scene_octree.Clear(false);
 		CleanScene = false;
 	}
 	if (SceneToLoad)

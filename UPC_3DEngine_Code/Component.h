@@ -13,6 +13,7 @@ enum ComponentType
 
 class Component
 {
+	friend ComponentCamera;
 public:
 	Component(GameObject* parent, bool Active, uint replica_limit, ComponentType type);
 	~Component();

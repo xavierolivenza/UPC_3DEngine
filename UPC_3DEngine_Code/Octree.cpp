@@ -40,26 +40,21 @@ void OctreeNode::Insert(ComponentMesh* mesh)
 		return;
 
 	if (isLeaf() && (objects.size() < Octree_MAX_ITEMS || (box.HalfSize().LengthSq() <= Octree_MIN_SIZE * Octree_MIN_SIZE)))
-		objects.push_back(mesh->parent);
+		objects.push_back(mesh);
 	else
 	{
 		if (isLeaf())
 		{
 			if (childs[0] == nullptr)
 				CreateChilds();
-			for (std::list<GameObject*>::iterator item = objects.begin(); item != objects.cend(); ++item)
+			for (std::list<ComponentMesh*>::iterator item = objects.begin(); item != objects.cend(); ++item)
 			{
-				ComponentMesh* mesh2 = (ComponentMesh*) (*item)->FindComponentFirst(ComponentType::Mesh_Component);
 				AABB meshBox;
-				
-				if (mesh2 != nullptr)
+				item._Ptr->_Myval->GetTransformedAABB(meshBox);
+				for (uint i = 0; i < 8; i++)
 				{
-					mesh2->GetTransformedAABB(meshBox);
-					for (uint i = 0; i < 8; i++)
-					{
-						if (childs[i]->box.Intersects(meshBox))
-							childs[i]->Insert(mesh2);
-					}
+					if (childs[i]->box.Intersects(meshBox))
+						childs[i]->Insert(item._Ptr->_Myval);
 				}
 			}
 			objects.clear();
@@ -69,9 +64,9 @@ void OctreeNode::Insert(ComponentMesh* mesh)
 	}
 }
 
-void OctreeNode::Remove(GameObject* obj)
+void OctreeNode::Remove(ComponentMesh* obj)
 {
-	std::list<GameObject*>::iterator it = std::find(objects.begin(), objects.end(), obj);
+	std::list<ComponentMesh*>::iterator it = std::find(objects.begin(), objects.end(), obj);
 
 	if (it != objects.end())
 		objects.erase(it);
@@ -151,7 +146,7 @@ void OctreeNode::CreateChilds()
 }
 
 //template<typename TYPE>
-int OctreeNode::CollectIntersections(std::list<GameObject*>& nodes, const Frustum& frustum) const
+int OctreeNode::CollectIntersections(std::list<ComponentMesh*>& nodes, const Frustum& frustum) const
 {
 	uint ret = 0;
 
@@ -159,26 +154,21 @@ int OctreeNode::CollectIntersections(std::list<GameObject*>& nodes, const Frustu
 	if (!box.Intersects(frustum))
 		return ret;
 
-		for (std::list<GameObject*>::const_iterator item = objects.begin(); item != objects.cend(); ++item)
-		{
-			ret++;
-			ComponentMesh* mesh = (ComponentMesh*)(*item)->FindComponentFirst(ComponentType::Mesh_Component);
-			if (mesh != nullptr)
-			{
-				AABB Box;
-				mesh->GetTransformedAABB(Box);
-
-				if (Box.Intersects(frustum))
-					nodes.push_back(*item);
-			}	
-		}
+	for (std::list<ComponentMesh*>::const_iterator item = objects.begin(); item != objects.cend(); ++item)
+	{
+		ret++;
+		AABB Box;
+		item._Ptr->_Myval->GetTransformedAABB(Box);
+		if (frustum.Contains(Box))
+			nodes.push_back(*item);
+	}
 
 	// If there is no children, end
 	if (childs[0] == nullptr)
 		return ret;
 
 	// Otherwise, add the points from the children
-	for(uint i = 0; i < 8; i++)
+	for (uint i = 0; i < 8; i++)
 		ret += childs[i]->CollectIntersections(nodes, frustum);
 
 	return ret;
@@ -220,17 +210,22 @@ void Octree::Clear(bool fullclear)
 	
 }
 
-void Octree::Remove(GameObject* obj)
+void Octree::Remove(ComponentMesh* mesh)
 {
 	if (root_node != nullptr)
-		root_node->Remove(obj);
+		root_node->Remove(mesh);
 }
 
 void Octree::Insert(GameObject* obj)
 {
-	ComponentMesh* mesh = (ComponentMesh*) obj->FindComponentFirst(ComponentType::Mesh_Component);
-	if(mesh != nullptr)
+	ComponentMesh* mesh = (ComponentMesh*)obj->FindComponentFirst(ComponentType::Mesh_Component);
+	if (mesh != nullptr)
 		root_node->Insert(mesh);
+}
+
+void Octree::Insert(ComponentMesh* mesh)
+{
+	root_node->Insert(mesh);
 }
 
 void Octree::DebugDraw()
@@ -247,7 +242,7 @@ void Octree::DebugDraw()
 }
 
 //template<typename TYPE>
-int Octree::CollectIntersections(std::list<GameObject*>& nodes, const Frustum& frustum) const
+int Octree::CollectIntersections(std::list<ComponentMesh*>& nodes, const Frustum& frustum) const
 {
 	int tests = 1;
 
