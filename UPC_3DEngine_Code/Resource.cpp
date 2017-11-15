@@ -57,6 +57,7 @@ bool Resource::ReLoadResource()
 		//Load resource
 		LoadResourceToMemory();
 	}
+	return true;
 }
 
 bool Resource::UnLoad()

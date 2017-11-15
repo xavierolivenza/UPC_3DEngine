@@ -53,9 +53,13 @@ bool ComponentCamera::Update(float dt)
 	{
 		//Get vector of candidates from octree
 		//Set DrawMesh to true
+		std::list<GameObject*> nodes;
+		App->scene->scene_octree.CollectIntersections(nodes, frustum);
+		for (std::list<GameObject*>::const_iterator item = nodes.begin(); item != nodes.cend(); ++item)
+			(*item)->DrawMesh = true;
 
 		//Test code, brute force
-		/**/
+		/*
 		const std::vector<GameObject*>* SceneGameObjects;
 		SceneGameObjects = App->scene->GetAllSceneGameObjects();
 		for (std::vector<GameObject*>::const_iterator item = SceneGameObjects->begin(); item != SceneGameObjects->cend(); ++item)
@@ -73,7 +77,7 @@ bool ComponentCamera::Update(float dt)
 				//	(*item)->DrawMesh = true;
 			}
 		}
-		/**/
+		*/
 	}
 
 	return true;

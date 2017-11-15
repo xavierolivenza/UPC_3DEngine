@@ -24,8 +24,8 @@ public:
 
 	void CreateChilds();
 
-	template<typename TYPE>
-	int CollectIntersections(std::list<GameObject*>& nodes, const TYPE& frustum) const;
+	//template<typename TYPE>
+	int CollectIntersections(std::list<GameObject*>& nodes, const Frustum& frustum) const;
 
 public:
 	AABB box;
@@ -48,8 +48,8 @@ public:
 
 	void DebugDraw();
 
-	template<typename TYPE>
-	int CollectIntersections(std::list<GameObject*>& nodes, const TYPE& frustum) const;
+	//template<typename TYPE>
+	int CollectIntersections(std::list<GameObject*>& nodes, const Frustum& frustum) const;
 
 private:
 	OctreeNode* root_node = nullptr;

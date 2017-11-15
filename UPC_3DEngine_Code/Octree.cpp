@@ -150,10 +150,38 @@ void OctreeNode::CreateChilds()
 	childs[7] = new OctreeNode(box_new);
 }
 
-template<typename TYPE>
-int OctreeNode::CollectIntersections(std::list<GameObject*>& nodes, const TYPE & frustum) const
+//template<typename TYPE>
+int OctreeNode::CollectIntersections(std::list<GameObject*>& nodes, const Frustum& frustum) const
 {
-	return 0;
+	uint ret = 0;
+
+	// If range is not in the octree, return
+	if (!box.Intersects(frustum))
+		return ret;
+
+		for (std::list<GameObject*>::const_iterator item = objects.begin(); item != objects.cend(); ++item)
+		{
+			ret++;
+			ComponentMesh* mesh = (ComponentMesh*)(*item)->FindComponentFirst(ComponentType::Mesh_Component);
+			if (mesh != nullptr)
+			{
+				AABB Box;
+				mesh->GetTransformedAABB(Box);
+
+				if (Box.Intersects(frustum))
+					nodes.push_back(*item);
+			}	
+		}
+
+	// If there is no children, end
+	if (childs[0] == nullptr)
+		return ret;
+
+	// Otherwise, add the points from the children
+	for(uint i = 0; i < 8; i++)
+		ret += childs[i]->CollectIntersections(nodes, frustum);
+
+	return ret;
 }
 
 // Octree ------------------------------
@@ -218,10 +246,14 @@ void Octree::DebugDraw()
 	glColor3f(1.0f, 1.0f, 1.0f);
 }
 
-template<typename TYPE>
-int Octree::CollectIntersections(std::list<GameObject*>& nodes, const TYPE & frustum) const
+//template<typename TYPE>
+int Octree::CollectIntersections(std::list<GameObject*>& nodes, const Frustum& frustum) const
 {
-	return 0;
+	int tests = 1;
+
+	if (root_node != nullptr)
+		tests = root_node->CollectIntersections(nodes, frustum);
+	return tests;
 }
 
 // --------------------------------------
