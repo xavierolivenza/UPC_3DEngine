@@ -50,6 +50,9 @@ bool Resource::LoadResource()
 
 bool Resource::UnLoad()
 {
+	if (loaded > 0) loaded--;
+	else return false;
+	if (loaded == 0) App->resources->ResToUnload = true;
 	return true;
 }
 

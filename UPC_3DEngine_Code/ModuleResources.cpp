@@ -50,11 +50,17 @@ update_status ModuleResources::PostUpdate(float dt)
 			{
 			case Resource::Type::mesh:
 				if (((ResourceMesh*)item->second)->loaded == 0)
+				{
+					resources.erase(item);
 					RELEASE(item->second);
+				}
 				break;
 			case Resource::Type::texture:
 				if (((ResourceTexture*)item->second)->loaded == 0)
+				{
+					resources.erase(item);
 					RELEASE(item->second);
+				}
 				break;
 			case Resource::Type::null:
 				break;

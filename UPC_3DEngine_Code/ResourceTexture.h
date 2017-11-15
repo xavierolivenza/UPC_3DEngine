@@ -32,8 +32,6 @@ public:
 	ResourceTexture();
 	~ResourceTexture();
 
-	bool UnLoad();
-
 	void DrawResourceOptionsAndData();
 
 	void Save(JSON_Object* conf) const;

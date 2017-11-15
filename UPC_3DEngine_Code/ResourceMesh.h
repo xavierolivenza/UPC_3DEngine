@@ -78,8 +78,6 @@ public:
 	ResourceMesh();
 	~ResourceMesh();
 
-	bool UnLoad();
-
 	void DrawResourceOptionsAndData();
 
 	void Save(JSON_Object* conf) const;

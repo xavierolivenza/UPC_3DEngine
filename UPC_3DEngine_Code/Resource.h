@@ -26,7 +26,7 @@ public:
 	
 	bool LoadResource();
 
-	virtual bool UnLoad();
+	bool UnLoad();
 
 	virtual void DrawResourceOptionsAndData();
 

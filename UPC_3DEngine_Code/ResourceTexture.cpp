@@ -12,20 +12,6 @@ ResourceTexture::~ResourceTexture()
 
 }
 
-bool ResourceTexture::UnLoad()
-{
-	if (loaded > 0)
-		loaded--;
-	else
-		return false;
-	if (loaded == 0)
-	{
-		//Unload memory
-		App->resources->ResToUnload = true;
-	}
-	return true;
-}
-
 void ResourceTexture::DrawResourceOptionsAndData()
 {
 	char title[50] = "";

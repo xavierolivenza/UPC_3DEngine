@@ -12,20 +12,6 @@ ResourceMesh::~ResourceMesh()
 
 }
 
-bool ResourceMesh::UnLoad()
-{
-	if (loaded > 0)
-		loaded--;
-	else
-		return false;
-	if (loaded == 0)
-	{
-		//Unload memory
-		App->resources->ResToUnload = true;
-	}
-	return true;
-}
-
 void ResourceMesh::DrawResourceOptionsAndData()
 {
 	char title[50] = "";
