@@ -10,7 +10,8 @@ ComponentMesh::ComponentMesh(GameObject* parent, bool Active) : Component(parent
 
 ComponentMesh::~ComponentMesh()
 {
-
+	if (resourceMesh != nullptr)
+		resourceMesh->UnLoad();
 }
 
 bool ComponentMesh::Enable()

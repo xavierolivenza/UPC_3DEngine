@@ -7,7 +7,10 @@ ComponentMaterial::ComponentMaterial(GameObject* parent, bool Active) : Componen
 }
 
 ComponentMaterial::~ComponentMaterial()
-{}
+{
+	if (resourceTexture != nullptr)
+		resourceTexture->UnLoad();
+}
 
 bool ComponentMaterial::Enable()
 {

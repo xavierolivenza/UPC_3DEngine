@@ -35,6 +35,8 @@ public:
 
 	const std::map<uint, Resource*>* GetResourcesMap() const;
 
+public:
+	bool ResToUnload = false;
 private:
 	uint uuid = 0;
 	std::map<uint, Resource*> resources;

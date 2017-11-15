@@ -42,6 +42,26 @@ update_status ModuleResources::Update(float dt)
 
 update_status ModuleResources::PostUpdate(float dt)
 {
+	if (ResToUnload)
+	{
+		for (std::map<uint, Resource*>::iterator item = resources.begin(); item != resources.end(); ++item)
+		{
+			switch (item->second->type)
+			{
+			case Resource::Type::mesh:
+				if (((ResourceMesh*)item->second)->loaded == 0)
+					RELEASE(item->second);
+				break;
+			case Resource::Type::texture:
+				if (((ResourceTexture*)item->second)->loaded == 0)
+					RELEASE(item->second);
+				break;
+			case Resource::Type::null:
+				break;
+			}
+		}
+		App->resources->ResToUnload = false;
+	}
 	return update_status::UPDATE_CONTINUE;
 }
 

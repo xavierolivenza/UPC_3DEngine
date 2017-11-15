@@ -48,6 +48,11 @@ bool Resource::LoadResource()
 	return loaded > 0;
 }
 
+bool Resource::UnLoad()
+{
+	return true;
+}
+
 void Resource::DrawResourceOptionsAndData()
 {
 
