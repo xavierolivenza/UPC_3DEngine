@@ -17,6 +17,8 @@ Load any geometry, open culling window with LAlt + 8 or manually. You can draw o
 
 WARNING: 
 
+-You can only load geometry files (.fbx, .FBX, .obj, .OBJ, .dae, .DAE) with textures in format (.jpg, .JPG, .png, .PNG, .tga, .TGA, .dds, .DDS).
+
 -If you charge a huge model or a model that has errors, the camera is moved to a far distance without sight of the plane and the axis. Charging a new smaller/correct one will make the camera return to a normal position. You can also open camera options and change position and reference variables to force the camera move where you want.
 
 -When you charge a new module without texture it will automatically charge checkers texture, the objective of that is to see if the UV are correct if you want the model without texture just go to render options and disable GL_TEXTURE_2D.
@@ -53,13 +55,17 @@ WARNING:
 
 	-Application: This window shows useful information of the app, FPS, memory usage, etc... It also allows the user to cap FPS, change app name, etc...
 	
+	-Time: Allow you to see time variables and edit time distortion
+	
 	-Window: This window shows different window information and allows the user to modify some window variables
 	
 	-Hardware: This window shows useful hardware information
 	
 -Module Variables: This window shows useful information about every module. And allows the user to modifiy some variables in some of them
 
--File: At the moment does nothing
+-Resource: First frame show in memory resources, if you click one, the second frame show information about that resource.
+
+-File: Option load to load fbx and scenes from assets. Option save to save the actual scene to scene folder.
 
 -View: This window let the user choose which windows visualize. It can also be done with LAlt + number (1 to 5 by now)
 
