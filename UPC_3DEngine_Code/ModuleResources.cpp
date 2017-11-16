@@ -136,7 +136,7 @@ bool ModuleResources::ImportFile(const char* new_file_in_assets)
 	switch (type)
 	{
 	case Resource::mesh: imported = App->importer->ImportFBX(&std::string(new_file_in_assets), output); break;
-	case Resource::texture: imported = App->importer->MaterialImporter->Save(&std::string(new_file_in_assets), output); break;
+	case Resource::texture: imported = App->importer->MaterialImporter->Save(&std::string(new_file_in_assets), output, true); break;
 	}
 
 	if (imported)
@@ -187,19 +187,20 @@ bool ModuleResources::ReimportResource(Resource& res)
 		ret = ImportFile(res.file.c_str());
 		if (ret)
 		{
+			if (res.GetType() != Resource::Type::null)
+			{
+				//Clean resource if you are reimporting this
+				res.CleanResource();
+			}
 			switch (res.GetType())
 			{
 			case Resource::Type::mesh:
-				//Clean resource if you are reimporting this
-
 				//Call mesh importer with this ppinter as reference
 				App->importer->LoadSimpleMesh(&res.exported_file, ((ResourceMesh*)&res)->SimpleMeshDataStruct);
 				ret = true;
 				break;
 			case Resource::Type::texture:
-				//Clean resource if you are reimporting this
-
-				//Call texture importer with this ppinter as reference
+				//Call texture importer with this pointer as reference
 				((ResourceTexture*)this)->TextureDataStruct.id_texture = App->importer->MaterialImporter->LoadImageFromFile(((ResourceTexture*)&res)->TextureDataStruct, &res.exported_file);
 				ret = true;
 				break;

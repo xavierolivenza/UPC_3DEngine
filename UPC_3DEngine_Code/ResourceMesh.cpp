@@ -12,6 +12,11 @@ ResourceMesh::~ResourceMesh()
 
 }
 
+void ResourceMesh::CleanResource()
+{
+	SimpleMeshDataStruct.Clean();
+}
+
 void ResourceMesh::DrawResourceOptionsAndData()
 {
 	char title[50] = "";

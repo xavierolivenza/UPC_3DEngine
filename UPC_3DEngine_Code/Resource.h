@@ -24,6 +24,8 @@ public:
 	const char* GetTypeStr() const;
 	const std::string& GetFile() const;
 	
+	virtual void CleanResource();
+
 	bool LoadResource();
 	bool ReLoadResource();
 

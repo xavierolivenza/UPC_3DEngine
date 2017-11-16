@@ -20,9 +20,14 @@ struct MaterialData
 
 	~MaterialData()
 	{
-		texture_name.clear();
+		Clean();
+	}
+
+	void Clean()
+	{
 		if ((texture_name != "") && (id_texture > 0))
 			glDeleteTextures(1, &id_texture);
+		texture_name.clear();
 	}
 };
 
@@ -31,6 +36,8 @@ class ResourceTexture : public Resource
 public:
 	ResourceTexture();
 	~ResourceTexture();
+
+	void CleanResource();
 
 	void DrawResourceOptionsAndData();
 

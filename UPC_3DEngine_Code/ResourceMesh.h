@@ -36,6 +36,11 @@ struct MeshData
 
 	~MeshData()
 	{
+		Clean();
+	}
+
+	void Clean()
+	{
 		BoundSphere.SetNegativeInfinity();
 		BoundBox.SetNegativeInfinity();
 		BoundOBox.SetNegativeInfinity();
@@ -77,6 +82,8 @@ class ResourceMesh : public Resource
 public:
 	ResourceMesh();
 	~ResourceMesh();
+
+	void CleanResource();
 
 	void DrawResourceOptionsAndData();
 

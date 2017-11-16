@@ -12,6 +12,11 @@ ResourceTexture::~ResourceTexture()
 
 }
 
+void ResourceTexture::CleanResource()
+{
+	TextureDataStruct.Clean();
+}
+
 void ResourceTexture::DrawResourceOptionsAndData()
 {
 	char title[50] = "";

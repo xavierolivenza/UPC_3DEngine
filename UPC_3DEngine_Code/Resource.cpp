@@ -41,6 +41,11 @@ const std::string& Resource::GetFile() const
 	return exported_file;
 }
 
+void Resource::CleanResource()
+{
+
+}
+
 bool Resource::LoadResource()
 {
 	if (loaded > 0) loaded++;
