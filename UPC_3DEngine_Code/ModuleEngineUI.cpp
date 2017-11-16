@@ -594,25 +594,37 @@ void ModuleEngineUI::ImGuiConsole()
 	int w = 0; int h = 0; App->window->GetWindowSize(w, h); ImGui::SetNextWindowPos(ImVec2(w * 0.5f - 600 * 0.5f, h - 177)); //w/2 - console width/2, h - console height
 	ImGui::Begin("Console", false, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize);
 	//ImGui::Begin("Console", false);
-	ImGui::BeginChild("ScrollingRegion", ImVec2(0, -ImGui::GetItemsLineHeightWithSpacing()), false, ImGuiWindowFlags_HorizontalScrollbar);
-	for (std::list<std::string>::iterator item = console_logs.begin(); item != console_logs.cend(); ++item)
-		ImGui::Text(item._Ptr->_Myval.c_str());
-	if (ScrollDownConsole)
+	if (ImGui::Button("Toggle Console/Assets"))
+		ShowAssetsInConsole = !ShowAssetsInConsole;
+	if (!ShowAssetsInConsole)
 	{
-		ImGui::SetScrollHere();
-		ScrollDownConsole = false;
+		ImGui::BeginChild("ScrollingRegion", ImVec2(0, -ImGui::GetItemsLineHeightWithSpacing()), false, ImGuiWindowFlags_HorizontalScrollbar);
+		for (std::list<std::string>::iterator item = console_logs.begin(); item != console_logs.cend(); ++item)
+			ImGui::Text(item._Ptr->_Myval.c_str());
+		if (ScrollDownConsole)
+		{
+			ImGui::SetScrollHere();
+			ScrollDownConsole = false;
+		}
+		ImGui::EndChild();
+		ImGui::Separator();
+		static char str0[128] = "";
+		if (ImGui::InputText("input text", str0, 128, ImGuiInputTextFlags_EnterReturnsTrue))
+		{
+			LOGP(str0);
+			strcpy(str0, "");
+		}
+		ImGui::SameLine();
+		if (ImGui::Button("Scroll Down"))
+			ScrollDownConsole = true;
 	}
-	ImGui::EndChild();
-	ImGui::Separator();
-	static char str0[128] = "";
-	if (ImGui::InputText("input text", str0, 128, ImGuiInputTextFlags_EnterReturnsTrue))
+	else
 	{
-		LOGP(str0);
-		strcpy(str0, "");
+		ImGui::BeginChild("ScrollingRegion", ImVec2(0, 0), false, ImGuiWindowFlags_HorizontalScrollbar);
+		RecursiveDrawDirectory(App->importer->Get_Assets_path()->c_str());
+		ImGui::EndChild();
 	}
-	ImGui::SameLine();
-	if (ImGui::Button("Scroll Down"))
-		ScrollDownConsole = true;
+
 	ImGui::End();
 }
 
