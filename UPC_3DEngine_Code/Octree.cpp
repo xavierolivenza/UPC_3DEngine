@@ -163,7 +163,7 @@ int OctreeNode::CollectIntersections(std::list<ComponentMesh*>& nodes, const Fru
 	}
 
 	// If there is no children, end
-	if (childs[0] == nullptr)
+	if (isLeaf())
 		return ret;
 
 	// Otherwise, add the points from the children
@@ -225,7 +225,8 @@ void Octree::Insert(GameObject* obj)
 
 void Octree::Insert(ComponentMesh* mesh)
 {
-	root_node->Insert(mesh);
+	if (root_node != nullptr)
+		root_node->Insert(mesh);
 }
 
 void Octree::DebugDraw()
