@@ -15,6 +15,10 @@ FRUSTUM CULLING:
 
 Load any geometry, open culling window with LAlt + 8 or manually. You can draw octree by pressing F1 or in culling window. Press calc octree button. Then choose one camera, set it to main camera and enable frustum culling in the component camera window. If you add new geometry calculate octree again.
 
+RESOURCE MANAGER:
+
+We have reference counting. If you load a fbx and then you edit ono of its textures, this will be reloaded. This last feature doesn't work with scene loaded textures, need fix.
+
 WARNING: 
 
 -You can only load geometry files (.fbx, .FBX, .obj, .OBJ, .dae, .DAE) with textures in format (.jpg, .JPG, .png, .PNG, .tga, .TGA, .dds, .DDS).
