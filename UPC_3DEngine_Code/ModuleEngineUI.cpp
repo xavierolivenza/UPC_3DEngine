@@ -161,7 +161,7 @@ void ModuleEngineUI::DrawModuleImGui()
 	if ((App->input->GetKey(SDL_SCANCODE_6) == KEY_DOWN) && (App->input->GetKey(SDL_SCANCODE_LALT) == KEY_REPEAT)) showProfilerWindow = !showProfilerWindow;
 	if ((App->input->GetKey(SDL_SCANCODE_7) == KEY_DOWN) && (App->input->GetKey(SDL_SCANCODE_LALT) == KEY_REPEAT)) showTimeManager = !showTimeManager;
 	if ((App->input->GetKey(SDL_SCANCODE_8) == KEY_DOWN) && (App->input->GetKey(SDL_SCANCODE_LALT) == KEY_REPEAT)) showCulling= !showCulling;
-	if ((App->input->GetKey(SDL_SCANCODE_8) == KEY_DOWN) && (App->input->GetKey(SDL_SCANCODE_LALT) == KEY_REPEAT)) showResources = !showResources;
+	if ((App->input->GetKey(SDL_SCANCODE_9) == KEY_DOWN) && (App->input->GetKey(SDL_SCANCODE_LALT) == KEY_REPEAT)) showResources = !showResources;
 	/*
 	if ((App->input->GetKey(SDL_SCANCODE_9) == KEY_DOWN) && (App->input->GetKey(SDL_SCANCODE_LALT) == KEY_REPEAT)) startAsGame = !startAsGame;
 	if (startAsGame)
