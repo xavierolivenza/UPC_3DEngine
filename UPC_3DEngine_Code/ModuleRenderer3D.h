@@ -27,7 +27,6 @@ public:
 	bool CleanUp();
 
 	bool Draw(const GeometryData* meshData) const;
-	bool Draw(const std::vector<GeometryData>* meshData) const;
 
 	bool DrawComponentMeshMaterial(const ComponentTransform* transform, const ComponentMesh* mesh, const ComponentMaterial* material) const;
 	

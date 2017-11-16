@@ -108,7 +108,7 @@ uint ModuleResources::Find(const char* file_in_assets) const
 }
 
 //Import files from assets to library, creating base meta file
-bool ModuleResources::ImportFile(const char* new_file_in_assets)
+bool ModuleResources::ImportFile(const char* new_file_in_assets, bool Reimporting)
 {
 	bool imported = false;
 	std::string output;
@@ -135,8 +135,8 @@ bool ModuleResources::ImportFile(const char* new_file_in_assets)
 	/**/
 	switch (type)
 	{
-	case Resource::mesh: imported = App->importer->ImportFBX(&std::string(new_file_in_assets), output); break;
-	case Resource::texture: imported = App->importer->MaterialImporter->Save(&std::string(new_file_in_assets), output, true); break;
+	case Resource::mesh: imported = App->importer->ImportFBX(&std::string(new_file_in_assets), output, Reimporting); break;
+	case Resource::texture: imported = App->importer->MaterialImporter->Save(&std::string(new_file_in_assets), output, Reimporting); break;
 	}
 
 	if (imported)
@@ -184,7 +184,7 @@ bool ModuleResources::ReimportResource(Resource& res)
 	bool ret = false;
 	if (res.type != Resource::null)
 	{
-		ret = ImportFile(res.file.c_str());
+		ret = ImportFile(res.file.c_str(), true);
 		if (ret)
 		{
 			if (res.GetType() != Resource::Type::null)

@@ -196,7 +196,7 @@ void ModuleSceneImporter::ImGuiModuleVariables()
 
 }
 
-bool ModuleSceneImporter::ImportFBX(std::string* file_to_import, std::string& output_file)
+bool ModuleSceneImporter::ImportFBX(std::string* file_to_import, std::string& output_file, bool Reimporting)
 {
 	bool ret = true;
 
@@ -329,14 +329,14 @@ bool ModuleSceneImporter::ImportFBX(std::string* file_to_import, std::string& ou
 				//------------------------------------------//
 				std::string output;
 				MeshDataStruct.Asociated_texture_OriginalPath = WorkingPath + material_path.C_Str();
-				MaterialImporter->Save(&MeshDataStruct.Asociated_texture_OriginalPath, output);
+				MaterialImporter->Save(&MeshDataStruct.Asociated_texture_OriginalPath, output, Reimporting);
 			}
 
 			//------------------------------------------//
 			//-------Serialize Mesh To Own Format-------//
 			//------------------------------------------//
 			std::string output;
-			MeshImporter->Save(pos, scale, rot, MeshDataStruct, output);
+			MeshImporter->Save(pos, scale, rot, MeshDataStruct, output, Reimporting);
 			fbx_MeshComponents.push_back(output);
 		}
 

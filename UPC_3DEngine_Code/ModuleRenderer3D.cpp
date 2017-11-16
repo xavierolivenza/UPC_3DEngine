@@ -658,16 +658,6 @@ bool ModuleRenderer3D::Draw(const GeometryData* meshData) const
 	return ret;
 }
 
-bool ModuleRenderer3D::Draw(const std::vector<GeometryData>* meshData) const
-{
-	bool ret = true;
-
-	for (std::vector<GeometryData>::const_iterator item = meshData->begin(); item != meshData->cend() && ret == true; ++item)
-		ret = Draw(item._Ptr);
-
-	return ret;
-}
-
 bool ModuleRenderer3D::DrawComponentMeshMaterial(const ComponentTransform* transform, const ComponentMesh* mesh, const ComponentMaterial* material) const
 {
 	if ((mesh == nullptr) || (mesh->resourceMesh == nullptr) || ((mesh->resourceMesh->SimpleMeshDataStruct.vertices == nullptr) || (mesh->resourceMesh->SimpleMeshDataStruct.indices == nullptr)))

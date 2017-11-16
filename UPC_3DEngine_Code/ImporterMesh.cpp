@@ -44,7 +44,7 @@ bool ImporterMesh::CleanUp()
 	return true;
 }
 
-bool ImporterMesh::Save(const float3& pos, const float3& scale, const Quat& rot, const MeshData& DataMesh, std::string& loaded_file) const
+bool ImporterMesh::Save(const float3& pos, const float3& scale, const Quat& rot, const MeshData& DataMesh, std::string& loaded_file, bool Reimporting) const
 {
 	//Serialize MeshData to file
 	// amount of each / mesh name / transform:pos / transform:scale / transform:rot / num_faces / vertices / indices / normals / texture_coords / colors / Asociated Texture Name.dds / SpherePosition / SphereRadius  / BoundBoxMinPoint / BoundBoxMaxPoint / BoundOBox(WIP)
@@ -56,14 +56,17 @@ bool ImporterMesh::Save(const float3& pos, const float3& scale, const Quat& rot,
 	LOGP("Importing mesh process start, to file: %s", mesh_name.c_str());
 
 	std::string mesh_path = *App->importer->Get_Library_mesh_path() + "\\" + mesh_name;
-	FILE* file = fopen(mesh_path.c_str(), "r");
-	if (file != nullptr)
+	if (!Reimporting)
 	{
-		fclose(file);
-		LOGP("Mesh file already exists: %s", mesh_path.c_str());
-		return false;
+		FILE* file = fopen(mesh_path.c_str(), "r");
+		if (file != nullptr)
+		{
+			fclose(file);
+			LOGP("Mesh file already exists: %s", mesh_path.c_str());
+			return false;
+		}
 	}
-
+	
 	size_t bar_pos = DataMesh.Asociated_texture_name.rfind("\\") + 1;
 	std::string tex_name = DataMesh.Asociated_texture_name.substr(bar_pos, DataMesh.Asociated_texture_name.rfind(".") - bar_pos);
 	tex_name += ".dds";
