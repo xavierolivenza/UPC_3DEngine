@@ -139,11 +139,11 @@ void ComponentCamera::DrawComponentImGui()
 		}
 		ImGui::Checkbox("Frustum Culling", &FrustumCulling);
 
-		if (ImGui::DragFloat("NearPlaneDistance", &NearPlaneDistance, 3, ImGuiInputTextFlags_CharsDecimal))
+		if (ImGui::DragFloat("NearPlaneDistance", &NearPlaneDistance, 0.001f, 0.001f, 1000.0f))
 			frustum.nearPlaneDistance = NearPlaneDistance;
-		if (ImGui::DragFloat("FarPlaneDistance", &FarPlaneDistance, 3, ImGuiInputTextFlags_CharsDecimal))
+		if (ImGui::DragFloat("FarPlaneDistance", &FarPlaneDistance, 1.0f, 0.001f, 1000.0f))
 			frustum.farPlaneDistance = FarPlaneDistance;
-		if (ImGui::DragFloat("FOV", &FOVVertical, 3, ImGuiInputTextFlags_CharsDecimal))
+		if (ImGui::DragFloat("FOV", &FOVVertical, 1.0f, 10.0f, 170.0f))
 		{
 			AspectRatio = App->window->GetAspectRatio();
 			frustum.verticalFov = FOVVertical * DEGTORAD;

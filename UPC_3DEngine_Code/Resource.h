@@ -23,6 +23,7 @@ public:
 	Type GetType() const;
 	const char* GetTypeStr() const;
 	const std::string& GetFile() const;
+	const std::string& GetName() const;
 	
 	virtual void CleanResource();
 
@@ -44,6 +45,7 @@ protected:
 	std::string file;
 	std::string exported_file;
 	std::string file_date;
+	std::string name;
 	Type type = Type::null;
 	uint loaded = 0;
 };

@@ -9,6 +9,7 @@ struct MaterialData
 {
 	uint id_texture = 0; // id in VRAM
 	std::string texture_name = "";
+	std::string texture_name_UI = "";
 	uint texture_w = 0;
 	uint texture_h = 0;
 	uint texture_d = 0;

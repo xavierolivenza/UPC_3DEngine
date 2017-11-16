@@ -41,6 +41,11 @@ const std::string& Resource::GetFile() const
 	return exported_file;
 }
 
+const std::string& Resource::GetName() const
+{
+	return name;
+}
+
 void Resource::CleanResource()
 {
 
@@ -94,19 +99,27 @@ bool Resource::LoadResourceToMemory()
 	switch (type)
 	{
 	case Resource::Type::mesh:
+	{
 		//Clean resource if you are reimporting this
 		//Call mesh importer with this ppinter as reference
 		App->importer->LoadSimpleMesh(&this->exported_file, ((ResourceMesh*)this)->SimpleMeshDataStruct);
 		ret = true;
 		break;
+	}
 	case Resource::Type::texture:
+	{
 		//Clean resource if you are reimporting this
 		//Call texture importer with this ppinter as reference
 		((ResourceTexture*)this)->TextureDataStruct.id_texture = App->importer->MaterialImporter->LoadImageFromFile(((ResourceTexture*)this)->TextureDataStruct, &this->exported_file);
+		size_t bar_pos = ((ResourceTexture*)this)->TextureDataStruct.texture_name.rfind("\\") + 1;
+		((ResourceTexture*)this)->TextureDataStruct.texture_name_UI = ((ResourceTexture*)this)->TextureDataStruct.texture_name.substr(bar_pos, ((ResourceTexture*)this)->TextureDataStruct.texture_name.length());
 		ret = true;
 		break;
+	}
 	case Resource::Type::null:
+	{
 		break;
+	}
 	}
 	return ret;
 }

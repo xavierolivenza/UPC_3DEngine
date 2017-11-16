@@ -12,6 +12,9 @@
 #include "GameObject.h"
 #include "ComponentMesh.h"
 
+#include "ResourceMesh.h"
+#include "ResourceTexture.h"
+
 ModuleEngineUI::ModuleEngineUI(Application* app, bool start_enabled) : Module(app, start_enabled),
 	fpsPlotData(FPS_AND_MS_PLOT_DATA_LENGTH), msPlotData(FPS_AND_MS_PLOT_DATA_LENGTH), memPlotData(FPS_AND_MS_PLOT_DATA_LENGTH)
 {
@@ -894,7 +897,12 @@ void ModuleEngineUI::ImGuiResources()
 	const std::map<uint, Resource*>* resources = App->resources->GetResourcesMap();
 	for (std::map<uint, Resource*>::const_iterator item = resources->cbegin(); item != resources->cend(); ++item)
 	{
-		ImGui::Text(item->second->GetFile().c_str());
+		switch (item->second->GetType())
+		{
+		case Resource::Type::mesh: ImGui::Text(((ResourceMesh*)item->second)->SimpleMeshDataStruct.Mesh_File.c_str()); break;
+		case Resource::Type::texture: ImGui::Text(((ResourceTexture*)item->second)->TextureDataStruct.texture_name_UI.c_str()); break;
+		case Resource::Type::null: break;
+		}
 		if (ImGui::IsItemClicked())
 			ResouceSelected = item._Ptr->_Myval.second;
 	}
