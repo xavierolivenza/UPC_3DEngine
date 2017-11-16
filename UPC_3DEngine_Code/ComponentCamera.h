@@ -41,6 +41,7 @@ private:
 	float3 Pos = { 0.0f, 0.0f, 0.0f };
 	float3 Up = { 0.0f, 1.0f, 0.0f };
 	float3 Front = { 0.0f, 0.0f, 1.0f };
+	int tests = 0;
 
 	bool DebugDrawFrustum = false;
 };

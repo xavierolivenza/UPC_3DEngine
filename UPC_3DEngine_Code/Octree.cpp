@@ -52,7 +52,7 @@ void OctreeNode::Insert(ComponentMesh* mesh)
 				item._Ptr->_Myval->GetTransformedAABB(meshBox);
 				for (uint i = 0; i < 8; i++)
 				{
-					if (childs[i]->box.Intersects(meshBox))
+					if (childs[i]->box.Contains(meshBox))
 						childs[i]->Insert(item._Ptr->_Myval);
 				}
 			}

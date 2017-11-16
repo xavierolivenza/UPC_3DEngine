@@ -884,7 +884,7 @@ void ModuleEngineUI::ImGuiCulling()
 	ImGui::Checkbox("Show Octree Debug", &App->scene->octree_draw);
 
 	//Debug text about time when checking candidates, collision tests...
-
+	ImGui::Text("Advice: If you want to see octree debug\ninformation, go to camera component information");
 	ImGui::End();
 }
 

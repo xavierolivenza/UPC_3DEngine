@@ -55,6 +55,7 @@ bool ComponentCamera::Update(float dt)
 		//Set DrawMesh to true
 		std::list<ComponentMesh*> nodes;
 		App->scene->scene_octree.CollectIntersections(nodes, frustum);
+		tests = App->scene->scene_octree.CollectIntersections(nodes, frustum);
 		for (std::list<ComponentMesh*>::iterator item = nodes.begin(); item != nodes.cend(); ++item)
 			(*item)->parent->DrawMesh = true;
 
@@ -158,6 +159,7 @@ void ComponentCamera::DrawComponentImGui()
 		*/
 
 		ImGui::Checkbox("Debug Draw Frustrum", &DebugDrawFrustum);
+		ImGui::Text("Number of tests: %i", tests);
 	}
 }
 
