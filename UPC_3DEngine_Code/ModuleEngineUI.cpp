@@ -849,7 +849,7 @@ void ModuleEngineUI::ImGuiCulling()
 	ImGui::Begin("Culling", false, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_HorizontalScrollbar);
 	//ImGui::Begin("Culling", false);
 
-	if (ImGui::Button("Calc Octree"))
+	if (ImGui::Button("Calc Octree") || (App->input->GetKey(SDL_SCANCODE_F2) == KEY_DOWN))
 	{
 		const std::vector<GameObject*>* vec = App->scene->GetAllSceneGameObjects();
 		App->scene->scene_octree.Clear(false);
