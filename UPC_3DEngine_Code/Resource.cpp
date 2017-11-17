@@ -41,6 +41,16 @@ const std::string& Resource::GetFile() const
 	return exported_file;
 }
 
+const std::string& Resource::GetOriginalFile() const
+{
+	return file;
+}
+
+void Resource::SetOriginalFile(const char* str)
+{
+	file = str;
+}
+
 const std::string& Resource::GetName() const
 {
 	return name;

@@ -23,6 +23,8 @@ public:
 	Type GetType() const;
 	const char* GetTypeStr() const;
 	const std::string& GetFile() const;
+	const std::string& GetOriginalFile() const;
+	void SetOriginalFile(const char* str);
 	const std::string& GetName() const;
 	
 	virtual void CleanResource();

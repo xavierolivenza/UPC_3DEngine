@@ -117,9 +117,15 @@ bool ComponentMesh::SaveComponent(JSON_Object* conf) const
 	App->parsonjson->SetBool(conf, "Active", Active);
 	App->parsonjson->SetUInt(conf, "Type", type);
 	if (resourceMesh != nullptr)
+	{
 		App->parsonjson->SetString(conf, "Mesh_File_Name", resourceMesh->SimpleMeshDataStruct.Mesh_File.c_str());
+		App->parsonjson->SetString(conf, "Original_File_Name", resourceMesh->GetOriginalFile().c_str());
+	}
 	else
+	{
 		App->parsonjson->SetString(conf, "Mesh_File_Name", "");
+		App->parsonjson->SetString(conf, "Original_File_Name", "");
+	}
 	return true;
 }
 
@@ -134,6 +140,8 @@ bool ComponentMesh::LoadComponent(JSON_Object* conf)
 	//Vinculate resource with component
 	SetResource(uuid);
 	//App->importer->LoadSimpleMesh(&File_path, resourceMesh->SimpleMeshDataStruct);
+	if (resourceMesh != nullptr)
+		resourceMesh->SetOriginalFile(App->parsonjson->GetString(conf, "Original_File_Name", ""));
 	return true;
 }
 

@@ -306,8 +306,6 @@ uint ModuleResources::LoadResource(const char* file, const char* originalFile)
 			break;
 		}
 		}
-
-		
 	}
 	return ret;
 }

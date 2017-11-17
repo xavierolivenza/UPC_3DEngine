@@ -89,9 +89,13 @@ bool ComponentMaterial::SaveComponent(JSON_Object* conf) const
 		size_t bar_pos = resourceTexture->TextureDataStruct.texture_name.rfind("\\") + 1;
 		std::string tex_name = resourceTexture->TextureDataStruct.texture_name.substr(bar_pos, resourceTexture->TextureDataStruct.texture_name.length());
 		App->parsonjson->SetString(conf, "Texture_Path", tex_name.c_str());
+		App->parsonjson->SetString(conf, "Original_File_Name", resourceTexture->GetOriginalFile().c_str());
 	}
 	else
+	{
 		App->parsonjson->SetString(conf, "Texture_Path", "");
+		App->parsonjson->SetString(conf, "Original_File_Name", "");
+	}
 	return true;
 }
 
@@ -106,5 +110,7 @@ bool ComponentMaterial::LoadComponent(JSON_Object* conf)
 	//Vinculate resource with component
 	SetResource(uuid);
 	//App->importer->LoadTexture(&tex_path, resourceTexture->TextureDataStruct);
+	if (resourceTexture != nullptr)
+		resourceTexture->SetOriginalFile(App->parsonjson->GetString(conf, "Original_File_Name", ""));
 	return true;
 }
