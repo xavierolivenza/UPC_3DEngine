@@ -25,7 +25,7 @@ public:
 	bool LoadGameObject(JSON_Object* conf);
 
 	void SetActive(bool active);
-	void SetActiveLocal(bool active);
+	void SetStatic(bool static_b);
 	bool IsActive();
 	bool IsStatic();
 

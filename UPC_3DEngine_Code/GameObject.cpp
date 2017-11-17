@@ -181,17 +181,19 @@ void GameObject::SetActive(bool active)
 	if (Active != active)
 	{
 		Active = active;
-		for (std::vector<Component*>::const_iterator item = components.cbegin(); item != components.cend(); ++item)
-			(*item)->SetActive(Active);
 		for (std::vector<GameObject*>::const_iterator item = children.cbegin(); item != children.cend(); ++item)
 			(*item)->SetActive(Active);
 	}
 }
 
-void GameObject::SetActiveLocal(bool active)
+void GameObject::SetStatic(bool static_b)
 {
-	if (Active != active)
-		Active = active;
+	if (Static != static_b)
+	{
+		Static = static_b;
+		for (std::vector<GameObject*>::const_iterator item = children.cbegin(); item != children.cend(); ++item)
+			(*item)->SetStatic(Active);
+	}
 }
 
 bool GameObject::IsActive()
@@ -216,8 +218,12 @@ const std::vector<Component*>* GameObject::GetComponents() const
 
 void GameObject::DrawGameObjectImGui()
 {
-	ImGui::Checkbox("Active", &Active);
-	ImGui::Checkbox("Static", &Static);
+	bool TempActive = Active;
+	if (ImGui::Checkbox("Active", &TempActive))
+		SetActive(TempActive);
+	bool TempStatic = Static;
+	if (ImGui::Checkbox("Static", &TempStatic))
+		SetStatic(TempStatic);
 }
 
 void GameObject::DrawComponentImGui()
