@@ -85,7 +85,6 @@ void ModuleResources::ClearAllResources()
 		RELEASE(item->second);
 	}
 	resources.clear();
-	App->engineUI->ResouceSelected = nullptr;
 }
 
 void ModuleResources::DrawModuleImGui()

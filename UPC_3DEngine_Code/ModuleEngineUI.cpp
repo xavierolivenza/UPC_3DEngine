@@ -283,6 +283,8 @@ void ModuleEngineUI::ImGuiDrawMenuBar()
 		{
 			App->scene->CleanUpScene();
 			App->resources->ClearAllResources();
+			GameObjectSelected = nullptr;
+			ResouceSelected = nullptr;
 		}
 		ImGui::EndMenu();
 	}
