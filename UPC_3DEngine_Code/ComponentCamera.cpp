@@ -54,7 +54,6 @@ bool ComponentCamera::Update(float dt)
 		//Get vector of candidates from octree
 		//Set DrawMesh to true
 		std::list<ComponentMesh*> nodes;
-		App->scene->scene_octree.CollectIntersections(nodes, frustum);
 		tests = App->scene->scene_octree.CollectIntersections(nodes, frustum);
 		for (std::list<ComponentMesh*>::iterator item = nodes.begin(); item != nodes.cend(); ++item)
 			(*item)->parent->DrawMesh = true;

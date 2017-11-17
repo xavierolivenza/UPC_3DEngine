@@ -1,13 +1,19 @@
 #pragma once
-#include "MathGeoLib\Geometry\AABB.h"
 #include <list>
 #include <vector>
-
-#define Octree_MAX_ITEMS 2
-#define Octree_MIN_SIZE 10.0f
+#include "MathGeoLib\Geometry\AABB.h"
+#include "Globals.h"
+//#define Octree_MAX_ITEMS 2
+//#define Octree_MIN_SIZE 10.0f
 
 class GameObject;
 class ComponentMesh;
+
+struct OctreeLimits
+{
+	uint octreeMaxItems = 2;
+	float octreeMinSize = 10.0f;
+};
 
 class OctreeNode
 {
@@ -17,7 +23,7 @@ public:
 
 	bool isLeaf() const;
 
-	void Insert(ComponentMesh* obj);
+	void Insert(ComponentMesh* obj, OctreeLimits& limits);
 	void Remove(ComponentMesh* obj);
 
 	void DebugDraw();
@@ -51,6 +57,10 @@ public:
 
 	//template<typename TYPE>
 	int CollectIntersections(std::list<ComponentMesh*>& nodes, const Frustum& frustum) const;
+
+public:
+	
+	OctreeLimits limits;
 
 private:
 	OctreeNode* root_node = nullptr;

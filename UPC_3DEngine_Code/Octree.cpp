@@ -31,15 +31,20 @@ bool OctreeNode::isLeaf() const
 	return false;
 }
 
-void OctreeNode::Insert(ComponentMesh* mesh)
+void OctreeNode::Insert(ComponentMesh* mesh, OctreeLimits& limits)
 {
 	AABB otherBox;
 	mesh->GetTransformedAABB(otherBox);
 	if (!box.Intersects(otherBox))
 		return;
 
-	if (isLeaf() && (objects.size() < Octree_MAX_ITEMS || (box.HalfSize().LengthSq() <= Octree_MIN_SIZE * Octree_MIN_SIZE)))
-		objects.push_back(mesh);
+	if (isLeaf() && (objects.size() < limits.octreeMaxItems || (box.HalfSize().LengthSq() <= limits.octreeMinSize * limits.octreeMinSize)))
+	{
+		//std::list<ComponentMesh*>::iterator it = std::find(objects.begin(), objects.end(), mesh);
+		//if (it == objects.end())
+			objects.push_back(mesh);
+	}
+		
 	else
 	{
 		if (isLeaf())
@@ -53,13 +58,13 @@ void OctreeNode::Insert(ComponentMesh* mesh)
 				for (uint i = 0; i < 8; i++)
 				{
 					if (childs[i]->box.Contains(meshBox))
-						childs[i]->Insert(item._Ptr->_Myval);
+						childs[i]->Insert(item._Ptr->_Myval, limits);
 				}
 			}
 			objects.clear();
 		}
 		for (uint i = 0; i < 8; i++)
-			childs[i]->Insert(mesh);
+			childs[i]->Insert(mesh, limits);
 	}
 }
 
@@ -220,13 +225,13 @@ void Octree::Insert(GameObject* obj)
 {
 	ComponentMesh* mesh = (ComponentMesh*)obj->FindComponentFirst(ComponentType::Mesh_Component);
 	if (mesh != nullptr)
-		root_node->Insert(mesh);
+		root_node->Insert(mesh, limits);
 }
 
 void Octree::Insert(ComponentMesh* mesh)
 {
 	if (root_node != nullptr)
-		root_node->Insert(mesh);
+		root_node->Insert(mesh, limits);
 }
 
 void Octree::DebugDraw()
