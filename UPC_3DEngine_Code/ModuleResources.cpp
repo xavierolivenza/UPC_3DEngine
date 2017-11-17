@@ -73,13 +73,19 @@ update_status ModuleResources::PostUpdate(float dt)
 
 bool ModuleResources::CleanUp()
 {
+	ClearAllResources();
+	return true;
+}
+
+void ModuleResources::ClearAllResources()
+{
 	for (std::map<uint, Resource*>::iterator item = resources.begin(); item != resources.end(); ++item)
 	{
 		item->second->~Resource();
 		RELEASE(item->second);
 	}
 	resources.clear();
-	return true;
+	App->engineUI->ResouceSelected = nullptr;
 }
 
 void ModuleResources::DrawModuleImGui()

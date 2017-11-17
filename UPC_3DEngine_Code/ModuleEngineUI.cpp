@@ -279,6 +279,11 @@ void ModuleEngineUI::ImGuiDrawMenuBar()
 			showLoadFilePopUp = false;
 			showSaveFilePopUp = true;
 		}
+		if (ImGui::MenuItem("Clear Scene"))
+		{
+			App->scene->CleanUpScene();
+			App->resources->ClearAllResources();
+		}
 		ImGui::EndMenu();
 	}
 	if (ImGui::BeginMenu("View"))

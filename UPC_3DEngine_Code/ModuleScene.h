@@ -41,15 +41,14 @@ public:
 
 	const std::vector<GameObject*>* GetAllSceneGameObjects() const;
 
-	Octree scene_octree;
-	bool octree_draw = false;
-
 private:
 	const ComponentCamera* GetActiveCameraIterator(GameObject* node) const;
 	void CleanUpGameObjectTree(GameObject* gameobject, bool cleanRoot = true);
 	void GetAllSceneGameObjectsCalc();
 
 public:
+	Octree scene_octree;
+	bool octree_draw = false;
 	bool NewObjectAdded = false;
 
 private:

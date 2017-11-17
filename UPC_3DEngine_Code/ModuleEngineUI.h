@@ -7,6 +7,7 @@ class GameObject;
 
 class ModuleEngineUI : public Module
 {
+	friend class ModuleResources;
 public:
 	ModuleEngineUI(Application* app, bool start_enabled = true);
 	~ModuleEngineUI();
