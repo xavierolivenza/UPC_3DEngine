@@ -128,7 +128,7 @@ update_status ModuleSceneImporter::Update(float dt)
 		std::experimental::filesystem::path path_origin = *DroppedFile;
 		std::experimental::filesystem::path path_destination = *App->importer->Get_Assets_path() + "\\" + DroppedFile->substr(bar_pos, DroppedFile->size());
 		std::experimental::filesystem::copy_file(path_origin, path_destination, std::experimental::filesystem::copy_options::overwrite_existing);
-		if (App->resources->ImportFile(path_destination.string().c_str())) LOGP("Dropped File found and imported.");
+		if (App->resources->ImportFile(path_destination.string().c_str(), true)) LOGP("Dropped File found and imported.");
 		LOGP("Dropped File found and import error.");
 		Load(&path_destination.string());
 	}
@@ -528,7 +528,8 @@ bool ModuleSceneImporter::Load(std::string* file_to_load)
 			if (Load(&(Library_mesh_path + "\\" + output_file)))
 				LOGP("Mesh File loaded.");
 		}
-		LOGP("Mesh File found and import error.");
+		else
+			LOGP("Mesh File found and import error.");
 	}
 	else if (extention == Mesh_Extention)
 	{
