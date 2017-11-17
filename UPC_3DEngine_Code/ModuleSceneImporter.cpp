@@ -123,7 +123,15 @@ update_status ModuleSceneImporter::Update(float dt)
 {
 	std::string* DroppedFile = App->input->GetDroppedFile();
 	if (DroppedFile != nullptr)
-		Load(DroppedFile);
+	{
+		size_t bar_pos = DroppedFile->rfind("\\") + 1;
+		std::experimental::filesystem::path path_origin = *DroppedFile;
+		std::experimental::filesystem::path path_destination = *App->importer->Get_Assets_path() + "\\" + DroppedFile->substr(bar_pos, DroppedFile->size());
+		std::experimental::filesystem::copy_file(path_origin, path_destination, std::experimental::filesystem::copy_options::overwrite_existing);
+		if (App->resources->ImportFile(path_destination.string().c_str())) LOGP("Dropped File found and imported.");
+		LOGP("Dropped File found and import error.");
+		Load(&path_destination.string());
+	}
 	return UPDATE_CONTINUE;
 }
 
@@ -685,17 +693,20 @@ bool ModuleSceneImporter::LoadFBXComponents(const std::string* file_to_load)
 		name = Library_mesh_path + "\\" + cursor;
 		//Load resource
 		uint uuid = App->resources->LoadResource(name.c_str(), originalPath.c_str());
-		//Vinculate resource with component
-		ComponentMesh* NewMesh = NewMeshGameObject->CreateMeshComponent(true);
-		NewMesh->SetResource(uuid);
 		if (uuid != 0)
 		{
+			//Vinculate resource with component
+			ComponentMesh* NewMesh = NewMeshGameObject->CreateMeshComponent(true);
+			NewMesh->SetResource(uuid);
 			NewMeshGameObject->name = NewMesh->resourceMesh->SimpleMeshDataStruct.Mesh_name;
 			//Load resource
 			uuid = App->resources->LoadResource((Library_material_path + "\\" + NewMesh->resourceMesh->SimpleMeshDataStruct.Asociated_texture_name).c_str(), NewMesh->resourceMesh->SimpleMeshDataStruct.Asociated_texture_OriginalPath.c_str());
-			//Vinculate resource with component
-			ComponentMaterial* NewMaterial = NewMeshGameObject->CreateMaterialComponent(true);
-			NewMaterial->SetResource(uuid);
+			if (uuid != 0)
+			{
+				//Vinculate resource with component
+				ComponentMaterial* NewMaterial = NewMeshGameObject->CreateMaterialComponent(true);
+				NewMaterial->SetResource(uuid);
+			}
 		}
 		NewGameObject->AddChild(NewMeshGameObject);
 	}
