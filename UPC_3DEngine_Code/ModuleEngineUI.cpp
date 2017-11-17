@@ -599,9 +599,34 @@ void ModuleEngineUI::ImGuiConsole()
 	int w = 0; int h = 0; App->window->GetWindowSize(w, h); ImGui::SetNextWindowPos(ImVec2(w * 0.5f - 600 * 0.5f, h - 177)); //w/2 - console width/2, h - console height
 	ImGui::Begin("Console", false, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize);
 	//ImGui::Begin("Console", false);
-	if (ImGui::Button("Toggle Console/Assets"))
-		ShowAssetsInConsole = !ShowAssetsInConsole;
-	if (!ShowAssetsInConsole)
+	if (ImGui::Checkbox("Console", &ShowConsole))
+	{
+		if (ShowConsole)
+		{
+			ShowAssets = false;
+			ShowLibrary = false;
+		}
+	}
+	ImGui::SameLine();
+	if (ImGui::Checkbox("Assets", &ShowAssets))
+	{
+		if (ShowAssets)
+		{
+			ShowConsole = false;
+			ShowLibrary = false;
+		}
+	}
+	ImGui::SameLine();
+	if (ImGui::Checkbox("Library", &ShowLibrary))
+	{
+		if (ShowLibrary)
+		{
+			ShowConsole = false;
+			ShowAssets = false;
+		}
+	}
+
+	if (ShowConsole)
 	{
 		ImGui::BeginChild("ScrollingRegion", ImVec2(0, -ImGui::GetItemsLineHeightWithSpacing()), false, ImGuiWindowFlags_HorizontalScrollbar);
 		for (std::list<std::string>::iterator item = console_logs.begin(); item != console_logs.cend(); ++item)
@@ -623,10 +648,16 @@ void ModuleEngineUI::ImGuiConsole()
 		if (ImGui::Button("Scroll Down"))
 			ScrollDownConsole = true;
 	}
-	else
+	else if (ShowAssets)
 	{
 		ImGui::BeginChild("ScrollingRegion", ImVec2(0, 0), false, ImGuiWindowFlags_HorizontalScrollbar);
 		RecursiveDrawDirectory(App->importer->Get_Assets_path()->c_str());
+		ImGui::EndChild();
+	}
+	else if (ShowLibrary)
+	{
+		ImGui::BeginChild("ScrollingRegion", ImVec2(0, 0), false, ImGuiWindowFlags_HorizontalScrollbar);
+		RecursiveDrawDirectory(App->importer->Get_Library_path()->c_str());
 		ImGui::EndChild();
 	}
 
@@ -700,11 +731,13 @@ void ModuleEngineUI::ImGuiLoadFilePopUp()
 			RecursiveDrawDirectory(App->importer->Get_Assets_path()->c_str());
 			ImGui::TreePop();
 		}
+		/*
 		if (ImGui::TreeNodeEx(App->importer->Get_Library_path()->c_str(), 0))
 		{
 			RecursiveDrawDirectory(App->importer->Get_Library_path()->c_str());
 			ImGui::TreePop();
 		}
+		*/
 		/*
 		if (ImGui::TreeNodeEx(App->importer->Get_Settings_path()->c_str(), 0))
 		{

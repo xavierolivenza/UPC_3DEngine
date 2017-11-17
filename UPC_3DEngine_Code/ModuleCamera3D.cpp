@@ -64,10 +64,12 @@ update_status ModuleCamera3D::Update(float dt)
 	if ((App->input->GetKey(SDL_SCANCODE_Q) == KEY_REPEAT) && (App->input->GetMouseButton(SDL_BUTTON_RIGHT) == KEY_REPEAT)) newPos.y += speed;
 	if ((App->input->GetKey(SDL_SCANCODE_E) == KEY_REPEAT) && (App->input->GetMouseButton(SDL_BUTTON_RIGHT) == KEY_REPEAT)) newPos.y -= speed;
 
+	ImGuiIO& io = ImGui::GetIO();
 	bool zoomed = false;
-	if (App->input->GetMouseZ() != 0)
+	int MouseZ = App->input->GetMouseZ();
+	if ((MouseZ != 0) && (!io.WantCaptureMouse))
 	{
-		newPos -= App->input->GetMouseZ() * Z * speed;
+		newPos -= MouseZ * Z * speed;
 		zoomed = true;
 	}
 
@@ -131,7 +133,6 @@ update_status ModuleCamera3D::Update(float dt)
 	CameraComp->SetFrame(Position, -Z, Y);
 
 	//Mouse Picking
-	ImGuiIO& io = ImGui::GetIO();
 	if ((App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_DOWN) && (!ImGuizmo::IsUsing()) && (!io.WantCaptureMouse))
 		MousePicking();
 
