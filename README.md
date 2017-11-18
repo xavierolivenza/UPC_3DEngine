@@ -17,7 +17,11 @@ Load any geometry, open culling window with LAlt + 8 or manually. You can draw o
 
 RESOURCE MANAGER:
 
-We have reference counting. If you load a fbx and then you edit ono of its textures, this will be reloaded. This last feature doesn't work with scene loaded textures, need fix.
+We have reference counting.
+
+If you load a fbx and then you edit one of its textures or mesh, this will be reloaded.
+
+Textures have importing/loading options.
 
 WARNING: 
 
@@ -31,19 +35,17 @@ WARNING:
 
 -Camera controls
 
-	-Right click+“WASD” fps-like movement
+	-Right click + “WASD” fps-like movement
 	
-	-Mouse wheel zooms in and out
+	-Mouse wheel zooms in and out. If the mouse cursor is over engine UI or you have focus on any input text, wheel is disabled, press enter or move your mouse to world view to solve this.
 	
 	-Alt+Left click to orbit the object or right click
 	
-	-F focus the camera around the geometry
+	-F focus the camera around the geometry you have selected in inspector, can pick it with mouse picking
 	
 	-Right click + "QE" lift movement. Q up, E down
 	
--Drag any FBX and drop it into the executable to load it
-
--Drag any texture and drop it into the executable to apply it to loaded geometry
+-Drag any FBX and drop it into the executable to load it, if you load its textures before the fbx file, this will be automatically loaded with textures
 
 ### WINDOWS
 
@@ -53,7 +55,7 @@ WARNING:
 
 -Inspector: This window shows game object and associated components configuration
 
--Console: A console that LOGS all the engine process
+-Console: Can show a console that LOGS all the engine process, the files in assets foilder and the files inside library folder
 
 -Configuration:
 
@@ -67,11 +69,13 @@ WARNING:
 	
 -Module Variables: This window shows useful information about every module. And allows the user to modifiy some variables in some of them
 
--Resource: First frame show in memory resources, if you click one, the second frame show information about that resource.
+-Resource: First frame shows in memory resources, if you click one, the second frame show information about that resource and if texture, its importing options, change them and click import button to update the resource.
 
--File: Option load to load fbx and scenes from assets. Option save to save the actual scene to scene folder.
+-File: Option load to load fbx and scenes from assets. Option save to save the actual scene to scene folder. Option Clear Scene to clean all scene game objects.
 
--View: This window let the user choose which windows visualize. It can also be done with LAlt + number (1 to 5 by now)
+-View: This window let the user choose which windows visualize. It can also be done with LAlt + number (1 to 8 by now)
+
+-Create: One option Create Camera to create one gameobject with camera.
 
 -Help: This window has the options to download latest release, report bug, and show the documentation. It also has about, which is a window with useful information like license, libraries used, authors, etc...
 
@@ -79,7 +83,11 @@ WARNING:
 
 ## CHANGELOG
 
-v0.7(Second Assignment):
+v0.7.1(Second Assignment):
+
+	-WIP/TODO:Write this changelog
+
+v0.7.0:
 
 	-Resource manager implemented
 	-Frustum culling working with adaptative octree
