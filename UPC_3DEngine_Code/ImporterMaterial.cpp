@@ -157,7 +157,7 @@ int ImporterMaterial::LoadImageFromFile(MaterialData& DataMaterial, std::string*
 
 		// Convert the image into a suitable format to work with
 		// NOTE: If your image contains alpha channel you can replace IL_RGB with IL_RGBA
-		success = ilConvertImage(IL_RGB, IL_UNSIGNED_BYTE);
+		success = ilConvertImage(IL_RGBA, IL_UNSIGNED_BYTE);
 
 		// Quit out if we failed the conversion
 		if (!success)

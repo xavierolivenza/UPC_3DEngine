@@ -3,7 +3,7 @@
 #include "Resource.h"
 #include "Glew\include\glew.h"
 
-#include "ComponentMaterial.h" //will be deleted and MeshData defined here
+#include "DevIL\include\il.h" //Used for initialize variables
 
 struct MaterialData
 {
@@ -47,5 +47,9 @@ public:
 
 public:
 	MaterialData TextureDataStruct;
-
+	//Loading varibles
+	GLint WrappingMethod = GL_CLAMP;
+	GLint InterpolationMethod = GL_LINEAR;
+	//Saving variables
+	GLint CompressingMethod = IL_DXT5;
 };

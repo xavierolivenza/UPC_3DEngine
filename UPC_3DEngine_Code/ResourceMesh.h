@@ -3,8 +3,6 @@
 #include "Resource.h"
 #include "Glew\include\glew.h"
 
-#include "ComponentMesh.h" //will be deleted and MeshData defined here
-
 struct MeshData
 {
 	Sphere BoundSphere;

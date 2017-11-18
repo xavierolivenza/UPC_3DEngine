@@ -29,6 +29,47 @@ void ResourceTexture::DrawResourceOptionsAndData()
 	ImGui::Text(title);
 	sprintf_s(title, 50, "Used: %i", loaded);
 	ImGui::Text(title);
+
+	static int WrappingMethodPick = 0;
+	if (ImGui::Combo("Wrapping Method", &WrappingMethodPick, "GL_CLAMP\0GL_REPEAT\0GL_MIRRORED_REPEAT\0GL_CLAMP_TO_EDGE\0GL_CLAMP_TO_BORDER\0\0"))
+	{
+		switch (WrappingMethodPick)
+		{
+		case 0: WrappingMethod = GL_CLAMP; break;
+		case 1: WrappingMethod = GL_REPEAT; break;
+		case 2: WrappingMethod = GL_MIRRORED_REPEAT; break;
+		case 3: WrappingMethod = GL_CLAMP_TO_EDGE; break;
+		case 4: WrappingMethod = GL_CLAMP_TO_BORDER; break;
+		}
+	}
+
+	static int InterpolationMethodPick = 1;
+	if (ImGui::Combo("Interpolation Method", &InterpolationMethodPick, "GL_NEAREST\0GL_LINEAR\0\0"))
+	{
+		switch (InterpolationMethodPick)
+		{
+		case 0: InterpolationMethod = GL_NEAREST; break;
+		case 1: InterpolationMethod = GL_LINEAR; break;
+		}
+	}
+
+	static int CompressingMethodPick = 4;
+	if (ImGui::Combo("Compressing Method", &CompressingMethodPick, "IL_DXT1\0IL_DXT2\0IL_DXT3\0IL_DXT4\0IL_DXT5\0\0"))
+	{
+		switch (CompressingMethodPick)
+		{
+		case 0: CompressingMethod = IL_DXT1; break;
+		case 1: CompressingMethod = IL_DXT2; break;
+		case 2: CompressingMethod = IL_DXT3; break;
+		case 3: CompressingMethod = IL_DXT4; break;
+		case 4: CompressingMethod = IL_DXT5; break;
+		}
+	}
+
+	if (ImGui::Button("Import"))
+	{
+		//Reimport with new variables
+	}
 }
 
 void ResourceTexture::Save(JSON_Object* conf) const
