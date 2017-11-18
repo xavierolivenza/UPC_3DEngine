@@ -25,6 +25,8 @@ Textures have importing/loading options.
 
 WARNING: 
 
+-This software is developed and tested in Windows OS, if you use this software in any other OS, we don't ensure this will work (we don't have any other computer with other OS to test it). Sorry for the inconvinience
+
 -You can only load geometry files (.fbx, .FBX, .obj, .OBJ, .dae, .DAE) with textures in format (.jpg, .JPG, .png, .PNG, .tga, .TGA, .dds, .DDS).
 
 -If you charge a huge model or a model that has errors, the camera is moved to a far distance without sight of the plane and the axis. Charging a new smaller/correct one will make the camera return to a normal position. You can also open camera options and change position and reference variables to force the camera move where you want.
