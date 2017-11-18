@@ -53,7 +53,6 @@ void ResourceTexture::DrawResourceOptionsAndData()
 		}
 	}
 
-	/*
 	static int CompressingMethodPick = 4;
 	if (ImGui::Combo("Compressing Method", &CompressingMethodPick, "IL_DXT1\0IL_DXT2\0IL_DXT3\0IL_DXT4\0IL_DXT5\0\0"))
 	{
@@ -66,12 +65,11 @@ void ResourceTexture::DrawResourceOptionsAndData()
 		case 4: TextureDataStruct.CompressingMethod = IL_DXT5; break;
 		}
 	}
-	*/
 
 	if (ImGui::Button("Import"))
 	{
 		//Reimport with new variables
-		App->resources->ReimportResource(*this);
+		App->resources->ReimportResource(*this, TextureDataStruct.CompressingMethod);
 	}
 }
 

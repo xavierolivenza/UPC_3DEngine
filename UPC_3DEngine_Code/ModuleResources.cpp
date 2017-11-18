@@ -113,7 +113,7 @@ uint ModuleResources::Find(const char* file_in_assets) const
 }
 
 //Import files from assets to library, creating base meta file
-bool ModuleResources::ImportFile(const char* new_file_in_assets, bool Reimporting)
+bool ModuleResources::ImportFile(const char* new_file_in_assets, bool Reimporting, int CompressingMethod)
 {
 	bool imported = false;
 	std::string output;
@@ -141,7 +141,7 @@ bool ModuleResources::ImportFile(const char* new_file_in_assets, bool Reimportin
 	switch (type)
 	{
 	case Resource::mesh: imported = App->importer->ImportFBX(&std::string(new_file_in_assets), output, Reimporting); break;
-	case Resource::texture: imported = App->importer->MaterialImporter->Save(&std::string(new_file_in_assets), output, Reimporting); break;
+	case Resource::texture: imported = App->importer->MaterialImporter->Save(&std::string(new_file_in_assets), output, Reimporting, CompressingMethod); break;
 	}
 
 	if (imported)
@@ -184,12 +184,12 @@ bool ModuleResources::ImportFile(const char* new_file_in_assets, bool Reimportin
 	return imported;
 }
 
-bool ModuleResources::ReimportResource(Resource& res)
+bool ModuleResources::ReimportResource(Resource& res, int CompressingMethod)
 {
 	bool ret = false;
 	if (res.type != Resource::null)
 	{
-		ret = ImportFile(res.file.c_str(), true);
+		ret = ImportFile(res.file.c_str(), true, CompressingMethod);
 		if (ret)
 		{
 			if (res.GetType() != Resource::Type::null)
@@ -206,7 +206,7 @@ bool ModuleResources::ReimportResource(Resource& res)
 				break;
 			case Resource::Type::texture:
 				//Call texture importer with this pointer as reference
-				((ResourceTexture*)this)->TextureDataStruct.id_texture = App->importer->MaterialImporter->LoadImageFromFile(((ResourceTexture*)&res)->TextureDataStruct, &res.exported_file);
+				((ResourceTexture*)&res)->TextureDataStruct.id_texture = App->importer->MaterialImporter->LoadImageFromFile(((ResourceTexture*)&res)->TextureDataStruct, &res.exported_file);
 				ret = true;
 				break;
 			case Resource::Type::null:

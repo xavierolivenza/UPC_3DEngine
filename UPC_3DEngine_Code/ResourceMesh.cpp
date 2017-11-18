@@ -30,6 +30,7 @@ void ResourceMesh::DrawResourceOptionsAndData()
 	sprintf_s(title, 50, "Used: %i", loaded);
 	ImGui::Text(title);
 
+	/*
 	static int ImportingPresetPick = 2;
 	if (ImGui::Combo("Importing Preset", &ImportingPresetPick, "Fast\0Quality\0MaxQuality\0\0"))
 	{
@@ -44,7 +45,9 @@ void ResourceMesh::DrawResourceOptionsAndData()
 	if (ImGui::Button("Import"))
 	{
 		//Reimport with new variables
+		App->resources->ReimportResource(*this);
 	}
+	*/
 }
 
 void ResourceMesh::Save(JSON_Object* conf) const
