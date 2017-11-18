@@ -300,6 +300,16 @@ void ModuleEngineUI::ImGuiDrawMenuBar()
 		ImGui::MenuItem("Culling", "LALT + 8", &showCulling);
 		ImGui::EndMenu();
 	}
+	if (ImGui::BeginMenu("Create"))
+	{
+		if (ImGui::MenuItem("Create Camera"))
+		{
+			GameObject* TestCamera = new GameObject("Camera", true, true);
+			TestCamera->CreateCameraComponent(true);
+			App->scene->AddChildToRoot(TestCamera);
+		}
+		ImGui::EndMenu();
+	}
 	if (ImGui::BeginMenu("Help"))
 	{
 		if (ImGui::MenuItem("Show Gui Demo Window"))

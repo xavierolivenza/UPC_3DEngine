@@ -21,9 +21,9 @@ bool ModuleScene::Init()
 	bool ret = true;
 	root = new GameObject("Root", true, true);
 	GameObject* TestCamera = new GameObject("Camera", true, true);
-	scene_octree.Boundaries(AABB(float3(-50.0f, -50.0f, -50.0f), float3(50.0f, 50.0f, 50.0f)));
 	TestCamera->CreateCameraComponent(true);
 	AddChildToRoot(TestCamera);
+	scene_octree.Boundaries(AABB(float3(-1.0f, -1.0f, -1.0f), float3(1.0f, 1.0f, 1.0f)));
 	return ret;
 }
 
