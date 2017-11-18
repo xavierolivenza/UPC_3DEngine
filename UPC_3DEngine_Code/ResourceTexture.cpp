@@ -35,11 +35,11 @@ void ResourceTexture::DrawResourceOptionsAndData()
 	{
 		switch (WrappingMethodPick)
 		{
-		case 0: WrappingMethod = GL_CLAMP; break;
-		case 1: WrappingMethod = GL_REPEAT; break;
-		case 2: WrappingMethod = GL_MIRRORED_REPEAT; break;
-		case 3: WrappingMethod = GL_CLAMP_TO_EDGE; break;
-		case 4: WrappingMethod = GL_CLAMP_TO_BORDER; break;
+		case 0: TextureDataStruct.WrappingMethod = GL_CLAMP; break;
+		case 1: TextureDataStruct.WrappingMethod = GL_REPEAT; break;
+		case 2: TextureDataStruct.WrappingMethod = GL_MIRRORED_REPEAT; break;
+		case 3: TextureDataStruct.WrappingMethod = GL_CLAMP_TO_EDGE; break;
+		case 4: TextureDataStruct.WrappingMethod = GL_CLAMP_TO_BORDER; break;
 		}
 	}
 
@@ -48,27 +48,30 @@ void ResourceTexture::DrawResourceOptionsAndData()
 	{
 		switch (InterpolationMethodPick)
 		{
-		case 0: InterpolationMethod = GL_NEAREST; break;
-		case 1: InterpolationMethod = GL_LINEAR; break;
+		case 0: TextureDataStruct.InterpolationMethod = GL_NEAREST; break;
+		case 1: TextureDataStruct.InterpolationMethod = GL_LINEAR; break;
 		}
 	}
 
+	/*
 	static int CompressingMethodPick = 4;
 	if (ImGui::Combo("Compressing Method", &CompressingMethodPick, "IL_DXT1\0IL_DXT2\0IL_DXT3\0IL_DXT4\0IL_DXT5\0\0"))
 	{
 		switch (CompressingMethodPick)
 		{
-		case 0: CompressingMethod = IL_DXT1; break;
-		case 1: CompressingMethod = IL_DXT2; break;
-		case 2: CompressingMethod = IL_DXT3; break;
-		case 3: CompressingMethod = IL_DXT4; break;
-		case 4: CompressingMethod = IL_DXT5; break;
+		case 0: TextureDataStruct.CompressingMethod = IL_DXT1; break;
+		case 1: TextureDataStruct.CompressingMethod = IL_DXT2; break;
+		case 2: TextureDataStruct.CompressingMethod = IL_DXT3; break;
+		case 3: TextureDataStruct.CompressingMethod = IL_DXT4; break;
+		case 4: TextureDataStruct.CompressingMethod = IL_DXT5; break;
 		}
 	}
+	*/
 
 	if (ImGui::Button("Import"))
 	{
 		//Reimport with new variables
+		App->resources->ReimportResource(*this);
 	}
 }
 

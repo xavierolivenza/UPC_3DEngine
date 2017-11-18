@@ -14,6 +14,12 @@ struct MaterialData
 	uint texture_h = 0;
 	uint texture_d = 0;
 
+	//Loading varibles
+	GLint WrappingMethod = GL_CLAMP;
+	GLint InterpolationMethod = GL_LINEAR;
+	//Saving variables
+	GLint CompressingMethod = IL_DXT5;
+
 	MaterialData()
 	{
 
@@ -47,9 +53,4 @@ public:
 
 public:
 	MaterialData TextureDataStruct;
-	//Loading varibles
-	GLint WrappingMethod = GL_CLAMP;
-	GLint InterpolationMethod = GL_LINEAR;
-	//Saving variables
-	GLint CompressingMethod = IL_DXT5;
 };

@@ -174,12 +174,12 @@ int ImporterMaterial::LoadImageFromFile(MaterialData& DataMaterial, std::string*
 		glBindTexture(GL_TEXTURE_2D, textureID);
 
 		// Set texture clamping method
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, DataMaterial.WrappingMethod);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, DataMaterial.WrappingMethod);
 
 		// Set texture interpolation method to use linear interpolation (no MIPMAPS)
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, DataMaterial.InterpolationMethod);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, DataMaterial.InterpolationMethod);
 
 		// Specify the texture specification
 		glTexImage2D(GL_TEXTURE_2D, 				// Type of texture
