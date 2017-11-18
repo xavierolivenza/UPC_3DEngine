@@ -613,34 +613,17 @@ void ModuleEngineUI::ImGuiConsole()
 	int w = 0; int h = 0; App->window->GetWindowSize(w, h); ImGui::SetNextWindowPos(ImVec2(w * 0.5f - 600 * 0.5f, h - 177)); //w/2 - console width/2, h - console height
 	ImGui::Begin("Console", false, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize);
 	//ImGui::Begin("Console", false);
-	if (ImGui::Checkbox("Console", &ShowConsole))
-	{
-		if (ShowConsole)
-		{
-			ShowAssets = false;
-			ShowLibrary = false;
-		}
-	}
-	ImGui::SameLine();
-	if (ImGui::Checkbox("Assets", &ShowAssets))
-	{
-		if (ShowAssets)
-		{
-			ShowConsole = false;
-			ShowLibrary = false;
-		}
-	}
-	ImGui::SameLine();
-	if (ImGui::Checkbox("Library", &ShowLibrary))
-	{
-		if (ShowLibrary)
-		{
-			ShowConsole = false;
-			ShowAssets = false;
-		}
-	}
 
-	if (ShowConsole)
+	static int e = 0;
+	ImGui::RadioButton("Console", &e, 0);
+	ImGui::SameLine();
+	ImGui::RadioButton("Assets", &e, 1);
+	ImGui::SameLine();
+	ImGui::RadioButton("Library", &e, 2);
+
+	switch (e)
+	{
+	case 0:
 	{
 		ImGui::BeginChild("ScrollingRegion", ImVec2(0, -ImGui::GetItemsLineHeightWithSpacing()), false, ImGuiWindowFlags_HorizontalScrollbar);
 		for (std::list<std::string>::iterator item = console_logs.begin(); item != console_logs.cend(); ++item)
@@ -661,20 +644,23 @@ void ModuleEngineUI::ImGuiConsole()
 		ImGui::SameLine();
 		if (ImGui::Button("Scroll Down"))
 			ScrollDownConsole = true;
+		break;
 	}
-	else if (ShowAssets)
+	case 1:
 	{
 		ImGui::BeginChild("ScrollingRegion", ImVec2(0, 0), false, ImGuiWindowFlags_HorizontalScrollbar);
 		RecursiveDrawDirectory(App->importer->Get_Assets_path()->c_str());
 		ImGui::EndChild();
+		break;
 	}
-	else if (ShowLibrary)
+	case 2:
 	{
 		ImGui::BeginChild("ScrollingRegion", ImVec2(0, 0), false, ImGuiWindowFlags_HorizontalScrollbar);
 		RecursiveDrawDirectory(App->importer->Get_Library_path()->c_str());
 		ImGui::EndChild();
+		break;
 	}
-
+	}
 	ImGui::End();
 }
 

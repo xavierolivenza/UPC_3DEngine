@@ -85,6 +85,16 @@ void ComponentTransform::DrawComponentImGui()
 	{
 		ImGui::Checkbox("Transform Component Active", &Active);
 
+		static int e = 0;
+		if (ImGui::RadioButton("Translation", &e, 0))
+			gizmoOp = ImGuizmo::OPERATION::TRANSLATE;
+		ImGui::SameLine();
+		if (ImGui::RadioButton("Rotation", &e, 1))
+			gizmoOp = ImGuizmo::OPERATION::ROTATE;
+		ImGui::SameLine();
+		if (ImGui::RadioButton("Scalation", &e, 2))
+			gizmoOp = ImGuizmo::OPERATION::SCALE;
+
 		uint flags = ImGuiInputTextFlags_CharsDecimal;
 
 		if ((parent != nullptr) && parent->IsStatic())

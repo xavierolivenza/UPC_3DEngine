@@ -72,11 +72,6 @@ private:
 	bool showTimeManager = true;
 	bool showCulling = false;
 	bool showResources = true;
-
-	bool ShowConsole = true;
-	bool ShowAssets = false;
-	bool ShowLibrary = false;
-
 	bool freezeplots = false;
 	bool active = false;
 	bool ScrollDownConsole = true;
