@@ -30,7 +30,7 @@ bool ComponentTransform::Update(float dt)
 	if (!parent->IsStatic())
 	{
 		ImGuizmo::Enable(true);
-		if ((parent != nullptr) && (App->engineUI->GetSelectedGameObject() == parent))
+		if ((parent != nullptr) && (App->engineUI->GetSelectedGameObject() == parent) && !(App->input->GetKey(SDL_SCANCODE_LALT) == KEY_REPEAT))
 		{
 			ImGuiIO& io = ImGui::GetIO();
 			ImGuizmo::SetRect(0, 0, io.DisplaySize.x, io.DisplaySize.y);
@@ -40,25 +40,21 @@ bool ComponentTransform::Update(float dt)
 			viewmatrix.Transpose();
 			projectionmatrix.Transpose();
 
-			float4x4 matrix = GetLocalMatrix().Transposed();
+			float4x4 matrix = GetMatrix();
 
 			//ImGuizmo::DrawCube(viewmatrix.ptr(), projectionmatrix.ptr(), matrix.ptr());
 
-			//LOGP("%f, %f, %f, %f", matrix.At(0, 0), matrix.At(0, 1), matrix.At(0, 2), matrix.At(0, 3));
-			ImGuizmo::Manipulate(viewmatrix.ptr(), projectionmatrix.ptr(), gizmoOp, ImGuizmo::LOCAL, matrix.ptr());
-			//LOGP("%f, %f, %f, %f", matrix.At(0, 0), matrix.At(0, 1), matrix.At(0, 2), matrix.At(0, 3));
+			ImGuizmo::Manipulate(viewmatrix.ptr(), projectionmatrix.ptr(), gizmoOp, ImGuizmo::WORLD, matrix.ptr());
 
 			if (ImGuizmo::IsUsing())
 			{
 				matrix.Transpose();
-				//To test 
-				//matrix = parent->GetParent()->GetTransform()->GetMatrix() * matrix;
-				//matrix = GetMatrix().Inverted() * matrix;
+				if ((parent != nullptr) && (parent->GetParent() != nullptr))
+					matrix = parent->GetParent()->GetTransform()->GetMatrix().Transposed().Inverted() * matrix;
 				float3 position = float3::zero;
 				float3 scale = float3::zero;
 				Quat rotation = Quat::identity;
 				matrix.Decompose(position, rotation, scale);
-				//LOGP("%f, %f, %f", position.x, position.y, position.z);
 				SetPos(position);
 				SetRot(rotation);
 				SetScale(scale);

@@ -43,7 +43,6 @@ void ResourceTexture::DrawResourceOptionsAndData()
 		}
 	}
 
-	static int InterpolationMethodPick = 1;
 	if (ImGui::Combo("Interpolation Method", &InterpolationMethodPick, "GL_NEAREST\0GL_LINEAR\0\0"))
 	{
 		switch (InterpolationMethodPick)
@@ -53,7 +52,6 @@ void ResourceTexture::DrawResourceOptionsAndData()
 		}
 	}
 
-	static int CompressingMethodPick = 4;
 	if (ImGui::Combo("Compressing Method", &CompressingMethodPick, "IL_DXT1\0IL_DXT2\0IL_DXT3\0IL_DXT4\0IL_DXT5\0\0"))
 	{
 		switch (CompressingMethodPick)
@@ -80,6 +78,10 @@ void ResourceTexture::Save(JSON_Object* conf) const
 	App->parsonjson->SetString(conf, "file_library", exported_file.c_str());
 	App->parsonjson->SetString(conf, "file_time", file_date.c_str());
 	App->parsonjson->SetUInt(conf, "type", type);
+
+	App->parsonjson->SetInt(conf, "WrappingMethod", TextureDataStruct.WrappingMethod);
+	App->parsonjson->SetInt(conf, "InterpolationMethod", TextureDataStruct.InterpolationMethod);
+	App->parsonjson->SetInt(conf, "CompressingMethod", TextureDataStruct.CompressingMethod);
 }
 
 void ResourceTexture::Load(JSON_Object* conf)
@@ -89,4 +91,30 @@ void ResourceTexture::Load(JSON_Object* conf)
 	exported_file = App->parsonjson->GetString(conf, "file_library", "");
 	type = (Resource::Type)App->parsonjson->GetUInt(conf, "type", Resource::Type::null);
 	file_date = App->parsonjson->GetString(conf, "file_time", "");
+
+	TextureDataStruct.WrappingMethod = App->parsonjson->GetInt(conf, "WrappingMethod", GL_CLAMP);
+	switch (TextureDataStruct.WrappingMethod)
+	{
+	case GL_CLAMP: InterpolationMethodPick = 0; break;
+	case GL_REPEAT: InterpolationMethodPick = 1; break;
+	case GL_MIRRORED_REPEAT: InterpolationMethodPick = 2; break;
+	case GL_CLAMP_TO_EDGE: InterpolationMethodPick = 3; break;
+	case GL_CLAMP_TO_BORDER: InterpolationMethodPick = 4; break;
+	}
+	TextureDataStruct.InterpolationMethod = App->parsonjson->GetInt(conf, "InterpolationMethod", GL_LINEAR);
+	switch (TextureDataStruct.WrappingMethod)
+	{
+	case GL_NEAREST: InterpolationMethodPick = 0; break;
+	case GL_LINEAR: InterpolationMethodPick = 1; break;
+	}
+	TextureDataStruct.CompressingMethod = App->parsonjson->GetInt(conf, "CompressingMethod", IL_DXT5);
+	switch (TextureDataStruct.WrappingMethod)
+	{
+	case IL_DXT1: InterpolationMethodPick = 0; break;
+	case IL_DXT2: InterpolationMethodPick = 1; break;
+	case IL_DXT3: InterpolationMethodPick = 2; break;
+	case IL_DXT4: InterpolationMethodPick = 3; break;
+	case IL_DXT5: InterpolationMethodPick = 4; break;
+	}
+	//App->resources->ReimportResource(*this, TextureDataStruct.CompressingMethod);
 }
