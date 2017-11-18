@@ -47,6 +47,16 @@ WARNING:
 	
 	-Right click + "QE" lift movement. Q up, E down
 	
+-Gizmos controls
+
+	-If the Game Object selected is static, the gizmo is not shown
+	
+	-Press W to enable Translation gizmo
+	
+	-Press E to enable Rotation gizmo
+	
+	-Press R to enable Scalation gizmo
+	
 -Drag any FBX and drop it into the executable to load it, if you load its textures before the fbx file, this will be automatically loaded with textures
 
 ### WINDOWS
@@ -82,6 +92,12 @@ WARNING:
 -Help: This window has the options to download latest release, report bug, and show the documentation. It also has about, which is a window with useful information like license, libraries used, authors, etc...
 
 -Close: Closes the engine
+
+## Innovation grade candidates
+
+-Adaptative Octree
+
+-Gizmos
 
 ## CHANGELOG
 
