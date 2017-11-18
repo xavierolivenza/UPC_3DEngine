@@ -57,7 +57,7 @@ void OctreeNode::Insert(ComponentMesh* mesh, OctreeLimits& limits)
 				item._Ptr->_Myval->GetTransformedAABB(meshBox);
 				for (uint i = 0; i < 8; i++)
 				{
-					if (childs[i]->box.Contains(meshBox))
+					if (childs[i]->box.Intersects(meshBox))
 						childs[i]->Insert(item._Ptr->_Myval, limits);
 				}
 			}

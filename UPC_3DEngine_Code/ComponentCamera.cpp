@@ -28,26 +28,6 @@ bool ComponentCamera::Enable()
 
 bool ComponentCamera::PreUpdate(float dt)
 {
-	return true;
-}
-
-bool ComponentCamera::Update(float dt)
-{
-	if (parent != nullptr)
-	{
-		ComponentTransform* transform = parent->GetTransform();
-		if (transform != nullptr)
-		{
-			float4x4 matrix = transform->GetMatrix();
-			frustum.pos = matrix.Row3(3);
-			frustum.front = matrix.Row3(2);
-			frustum.up = matrix.Row3(1);
-		}
-	}
-
-	if (DebugDrawFrustum)
-		App->renderer3D->DrawDebugBox(frustum.CornerPoint(0), frustum.CornerPoint(1), frustum.CornerPoint(2), frustum.CornerPoint(3), frustum.CornerPoint(4), frustum.CornerPoint(5), frustum.CornerPoint(6), frustum.CornerPoint(7));
-
 	//Apply Frustum Culling
 	if (FrustumCulling)
 	{
@@ -81,22 +61,40 @@ bool ComponentCamera::Update(float dt)
 		SceneGameObjects = App->scene->GetAllSceneGameObjects();
 		for (std::vector<GameObject*>::const_iterator item = SceneGameObjects->begin(); item != SceneGameObjects->cend(); ++item)
 		{
-			ComponentMesh* mesh = (ComponentMesh*)(*item)->FindComponentFirst(ComponentType::Mesh_Component);
-			if (mesh != nullptr)
-			{
-				AABB Box;
-				mesh->GetTransformedAABB(Box);
+		ComponentMesh* mesh = (ComponentMesh*)(*item)->FindComponentFirst(ComponentType::Mesh_Component);
+		if (mesh != nullptr)
+		{
+		AABB Box;
+		mesh->GetTransformedAABB(Box);
 
-				if (frustum.Contains(Box))
-					(*item)->DrawMesh = true;
+		if (frustum.Contains(Box))
+		(*item)->DrawMesh = true;
 
-				//if (frustum.ContainsAaBox(Box))
-				//	(*item)->DrawMesh = true;
-			}
+		//if (frustum.ContainsAaBox(Box))
+		//	(*item)->DrawMesh = true;
+		}
 		}
 		*/
 	}
+	return true;
+}
 
+bool ComponentCamera::Update(float dt)
+{
+	if (parent != nullptr)
+	{
+		ComponentTransform* transform = parent->GetTransform();
+		if (transform != nullptr)
+		{
+			float4x4 matrix = transform->GetMatrix();
+			frustum.pos = matrix.Row3(3);
+			frustum.front = matrix.Row3(2);
+			frustum.up = matrix.Row3(1);
+		}
+	}
+
+	if (DebugDrawFrustum)
+		App->renderer3D->DrawDebugBox(frustum.CornerPoint(0), frustum.CornerPoint(1), frustum.CornerPoint(2), frustum.CornerPoint(3), frustum.CornerPoint(4), frustum.CornerPoint(5), frustum.CornerPoint(6), frustum.CornerPoint(7));
 	return true;
 }
 

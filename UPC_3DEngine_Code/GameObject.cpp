@@ -192,7 +192,7 @@ void GameObject::SetStatic(bool static_b)
 	{
 		Static = static_b;
 		for (std::vector<GameObject*>::const_iterator item = children.cbegin(); item != children.cend(); ++item)
-			(*item)->SetStatic(Active);
+			(*item)->SetStatic(Static);
 	}
 }
 
