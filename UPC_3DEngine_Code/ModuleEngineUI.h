@@ -88,6 +88,8 @@ private:
 	std::string LoadFileNameFileBrowser;
 	std::string SaveFileNameFileBrowser;
 
+	int maxItems = 2;
+	float minSize = 10.0f;
 private:
 	char appnamestr[128];
 };

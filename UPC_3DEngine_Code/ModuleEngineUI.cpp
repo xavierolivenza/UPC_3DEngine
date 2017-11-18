@@ -936,6 +936,11 @@ void ModuleEngineUI::ImGuiCulling()
 	ImGui::Checkbox("Show Octree Debug", &App->scene->octree_draw);
 
 	//Debug text about time when checking candidates, collision tests...
+	if (ImGui::DragInt("Max Items", &maxItems, 1.0f, 1, 10))
+		App->scene->scene_octree.limits.octreeMaxItems = maxItems;
+
+	if (ImGui::DragFloat("Minimun Size", &minSize, 0.1f, 1.0f, 15.0f, "%.2f"))
+		App->scene->scene_octree.limits.octreeMinSize = minSize;
 	ImGui::Text("Advice: If you want to see octree debug\ninformation, go to camera component information");
 	ImGui::End();
 }
