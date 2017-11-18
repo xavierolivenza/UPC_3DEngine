@@ -41,10 +41,9 @@ bool ComponentTransform::Update(float dt)
 			projectionmatrix.Transpose();
 
 			float4x4 matrix = GetMatrix();
+			//ImGuizmo::DrawCube(viewmatrix.ptr(), projectionmatrix.ptr(), GetMatrix().ptr());
 
-			//ImGuizmo::DrawCube(viewmatrix.ptr(), projectionmatrix.ptr(), matrix.ptr());
-
-			ImGuizmo::Manipulate(viewmatrix.ptr(), projectionmatrix.ptr(), gizmoOp, ImGuizmo::WORLD, matrix.ptr());
+			ImGuizmo::Manipulate(viewmatrix.ptr(), projectionmatrix.ptr(), gizmoOp, ImGuizmo::LOCAL, matrix.ptr());
 
 			if (ImGuizmo::IsUsing())
 			{
