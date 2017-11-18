@@ -3,6 +3,8 @@
 #include "Resource.h"
 #include "Glew\include\glew.h"
 
+#include "Assimp\include\postprocess.h"
+
 struct MeshData
 {
 	Sphere BoundSphere;
@@ -26,6 +28,8 @@ struct MeshData
 	std::string Asociated_texture_name;
 	std::string Asociated_texture_OriginalPath;
 	std::string Mesh_File;
+
+	uint ImportingPreset = aiProcessPreset_TargetRealtime_Fast;
 
 	MeshData()
 	{

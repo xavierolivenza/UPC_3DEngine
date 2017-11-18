@@ -29,6 +29,22 @@ void ResourceMesh::DrawResourceOptionsAndData()
 	ImGui::Text(title);
 	sprintf_s(title, 50, "Used: %i", loaded);
 	ImGui::Text(title);
+
+	static int ImportingPresetPick = 2;
+	if (ImGui::Combo("Importing Preset", &ImportingPresetPick, "Fast\0Quality\0MaxQuality\0\0"))
+	{
+		switch (ImportingPresetPick)
+		{
+		case 0: SimpleMeshDataStruct.ImportingPreset = aiProcessPreset_TargetRealtime_Fast; break;
+		case 1: SimpleMeshDataStruct.ImportingPreset = aiProcessPreset_TargetRealtime_Quality; break;
+		case 2: SimpleMeshDataStruct.ImportingPreset = aiProcessPreset_TargetRealtime_MaxQuality; break;
+		}
+	}
+
+	if (ImGui::Button("Import"))
+	{
+		//Reimport with new variables
+	}
 }
 
 void ResourceMesh::Save(JSON_Object* conf) const
