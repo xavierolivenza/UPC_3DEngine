@@ -43,6 +43,8 @@ TIPS:
 
 -Octree only works with static objects, if an object is not static, this will not be inside octree. If you activate frustrum culling and everything disappears that mean that you might have static objects and an invalid octree, just recalculate it.
 
+-Inside Assets folder will be created one Scenes Folder, here all scenes will be stored, the scene called "EditorScene_Backup" is the scene useed by the editor to store the play/stop status of the scene.
+
 ### CONTROLS
 
 -Camera controls
@@ -93,7 +95,7 @@ TIPS:
 
 -Resource: First frame shows in memory resources, if you click one, the second frame show information about that resource and if texture, its importing options, change them and click import button to update the resource.
 
--File: Option load to load fbx and scenes from assets. Option save to save the actual scene to scene folder. Option Clear Scene to clean all scene game objects.
+-File: Option load to load fbx and scenes from assets, you have a shorcut directory to scenes folder. Option save to save the actual scene to scene folder. Option Clear Scene to clean all scene game objects.
 
 -View: This window let the user choose which windows visualize. It can also be done with LAlt + number (1 to 8 by now)
 
