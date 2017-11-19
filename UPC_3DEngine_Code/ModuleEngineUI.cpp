@@ -79,7 +79,7 @@ bool ModuleEngineUI::Start()
 	style.ChildWindowRounding = 2.5f;
 
 	style.Colors[ImGuiCol_Text] = ImVec4(1.00f, 1.00f, 1.00f, 1.00f);
-	style.Colors[ImGuiCol_TextDisabled] = ImVec4(0.24f, 0.23f, 0.29f, 1.00f);
+	style.Colors[ImGuiCol_TextDisabled] = ImVec4(0.59f, 0.59f, 0.59f, 1.00f);
 	style.Colors[ImGuiCol_WindowBg] = ImVec4(0.41f, 0.41f, 0.41f, 0.70f);
 	style.Colors[ImGuiCol_ChildWindowBg] = ImVec4(0.00f, 0.00f, 0.00f, 0.70f);
 	style.Colors[ImGuiCol_PopupBg] = ImVec4(0.25f, 0.25f, 0.25f, 0.90f);
@@ -121,8 +121,6 @@ bool ModuleEngineUI::Start()
 	style.Colors[ImGuiCol_PlotHistogramHovered] = ImVec4(1.00f, 1.00f, 0.00f, 1.00f);
 	style.Colors[ImGuiCol_TextSelectedBg] = ImVec4(0.83f, 0.51f, 0.20f, 0.80f);
 	style.Colors[ImGuiCol_ModalWindowDarkening] = ImVec4(1.00f, 0.98f, 0.95f, 0.73f);
-
-
 	//IMGUI STYLE END
 
 	bool ret = true;

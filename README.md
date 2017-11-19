@@ -33,6 +33,8 @@ WARNING:
 
 -When you charge a new module without texture it will automatically charge checkers texture, the objective of that is to see if the UV are correct if you want the model without texture just go to render options and disable GL_TEXTURE_2D.
 
+-Street scene and fbx has some problems. There's a house that doesn't charge at first, but if you press play and stop button it charges and sometime it has errors.
+
 ### CONTROLS
 
 -Camera controls
@@ -103,7 +105,15 @@ WARNING:
 
 v0.7.1(Second Assignment):
 
-	-WIP/TODO:Write this changelog
+	-Added debug info and variables for octree
+	-Fixed octree
+	-Fixed import manager
+	-New console/assets/library window
+	-Texture importing options added
+	-Gizmos improved
+	-Menu create camera
+	-Changed UI colors
+	-Radio Buttons added
 
 v0.7.0:
 
