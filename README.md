@@ -39,6 +39,8 @@ TIPS:
 
 -In the Option Window inside Configuration window, there is one option to toggle Library folder visibility, change it and restart the engine to update this.
 
+-If you set one camera to MainCamera an press Play button, the main view of the editor is the view of the MainCamera, when you press stop, the view return to the editor camera.
+
 ### CONTROLS
 
 -Camera controls
