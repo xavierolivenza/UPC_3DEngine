@@ -33,7 +33,11 @@ WARNING:
 
 -When you charge a new module without texture it will automatically charge checkers texture, the objective of that is to see if the UV are correct if you want the model without texture just go to render options and disable GL_TEXTURE_2D.
 
--Street scene and fbx has some problems. There's a house that doesn't charge at first, but if you press play and stop button it charges and sometime it has errors.
+-street.fbx has a strange error, there are three houses that do not load at first attempt, but if you press play and then stop, or save and load a scene, they load well (you may have to repeat this loop to get it loaded)
+
+TIPS:
+
+-In the Option Window inside Configuration window, there is one option to toggle Library folder visibility, change it and restart the engine to update this.
 
 ### CONTROLS
 
