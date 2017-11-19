@@ -84,6 +84,19 @@ void ComponentTransform::DrawComponentImGui()
 	if (ImGui::CollapsingHeader("Transform Component", ImGuiTreeNodeFlags_DefaultOpen))
 	{
 		ImGui::Checkbox("Transform Component Active", &Active);
+		if (!parent->IsStatic())
+		{
+			ImGui::SameLine();
+			if (ImGui::SmallButton("Reset Trans"))
+			{
+				float3 position = float3::zero;
+				float3 scale = float3::one;
+				Quat rotation = Quat::identity;
+				SetPos(position);
+				SetRot(rotation);
+				SetScale(scale);
+			}
+		}
 
 		static int e = 0;
 		if (ImGui::RadioButton("Translation", &e, 0))
