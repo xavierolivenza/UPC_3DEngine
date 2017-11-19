@@ -41,6 +41,8 @@ TIPS:
 
 -If you set one camera to MainCamera an press Play button, the main view of the editor is the view of the MainCamera, when you press stop, the view return to the editor camera.
 
+-Octree only works with static objects, if an object is not static, this will not be inside octree. If you activate frustrum culling and everything disappears that mean that you might have static objects and an invalid octree, just recalculate it.
+
 ### CONTROLS
 
 -Camera controls
