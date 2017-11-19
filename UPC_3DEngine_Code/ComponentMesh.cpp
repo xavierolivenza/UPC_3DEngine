@@ -97,11 +97,11 @@ void ComponentMesh::DrawComponentImGui()
 		sprintf_s(data, data_size, "Colors ID: %i", resourceMesh->SimpleMeshDataStruct.id_colors);
 		ImGui::Text(data);
 
-		ImGui::InputFloat3("AABB Max Point", &resourceMesh->SimpleMeshDataStruct.BoundBox.maxPoint[0], 3, ImGuiInputTextFlags_CharsDecimal | ImGuiInputTextFlags_ReadOnly);
-		ImGui::InputFloat3("AABB Min Point", &resourceMesh->SimpleMeshDataStruct.BoundBox.minPoint[0], 3, ImGuiInputTextFlags_CharsDecimal | ImGuiInputTextFlags_ReadOnly);
+		//ImGui::InputFloat3("AABB Max Point", &resourceMesh->SimpleMeshDataStruct.BoundBox.maxPoint[0], 3, ImGuiInputTextFlags_CharsDecimal | ImGuiInputTextFlags_ReadOnly);
+		//ImGui::InputFloat3("AABB Min Point", &resourceMesh->SimpleMeshDataStruct.BoundBox.minPoint[0], 3, ImGuiInputTextFlags_CharsDecimal | ImGuiInputTextFlags_ReadOnly);
 
 		ImGui::Checkbox("Debug Draw AABB", &DebugDrawAABB);
-		ImGui::Checkbox("Debug Draw OBB", &DebugDrawOBB);
+		//ImGui::Checkbox("Debug Draw OBB", &DebugDrawOBB);
 	}
 }
 
