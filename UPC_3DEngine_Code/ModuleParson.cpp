@@ -221,7 +221,7 @@ double ParsonJSON::GetDouble(JSON_Object* conf, const char* field, double defaul
 bool ParsonJSON::GetBool(JSON_Object* conf, const char* field, bool default) const
 {
 	JSON_Value* value = json_object_get_value(conf, field);
-	if (value && (json_value_get_type(value) == JSONNumber))
+	if (value && (json_value_get_type(value) == JSONBoolean))
 		return json_value_get_boolean(value);
 	return default;
 }

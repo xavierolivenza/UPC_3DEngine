@@ -108,6 +108,7 @@ bool ModuleWindow::SaveConf(JSON_Object* conf) const
 	App->parsonjson->SetBool(conf, "resizable", resizable);
 	App->parsonjson->SetBool(conf, "borderless", borderless);
 	App->parsonjson->SetBool(conf, "fullscreen desktop", fullscreen_desktop);
+	App->parsonjson->SetBool(conf, "Library_Hidden", Library_Hidden);
 	return true;
 }
 
@@ -121,6 +122,7 @@ bool ModuleWindow::LoadConf(JSON_Object* conf)
 	resizable = App->parsonjson->GetBool(conf, "resizable", true);
 	borderless = App->parsonjson->GetBool(conf, "borderless", false);
 	fullscreen_desktop = App->parsonjson->GetBool(conf, "fullscreen desktop", false);
+	Library_Hidden = App->parsonjson->GetBool(conf, "Library_Hidden", true);
 	return true;
 }
 
@@ -159,4 +161,5 @@ void ModuleWindow::ImGuiModuleVariables()
 	snprintf(buffer, sizeof buffer, "%i", App->GetFramerateCapModif());
 	if (ImGui::InputText("MaxFPSValue", buffer, sizeof buffer, ImGuiInputTextFlags_EnterReturnsTrue | ImGuiInputTextFlags_CharsDecimal))
 		App->GetFramerateCapModif() = atoi(buffer);
+	ImGui::Checkbox("Toggle Library Folder Visibility (On restart)", &Library_Hidden);
 }

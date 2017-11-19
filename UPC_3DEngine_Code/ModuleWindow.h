@@ -50,6 +50,11 @@ public:
 		return (float)w_width / (float)w_height;
 	}
 
+	bool GetLibraryHidden()
+	{
+		return Library_Hidden;
+	}
+
 public:
 	//The window we'll be rendering to
 	SDL_Window* window;
@@ -64,6 +69,7 @@ private:
 	bool resizable = true;
 	bool borderless = false;
 	bool fullscreen_desktop = false;
+	bool Library_Hidden = false;
 	std::string title;
 };
 

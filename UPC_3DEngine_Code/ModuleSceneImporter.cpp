@@ -87,6 +87,11 @@ bool ModuleSceneImporter::Init()
 	else LOGP("Scenes folder already exists");
 	/**/
 
+	if (App->window->GetLibraryHidden())
+		SetFileAttributes(Library_path.c_str(), FILE_ATTRIBUTE_HIDDEN);
+	else
+		SetFileAttributes(Library_path.c_str(), FILE_ATTRIBUTE_NORMAL);
+
 	//Iterate all Assets folder including files and directories
 	for (auto& file_in_path : std::experimental::filesystem::recursive_directory_iterator(Assets_path.c_str()))
 	{
