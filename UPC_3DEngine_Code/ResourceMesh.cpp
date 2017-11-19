@@ -64,6 +64,6 @@ void ResourceMesh::Load(JSON_Object* conf)
 	//uuid = App->parsonjson->GetUInt(conf, "uuid", 0);
 	file = App->parsonjson->GetString(conf, "file_assets", "");
 	exported_file = App->parsonjson->GetString(conf, "file_library", "");
-	type = (Resource::Type)App->parsonjson->GetUInt(conf, "type", Resource::Type::null);
+	//type = (Resource::Type)App->parsonjson->GetUInt(conf, "type", Resource::Type::null);
 	file_date = App->parsonjson->GetString(conf, "file_time", "");
 }
