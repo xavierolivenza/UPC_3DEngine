@@ -172,7 +172,7 @@ bool ModuleResources::ImportFile(const char* new_file_in_assets, bool Reimportin
 		filepath_name += ".meta";
 
 		bool Exist = false;
-		FILE* file = fopen(filepath_name.c_str(), "r");
+		FILE* file = fopen((filepath_name + ".json").c_str(), "r");
 		if (file != nullptr)
 		{
 			fclose(file);
