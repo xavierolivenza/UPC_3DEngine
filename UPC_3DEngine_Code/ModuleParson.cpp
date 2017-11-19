@@ -160,7 +160,12 @@ bool ParsonJSON::SaveResource(const Resource* mesh) const
 		json_object_set_value(root_object, mesh->GetTypeStr(), json_value_init_object());
 	//Save
 	conf = json_object_get_object(root_object, mesh->GetTypeStr());
-	mesh->Save(conf);
+
+	switch (mesh->GetType())
+	{
+	case Resource::mesh: ((ResourceMesh*)mesh)->Save(conf); break;
+	case Resource::texture: ((ResourceTexture*)mesh)->Save(conf); break;
+	}
 
 	//json_serialize_to_string_pretty(root_value);
 	json_serialize_to_file(root_value, file_name.c_str());
@@ -171,7 +176,13 @@ bool ParsonJSON::LoadResource(Resource& mesh)
 {
 	JSON_Object* conf = nullptr;
 	conf = json_object_get_object(root_object, mesh.GetTypeStr());
-	mesh.Load(conf);
+
+	switch (mesh.GetType())
+	{
+	case Resource::mesh: ((ResourceMesh*)&mesh)->Load(conf); break;
+	case Resource::texture: ((ResourceTexture*)&mesh)->Load(conf); break;
+	}
+
 	return true;
 }
 

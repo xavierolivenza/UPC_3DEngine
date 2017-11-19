@@ -699,14 +699,17 @@ bool ModuleSceneImporter::LoadFBXComponents(const std::string* file_to_load)
 			//Vinculate resource with component
 			ComponentMesh* NewMesh = NewMeshGameObject->CreateMeshComponent(true);
 			NewMesh->SetResource(uuid);
-			NewMeshGameObject->name = NewMesh->resourceMesh->SimpleMeshDataStruct.Mesh_name;
-			//Load resource
-			uuid = App->resources->LoadResource((Library_material_path + "\\" + NewMesh->resourceMesh->SimpleMeshDataStruct.Asociated_texture_name).c_str(), NewMesh->resourceMesh->SimpleMeshDataStruct.Asociated_texture_OriginalPath.c_str());
-			if (uuid != 0)
+			if(NewMesh->resourceMesh != nullptr)
 			{
-				//Vinculate resource with component
-				ComponentMaterial* NewMaterial = NewMeshGameObject->CreateMaterialComponent(true);
-				NewMaterial->SetResource(uuid);
+				NewMeshGameObject->name = NewMesh->resourceMesh->SimpleMeshDataStruct.Mesh_name;
+				//Load resource
+				uuid = App->resources->LoadResource((Library_material_path + "\\" + NewMesh->resourceMesh->SimpleMeshDataStruct.Asociated_texture_name).c_str(), NewMesh->resourceMesh->SimpleMeshDataStruct.Asociated_texture_OriginalPath.c_str());
+				if (uuid != 0)
+				{
+					//Vinculate resource with component
+					ComponentMaterial* NewMaterial = NewMeshGameObject->CreateMaterialComponent(true);
+					NewMaterial->SetResource(uuid);
+				}
 			}
 		}
 		NewGameObject->AddChild(NewMeshGameObject);

@@ -163,20 +163,45 @@ bool ModuleResources::ImportFile(const char* new_file_in_assets, bool Reimportin
 				}
 			}
 		}
+		/**/
 
-		//Save Meta file
+		//Meta management
 		size_t bar_pos = res->file.rfind("\\") + 1;
 		std::string filepath_name = res->file.substr(0, bar_pos);
 		filepath_name += res->file.substr(bar_pos, res->file.length());
 		filepath_name += ".meta";
-		ParsonJSON* parsonjson = new ParsonJSON(filepath_name.c_str(), true, true, false);
-		bool MetaSaved = parsonjson->Init();
-		if (MetaSaved)
-			MetaSaved = parsonjson->SaveResource(res);
-		RELEASE(parsonjson);
-		if (MetaSaved) LOGP("SaveScene Success, file: %s", filepath_name.c_str());
-		else LOGP("SaveScene Failure, file: %s", filepath_name.c_str());
 
+		bool Exist = false;
+		FILE* file = fopen(filepath_name.c_str(), "r");
+		if (file != nullptr)
+		{
+			fclose(file);
+			LOGP("Meta file already exists: %s", filepath_name.c_str());
+			Exist = true;
+		}
+
+		ParsonJSON* parsonjson = new ParsonJSON(filepath_name.c_str(), true, true, false);
+		bool Meta = parsonjson->Init();
+		if (Exist)
+		{
+			//Save Meta file
+			if (Meta) Meta = parsonjson->LoadResource(*res);
+			if (Meta)
+				switch (type)
+				{
+				case Resource::mesh: App->importer->ImportFBX(&std::string(new_file_in_assets), output, Reimporting); break;
+				case Resource::texture: App->importer->MaterialImporter->Save(&std::string(new_file_in_assets), output, Reimporting, CompressingMethod); break;
+				}
+		}
+		else
+		{
+			//Save Meta file
+			if (Meta) Meta = parsonjson->SaveResource(res);
+		}
+		RELEASE(parsonjson);
+		if (Meta) LOGP("Load Resource Meta Success, file: %s", filepath_name.c_str());
+		else LOGP("Load Resource Meta Failure, file: %s", filepath_name.c_str());
+		
 		//delete res created
 		RELEASE(res);
 	}
@@ -212,6 +237,18 @@ bool ModuleResources::ReimportResource(Resource& res, int CompressingMethod)
 			case Resource::Type::null:
 				break;
 			}
+
+			//Save Meta file
+			size_t bar_pos = res.file.rfind("\\") + 1;
+			std::string filepath_name = res.file.substr(0, bar_pos);
+			filepath_name += res.file.substr(bar_pos, res.file.length());
+			filepath_name += ".meta";
+			ParsonJSON* parsonjson = new ParsonJSON(filepath_name.c_str(), true, true, false);
+			bool MetaSaved = parsonjson->Init();
+			if (MetaSaved) MetaSaved = parsonjson->SaveResource(&res);
+			RELEASE(parsonjson);
+			if (MetaSaved) LOGP("Load Resource Meta Success, file: %s", filepath_name.c_str());
+			else LOGP("Load Resource Meta Failure, file: %s", filepath_name.c_str());
 		}
 	}
 	return ret;
@@ -243,16 +280,8 @@ uint ModuleResources::LoadResource(const char* file, const char* originalFile)
 
 		switch (type)
 		{
-		case Resource::mesh:
-		{
-			path = *App->importer->Get_Library_mesh_path() + "\\" + filename;
-			break;
-		}
-		case Resource::texture:
-		{
-			path = *App->importer->Get_Library_material_path() + "\\" + filename;
-			break;
-		}
+		case Resource::mesh: path = *App->importer->Get_Library_mesh_path() + "\\" + filename; break;
+		case Resource::texture:path = *App->importer->Get_Library_material_path() + "\\" + filename; break;
 		}
 
 		//Check if already exists
@@ -269,22 +298,24 @@ uint ModuleResources::LoadResource(const char* file, const char* originalFile)
 		res = CreateNewResource(type);
 		if (originalFile != nullptr)
 			res->file = originalFile;
+		
 		ret = res->GetUID();
 
-		for (std::experimental::filesystem::recursive_directory_iterator::value_type file_in_path : std::experimental::filesystem::recursive_directory_iterator(App->importer->Get_Assets_path()->c_str()))
-		{
-			if (std::experimental::filesystem::is_regular_file(file_in_path.path()))
-			{
-				//LOGP("%S", file_in_path.path().string().c_str());
-				if (res->file == file_in_path.path().string().c_str())
-				{
-					std::experimental::filesystem::file_time_type ftime = std::experimental::filesystem::last_write_time(file_in_path.path());
-					std::time_t cftime = decltype(ftime)::clock::to_time_t(ftime);
-					res->file_date = std::asctime(std::localtime(&cftime));
-				}
-			}
-		}
+		//Load meta file to get importing/loading options
+		size_t bar_pos = res->file.rfind("\\") + 1;
+		std::string filepath_name = res->file.substr(0, bar_pos);
+		filepath_name += res->file.substr(bar_pos, res->file.length());
+		filepath_name += ".meta";
+		ParsonJSON* parsonjson = new ParsonJSON(filepath_name.c_str(), true, true, false);
+		bool MetaLoaded = parsonjson->Init();
+		if (MetaLoaded) MetaLoaded = parsonjson->LoadResource(*res);
+		RELEASE(parsonjson);
+		if (MetaLoaded) LOGP("Load Resource Meta Success, file: %s", filepath_name.c_str());
+		else LOGP("Load Resource Meta Failure, file: %s", filepath_name.c_str());
 
+		ret = res->GetUID();
+
+		//Load Resource
 		switch (type)
 		{
 		case Resource::mesh:

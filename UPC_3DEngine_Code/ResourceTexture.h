@@ -54,6 +54,7 @@ public:
 public:
 	MaterialData TextureDataStruct;
 private:
+	int WrappingMethodPick = 0;
 	int InterpolationMethodPick = 1;
 	int CompressingMethodPick = 4;
 };
