@@ -113,6 +113,7 @@
     <ClInclude Include="ComponentCamera.h" />
     <ClInclude Include="ComponentMaterial.h" />
     <ClInclude Include="ComponentMesh.h" />
+    <ClInclude Include="ComponentParticleSystem.h" />
     <ClInclude Include="ComponentTransform.h" />
     <ClInclude Include="DeviceId\DeviceId.h" />
     <ClInclude Include="DeviceId\dxgi1_4.h" />
@@ -211,6 +212,7 @@
     <ClInclude Include="p2Point.h" />
     <ClInclude Include="ModuleParson.h" />
     <ClInclude Include="parson\parson.h" />
+    <ClInclude Include="ParticleSystem.h" />
     <ClInclude Include="Primitive.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="ResourceMesh.h" />
@@ -224,6 +226,7 @@
     <ClCompile Include="ComponentCamera.cpp" />
     <ClCompile Include="ComponentMaterial.cpp" />
     <ClCompile Include="ComponentMesh.cpp" />
+    <ClCompile Include="ComponentParticleSystem.cpp" />
     <ClCompile Include="ComponentTransform.cpp" />
     <ClCompile Include="DeviceId\DeviceId.cpp" />
     <ClCompile Include="Fluid_Studios_Memory_Manager\mmgr.cpp" />
@@ -282,6 +285,7 @@
     <ClCompile Include="p2Log.cpp" />
     <ClCompile Include="ModuleParson.cpp" />
     <ClCompile Include="parson\parson.c" />
+    <ClCompile Include="ParticleSystem.cpp" />
     <ClCompile Include="Primitive.cpp" />
     <ClCompile Include="Resource.cpp" />
     <ClCompile Include="ResourceMesh.cpp" />
