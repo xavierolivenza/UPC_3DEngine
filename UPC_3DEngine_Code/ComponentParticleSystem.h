@@ -27,5 +27,6 @@ public:
 //	ResourceMesh* resourceMesh = nullptr;
 
 private:
+	bool ShowParticleEditor = false;
 	ParticleSystem* PartSystem = nullptr;
 };

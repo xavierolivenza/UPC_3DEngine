@@ -83,7 +83,10 @@ public:
 	bool PostUpdate(float dt);
 	bool CleanUp();
 
+	void DrawImGuiEditorWindow();
+
 private:
+	void DrawColorSelector();
 	bool CreateParticle();
 
 private:

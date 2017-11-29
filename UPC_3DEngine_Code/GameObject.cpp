@@ -4,6 +4,7 @@
 #include "ComponentMesh.h"
 #include "ComponentMaterial.h"
 #include "ComponentCamera.h"
+#include "ComponentParticleSystem.h"
 
 GameObject::GameObject(const char* name, bool active, bool static_game_object): name(name), Active(active), Static(static_game_object)
 {
@@ -301,6 +302,19 @@ ComponentCamera* GameObject::CreateCameraComponent(bool active)
 	}
 	else
 		LOGP("You cannot create another component Camera in this GameObject.");
+	return nullptr;
+}
+
+ComponentParticleSystem * GameObject::CreateParticleSystemComponent(bool active)
+{
+	if (CanCreateOneMoreComponent(ComponentType::ParticleSystem_Component))
+	{
+		ComponentParticleSystem* particlesystem = new ComponentParticleSystem(this, active);
+		components.push_back((Component*)particlesystem);
+		return particlesystem;
+	}
+	else
+		LOGP("You cannot create another component Particle System in this GameObject.");
 	return nullptr;
 }
 

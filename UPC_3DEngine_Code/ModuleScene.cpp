@@ -21,6 +21,12 @@ bool ModuleScene::Init()
 	bool ret = true;
 	root = new GameObject("Root", true, true);
 	scene_octree.Boundaries(AABB(float3(-1.0f, -1.0f, -1.0f), float3(1.0f, 1.0f, 1.0f)));
+
+	//Particle test
+	GameObject* particletest = new GameObject("Particle System", true, true);
+	particletest->CreateParticleSystemComponent(true);
+	AddChildToRoot(particletest);
+
 	return ret;
 }
 

@@ -8,6 +8,7 @@ enum ComponentType
 	Mesh_Component,
 	Material_Component,
 	Camera_Component,
+	ParticleSystem_Component,
 	Null_ComponentType
 };
 

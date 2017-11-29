@@ -8,6 +8,7 @@ class ComponentTransform;
 class ComponentMesh;
 class ComponentMaterial;
 class ComponentCamera;
+class ComponentParticleSystem;
 
 class GameObject
 {
@@ -43,6 +44,7 @@ public:
 	ComponentMesh* CreateMeshComponent(bool active);
 	ComponentMaterial* CreateMaterialComponent(bool active);
 	ComponentCamera* CreateCameraComponent(bool active);
+	ComponentParticleSystem* CreateParticleSystemComponent(bool active);
 	bool RemoveComponent(Component* component);
 
 	//Find Component
