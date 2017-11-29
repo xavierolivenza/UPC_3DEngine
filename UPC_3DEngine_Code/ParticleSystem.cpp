@@ -34,3 +34,8 @@ bool ParticleSystem::CreateParticle()
 {
 	return true;
 }
+
+ParticleEmitter::EmitterShapeUnion::EmitterShapeUnion()
+{
+
+}

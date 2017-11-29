@@ -34,8 +34,9 @@ struct ParticleEmitter
 		EmitterType_Circle,
 		EmitterType_Edge
 	} Type;
-	union
+	union EmitterShapeUnion
 	{
+		EmitterShapeUnion();
 		AABB Box_Shape;
 		Sphere Sphere_Shape;
 		Cone Cone_Shape;
@@ -89,5 +90,5 @@ private:
 	std::vector<Particle*> Particles;
 	ParticleState InitialState;
 	ParticleState FinalState;
-	//ParticleEmitter Emitter;
+	ParticleEmitter Emitter;
 };
