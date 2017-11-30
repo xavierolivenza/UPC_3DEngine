@@ -10,6 +10,31 @@
 #include "MathGeoLib\Geometry\Circle.h"
 #include "ResourceMesh.h"
 
+#ifdef NULL
+#undef NULL
+#endif
+#define NULL  0
+
+// Deletes a buffer
+#define RELEASE( x )	\
+{                       \
+	if( x != NULL )     \
+	{                   \
+		delete x;       \
+	    x = NULL;       \
+	}                   \
+}
+
+// Deletes an array of buffers
+#define RELEASE_ARRAY( x )	\
+{                           \
+	if( x != NULL )         \
+	{                       \
+		delete[] x;         \
+	    x = NULL;           \
+	}                       \
+}
+
 struct ParticleEmitter
 {
 	uint Lifetime = 0;								//Lifetime of emitted particles
@@ -73,6 +98,26 @@ struct Particle
 	ParticleState* FinalState;						//Particle Final State Properties
 };
 
+struct ParticleMeshData								//Very similar to MeshDataResource, but we copy it here to separate as much as we can the particle code from engine code (eayer to export/make a library)
+{
+	ParticleMeshData();
+	~ParticleMeshData();
+	void Copy(ParticleMeshData& Other);
+	void Clean();
+
+	uint num_faces = 0;
+	uint id_vertices = 0;							// ID in VRAM
+	uint num_vertices = 0;
+	float* vertices = nullptr;
+	uint id_indices = 0;							// ID in VRAM
+	uint num_indices = 0;
+	uint* indices = nullptr;
+	uint id_normals = 0;							// ID in VRAM
+	float* normals = nullptr;
+	uint id_texture_coords = 0;						// ID in VRAM
+	float* texture_coords = nullptr;
+};
+
 class ParticleSystem
 {
 public:
@@ -83,7 +128,9 @@ public:
 	bool PostUpdate(float dt);
 	bool CleanUp();
 
-	void DrawImGuiEditorWindow();
+	void SetMeshResource(ParticleMeshData& MeshData);//Set Mesh resource to use
+	void SetMeshResourcePlane();					//Delete actual mesh + load a plane
+	void DrawImGuiEditorWindow();					//Draw Particle Editor Window
 
 private:
 	void DrawColorSelector();
@@ -91,8 +138,9 @@ private:
 
 public:
 	bool EditorWindowOpen = false;
-
+	
 private:
+	ParticleMeshData ParticleMesh;
 	std::vector<Particle*> Particles;
 	ParticleState InitialState;
 	ParticleState FinalState;
