@@ -89,6 +89,9 @@ private:
 	void DrawColorSelector();
 	bool CreateParticle();
 
+public:
+	bool EditorWindowOpen = false;
+
 private:
 	std::vector<Particle*> Particles;
 	ParticleState InitialState;

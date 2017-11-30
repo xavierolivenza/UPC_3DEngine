@@ -33,33 +33,36 @@ bool ParticleSystem::CleanUp()
 
 void ParticleSystem::DrawImGuiEditorWindow()
 {
-	ImGui::Begin("Particle Editor", false);
+	if (EditorWindowOpen)
+	{
+		ImGui::Begin("Particle Editor", &EditorWindowOpen);
 
-	ImVec2 WindowSize = ImGui::GetWindowSize();
-	float ChildsWidth = (WindowSize.x - 28.0f) / 3.0f;
-	float ChildsHeight = (WindowSize.y - 52.0f) / 2.0f;
+		ImVec2 WindowSize = ImGui::GetWindowSize();
+		float ChildsWidth = (WindowSize.x - 28.0f) / 3.0f;
+		float ChildsHeight = (WindowSize.y - 52.0f) / 2.0f;
 
-	ImGui::BeginChild("Preview", ImVec2(ChildsWidth, ChildsHeight), true);
+		ImGui::BeginChild("Preview", ImVec2(ChildsWidth, ChildsHeight), true);
 
-	ImGui::EndChild();
+		ImGui::EndChild();
 
-	ImGui::SameLine();
+		ImGui::SameLine();
 
-	ImGui::BeginChild("Initial State", ImVec2(ChildsWidth, ChildsHeight), true);
-	DrawColorSelector();
-	ImGui::EndChild();
+		ImGui::BeginChild("Initial State", ImVec2(ChildsWidth, ChildsHeight), true);
+		DrawColorSelector();
+		ImGui::EndChild();
 
-	ImGui::SameLine();
+		ImGui::SameLine();
 
-	ImGui::BeginChild("Final State", ImVec2(ChildsWidth, ChildsHeight), true);
-	DrawColorSelector();
-	ImGui::EndChild();
+		ImGui::BeginChild("Final State", ImVec2(ChildsWidth, ChildsHeight), true);
+		DrawColorSelector();
+		ImGui::EndChild();
 
-	ImGui::BeginChild("EmitterGeneralOptions", ImVec2(0, ChildsHeight), true);
+		ImGui::BeginChild("EmitterGeneralOptions", ImVec2(0, ChildsHeight), true);
 
-	ImGui::EndChild();
+		ImGui::EndChild();
 
-	ImGui::End();
+		ImGui::End();
+	}
 }
 
 void ParticleSystem::DrawColorSelector()

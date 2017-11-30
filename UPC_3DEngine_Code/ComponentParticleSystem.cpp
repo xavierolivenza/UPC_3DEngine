@@ -27,7 +27,7 @@ bool ComponentParticleSystem::PreUpdate(float dt)
 bool ComponentParticleSystem::Update(float dt)
 {
 	PartSystem->Update(dt);
-	if (ShowParticleEditor) PartSystem->DrawImGuiEditorWindow();
+	if (PartSystem->EditorWindowOpen) PartSystem->DrawImGuiEditorWindow();
 	return true;
 }
 
@@ -51,7 +51,7 @@ bool ComponentParticleSystem::CleanUp()
 void ComponentParticleSystem::DrawComponentImGui()
 {
 	if (ImGui::CollapsingHeader("Particle System Component", ImGuiTreeNodeFlags_DefaultOpen))
-		ImGui::Checkbox("Show Particle Editor", &ShowParticleEditor);
+		ImGui::Checkbox("Show Particle Editor", &PartSystem->EditorWindowOpen);
 }
 
 void ComponentParticleSystem::SetResource(uint uuid)
