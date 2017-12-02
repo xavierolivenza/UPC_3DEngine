@@ -38,7 +38,50 @@ void ParticleSystem::SetMeshResource(ParticleMeshData& MeshData)
 
 void ParticleSystem::SetMeshResourcePlane()
 {
-	//TODO Load plane to ParticleMesh
+	ParticleMesh.Clean();
+	ParticleMesh.num_faces = 2;
+	// Vertices
+	ParticleMesh.num_vertices = 4;
+	ParticleMesh.vertices = new float[ParticleMesh.num_vertices * 3];
+	float vertices[] =
+	{
+		-0.5f,  0.5f, 0,
+		0.5f,  0.5f, 0,
+		-0.5f, -0.5f, 0,
+		0.5f, -0.5f, 0
+	};
+	memcpy(ParticleMesh.vertices, vertices, sizeof(float) * ParticleMesh.num_vertices * 3);
+	// Vertices Buffer
+	glGenBuffers(1, (GLuint*) &ParticleMesh.id_vertices);
+	glBindBuffer(GL_ARRAY_BUFFER, ParticleMesh.id_vertices);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * ParticleMesh.num_vertices * 3, ParticleMesh.vertices, GL_STATIC_DRAW);
+	//Indices
+	ParticleMesh.num_indices = 6;
+	ParticleMesh.indices = new uint[ParticleMesh.num_indices];
+	uint indices[] =
+	{
+		0, 1, 2,
+		1, 3, 2
+	};
+	memcpy(ParticleMesh.indices, indices, sizeof(float) * ParticleMesh.num_indices);
+	// Indices Buffer
+	glGenBuffers(1, (GLuint*) &ParticleMesh.id_indices);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ParticleMesh.id_indices);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint) * ParticleMesh.num_indices, ParticleMesh.indices, GL_STATIC_DRAW);
+	// Texture coords
+	ParticleMesh.texture_coords = new float[ParticleMesh.num_vertices * 3];
+	float texture_coords[] =
+	{
+		0.0f, 1.0f, 0.0f,
+		1.0f, 1.0f, 0.0f,
+		0.0f, 0.0f, 0.0f,
+		1.0f, 0.0f, 0.0f
+	};
+	memcpy(ParticleMesh.texture_coords, texture_coords, sizeof(float) * ParticleMesh.num_vertices * 3);
+	// Texture coords Buffer
+	glGenBuffers(1, (GLuint*) &ParticleMesh.id_texture_coords);
+	glBindBuffer(GL_ARRAY_BUFFER, ParticleMesh.id_texture_coords);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * ParticleMesh.num_indices * 3, ParticleMesh.texture_coords, GL_STATIC_DRAW);
 }
 
 void ParticleSystem::DrawImGuiEditorWindow()
