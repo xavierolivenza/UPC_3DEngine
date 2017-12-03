@@ -58,7 +58,7 @@ struct ParticleEmitter
 		EmitterType_Box,
 		EmitterType_Circle,
 		EmitterType_Edge
-	} Type;
+	} Type = EmitterType_Box;
 	union EmitterShapeUnion
 	{
 		EmitterShapeUnion();
@@ -91,11 +91,21 @@ struct ParticleProperties
 	float4 RGBATint = float4::zero;					//Particle Texture tint
 };
 
-struct Particle
+class Particle
 {
+public:
+	Particle();
+	~Particle();
+	bool PreUpdate(float dt);
+	bool Update(float dt);
+	bool PostUpdate(float dt);
+
+	void DrawParticle();
+
+public:
 	ParticleProperties Properties;					//Particle Properties
-	ParticleState* InitialState;					//Particle Initial State Properties
-	ParticleState* FinalState;						//Particle Final State Properties
+	ParticleState* InitialState = nullptr;			//Particle Initial State Properties
+	ParticleState* FinalState = nullptr;			//Particle Final State Properties
 };
 
 struct ParticleMeshData								//Very similar to MeshDataResource, but we copy it here to separate as much as we can the particle code from engine code (eayer to export/make a library)

@@ -1,6 +1,99 @@
 #include "ParticleSystem.h"
 #include "imgui-1.51\imgui.h"
 
+ParticleEmitter::EmitterShapeUnion::EmitterShapeUnion()
+{
+
+}
+
+Particle::Particle()
+{
+
+}
+
+Particle::~Particle()
+{
+
+}
+
+bool Particle::PreUpdate(float dt)
+{
+	return true;
+}
+
+bool Particle::Update(float dt)
+{
+	return true;
+}
+
+bool Particle::PostUpdate(float dt)
+{
+	return true;
+}
+
+void Particle::DrawParticle()
+{
+
+}
+
+ParticleMeshData::ParticleMeshData()
+{
+
+}
+
+ParticleMeshData::~ParticleMeshData()
+{
+	Clean();
+}
+
+void ParticleMeshData::Copy(ParticleMeshData& Other)
+{
+	Clean();
+	num_faces = Other.num_faces;
+	id_vertices = Other.id_vertices;
+	num_vertices = Other.num_vertices;
+	vertices = new float[num_vertices * 3];
+	memcpy(vertices, Other.vertices, sizeof(float) * num_vertices * 3);
+	id_indices = Other.id_indices;
+	num_indices = Other.num_indices;
+	indices = new uint[num_indices];
+	memcpy(indices, Other.indices, sizeof(float) * num_indices);
+	id_normals = Other.id_normals;
+	normals = new float[num_vertices * 3];
+	memcpy(normals, Other.normals, sizeof(float) * num_vertices * 3);
+	id_texture_coords = Other.id_texture_coords;
+	texture_coords = new float[num_vertices * 3];
+	memcpy(texture_coords, Other.texture_coords, sizeof(float) * num_vertices * 3);
+}
+
+void ParticleMeshData::Clean()
+{
+	if (vertices != nullptr)
+	{
+		if (id_vertices > 0)
+			glDeleteBuffers(1, &id_vertices);
+		RELEASE_ARRAY(vertices);
+	}
+	if (indices != nullptr)
+	{
+		if (id_indices > 0)
+			glDeleteBuffers(1, &id_indices);
+		RELEASE_ARRAY(indices);
+	}
+	if (normals != nullptr)
+	{
+		if (id_normals > 0)
+			glDeleteBuffers(1, &id_normals);
+		RELEASE_ARRAY(normals);
+	}
+	if (texture_coords != nullptr)
+	{
+		if (id_texture_coords > 0)
+			glDeleteBuffers(1, &id_texture_coords);
+		RELEASE_ARRAY(texture_coords);
+	}
+}
+
 ParticleSystem::ParticleSystem()
 {
 
@@ -13,17 +106,26 @@ ParticleSystem::~ParticleSystem()
 
 bool ParticleSystem::PreUpdate(float dt)
 {
-	return true;
+	bool ret = false;
+	for (std::vector<Particle*>::iterator item = Particles.begin(); item != Particles.cend() && ret == true; ++item)
+		ret = (*item)->PreUpdate(dt);
+	return ret;
 }
 
 bool ParticleSystem::Update(float dt)
 {
-	return true;
+	bool ret = false;
+	for (std::vector<Particle*>::iterator item = Particles.begin(); item != Particles.cend() && ret == true; ++item)
+		ret = (*item)->Update(dt);
+	return ret;
 }
 
 bool ParticleSystem::PostUpdate(float dt)
 {
-	return true;
+	bool ret = false;
+	for (std::vector<Particle*>::iterator item = Particles.begin(); item != Particles.cend() && ret == true; ++item)
+		ret = (*item)->PostUpdate(dt);
+	return ret;
 }
 
 bool ParticleSystem::CleanUp()
@@ -126,67 +228,4 @@ void ParticleSystem::DrawColorSelector()
 bool ParticleSystem::CreateParticle()
 {
 	return true;
-}
-
-ParticleEmitter::EmitterShapeUnion::EmitterShapeUnion()
-{
-
-}
-
-ParticleMeshData::ParticleMeshData()
-{
-
-}
-
-ParticleMeshData::~ParticleMeshData()
-{
-	Clean();
-}
-
-void ParticleMeshData::Copy(ParticleMeshData& Other)
-{
-	Clean();
-	num_faces = Other.num_faces;
-	id_vertices = Other.id_vertices;
-	num_vertices = Other.num_vertices;
-	vertices = new float[num_vertices * 3];
-	memcpy(vertices, Other.vertices, sizeof(float) * num_vertices * 3);
-	id_indices = Other.id_indices;
-	num_indices = Other.num_indices;
-	indices = new uint[num_indices];
-	memcpy(indices, Other.indices, sizeof(float) * num_indices);
-	id_normals = Other.id_normals;
-	normals = new float[num_vertices * 3];
-	memcpy(normals, Other.normals, sizeof(float) * num_vertices * 3);
-	id_texture_coords = Other.id_texture_coords;
-	texture_coords = new float[num_vertices * 3];
-	memcpy(texture_coords, Other.texture_coords, sizeof(float) * num_vertices * 3);
-}
-
-void ParticleMeshData::Clean()
-{
-	if (vertices != nullptr)
-	{
-		if (id_vertices > 0)
-			glDeleteBuffers(1, &id_vertices);
-		RELEASE_ARRAY(vertices);
-	}
-	if (indices != nullptr)
-	{
-		if (id_indices > 0)
-			glDeleteBuffers(1, &id_indices);
-		RELEASE_ARRAY(indices);
-	}
-	if (normals != nullptr)
-	{
-		if (id_normals > 0)
-			glDeleteBuffers(1, &id_normals);
-		RELEASE_ARRAY(normals);
-	}
-	if (texture_coords != nullptr)
-	{
-		if (id_texture_coords > 0)
-			glDeleteBuffers(1, &id_texture_coords);
-		RELEASE_ARRAY(texture_coords);
-	}
 }
