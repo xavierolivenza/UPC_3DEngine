@@ -193,34 +193,39 @@ void ParticleSystem::DrawImGuiEditorWindow()
 		ImGui::Begin("Particle Editor", &EditorWindowOpen);
 
 		ImVec2 WindowSize = ImGui::GetWindowSize();
-		float ChildsWidth = (WindowSize.x - 28.0f) / 3.0f;
-		float ChildsHeight = (WindowSize.y - 52.0f) / 2.0f;
+		float ChildsWidth = (WindowSize.x - 28.0f) * 0.33f;
+		float ChildsHeight = (WindowSize.y - 52.0f) * 0.5f;
 
 		ImGui::BeginChild("Preview", ImVec2(ChildsWidth, ChildsHeight), true);
-
+		DrawTexturePreview();
 		ImGui::EndChild();
 
 		ImGui::SameLine();
 
 		ImGui::BeginChild("Initial State", ImVec2(ChildsWidth, ChildsHeight), true);
-		DrawColorSelector();
+		DrawColorSelector(InitialState);
 		ImGui::EndChild();
 
 		ImGui::SameLine();
 
 		ImGui::BeginChild("Final State", ImVec2(ChildsWidth, ChildsHeight), true);
-		DrawColorSelector();
+		DrawColorSelector(FinalState);
 		ImGui::EndChild();
 
 		ImGui::BeginChild("EmitterGeneralOptions", ImVec2(0, ChildsHeight), true);
-
+		DrawEmitterOptions();
 		ImGui::EndChild();
 
 		ImGui::End();
 	}
 }
 
-void ParticleSystem::DrawColorSelector()
+void ParticleSystem::DrawTexturePreview()
+{
+
+}
+
+void ParticleSystem::DrawColorSelector(ParticleState& state)
 {
 	ImGui::Text("Color picker:");
 	static bool hdr = false;
@@ -264,6 +269,11 @@ void ParticleSystem::DrawColorSelector()
 	if (inputs_mode == 3) flags |= ImGuiColorEditFlags_HSV;
 	if (inputs_mode == 4) flags |= ImGuiColorEditFlags_HEX;
 	ImGui::ColorPicker4("MyColor##4", (float*)&color, flags, ref_color ? &ref_color_v.x : NULL);
+}
+
+void ParticleSystem::DrawEmitterOptions()
+{
+	//imgui_demo.cpp line 1482
 }
 
 bool ParticleSystem::CreateParticle()

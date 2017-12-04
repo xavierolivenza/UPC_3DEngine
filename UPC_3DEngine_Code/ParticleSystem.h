@@ -143,7 +143,9 @@ public:
 	void DrawImGuiEditorWindow();					//Draw Particle Editor Window
 
 private:
-	void DrawColorSelector();
+	void DrawTexturePreview();
+	void DrawColorSelector(ParticleState& state);
+	void DrawEmitterOptions();
 	bool CreateParticle();
 
 public:
