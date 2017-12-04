@@ -73,8 +73,19 @@ struct ParticleState
 {
 	float Speed = 0.0f;								//Particle Speed
 	float SpeedVariation = 0.0f;
-	float4 RGBATint = float4::zero;					//Particle Texture tint
+	float Size = 0.0f;
+	float SizeVariation = 0.0f;
+	float4 RGBATint = float4::one;					//Particle Texture tint
 	float4 RGBATintVariation = float4::zero;
+
+	bool alpha_preview = true;
+	bool alpha_half_preview = false;
+	bool options_menu = true;
+	bool alpha = true;
+	bool alpha_bar = true;
+	bool side_preview = true;
+	int inputs_mode = 2;
+	int picker_mode = 0;
 };
 
 struct ParticleProperties
@@ -144,7 +155,7 @@ public:
 
 private:
 	void DrawTexturePreview();
-	void DrawColorSelector(ParticleState& state);
+	void DrawColorSelector();
 	void DrawEmitterOptions();
 	bool CreateParticle();
 
@@ -157,4 +168,10 @@ private:
 	ParticleState InitialState;
 	ParticleState FinalState;
 	ParticleEmitter Emitter;
+
+	enum
+	{
+		InitialState_Enum,
+		FinalState_Enum
+	}ParticleStateEnum = InitialState_Enum;
 };
