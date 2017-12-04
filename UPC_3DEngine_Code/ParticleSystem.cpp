@@ -222,7 +222,48 @@ void ParticleSystem::DrawImGuiEditorWindow()
 
 void ParticleSystem::DrawColorSelector()
 {
+	ImGui::Text("Color picker:");
+	static bool hdr = false;
+	static bool alpha_preview = true;
+	static bool alpha_half_preview = false;
+	static bool options_menu = true;
+	static bool alpha = true;
+	static bool alpha_bar = true;
+	static bool side_preview = true;
+	static bool ref_color = false;
+	static ImVec4 ref_color_v(1.0f, 0.0f, 1.0f, 0.5f);
+	static int inputs_mode = 2;
+	static int picker_mode = 0;
+
+	static ImVec4 color = ImColor(114, 144, 154, 200);
+	ImGui::Checkbox("With Alpha", &alpha);
+	ImGui::Checkbox("With Alpha Bar", &alpha_bar);
+	ImGui::Checkbox("With Side Preview", &side_preview);
+	if (side_preview)
+	{
+		ImGui::SameLine();
+		ImGui::Checkbox("With Ref Color", &ref_color);
+		if (ref_color)
+		{
+			ImGui::SameLine();
+			ImGui::ColorEdit4("##RefColor", &ref_color_v.x, ImGuiColorEditFlags_NoInputs);
+		}
+	}
+	int misc_flags = (hdr ? ImGuiColorEditFlags_HDR : 0) | (alpha_half_preview ? ImGuiColorEditFlags_AlphaPreviewHalf : (alpha_preview ? ImGuiColorEditFlags_AlphaPreview : 0)) | (options_menu ? 0 : ImGuiColorEditFlags_NoOptions);
 	//imgui_demo.cpp line 835
+	ImGui::Combo("Inputs Mode", &inputs_mode, "All Inputs\0No Inputs\0RGB Input\0HSV Input\0HEX Input\0");
+	ImGui::Combo("Picker Mode", &picker_mode, "Auto/Current\0Hue bar + SV rect\0Hue wheel + SV triangle\0");
+	ImGuiColorEditFlags flags = misc_flags;
+	if (!alpha) flags |= ImGuiColorEditFlags_NoAlpha; // This is by default if you call ColorPicker3() instead of ColorPicker4()
+	if (alpha_bar) flags |= ImGuiColorEditFlags_AlphaBar;
+	if (!side_preview) flags |= ImGuiColorEditFlags_NoSidePreview;
+	if (picker_mode == 1) flags |= ImGuiColorEditFlags_PickerHueBar;
+	if (picker_mode == 2) flags |= ImGuiColorEditFlags_PickerHueWheel;
+	if (inputs_mode == 1) flags |= ImGuiColorEditFlags_NoInputs;
+	if (inputs_mode == 2) flags |= ImGuiColorEditFlags_RGB;
+	if (inputs_mode == 3) flags |= ImGuiColorEditFlags_HSV;
+	if (inputs_mode == 4) flags |= ImGuiColorEditFlags_HEX;
+	ImGui::ColorPicker4("MyColor##4", (float*)&color, flags, ref_color ? &ref_color_v.x : NULL);
 }
 
 bool ParticleSystem::CreateParticle()
