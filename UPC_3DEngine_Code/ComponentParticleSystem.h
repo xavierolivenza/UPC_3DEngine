@@ -27,6 +27,7 @@ public:
 
 private:
 	ParticleSystem* PartSystem = nullptr;
+	bool EditBoundBox = false;
 };
 
 #endif // __ComponentParticleSystem_H__

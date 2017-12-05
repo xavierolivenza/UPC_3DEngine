@@ -7,7 +7,6 @@
 #include "MathGeoLib\Math\Quat.h"
 #include "MathGeoLib\Geometry\AABB.h"
 #include "MathGeoLib\Geometry\Sphere.h"
-#include "MathGeoLib\Geometry\Cone.h"
 #include "MathGeoLib\Geometry\Circle.h"
 
 #ifdef NULL
@@ -41,12 +40,23 @@
 	}                       \
 }
 
-struct ParticleEmitter
+//
+struct ConeTrunk
 {
+	Circle Upper_Circle;
+	Circle Bottom_Circle;
+};
+
+class ParticleEmitter
+{
+public:
 	ParticleEmitter();
 	~ParticleEmitter();
 
-	float PreviewState = 0.0f;							//Preview of the particle, 0 = initial state, 1 = final state
+	void DebugDraw();
+
+public:
+	float PreviewState = 0.0f;						//Preview of the particle, 0 = initial state, 1 = final state
 	int Lifetime = 0;								//Lifetime of emitted particles
 	int LifetimeVariation = 0;						//Lifetime variation of emitted particles
 	int EmissionDuration = 0;						//If loop is false, emission is played EmissionDuration ms
@@ -81,7 +91,7 @@ struct ParticleEmitter
 		EmitterShapeUnion();
 		AABB Box_Shape;
 		Sphere Sphere_Shape;
-		Cone Cone_Shape;
+		ConeTrunk ConeTrunk_Shape;
 		Circle Circle_Shape;
 	} EmitterShape;
 };
@@ -170,7 +180,10 @@ public:
 
 	void SetMeshResource(ParticleMeshData& MeshData);//Set Mesh resource to use
 	void SetMeshResourcePlane();					//Delete actual mesh + load a plane
+	void DebugDrawEmitter(bool active);
 	void DrawImGuiEditorWindow();					//Draw Particle Editor Window
+
+	AABB& GetEmitterAABB();							//You can get the Emitter AABB and edit min and max point with gizmos
 
 private:
 	void DrawTexturePreview();
@@ -187,6 +200,7 @@ private:
 	ParticleState InitialState;
 	ParticleState FinalState;
 	ParticleEmitter Emitter;
+	bool EmitterDebugDraw = true;
 
 	enum
 	{

@@ -2,6 +2,11 @@
 #include "ParticleSystem.h"
 #include "imgui-1.51\imgui.h"
 #include "ResourceMesh.h"
+#include "imgui-1.51\ImGuizmo.h"
+#include "ModuleCamera3D.h"
+#include "MathGeoLib\Geometry\Frustum.h"
+#include "ComponentCamera.h"
+#include "ComponentTransform.h"
 
 ComponentParticleSystem::ComponentParticleSystem(GameObject* parent, bool Active) : Component(parent, Active, 0, ComponentType::ParticleSystem_Component)
 {
@@ -29,6 +34,48 @@ bool ComponentParticleSystem::Update(float dt)
 {
 	PartSystem->Update(dt);
 	if (PartSystem->EditorWindowOpen) PartSystem->DrawImGuiEditorWindow();
+	if (EditBoundBox)
+	{
+		ImGuizmo::Enable(true);
+		if ((parent != nullptr) && (App->engineUI->GetSelectedGameObject() == parent) && !(App->input->GetKey(SDL_SCANCODE_LALT) == KEY_REPEAT))
+		{
+			ImGuiIO& io = ImGui::GetIO();
+			ImGuizmo::SetRect(0, 0, io.DisplaySize.x, io.DisplaySize.y);
+
+			float4x4 viewmatrix = App->camera->GetCameraComp()->frustum.ViewMatrix();
+			float4x4 projectionmatrix = App->camera->GetCameraComp()->frustum.ProjectionMatrix();
+			viewmatrix.Transpose();
+			projectionmatrix.Transpose();
+
+			AABB Box = PartSystem->GetEmitterAABB();
+
+			float4x4 MaxMatrix = float4x4::FromTRS(Box.maxPoint, Quat::identity, float3::one);
+			MaxMatrix.Transpose();
+			float4x4 MinMatrix = float4x4::FromTRS(Box.minPoint, Quat::identity, float3::one);
+			MinMatrix.Transpose();
+
+			for (uint i = 0; i < 2; i++)
+			{
+				if (i == 0) ImGuizmo::Manipulate(viewmatrix.ptr(), projectionmatrix.ptr(), ImGuizmo::TRANSLATE, ImGuizmo::LOCAL, MaxMatrix.ptr());
+				else ImGuizmo::Manipulate(viewmatrix.ptr(), projectionmatrix.ptr(), ImGuizmo::TRANSLATE, ImGuizmo::LOCAL, MinMatrix.ptr());
+
+				if (ImGuizmo::IsUsing())
+				{
+					//matrix.Transpose();
+					//if ((parent != nullptr) && (parent->GetParent() != nullptr))
+					//matrix = parent->GetParent()->GetTransform()->GetMatrix().Transposed().Inverted() * matrix;
+					//float3 position = float3::zero;
+					//float3 scale = float3::zero;
+					//Quat rotation = Quat::identity;
+					//matrix.Decompose(position, rotation, scale);
+					//SetPos(position);
+					//SetRot(rotation);
+					//SetScale(scale);
+				}
+			}
+		}
+
+	}
 	return true;
 }
 
@@ -53,6 +100,7 @@ void ComponentParticleSystem::DrawComponentImGui()
 {
 	if (ImGui::CollapsingHeader("Particle System Component", ImGuiTreeNodeFlags_DefaultOpen))
 		ImGui::Checkbox("Show Particle Editor", &PartSystem->EditorWindowOpen);
+	ImGui::Checkbox("Edit Bounding Box", &EditBoundBox);
 }
 
 void ComponentParticleSystem::SetResource(uint uuid)

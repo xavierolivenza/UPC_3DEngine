@@ -5,11 +5,32 @@
 ParticleEmitter::ParticleEmitter()
 {
 	BoundingBox.SetNegativeInfinity();
+	BoundingBox.minPoint = float3(-0.5f, -0.5f, -0.5f);
+	BoundingBox.maxPoint = float3( 0.5f,  0.5f,  0.5f);
 }
 
 ParticleEmitter::~ParticleEmitter()
 {
 
+}
+
+void ParticleEmitter::DebugDraw()
+{
+	switch (Type)
+	{
+	case EmitterType_Sphere:
+		break;
+	case EmitterType_SemiSphere:
+		break;
+	case EmitterType_Cone:
+		break;
+	case EmitterType_Box:
+		break;
+	case EmitterType_Circle:
+		break;
+	case EmitterType_Edge:
+		break;
+	}
 }
 
 ParticleEmitter::EmitterShapeUnion::EmitterShapeUnion()
@@ -128,6 +149,7 @@ bool ParticleSystem::Update(float dt)
 	bool ret = false;
 	for (std::vector<Particle*>::iterator item = Particles.begin(); item != Particles.cend() && ret == true; ++item)
 		ret = (*item)->Update(dt);
+	if (EmitterDebugDraw) Emitter.DebugDraw();
 	return ret;
 }
 
@@ -197,6 +219,11 @@ void ParticleSystem::SetMeshResourcePlane()
 	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * ParticleMesh.num_indices * 3, ParticleMesh.texture_coords, GL_STATIC_DRAW);
 }
 
+void ParticleSystem::DebugDrawEmitter(bool active)
+{
+	EmitterDebugDraw = active;
+}
+
 void ParticleSystem::DrawImGuiEditorWindow()
 {
 	if (EditorWindowOpen)
@@ -231,6 +258,11 @@ void ParticleSystem::DrawImGuiEditorWindow()
 
 		ImGui::End();
 	}
+}
+
+AABB& ParticleSystem::GetEmitterAABB()
+{
+	return Emitter.BoundingBox;
 }
 
 void ParticleSystem::DrawTexturePreview()
