@@ -43,7 +43,10 @@
 
 struct ParticleEmitter
 {
-	
+	ParticleEmitter();
+	~ParticleEmitter();
+
+	float PreviewState = 0.0f;							//Preview of the particle, 0 = initial state, 1 = final state
 	int Lifetime = 0;								//Lifetime of emitted particles
 	int LifetimeVariation = 0;						//Lifetime variation of emitted particles
 	int EmissionDuration = 0;						//If loop is false, emission is played EmissionDuration ms
@@ -59,6 +62,11 @@ struct ParticleEmitter
 	//Accel +- Variation							//We can add some acceleleration to particles?
 	AABB BoundingBox;								//User can set AABB for camera culling purpose (we can add physics...)
 
+	enum
+	{
+		LocalEmission,
+		WorldEmission
+	} EmissionType = WorldEmission;
 	enum
 	{
 		EmitterType_Sphere,

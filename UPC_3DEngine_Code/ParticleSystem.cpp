@@ -2,6 +2,16 @@
 #include "imgui-1.51\imgui.h"
 #include "Glew\include\glew.h"
 
+ParticleEmitter::ParticleEmitter()
+{
+	BoundingBox.SetNegativeInfinity();
+}
+
+ParticleEmitter::~ParticleEmitter()
+{
+
+}
+
 ParticleEmitter::EmitterShapeUnion::EmitterShapeUnion()
 {
 
@@ -264,41 +274,40 @@ void ParticleSystem::DrawColorSelector()
 void ParticleSystem::DrawEmitterOptions()
 {
 	//imgui_demo.cpp line 1482
-	ParticleEmitter emitter;
-
+	ImGui::Columns(2, "##mycolumns3", false);  // 2-ways, no border
+	ImGui::PushItemWidth(100);
+	ImGui::SliderFloat("Preview Initial-Final", &Emitter.PreviewState, 0.0f, 1.0f);
+	ImGui::PopItemWidth();
 	ImGui::PushItemWidth(80);
-	ImGui::SliderInt("+-##Lifetime", &emitter.Lifetime, 0.0f, 100.0f);
+	ImGui::SliderInt("+-##Lifetime", &Emitter.Lifetime, 0.0f, 100.0f);
 	ImGui::SameLine();
-	ImGui::SliderInt("Lifetime+-Var##LifetimeVariation", &emitter.Lifetime, 0.0f, 100.0f);
-	ImGui::PopItemWidth();
-	ImGui::PushItemWidth(80);
-	ImGui::DragInt("Emission Duration", &emitter.EmissionDuration, 0.0f, 100.0f);
-	ImGui::PopItemWidth();
-	ImGui::Checkbox("Loop", &emitter.Loop);
-	ImGui::PushItemWidth(80);
-	ImGui::DragInt("Particle Num", &emitter.ParticleNumber, 0.0f, 100.0f);
-	ImGui::PopItemWidth();
-	ImGui::PushItemWidth(80);
-	ImGui::SliderFloat("+-##Speed", &emitter.Speed, 0.0f, 100.0f);
+	ImGui::SliderInt("Lifetime+-Var##LifetimeVariation", &Emitter.LifetimeVariation, 0.0f, 100.0f);
+	ImGui::DragInt("Emission Duration", &Emitter.EmissionDuration, 0.1f, 0.0f, 100.0f);
+	ImGui::Checkbox("Loop", &Emitter.Loop);
+	ImGui::DragInt("Particle Num", &Emitter.ParticleNumber, 0.1f, 0.0f, 1000.0f);
+	ImGui::SliderFloat("+-##Speed", &Emitter.Speed, 0.0f, 100.0f);
 	ImGui::SameLine();
-	ImGui::SliderFloat("Speed+-Var##SpeedVariation", &emitter.SpeedVariation, 0.0f, 100.0f);
-	ImGui::PopItemWidth();
-	ImGui::PushItemWidth(80);
-	ImGui::SliderFloat("+-##ExternalForceX", &emitter.ExternalForce.x, 0.0f, 100.0f);
+	ImGui::SliderFloat("Speed+-Var##SpeedVariation", &Emitter.SpeedVariation, 0.0f, 100.0f);
+	ImGui::SliderFloat("+-##ExternalForceX", &Emitter.ExternalForce.x, 0.0f, 100.0f);
 	ImGui::SameLine();
-	ImGui::SliderFloat("ExternalForceX+-Var##ExternalForceVariationX", &emitter.ExternalForceVariation.x, 0.0f, 100.0f);
-	ImGui::PopItemWidth();
-	ImGui::PushItemWidth(80);
-	ImGui::SliderFloat("+-##ExternalForceY", &emitter.ExternalForce.y, 0.0f, 100.0f);
+	ImGui::SliderFloat("ExternalForceX+-Var##ExternalForceVariationX", &Emitter.ExternalForceVariation.x, 0.0f, 100.0f);
+	ImGui::SliderFloat("+-##ExternalForceY", &Emitter.ExternalForce.y, 0.0f, 100.0f);
 	ImGui::SameLine();
-	ImGui::SliderFloat("ExternalForceY+-Var##ExternalForceVariationY", &emitter.ExternalForceVariation.y, 0.0f, 100.0f);
-	ImGui::PopItemWidth();
-	ImGui::PushItemWidth(80);
-	ImGui::SliderFloat("+-##ExternalForceZ", &emitter.ExternalForce.z, 0.0f, 100.0f);
+	ImGui::SliderFloat("ExternalForceY+-Var##ExternalForceVariationY", &Emitter.ExternalForceVariation.y, 0.0f, 100.0f);
+	ImGui::SliderFloat("+-##ExternalForceZ", &Emitter.ExternalForce.z, 0.0f, 100.0f);
 	ImGui::SameLine();
-	ImGui::SliderFloat("ExternalForceZ+-Var##ExternalForceVariationZ", &emitter.ExternalForceVariation.z, 0.0f, 100.0f);
+	ImGui::SliderFloat("ExternalForceZ+-Var##ExternalForceVariationZ", &Emitter.ExternalForceVariation.z, 0.0f, 100.0f);
 	ImGui::PopItemWidth();
-
+	ImGui::NextColumn();
+	ImGui::PushItemWidth(120);
+	ImGui::Combo("Emyssion Type", (int*)&Emitter.EmissionType, "Local\0World\0");
+	ImGui::Combo("Emyssion Shape", (int*)&Emitter.Type, "Sphere\0SemiSphere\0Cone\0Box\0Circle\0Edge");
+	ImGui::PopItemWidth();
+	//Curve editor to interpolate initial-final
+	ImGui::PushItemWidth(240);
+	ImGui::InputFloat3("AABB Max", &Emitter.BoundingBox.maxPoint[0], 3);
+	ImGui::InputFloat3("AABB Min", &Emitter.BoundingBox.minPoint[0], 3);
+	ImGui::PopItemWidth();
 }
 
 bool ParticleSystem::CreateParticle()
