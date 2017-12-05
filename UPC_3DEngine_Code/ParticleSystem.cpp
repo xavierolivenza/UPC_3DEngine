@@ -1,5 +1,6 @@
 #include "ParticleSystem.h"
 #include "imgui-1.51\imgui.h"
+#include "Glew\include\glew.h"
 
 ParticleEmitter::EmitterShapeUnion::EmitterShapeUnion()
 {
@@ -56,7 +57,7 @@ void ParticleMeshData::Copy(ParticleMeshData& Other)
 	memcpy(vertices, Other.vertices, sizeof(float) * num_vertices * 3);
 	id_indices = Other.id_indices;
 	num_indices = Other.num_indices;
-	indices = new uint[num_indices];
+	indices = new unsigned int[num_indices];
 	memcpy(indices, Other.indices, sizeof(float) * num_indices);
 	id_normals = Other.id_normals;
 	normals = new float[num_vertices * 3];
@@ -159,8 +160,8 @@ void ParticleSystem::SetMeshResourcePlane()
 	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * ParticleMesh.num_vertices * 3, ParticleMesh.vertices, GL_STATIC_DRAW);
 	//Indices
 	ParticleMesh.num_indices = 6;
-	ParticleMesh.indices = new uint[ParticleMesh.num_indices];
-	uint indices[] =
+	ParticleMesh.indices = new unsigned int[ParticleMesh.num_indices];
+	unsigned int indices[] =
 	{
 		0, 1, 2,
 		1, 3, 2
@@ -169,7 +170,7 @@ void ParticleSystem::SetMeshResourcePlane()
 	// Indices Buffer
 	glGenBuffers(1, (GLuint*) &ParticleMesh.id_indices);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ParticleMesh.id_indices);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint) * ParticleMesh.num_indices, ParticleMesh.indices, GL_STATIC_DRAW);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * ParticleMesh.num_indices, ParticleMesh.indices, GL_STATIC_DRAW);
 	// Texture coords
 	ParticleMesh.texture_coords = new float[ParticleMesh.num_vertices * 3];
 	float texture_coords[] =

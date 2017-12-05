@@ -1,4 +1,5 @@
-#pragma once
+#ifndef __Resource_H__
+#define __Resource_H__
 
 #include "Globals.h"
 #include "ModuleParson.h"
@@ -12,6 +13,8 @@ public:
 	{
 		mesh,
 		texture,
+		particle,
+		emitter,
 		null
 	};
 
@@ -51,3 +54,5 @@ protected:
 	Type type = Type::null;
 	uint loaded = 0;
 };
+
+#endif // __Resource_H__

@@ -1,6 +1,7 @@
 #include "ComponentParticleSystem.h"
 #include "ParticleSystem.h"
 #include "imgui-1.51\imgui.h"
+#include "ResourceMesh.h"
 
 ComponentParticleSystem::ComponentParticleSystem(GameObject* parent, bool Active) : Component(parent, Active, 0, ComponentType::ParticleSystem_Component)
 {

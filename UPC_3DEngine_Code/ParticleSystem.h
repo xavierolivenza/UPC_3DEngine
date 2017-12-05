@@ -1,6 +1,7 @@
-#pragma once
+#ifndef __ParticleSystem_H__
+#define __ParticleSystem_H__
+
 #include <vector>
-#include "Globals.h"
 #include "MathGeoLib\Math\float3.h"
 #include "MathGeoLib\Math\float4.h"
 #include "MathGeoLib\Math\Quat.h"
@@ -8,7 +9,6 @@
 #include "MathGeoLib\Geometry\Sphere.h"
 #include "MathGeoLib\Geometry\Cone.h"
 #include "MathGeoLib\Geometry\Circle.h"
-#include "ResourceMesh.h"
 
 #ifdef NULL
 #undef NULL
@@ -16,6 +16,9 @@
 #define NULL  0
 
 // Deletes a buffer
+#ifdef RELEASE
+#undef RELEASE
+#endif
 #define RELEASE( x )	\
 {                       \
 	if( x != NULL )     \
@@ -26,6 +29,9 @@
 }
 
 // Deletes an array of buffers
+#ifdef RELEASE_ARRAY
+#undef RELEASE_ARRAY
+#endif
 #define RELEASE_ARRAY( x )	\
 {                           \
 	if( x != NULL )         \
@@ -37,6 +43,7 @@
 
 struct ParticleEmitter
 {
+	
 	int Lifetime = 0;								//Lifetime of emitted particles
 	int LifetimeVariation = 0;						//Lifetime variation of emitted particles
 	int EmissionDuration = 0;						//If loop is false, emission is played EmissionDuration ms
@@ -90,17 +97,19 @@ struct ParticleState
 	int picker_mode = 0;
 };
 
+struct ParticleMeshData;
+
 struct ParticleProperties
 {
 	float3 Position = float3::zero;					//Particle Actual Position
 	Quat Rotation = Quat::identity;					//Particle Actual Rotation
 	float3 Scale = float3::zero;					//Particle Actual Scale
-	ResourceMesh* MeshResource = nullptr;			//Mesh used by this particle plane/other mesh
+	ParticleMeshData* MeshResource = nullptr;		//Mesh used by this particle plane/other mesh
 	float Speed = 0.0f;								//Particle Speed
 	//Accel											//We can add some acceleleration to particles?
-	uint LifetimeMax = 0;							//Max Particle Lifetime
-	uint LifetimeActual = 0;						//Actual Particle Lifetime
-	uint TextureID = 0;								//Texture ID used by this particle
+	unsigned int LifetimeMax = 0;					//Max Particle Lifetime
+	unsigned int LifetimeActual = 0;				//Actual Particle Lifetime
+	unsigned int TextureID = 0;						//Texture ID used by this particle
 	float4 RGBATint = float4::zero;					//Particle Texture tint
 };
 
@@ -128,16 +137,16 @@ struct ParticleMeshData								//Very similar to MeshDataResource, but we copy i
 	void Copy(ParticleMeshData& Other);
 	void Clean();
 
-	uint num_faces = 0;
-	uint id_vertices = 0;							// ID in VRAM
-	uint num_vertices = 0;
+	unsigned int num_faces = 0;
+	unsigned int id_vertices = 0;					// ID in VRAM
+	unsigned int num_vertices = 0;
 	float* vertices = nullptr;
-	uint id_indices = 0;							// ID in VRAM
-	uint num_indices = 0;
-	uint* indices = nullptr;
-	uint id_normals = 0;							// ID in VRAM
+	unsigned int id_indices = 0;					// ID in VRAM
+	unsigned int num_indices = 0;
+	unsigned int* indices = nullptr;
+	unsigned int id_normals = 0;					// ID in VRAM
 	float* normals = nullptr;
-	uint id_texture_coords = 0;						// ID in VRAM
+	unsigned int id_texture_coords = 0;				// ID in VRAM
 	float* texture_coords = nullptr;
 };
 
@@ -177,3 +186,5 @@ private:
 		FinalState_Enum
 	}ParticleStateEnum = InitialState_Enum;
 };
+
+#endif // __ParticleSystem_H__

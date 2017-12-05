@@ -1,4 +1,6 @@
-#pragma once
+#ifndef __ComponentParticleSystem_H__
+#define __ComponentParticleSystem_H__
+
 #include "Component.h"
 
 //class ResourceMesh;
@@ -23,9 +25,8 @@ public:
 	bool SaveComponent(JSON_Object* conf) const;
 	bool LoadComponent(JSON_Object* conf);
 
-//public:
-//	ResourceMesh* resourceMesh = nullptr;
-
 private:
 	ParticleSystem* PartSystem = nullptr;
 };
+
+#endif // __ComponentParticleSystem_H__
