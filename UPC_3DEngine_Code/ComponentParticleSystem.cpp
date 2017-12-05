@@ -101,6 +101,13 @@ void ComponentParticleSystem::DrawComponentImGui()
 	if (ImGui::CollapsingHeader("Particle System Component", ImGuiTreeNodeFlags_DefaultOpen))
 		ImGui::Checkbox("Show Particle Editor", &PartSystem->EditorWindowOpen);
 	ImGui::Checkbox("Edit Bounding Box", &EditBoundBox);
+	ImGui::Button("Save Particles Resource", ImVec2(170,30));
+	ImGui::SameLine();
+	ImGui::Button("Load Particles Resource", ImVec2(180, 30));
+	ImGui::Button("Save Emitter Resource", ImVec2(170, 30));
+	ImGui::SameLine();
+	ImGui::Button("Load Emitter Resource", ImVec2(180, 30));
+	ImGui::Button("Load Texture", ImVec2(120, 30));
 }
 
 void ComponentParticleSystem::SetResource(uint uuid)

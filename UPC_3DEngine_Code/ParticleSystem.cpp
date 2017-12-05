@@ -332,7 +332,6 @@ void ParticleSystem::DrawColorSelector()
 
 void ParticleSystem::DrawEmitterOptions()
 {
-	//imgui_demo.cpp line 1482
 	ImGui::Columns(2, "##mycolumns3", false);  // 2-ways, no border
 	ImGui::PushItemWidth(100);
 	ImGui::SliderFloat("Preview Initial-Final", &Emitter.PreviewState, 0.0f, 1.0f);
