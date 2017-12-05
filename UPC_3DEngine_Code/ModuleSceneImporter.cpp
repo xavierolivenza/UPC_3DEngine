@@ -278,14 +278,20 @@ bool ModuleSceneImporter::ImportFBX(std::string* file_to_import, std::string& ou
 			{
 				MeshDataStruct.num_faces = MeshInstance->mNumFaces;
 				MeshDataStruct.num_indices = MeshInstance->mNumFaces * 3;
-				MeshDataStruct.indices = new uint[MeshDataStruct.num_indices]; // assume each face is a triangle
+				uint* indices = new uint[MeshDataStruct.num_indices];
 				for (uint i = 0; i < MeshInstance->mNumFaces; ++i)
 				{
 					if (MeshInstance->mFaces[i].mNumIndices != 3)
+					{
+						MeshDataStruct.num_indices -= MeshInstance->mFaces[i].mNumIndices;
 						LOGP("WARNING, geometry face with != 3 indices!");
+					}
 					else
-						memcpy(&MeshDataStruct.indices[i * 3], MeshInstance->mFaces[i].mIndices, 3 * sizeof(uint));
+						memcpy(&indices[i * 3], MeshInstance->mFaces[i].mIndices, 3 * sizeof(uint));
 				}
+				MeshDataStruct.indices = new uint[MeshDataStruct.num_indices];
+				memcpy(MeshDataStruct.indices, indices, sizeof(uint) * MeshDataStruct.num_indices);
+				RELEASE_ARRAY(indices);
 			}
 
 			// normals
