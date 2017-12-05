@@ -14,23 +14,46 @@ ParticleEmitter::~ParticleEmitter()
 
 }
 
-void ParticleEmitter::DebugDraw()
+void ParticleEmitter::DebugDrawEmitter()
 {
 	switch (Type)
 	{
-	case EmitterType_Sphere:
-		break;
-	case EmitterType_SemiSphere:
-		break;
-	case EmitterType_Cone:
-		break;
-	case EmitterType_Box:
-		break;
-	case EmitterType_Circle:
-		break;
-	case EmitterType_Edge:
-		break;
+	case EmitterType_Sphere: DrawSphere(EmitterShape.Sphere_Shape); break;
+	case EmitterType_SemiSphere: DrawSemiSphere(EmitterShape.Sphere_Shape); break;
+	case EmitterType_Cone: DrawCone(EmitterShape.ConeTrunk_Shape); break;
+	case EmitterType_Box: DrawBox(EmitterShape.Box_Shape); break;
+	case EmitterType_Circle: DrawCircle(EmitterShape.Circle_Shape); break;
 	}
+}
+
+void ParticleEmitter::DebugDrawEmitterAABB()
+{
+	DrawBox(BoundingBox);
+}
+
+void ParticleEmitter::DrawSphere(const Sphere& shape)
+{
+
+}
+
+void ParticleEmitter::DrawSemiSphere(const Sphere& shape)
+{
+
+}
+
+void ParticleEmitter::DrawCone(const ConeTrunk& shape)
+{
+
+}
+
+void ParticleEmitter::DrawBox(const AABB& shape)
+{
+
+}
+
+void ParticleEmitter::DrawCircle(const Circle& shape)
+{
+
 }
 
 ParticleEmitter::EmitterShapeUnion::EmitterShapeUnion()
@@ -149,7 +172,6 @@ bool ParticleSystem::Update(float dt)
 	bool ret = false;
 	for (std::vector<Particle*>::iterator item = Particles.begin(); item != Particles.cend() && ret == true; ++item)
 		ret = (*item)->Update(dt);
-	if (EmitterDebugDraw) Emitter.DebugDraw();
 	return ret;
 }
 
@@ -219,9 +241,14 @@ void ParticleSystem::SetMeshResourcePlane()
 	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * ParticleMesh.num_indices * 3, ParticleMesh.texture_coords, GL_STATIC_DRAW);
 }
 
-void ParticleSystem::DebugDrawEmitter(bool active)
+void ParticleSystem::DebugDrawEmitter()
 {
-	EmitterDebugDraw = active;
+	Emitter.DebugDrawEmitter();
+}
+
+void ParticleSystem::DebugDrawEmitterAABB()
+{
+	Emitter.DebugDrawEmitterAABB();
 }
 
 void ParticleSystem::DrawImGuiEditorWindow()

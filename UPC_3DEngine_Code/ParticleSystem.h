@@ -40,7 +40,6 @@
 	}                       \
 }
 
-//
 struct ConeTrunk
 {
 	Circle Upper_Circle;
@@ -53,7 +52,15 @@ public:
 	ParticleEmitter();
 	~ParticleEmitter();
 
-	void DebugDraw();
+	void DebugDrawEmitter();
+	void DebugDrawEmitterAABB();
+
+private:
+	void DrawSphere(const Sphere& shape);
+	void DrawSemiSphere(const Sphere& shape);
+	void DrawCone(const ConeTrunk& shape);
+	void DrawBox(const AABB& shape);
+	void DrawCircle(const Circle& shape);
 
 public:
 	float PreviewState = 0.0f;						//Preview of the particle, 0 = initial state, 1 = final state
@@ -83,8 +90,7 @@ public:
 		EmitterType_SemiSphere,
 		EmitterType_Cone,
 		EmitterType_Box,
-		EmitterType_Circle,
-		EmitterType_Edge
+		EmitterType_Circle
 	} Type = EmitterType_Box;
 	union EmitterShapeUnion
 	{
@@ -180,7 +186,8 @@ public:
 
 	void SetMeshResource(ParticleMeshData& MeshData);//Set Mesh resource to use
 	void SetMeshResourcePlane();					//Delete actual mesh + load a plane
-	void DebugDrawEmitter(bool active);
+	void DebugDrawEmitter();
+	void DebugDrawEmitterAABB();
 	void DrawImGuiEditorWindow();					//Draw Particle Editor Window
 
 	AABB& GetEmitterAABB();							//You can get the Emitter AABB and edit min and max point with gizmos
@@ -200,7 +207,6 @@ private:
 	ParticleState InitialState;
 	ParticleState FinalState;
 	ParticleEmitter Emitter;
-	bool EmitterDebugDraw = true;
 
 	enum
 	{
