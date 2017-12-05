@@ -37,11 +37,13 @@
 
 struct ParticleEmitter
 {
-	uint Lifetime = 0;								//Lifetime of emitted particles
-	uint LifetimeVariation = 0;						//Lifetime variation of emitted particles
-	uint EmissionDuration = 0;						//If loop is false, emission is played EmissionDuration ms
+	int Lifetime = 0;								//Lifetime of emitted particles
+	int LifetimeVariation = 0;						//Lifetime variation of emitted particles
+	int EmissionDuration = 0;						//If loop is false, emission is played EmissionDuration ms
 	bool Loop = true;								//Ignore EmissionDuration and keep emitting
-	uint ParticleNumber = 0;						//Max particles emitted at the same time
+	int ParticleNumber = 0;							//Max particles emitted at the same time
+	float Speed = 0.0f;
+	float SpeedVariation = 0.0f;
 	float3 Position = float3::zero;					//Emitter position
 	Quat Rotation = Quat::identity;					//Emitter rotation
 	float3 Scale = float3::zero;					//Emitter scale

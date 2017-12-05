@@ -251,17 +251,53 @@ void ParticleSystem::DrawColorSelector()
 	if (state->inputs_mode == 2) flags |= ImGuiColorEditFlags_RGB;
 	if (state->inputs_mode == 3) flags |= ImGuiColorEditFlags_HSV;
 	if (state->inputs_mode == 4) flags |= ImGuiColorEditFlags_HEX;
-	ImGui::ColorPicker4("MyColor##4", (float*)&state->RGBATint, flags);
+	ImGui::ColorPicker4("Color##Color", (float*)&state->RGBATint, flags);
 	ImGui::PushItemWidth(80);
 	ImGui::SliderFloat("+-##Size", &state->Size, 0.0f, 100.0f);
 	ImGui::SameLine();
 	ImGui::SliderFloat("Size+-Var##SizeVariation", &state->SizeVariation, 0.0f, 100.0f);
 	ImGui::PopItemWidth();
+	ImGui::DragFloat4("Color Var##ColorVariation", (float*)&state->RGBATintVariation, 0.1f, 1.0f, 255.0f);
 }
 
 void ParticleSystem::DrawEmitterOptions()
 {
 	//imgui_demo.cpp line 1482
+	ParticleEmitter emitter;
+
+	ImGui::PushItemWidth(80);
+	ImGui::SliderInt("+-##Lifetime", &emitter.Lifetime, 0.0f, 100.0f);
+	ImGui::SameLine();
+	ImGui::SliderInt("Lifetime+-Var##LifetimeVariation", &emitter.Lifetime, 0.0f, 100.0f);
+	ImGui::PopItemWidth();
+	ImGui::PushItemWidth(80);
+	ImGui::DragInt("Emission Duration", &emitter.EmissionDuration, 0.0f, 100.0f);
+	ImGui::PopItemWidth();
+	ImGui::Checkbox("Loop", &emitter.Loop);
+	ImGui::PushItemWidth(80);
+	ImGui::DragInt("Particle Num", &emitter.ParticleNumber, 0.0f, 100.0f);
+	ImGui::PopItemWidth();
+	ImGui::PushItemWidth(80);
+	ImGui::SliderFloat("+-##Speed", &emitter.Speed, 0.0f, 100.0f);
+	ImGui::SameLine();
+	ImGui::SliderFloat("Speed+-Var##SpeedVariation", &emitter.SpeedVariation, 0.0f, 100.0f);
+	ImGui::PopItemWidth();
+	ImGui::PushItemWidth(80);
+	ImGui::SliderFloat("+-##ExternalForceX", &emitter.ExternalForce.x, 0.0f, 100.0f);
+	ImGui::SameLine();
+	ImGui::SliderFloat("ExternalForceX+-Var##ExternalForceVariationX", &emitter.ExternalForceVariation.x, 0.0f, 100.0f);
+	ImGui::PopItemWidth();
+	ImGui::PushItemWidth(80);
+	ImGui::SliderFloat("+-##ExternalForceY", &emitter.ExternalForce.y, 0.0f, 100.0f);
+	ImGui::SameLine();
+	ImGui::SliderFloat("ExternalForceY+-Var##ExternalForceVariationY", &emitter.ExternalForceVariation.y, 0.0f, 100.0f);
+	ImGui::PopItemWidth();
+	ImGui::PushItemWidth(80);
+	ImGui::SliderFloat("+-##ExternalForceZ", &emitter.ExternalForce.z, 0.0f, 100.0f);
+	ImGui::SameLine();
+	ImGui::SliderFloat("ExternalForceZ+-Var##ExternalForceVariationZ", &emitter.ExternalForceVariation.z, 0.0f, 100.0f);
+	ImGui::PopItemWidth();
+
 }
 
 bool ParticleSystem::CreateParticle()
