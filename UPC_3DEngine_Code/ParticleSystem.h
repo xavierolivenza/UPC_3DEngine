@@ -14,6 +14,16 @@
 #endif
 #define NULL  0
 
+#ifdef DEGTORAD
+#undef DEGTORAD
+#endif
+#define DEGTORAD 0.0174532925199432957f
+
+#ifdef RADTODEG
+#undef RADTODEG
+#endif
+#define RADTODEG 57.295779513082320876f
+
 // Deletes a buffer
 #ifdef RELEASE
 #undef RELEASE
@@ -74,8 +84,8 @@ public:
 	float3 Position = float3::zero;					//Emitter position
 	Quat Rotation = Quat::identity;					//Emitter rotation
 	float3 Scale = float3::zero;					//Emitter scale
-	float3 ExternalForce = float3::zero;			//Particles influenced by external force - Direction + force (vector magnitude)
-	float3 ExternalForceVariation = float3::zero;
+	//float3 ExternalForce = float3::zero;			//Particles influenced by external force - Direction + force (vector magnitude)
+	//float3 ExternalForceVariation = float3::zero;
 	//Accel +- Variation							//We can add some acceleleration to particles?
 	AABB BoundingBox;								//User can set AABB for camera culling purpose (we can add physics...)
 
@@ -106,6 +116,8 @@ struct ParticleState
 {
 	float Speed = 0.0f;								//Particle Speed
 	float SpeedVariation = 0.0f;
+	float3 ExternalForce = float3::zero;			//Particles influenced by external force - Direction + force (vector magnitude)
+	float3 ExternalForceVariation = float3::zero;
 	float Size = 0.0f;
 	float SizeVariation = 0.0f;
 	float4 RGBATint = float4::one;					//Particle Texture tint
@@ -125,11 +137,14 @@ struct ParticleMeshData;
 
 struct ParticleProperties
 {
+	float3 OriginalPosition = float3::zero;			//Particle EmissionOrigin Position
 	float3 Position = float3::zero;					//Particle Actual Position
 	Quat Rotation = Quat::identity;					//Particle Actual Rotation
 	float3 Scale = float3::zero;					//Particle Actual Scale
 	ParticleMeshData* MeshResource = nullptr;		//Mesh used by this particle plane/other mesh
 	float Speed = 0.0f;								//Particle Speed
+	float3 EmissionDirection = float3::zero;		//Particle Emission Direction
+	float3 ExternalForce = float3::zero;			//Particles influenced by external force - Direction + force (vector magnitude)
 	//Accel											//We can add some acceleleration to particles?
 	unsigned int LifetimeMax = 0;					//Max Particle Lifetime
 	unsigned int LifetimeActual = 0;				//Actual Particle Lifetime

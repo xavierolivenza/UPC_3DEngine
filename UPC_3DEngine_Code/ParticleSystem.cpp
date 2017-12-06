@@ -78,6 +78,17 @@ bool Particle::PreUpdate(float dt)
 
 bool Particle::Update(float dt)
 {
+	//Particle Position
+	/*
+	float dt2half = dt * dt * 0.5f;
+	float alpha = atan(Properties.EmissionDirection.y / Properties.EmissionDirection.x);
+	float beta = atan(Properties.EmissionDirection.x / Properties.EmissionDirection.z);
+	float gamma = atan(Properties.ExternalForce.y / Properties.ExternalForce.x);
+	float delta = atan(Properties.ExternalForce.x / Properties.ExternalForce.z);
+	Properties.Position.x = Properties.OriginalPosition.x + Properties.Speed * cos(alpha) * cos(beta) * dt + Properties.ExternalForce.Length() * cos(gamma) * cos(delta) * dt2half;
+	Properties.Position.y = Properties.OriginalPosition.y + Properties.Speed * sin(alpha) * dt + Properties.ExternalForce.Length() * sin(gamma) * dt2half;
+	Properties.Position.z = Properties.OriginalPosition.z + Properties.Speed * cos(alpha) * sin(beta) * dt + Properties.ExternalForce.Length() * cos(gamma) * sin(delta) * dt2half;
+	*/
 	return true;
 }
 
@@ -346,6 +357,7 @@ void ParticleSystem::DrawEmitterOptions()
 	ImGui::SliderFloat("+-##Speed", &Emitter.Speed, 0.0f, 100.0f);
 	ImGui::SameLine();
 	ImGui::SliderFloat("Speed+-Var##SpeedVariation", &Emitter.SpeedVariation, 0.0f, 100.0f);
+	/*
 	ImGui::SliderFloat("+-##ExternalForceX", &Emitter.ExternalForce.x, 0.0f, 100.0f);
 	ImGui::SameLine();
 	ImGui::SliderFloat("ExternalForceX+-Var##ExternalForceVariationX", &Emitter.ExternalForceVariation.x, 0.0f, 100.0f);
@@ -355,6 +367,7 @@ void ParticleSystem::DrawEmitterOptions()
 	ImGui::SliderFloat("+-##ExternalForceZ", &Emitter.ExternalForce.z, 0.0f, 100.0f);
 	ImGui::SameLine();
 	ImGui::SliderFloat("ExternalForceZ+-Var##ExternalForceVariationZ", &Emitter.ExternalForceVariation.z, 0.0f, 100.0f);
+	*/
 	ImGui::PopItemWidth();
 	ImGui::NextColumn();
 	ImGui::PushItemWidth(120);
