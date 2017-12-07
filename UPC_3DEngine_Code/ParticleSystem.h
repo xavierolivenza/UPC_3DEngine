@@ -2,6 +2,7 @@
 #define __ParticleSystem_H__
 
 #include <vector>
+#include "MathGeoLib\Math\float2.h"
 #include "MathGeoLib\Math\float3.h"
 #include "MathGeoLib\Math\float4.h"
 #include "MathGeoLib\Math\Quat.h"
@@ -200,12 +201,13 @@ struct ParticleTextureData
 
 struct KeyInput
 {
-	void Reset();
-
-	bool Idle = false;
-	bool Up = false;
-	bool Down = false;
-	bool Repeat = false;
+	enum
+	{
+		Idle,
+		Up,
+		Down,
+		Repeat
+	}State = Idle;
 };
 
 class ParticleSystem
@@ -248,6 +250,9 @@ private:
 	ParticleState FinalState;
 	ParticleEmitter Emitter;
 	ParticleTextureData TextureData;
+
+	float2 corner1UV = float2::zero;
+	float2 corner2UV = float2::one;
 
 	enum
 	{

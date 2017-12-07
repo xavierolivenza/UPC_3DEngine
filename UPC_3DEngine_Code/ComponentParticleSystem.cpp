@@ -38,13 +38,13 @@ bool ComponentParticleSystem::Update(float dt)
 {
 	if (PopUpLoadOpen) ImGuiLoadPopUp();
 	if (PopUpSaveOpen) ImGuiSavePopUp();
-	PartSystem->MouseLeftClick.Reset();
+
 	switch(App->input->GetMouseButton(SDL_BUTTON_LEFT))
 	{
-		case KEY_STATE::KEY_IDLE: PartSystem->MouseLeftClick.Idle = true; break;
-		case KEY_STATE::KEY_UP: PartSystem->MouseLeftClick.Up = true; break;
-		case KEY_STATE::KEY_REPEAT: PartSystem->MouseLeftClick.Repeat = true; break;
-		case KEY_STATE::KEY_DOWN: PartSystem->MouseLeftClick.Down = true; break;
+		case KEY_STATE::KEY_IDLE: PartSystem->MouseLeftClick.State = KeyInput::Idle; break;
+		case KEY_STATE::KEY_UP: PartSystem->MouseLeftClick.State = KeyInput::Up; break;
+		case KEY_STATE::KEY_REPEAT: PartSystem->MouseLeftClick.State = KeyInput::Repeat; break;
+		case KEY_STATE::KEY_DOWN: PartSystem->MouseLeftClick.State = KeyInput::Down; break;
 	}
 	PartSystem->Update(dt);
 	if (PartSystem->EditorWindowOpen) PartSystem->DrawImGuiEditorWindow();
