@@ -36,7 +36,7 @@ bool ComponentParticleSystem::PreUpdate(float dt)
 
 bool ComponentParticleSystem::Update(float dt)
 {
-	if (LoadTexturePopUp) ImGuiLoadTexturePopUp();
+	if (PopUpOpen) ImGuiDrawPopUp();
 	PartSystem->MouseLeftClick.Reset();
 	switch(App->input->GetMouseButton(SDL_BUTTON_LEFT))
 	{
@@ -117,11 +117,23 @@ void ComponentParticleSystem::DrawComponentImGui()
 		ImGui::Checkbox("Edit Bounding Box", &EditBoundBox);
 		ImGui::Button("Save Particles Resource", ImVec2(170, 30));
 		ImGui::SameLine();
-		ImGui::Button("Load Particles Resource", ImVec2(180, 30));
+		if (ImGui::Button("Load Particles Resource", ImVec2(180, 30)))
+		{
+			FileToLoadType = Particle_Resource;
+			PopUpOpen = true;
+		}
 		ImGui::Button("Save Emitter Resource", ImVec2(170, 30));
 		ImGui::SameLine();
-		ImGui::Button("Load Emitter Resource", ImVec2(180, 30));
-		if (ImGui::Button("Load Texture", ImVec2(120, 30))) LoadTexturePopUp = true;
+		if (ImGui::Button("Load Emitter Resource", ImVec2(180, 30)))
+		{
+			FileToLoadType = Emitter_Resource;
+			PopUpOpen = true;
+		}
+		if (ImGui::Button("Load Texture", ImVec2(120, 30)))
+		{
+			FileToLoadType = Texture_Resource;
+			PopUpOpen = true;
+		}
 	}
 }
 
@@ -182,38 +194,71 @@ bool ComponentParticleSystem::LoadComponent(JSON_Object* conf)
 	return true;
 }
 
-void ComponentParticleSystem::ImGuiLoadTexturePopUp()
+void ComponentParticleSystem::ImGuiDrawPopUp()
 {
-	ImGui::OpenPopup("Load Texture");
-	if (ImGui::BeginPopupModal("Load Texture", nullptr, ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_HorizontalScrollbar))
+	const char* Str = "Wrong Type";
+	switch (FileToLoadType)
 	{
-		ImGui::Text("Here are only shown files that are accepted\ntexture files.");
+	case Texture_Resource: Str = "Load Texture"; break;
+	case Particle_Resource: Str = "Load Particle"; break;
+	case Emitter_Resource: Str = "Load Emitter"; break;
+	}
+
+	ImGui::OpenPopup(Str);
+	if (ImGui::BeginPopupModal(Str, nullptr, ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_HorizontalScrollbar))
+	{
+		ImGui::Text("Here are only shown files that are accepted\nextention files.");
 		ImGui::BeginChild("File Browser##1", ImVec2(300, 300), true);
-		DrawDirectory(App->importer->Get_Assets_path()->c_str());
+		switch (FileToLoadType)
+		{
+		case Texture_Resource: DrawDirectory(App->importer->Get_Assets_path()->c_str()); break;
+		case Particle_Resource: DrawDirectory(App->importer->Get_ParticleSystem_Particles_path()->c_str()); break;
+		case Emitter_Resource: DrawDirectory(App->importer->Get_ParticleSystem_Emitter_path()->c_str()); break;
+		}
 		ImGui::EndChild();
 		char file_path[1000] = "";
 		sprintf_s(file_path, 1000, "%s", FileToLoad.c_str());
-		ImGui::InputText("input text##1", file_path, 1000, ImGuiInputTextFlags_ReadOnly);
+		ImGui::InputText("##input text 1", file_path, 1000, ImGuiInputTextFlags_ReadOnly);
 		ImGui::SameLine();
 		if (ImGui::Button("Ok##1", ImVec2(50, 20)))
 		{
 			if (!FileToLoad.empty())
 			{
-				size_t bar_pos = FileToLoad.rfind("\\") + 1;
-				size_t dot_pos = FileToLoad.rfind(".");
-				FileToLoadName = FileToLoad.substr(bar_pos, dot_pos - bar_pos);
-				uint Texuuid = App->resources->LoadResource((*App->importer->Get_Library_material_path() + "\\" + FileToLoadName + ".dds").c_str(), FileToLoad.c_str());
-				SetTextureResource(Texuuid);
+				switch (FileToLoadType)
+				{
+				case Texture_Resource: ImGuiLoadTexturePopUp(); break;
+				case Particle_Resource: ImGuiLoadParticlePopUp(); break;
+				case Emitter_Resource: ImGuiLoadEmitterPopUp(); break;
+				}
 			}
-			LoadTexturePopUp = false;
+			PopUpOpen = false;
 		}
 		ImGui::SameLine();
 		if (ImGui::Button("Cancel##1", ImVec2(50, 20)))
 		{
-			LoadTexturePopUp = false;
+			PopUpOpen = false;
 		}
 		ImGui::EndPopup();
 	}
+}
+
+void ComponentParticleSystem::ImGuiLoadTexturePopUp()
+{
+	size_t bar_pos = FileToLoad.rfind("\\") + 1;
+	size_t dot_pos = FileToLoad.rfind(".");
+	FileToLoadName = FileToLoad.substr(bar_pos, dot_pos - bar_pos);
+	uint Texuuid = App->resources->LoadResource((*App->importer->Get_Library_material_path() + "\\" + FileToLoadName + ".dds").c_str(), FileToLoad.c_str());
+	SetTextureResource(Texuuid);
+}
+
+void ComponentParticleSystem::ImGuiLoadParticlePopUp()
+{
+
+}
+
+void ComponentParticleSystem::ImGuiLoadEmitterPopUp()
+{
+
 }
 
 void ComponentParticleSystem::DrawDirectory(const char * directory)
@@ -235,7 +280,16 @@ void ComponentParticleSystem::DrawDirectory(const char * directory)
 		{
 			sprintf_s(title, 1000, "%S", file_in_path.path().extension().c_str());
 			DirectoryTemporalStr = title;
-			if ((DirectoryTemporalStr == ".png") || (DirectoryTemporalStr == ".PNG") || (DirectoryTemporalStr == ".jpg") || (DirectoryTemporalStr == ".JPG") || (DirectoryTemporalStr == ".tga") || (DirectoryTemporalStr == ".TGA") || (DirectoryTemporalStr == ".dds") || (DirectoryTemporalStr == ".DDS"))
+			bool Valid = false;
+			//Change Particle_Resource extention to .particle.json
+			//Change Emitter_Resource extention to .emitter.json
+			switch (FileToLoadType)
+			{
+			case Texture_Resource: if ((DirectoryTemporalStr == ".png") || (DirectoryTemporalStr == ".PNG") || (DirectoryTemporalStr == ".jpg") || (DirectoryTemporalStr == ".JPG") || (DirectoryTemporalStr == ".tga") || (DirectoryTemporalStr == ".TGA") || (DirectoryTemporalStr == ".dds") || (DirectoryTemporalStr == ".DDS")) Valid = true; break;
+			case Particle_Resource: if (DirectoryTemporalStr == ".json") Valid = true; break;
+			case Emitter_Resource: if (DirectoryTemporalStr == ".json") Valid = true; break;
+			}
+			if (Valid)
 			{
 				sprintf_s(title, 1000, "%S", file_in_path.path().filename().c_str());
 				if (ImGui::TreeNodeEx(title, ImGuiTreeNodeFlags_Leaf))

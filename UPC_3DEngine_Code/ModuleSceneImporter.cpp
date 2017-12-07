@@ -85,6 +85,18 @@ bool ModuleSceneImporter::Init()
 	//Create Scenes folder, this just fails if the folder is already created
 	if (std::experimental::filesystem::create_directory(Scenes_path.c_str())) LOGP("Scenes folder created");
 	else LOGP("Scenes folder already exists");
+
+	//Create ParticleSystem folder, this just fails if the folder is already created
+	if (std::experimental::filesystem::create_directory(ParticleSystem_path.c_str())) LOGP("ParticleSystem folder created");
+	else LOGP("ParticleSystem folder already exists");
+
+	//Create Particles folder, this just fails if the folder is already created
+	if (std::experimental::filesystem::create_directory(ParticleSystem_Particles_path.c_str())) LOGP("Particles folder created");
+	else LOGP("Particles folder already exists");
+
+	//Create Emitters folder, this just fails if the folder is already created
+	if (std::experimental::filesystem::create_directory(ParticleSystem_Emitter_path.c_str())) LOGP("Emitter folder created");
+	else LOGP("Emitters folder already exists");
 	/**/
 
 	if (App->window->GetLibraryHidden())
@@ -852,4 +864,19 @@ const std::string* ModuleSceneImporter::Get_Mesh_Extention() const
 const std::string* ModuleSceneImporter::Get_FBXComponents_Extention() const
 {
 	return &FBXComponents_Extention;
+}
+
+const std::string * ModuleSceneImporter::Get_ParticleSystem_path() const
+{
+	return &ParticleSystem_path;
+}
+
+const std::string * ModuleSceneImporter::Get_ParticleSystem_Particles_path() const
+{
+	return &ParticleSystem_Particles_path;
+}
+
+const std::string * ModuleSceneImporter::Get_ParticleSystem_Emitter_path() const
+{
+	return &ParticleSystem_Emitter_path;
 }
