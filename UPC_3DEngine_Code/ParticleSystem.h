@@ -211,6 +211,11 @@ public:
 
 	void SetMeshResource(ParticleMeshData& MeshData);//Set Mesh resource to use
 	void SetMeshResourcePlane();					//Delete actual mesh + load a plane
+	void SetTextureResource(unsigned int ID);
+	void SetInitialStateResource(ParticleState& state);
+	void SetFinalStateResource(ParticleState& state);
+	void SetEmitterResource(ParticleEmitter& emitter);
+
 	void DebugDrawEmitter();
 	void DebugDrawEmitterAABB();
 	void DrawImGuiEditorWindow();					//Draw Particle Editor Window
@@ -226,12 +231,14 @@ private:
 public:
 	bool EditorWindowOpen = false;
 	KeyInput MouseLeftClick;
+
 private:
 	ParticleMeshData ParticleMesh;
 	std::vector<Particle*> Particles;
 	ParticleState InitialState;
 	ParticleState FinalState;
 	ParticleEmitter Emitter;
+	unsigned int TextureID = 0;
 
 	enum
 	{

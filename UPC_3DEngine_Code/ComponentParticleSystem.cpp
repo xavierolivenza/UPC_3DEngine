@@ -7,6 +7,8 @@
 #include "MathGeoLib\Geometry\Frustum.h"
 #include "ComponentCamera.h"
 #include "ComponentTransform.h"
+#include "ModuleResources.h"
+#include "ResourceTexture.h"
 
 ComponentParticleSystem::ComponentParticleSystem(GameObject* parent, bool Active) : Component(parent, Active, 0, ComponentType::ParticleSystem_Component)
 {
@@ -107,18 +109,20 @@ bool ComponentParticleSystem::CleanUp()
 void ComponentParticleSystem::DrawComponentImGui()
 {
 	if (ImGui::CollapsingHeader("Particle System Component", ImGuiTreeNodeFlags_DefaultOpen))
+	{
 		ImGui::Checkbox("Show Particle Editor", &PartSystem->EditorWindowOpen);
-	ImGui::Checkbox("Edit Bounding Box", &EditBoundBox);
-	ImGui::Button("Save Particles Resource", ImVec2(170,30));
-	ImGui::SameLine();
-	ImGui::Button("Load Particles Resource", ImVec2(180, 30));
-	ImGui::Button("Save Emitter Resource", ImVec2(170, 30));
-	ImGui::SameLine();
-	ImGui::Button("Load Emitter Resource", ImVec2(180, 30));
-	ImGui::Button("Load Texture", ImVec2(120, 30));
+		ImGui::Checkbox("Edit Bounding Box", &EditBoundBox);
+		ImGui::Button("Save Particles Resource", ImVec2(170, 30));
+		ImGui::SameLine();
+		ImGui::Button("Load Particles Resource", ImVec2(180, 30));
+		ImGui::Button("Save Emitter Resource", ImVec2(170, 30));
+		ImGui::SameLine();
+		ImGui::Button("Load Emitter Resource", ImVec2(180, 30));
+		ImGui::Button("Load Texture", ImVec2(120, 30));
+	}
 }
 
-void ComponentParticleSystem::SetResource(uint uuid)
+void ComponentParticleSystem::SetMeshResource(uint uuid)
 {
 	ResourceMesh* resourceMesh = (ResourceMesh*)App->resources->Get(uuid);
 	if (resourceMesh != nullptr)
@@ -141,6 +145,28 @@ void ComponentParticleSystem::SetResource(uint uuid)
 		memcpy(ParticleMesh.texture_coords, resourceMesh->SimpleMeshDataStruct.texture_coords, sizeof(float) * ParticleMesh.num_vertices * 3);
 		PartSystem->SetMeshResource(ParticleMesh);
 	}
+}
+
+void ComponentParticleSystem::SetTextureResource(uint uuid)
+{
+	TextureResource = (ResourceTexture*)App->resources->Get(uuid);
+	if (TextureResource != nullptr)
+		PartSystem->SetTextureResource(TextureResource->TextureDataStruct.id_texture);
+}
+
+void ComponentParticleSystem::SetParticleResource(uint uuid)
+{
+	//ParticleState InitialState;
+	//PartSystem->SetInitialStateResource(InitialState);
+	//ParticleState FinalState;
+	//PartSystem->SetFinalStateResource(FinalState);
+	//SetTextureResource();
+}
+
+void ComponentParticleSystem::SetEmitterResource(uint uuid)
+{
+	//ParticleEmitter Emitter;
+	//PartSystem->SetEmitterResource(Emitter);
 }
 
 bool ComponentParticleSystem::SaveComponent(JSON_Object* conf) const

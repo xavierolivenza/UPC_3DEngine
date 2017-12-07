@@ -260,6 +260,26 @@ void ParticleSystem::SetMeshResourcePlane()
 	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * ParticleMesh.num_indices * 3, ParticleMesh.texture_coords, GL_STATIC_DRAW);
 }
 
+void ParticleSystem::SetTextureResource(unsigned int ID)
+{
+	TextureID = ID;
+}
+
+void ParticleSystem::SetInitialStateResource(ParticleState& state)
+{
+
+}
+
+void ParticleSystem::SetFinalStateResource(ParticleState& state)
+{
+
+}
+
+void ParticleSystem::SetEmitterResource(ParticleEmitter& emitter)
+{
+
+}
+
 void ParticleSystem::DebugDrawEmitter()
 {
 	Emitter.DebugDrawEmitter();

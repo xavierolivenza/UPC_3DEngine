@@ -5,6 +5,7 @@
 
 //class ResourceMesh;
 class ParticleSystem;
+class ResourceTexture;
 
 class ComponentParticleSystem : public Component
 {
@@ -20,13 +21,17 @@ public:
 	bool CleanUp();
 	void DrawComponentImGui();
 
-	void SetResource(uint uuid);
+	void SetMeshResource(uint uuid);
+	void SetTextureResource(uint uuid);
+	void SetParticleResource(uint uuid);
+	void SetEmitterResource(uint uuid);
 
 	bool SaveComponent(JSON_Object* conf) const;
 	bool LoadComponent(JSON_Object* conf);
 
 private:
 	ParticleSystem* PartSystem = nullptr;
+	ResourceTexture* TextureResource = nullptr;
 	bool EditBoundBox = false;
 };
 
