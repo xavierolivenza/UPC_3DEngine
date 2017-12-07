@@ -386,10 +386,6 @@ AABB& ParticleSystem::GetEmitterAABB()
 void ParticleSystem::DrawTexturePreview()
 {
 	ImDrawList* draw_list = ImGui::GetWindowDrawList();
-	static ImVector<ImVec2> points;
-	static bool adding_line = false;
-	static float sz = 36.0f;
-	float spacing = 8.0f;
 	static float texSize = 1.0f;
 	static ImVec2 InitialPos = ImVec2(0.0f, 0.0f);
 	static ImVec2 FinalPos = ImVec2(0.0f, 0.0f);
@@ -403,27 +399,6 @@ void ParticleSystem::DrawTexturePreview()
 	bool adding_preview = false;
 	ImGui::InvisibleButton("canvas", canvas_size);
 	ImVec2 mouse_pos_in_canvas = ImVec2(ImGui::GetIO().MousePos.x, ImGui::GetIO().MousePos.y);
-	if (adding_line)
-	{
-		adding_preview = true;
-		points.push_back(mouse_pos_in_canvas);
-		if (!ImGui::GetIO().MouseDown[0])
-			adding_line = adding_preview = false;
-	}
-	if (ImGui::IsItemHovered())
-	{
-		if (!adding_line && ImGui::IsMouseClicked(0))
-		{
-			points.push_back(mouse_pos_in_canvas);
-			adding_line = true;
-		}
-		if (ImGui::IsMouseClicked(1) && !points.empty())
-		{
-			adding_line = adding_preview = false;
-			points.pop_back();
-			points.pop_back();
-		}
-	}
 	draw_list->PushClipRect(canvas_pos, ImVec2(canvas_pos.x + canvas_size.x, canvas_pos.y + canvas_size.y));      // clip lines within the canvas (if we resize it, etc.)
 	draw_list->AddImage((void*)TextureData.TextureID, canvas_pos, ImVec2(canvas_pos.x + TextureData.TextureW * texSize, canvas_pos.y + TextureData.TextureH * texSize), ImVec2(0, 1), ImVec2(1, 0));
 	draw_list->AddRect(canvas_pos, ImVec2(canvas_pos.x + canvas_size.x, canvas_pos.y + canvas_size.y), ImColor(255, 255, 255));
@@ -436,8 +411,11 @@ void ParticleSystem::DrawTexturePreview()
 	}
 	draw_list->AddRect(ImVec2(InitialPos.x, InitialPos.y), ImVec2(FinalPos.x, FinalPos.y), IM_COL32(255, 255, 0, 255), 0.0f, ~0);
 	draw_list->PopClipRect();
-	if (adding_preview)
-		points.pop_back();
+
+	//ImGui::SameLine();
+	//ImGui::VSliderFloat("##SliverV", );
+	//ImGui::SliderFloat("##SliverH", );
+
 	ImGui::DragFloat2("Corner1 UV", corner1UV.ptr(), 0.001f, 0.0f, 1.0f);
 	ImGui::DragFloat2("Corner2 UV", corner2UV.ptr(), 0.001f, 0.0f, 1.0f);
 }
