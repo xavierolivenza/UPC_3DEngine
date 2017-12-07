@@ -189,6 +189,16 @@ struct ParticleMeshData								//Very similar to MeshDataResource, but we copy i
 	float* texture_coords = nullptr;
 };
 
+struct KeyInput
+{
+	bool Idle = false;
+	bool Up = false;
+	bool Down = false;
+	bool Repeat = false;
+
+	void Reset();
+};
+
 class ParticleSystem
 {
 public:
@@ -215,7 +225,7 @@ private:
 
 public:
 	bool EditorWindowOpen = false;
-	
+	KeyInput MouseLeftClick;
 private:
 	ParticleMeshData ParticleMesh;
 	std::vector<Particle*> Particles;

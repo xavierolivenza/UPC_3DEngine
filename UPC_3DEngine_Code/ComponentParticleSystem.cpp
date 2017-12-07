@@ -32,6 +32,14 @@ bool ComponentParticleSystem::PreUpdate(float dt)
 
 bool ComponentParticleSystem::Update(float dt)
 {
+	PartSystem->MouseLeftClick.Reset();
+	switch(App->input->GetMouseButton(SDL_BUTTON_LEFT))
+	{
+		case KEY_STATE::KEY_IDLE: PartSystem->MouseLeftClick.Idle = true; break;
+		case KEY_STATE::KEY_UP: PartSystem->MouseLeftClick.Up = true; break;
+		case KEY_STATE::KEY_REPEAT: PartSystem->MouseLeftClick.Repeat = true; break;
+		case KEY_STATE::KEY_DOWN: PartSystem->MouseLeftClick.Down = true; break;
+	}
 	PartSystem->Update(dt);
 	if (PartSystem->EditorWindowOpen) PartSystem->DrawImGuiEditorWindow();
 	if (EditBoundBox)

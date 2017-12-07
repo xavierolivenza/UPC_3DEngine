@@ -160,6 +160,14 @@ void ParticleMeshData::Clean()
 	}
 }
 
+void KeyInput::Reset()
+{
+	Idle = false;
+	Up = false;
+	Down = false;
+	Repeat = false;
+}
+
 ParticleSystem::ParticleSystem()
 {
 
@@ -305,7 +313,50 @@ AABB& ParticleSystem::GetEmitterAABB()
 
 void ParticleSystem::DrawTexturePreview()
 {
+	ImDrawList* draw_list = ImGui::GetWindowDrawList();
+	static ImVector<ImVec2> points;
+	static bool adding_line = false;
+	static float sz = 36.0f;
+	float spacing = 8.0f;
 
+	ImVec2 canvas_pos = ImGui::GetCursorScreenPos();            // ImDrawList API uses screen coordinates!
+	ImVec2 canvas_size = ImGui::GetContentRegionAvail();        // Resize canvas to what's available
+	if (canvas_size.x < 50.0f) canvas_size.x = 50.0f;
+	if (canvas_size.y < 50.0f) canvas_size.y = 50.0f;
+	draw_list->AddRectFilledMultiColor(canvas_pos, ImVec2(canvas_pos.x + canvas_size.x, canvas_pos.y + canvas_size.y), ImColor(50, 50, 50), ImColor(50, 50, 60), ImColor(60, 60, 70), ImColor(50, 50, 60));
+	draw_list->AddRect(canvas_pos, ImVec2(canvas_pos.x + canvas_size.x, canvas_pos.y + canvas_size.y), ImColor(255, 255, 255));
+
+	bool adding_preview = false;
+	ImGui::InvisibleButton("canvas", canvas_size);
+	ImVec2 mouse_pos_in_canvas = ImVec2(ImGui::GetIO().MousePos.x - canvas_pos.x, ImGui::GetIO().MousePos.y - canvas_pos.y);
+	if (adding_line)
+	{
+		adding_preview = true;
+		points.push_back(mouse_pos_in_canvas);
+		if (!ImGui::GetIO().MouseDown[0])
+			adding_line = adding_preview = false;
+	}
+	if (ImGui::IsItemHovered())
+	{
+		if (!adding_line && ImGui::IsMouseClicked(0))
+		{
+			points.push_back(mouse_pos_in_canvas);
+			adding_line = true;
+		}
+		if (ImGui::IsMouseClicked(1) && !points.empty())
+		{
+			adding_line = adding_preview = false;
+			points.pop_back();
+			points.pop_back();
+		}
+	}
+	draw_list->PushClipRect(canvas_pos, ImVec2(canvas_pos.x + canvas_size.x, canvas_pos.y + canvas_size.y));      // clip lines within the canvas (if we resize it, etc.)
+	for (int i = 0; i < points.Size - 1; i += 2)
+		//draw_list->AddLine(ImVec2(canvas_pos.x + points[i].x, canvas_pos.y + points[i].y), ImVec2(canvas_pos.x + points[i + 1].x, canvas_pos.y + points[i + 1].y), IM_COL32(255, 255, 0, 255), 2.0f);
+		draw_list->AddRect(ImVec2(mouse_pos_in_canvas.x, mouse_pos_in_canvas.y), ImVec2(mouse_pos_in_canvas.x + sz, mouse_pos_in_canvas.y + sz), IM_COL32(255, 255, 0, 255), 0.0f, ~0); mouse_pos_in_canvas.x += sz + spacing;
+		draw_list->PopClipRect();
+	if (adding_preview)
+		points.pop_back();
 }
 
 void ParticleSystem::DrawColorSelector()
