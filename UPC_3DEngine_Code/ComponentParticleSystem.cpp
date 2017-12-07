@@ -65,10 +65,9 @@ bool ComponentParticleSystem::Update(float dt)
 
 			switch (AABBPointToMove)
 			{
-			case 0:
-
-				break;
+			case 0: break;
 			case 1:
+			{
 				float4x4 MinMatrix = float4x4::FromTRS(Box.minPoint, Quat::identity, float3::one);
 				MinMatrix.Transpose();
 				ImGuizmo::Manipulate(viewmatrix.ptr(), projectionmatrix.ptr(), ImGuizmo::TRANSLATE, ImGuizmo::LOCAL, MinMatrix.ptr());
@@ -82,7 +81,9 @@ bool ComponentParticleSystem::Update(float dt)
 					Box.minPoint = position;
 				}
 				break;
+			}
 			case 2:
+			{
 				float4x4 MaxMatrix = float4x4::FromTRS(Box.maxPoint, Quat::identity, float3::one);
 				MaxMatrix.Transpose();
 				ImGuizmo::Manipulate(viewmatrix.ptr(), projectionmatrix.ptr(), ImGuizmo::TRANSLATE, ImGuizmo::LOCAL, MaxMatrix.ptr());
@@ -97,9 +98,11 @@ bool ComponentParticleSystem::Update(float dt)
 				}
 				break;
 			}
+			}
 		}
 		PartSystem->DebugDrawEmitterAABB();
 	}
+	if (!parent->IsStatic()) AABBPointToMove = 0;
 	return true;
 }
 
@@ -128,9 +131,9 @@ void ComponentParticleSystem::DrawComponentImGui()
 		ImGui::Checkbox("Edit Bounding Box", &EditBoundBox);
 		ImGui::RadioButton("Null", &AABBPointToMove, 0);
 		ImGui::SameLine();
-		ImGui::RadioButton("Min Point", &AABBPointToMove, 1);
+		if (ImGui::RadioButton("Min Point", &AABBPointToMove, 1)) parent->SetStatic(true);
 		ImGui::SameLine();
-		ImGui::RadioButton("Max Point", &AABBPointToMove, 2);
+		if (ImGui::RadioButton("Max Point", &AABBPointToMove, 2)) parent->SetStatic(true);
 		if (ImGui::Button("Save Particles Resource", ImVec2(170, 30)))
 		{
 			FileType = Particle_Resource;
