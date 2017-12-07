@@ -39,6 +39,7 @@ private:
 	void DrawDirectory(const char* directory);
 
 private:
+	int AABBPointToMove = 0;
 	ParticleSystem* PartSystem = nullptr;
 	ResourceTexture* TextureResource = nullptr;
 	bool EditBoundBox = false;

@@ -48,7 +48,60 @@ void ParticleEmitter::DrawCone(const ConeTrunk& shape)
 
 void ParticleEmitter::DrawBox(const AABB& shape)
 {
+	float3 p0 = shape.CornerPoint(0);
+	float3 p1 = shape.CornerPoint(1);
+	float3 p2 = shape.CornerPoint(2);
+	float3 p3 = shape.CornerPoint(3);
+	float3 p4 = shape.CornerPoint(4);
+	float3 p5 = shape.CornerPoint(5);
+	float3 p6 = shape.CornerPoint(6);
+	float3 p7 = shape.CornerPoint(7);
 
+	glLineWidth(4.0f);
+	glColor3f(1.0f, 1.0f, 0.0f);
+
+	glBegin(GL_LINES);
+
+	glVertex3f(p0.x, p0.y, p0.z);
+	glVertex3f(p1.x, p1.y, p1.z);
+
+	glVertex3f(p0.x, p0.y, p0.z);
+	glVertex3f(p2.x, p2.y, p2.z);
+
+	glVertex3f(p0.x, p0.y, p0.z);
+	glVertex3f(p4.x, p4.y, p4.z);
+
+	glVertex3f(p7.x, p7.y, p7.z);
+	glVertex3f(p6.x, p6.y, p6.z);
+
+	glVertex3f(p7.x, p7.y, p7.z);
+	glVertex3f(p3.x, p3.y, p3.z);
+
+	glVertex3f(p7.x, p7.y, p7.z);
+	glVertex3f(p5.x, p5.y, p5.z);
+
+	glVertex3f(p5.x, p5.y, p5.z);
+	glVertex3f(p1.x, p1.y, p1.z);
+
+	glVertex3f(p5.x, p5.y, p5.z);
+	glVertex3f(p4.x, p4.y, p4.z);
+
+	glVertex3f(p2.x, p2.y, p2.z);
+	glVertex3f(p3.x, p3.y, p3.z);
+
+	glVertex3f(p2.x, p2.y, p2.z);
+	glVertex3f(p6.x, p6.y, p6.z);
+
+	glVertex3f(p6.x, p6.y, p6.z);
+	glVertex3f(p4.x, p4.y, p4.z);
+
+	glVertex3f(p3.x, p3.y, p3.z);
+	glVertex3f(p1.x, p1.y, p1.z);
+
+	glEnd();
+
+	glLineWidth(1.0f);
+	glColor3f(1.0f, 1.0f, 1.0f);
 }
 
 void ParticleEmitter::DrawCircle(const Circle& shape)
@@ -353,7 +406,7 @@ void ParticleSystem::DrawTexturePreview()
 	if (canvas_size.x < 50.0f) canvas_size.x = 50.0f;
 	if (canvas_size.y < 50.0f) canvas_size.y = 50.0f;
 	draw_list->AddRectFilledMultiColor(canvas_pos, ImVec2(canvas_pos.x + canvas_size.x, canvas_pos.y + canvas_size.y), ImColor(50, 50, 50), ImColor(50, 50, 60), ImColor(60, 60, 70), ImColor(50, 50, 60));
-	draw_list->AddImage((void*)TextureData.TextureID, canvas_pos, ImVec2(canvas_pos.x + TextureData.TextureW * texSize, canvas_pos.y + TextureData.TextureH * texSize), ImVec2(0, 1), ImVec2(1, 0));
+	
 	draw_list->AddRect(canvas_pos, ImVec2(canvas_pos.x + canvas_size.x, canvas_pos.y + canvas_size.y), ImColor(255, 255, 255));
 
 	bool adding_preview = false;
@@ -381,6 +434,7 @@ void ParticleSystem::DrawTexturePreview()
 		}
 	}
 	draw_list->PushClipRect(canvas_pos, ImVec2(canvas_pos.x + canvas_size.x, canvas_pos.y + canvas_size.y));      // clip lines within the canvas (if we resize it, etc.)
+	draw_list->AddImage((void*)TextureData.TextureID, canvas_pos, ImVec2(canvas_pos.x + TextureData.TextureW * texSize, canvas_pos.y + TextureData.TextureH * texSize), ImVec2(0, 1), ImVec2(1, 0));
 	for (int i = 0; i < points.Size - 1; i += 2)
 		//draw_list->AddLine(ImVec2(canvas_pos.x + points[i].x, canvas_pos.y + points[i].y), ImVec2(canvas_pos.x + points[i + 1].x, canvas_pos.y + points[i + 1].y), IM_COL32(255, 255, 0, 255), 2.0f);
 		draw_list->AddRect(ImVec2(mouse_pos_in_canvas.x, mouse_pos_in_canvas.y), ImVec2(mouse_pos_in_canvas.x + sz, mouse_pos_in_canvas.y + sz), IM_COL32(255, 255, 0, 255), 0.0f, ~0); mouse_pos_in_canvas.x += sz + spacing;

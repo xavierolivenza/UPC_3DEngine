@@ -61,34 +61,44 @@ bool ComponentParticleSystem::Update(float dt)
 			viewmatrix.Transpose();
 			projectionmatrix.Transpose();
 
-			AABB Box = PartSystem->GetEmitterAABB();
+			AABB& Box = PartSystem->GetEmitterAABB();
 
-			float4x4 MaxMatrix = float4x4::FromTRS(Box.maxPoint, Quat::identity, float3::one);
-			MaxMatrix.Transpose();
-			float4x4 MinMatrix = float4x4::FromTRS(Box.minPoint, Quat::identity, float3::one);
-			MinMatrix.Transpose();
-
-			for (uint i = 0; i < 2; i++)
+			switch (AABBPointToMove)
 			{
-				if (i == 0) ImGuizmo::Manipulate(viewmatrix.ptr(), projectionmatrix.ptr(), ImGuizmo::TRANSLATE, ImGuizmo::LOCAL, MaxMatrix.ptr());
-				else ImGuizmo::Manipulate(viewmatrix.ptr(), projectionmatrix.ptr(), ImGuizmo::TRANSLATE, ImGuizmo::LOCAL, MinMatrix.ptr());
+			case 0:
 
+				break;
+			case 1:
+				float4x4 MinMatrix = float4x4::FromTRS(Box.minPoint, Quat::identity, float3::one);
+				MinMatrix.Transpose();
+				ImGuizmo::Manipulate(viewmatrix.ptr(), projectionmatrix.ptr(), ImGuizmo::TRANSLATE, ImGuizmo::LOCAL, MinMatrix.ptr());
 				if (ImGuizmo::IsUsing())
 				{
-					//matrix.Transpose();
-					//if ((parent != nullptr) && (parent->GetParent() != nullptr))
-					//matrix = parent->GetParent()->GetTransform()->GetMatrix().Transposed().Inverted() * matrix;
-					//float3 position = float3::zero;
-					//float3 scale = float3::zero;
-					//Quat rotation = Quat::identity;
-					//matrix.Decompose(position, rotation, scale);
-					//SetPos(position);
-					//SetRot(rotation);
-					//SetScale(scale);
+					MinMatrix.Transpose();
+					float3 position = float3::zero;
+					float3 scale = float3::zero;
+					Quat rotation = Quat::identity;
+					MinMatrix.Decompose(position, rotation, scale);
+					Box.minPoint = position;
 				}
+				break;
+			case 2:
+				float4x4 MaxMatrix = float4x4::FromTRS(Box.maxPoint, Quat::identity, float3::one);
+				MaxMatrix.Transpose();
+				ImGuizmo::Manipulate(viewmatrix.ptr(), projectionmatrix.ptr(), ImGuizmo::TRANSLATE, ImGuizmo::LOCAL, MaxMatrix.ptr());
+				if (ImGuizmo::IsUsing())
+				{
+					MaxMatrix.Transpose();
+					float3 position = float3::zero;
+					float3 scale = float3::zero;
+					Quat rotation = Quat::identity;
+					MaxMatrix.Decompose(position, rotation, scale);
+					Box.maxPoint = position;
+				}
+				break;
 			}
 		}
-
+		PartSystem->DebugDrawEmitterAABB();
 	}
 	return true;
 }
@@ -116,6 +126,11 @@ void ComponentParticleSystem::DrawComponentImGui()
 	{
 		ImGui::Checkbox("Show Particle Editor", &PartSystem->EditorWindowOpen);
 		ImGui::Checkbox("Edit Bounding Box", &EditBoundBox);
+		ImGui::RadioButton("Null", &AABBPointToMove, 0);
+		ImGui::SameLine();
+		ImGui::RadioButton("Min Point", &AABBPointToMove, 1);
+		ImGui::SameLine();
+		ImGui::RadioButton("Max Point", &AABBPointToMove, 2);
 		if (ImGui::Button("Save Particles Resource", ImVec2(170, 30)))
 		{
 			FileType = Particle_Resource;
