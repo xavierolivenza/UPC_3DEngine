@@ -160,6 +160,13 @@ void ParticleMeshData::Clean()
 	}
 }
 
+void ParticleTextureData::Set(unsigned int ID, unsigned int width, unsigned int heigth)
+{
+	TextureID = ID;
+	TextureW = width;
+	TextureH = heigth;
+}
+
 void KeyInput::Reset()
 {
 	Idle = false;
@@ -260,9 +267,9 @@ void ParticleSystem::SetMeshResourcePlane()
 	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * ParticleMesh.num_indices * 3, ParticleMesh.texture_coords, GL_STATIC_DRAW);
 }
 
-void ParticleSystem::SetTextureResource(unsigned int ID)
+void ParticleSystem::SetTextureResource(unsigned int ID, unsigned int width, unsigned int heigth)
 {
-	TextureID = ID;
+	TextureData.Set(ID, width, heigth);
 }
 
 void ParticleSystem::SetInitialStateResource(ParticleState& state)
@@ -338,12 +345,18 @@ void ParticleSystem::DrawTexturePreview()
 	static bool adding_line = false;
 	static float sz = 36.0f;
 	float spacing = 8.0f;
+	static float texSize = 0.2f;
+	ImGui::SliderFloat("Image Preview Size", &texSize, 0.0f, 1.0f, "%.2f");
 
 	ImVec2 canvas_pos = ImGui::GetCursorScreenPos();            // ImDrawList API uses screen coordinates!
 	ImVec2 canvas_size = ImGui::GetContentRegionAvail();        // Resize canvas to what's available
 	if (canvas_size.x < 50.0f) canvas_size.x = 50.0f;
 	if (canvas_size.y < 50.0f) canvas_size.y = 50.0f;
 	draw_list->AddRectFilledMultiColor(canvas_pos, ImVec2(canvas_pos.x + canvas_size.x, canvas_pos.y + canvas_size.y), ImColor(50, 50, 50), ImColor(50, 50, 60), ImColor(60, 60, 70), ImColor(50, 50, 60));
+
+	//ImGui::Image((void*)resourceTexture->TextureDataStruct.id_texture, ImVec2(resourceTexture->TextureDataStruct.texture_w * texSize, resourceTexture->TextureDataStruct.texture_h * texSize), ImVec2(1, 1), ImVec2(0, 0));
+
+	draw_list->AddImage((void*)TextureData.TextureID, canvas_pos, ImVec2(canvas_pos.x + TextureData.TextureW * texSize, canvas_pos.y + TextureData.TextureH * texSize), ImVec2(1, 1), ImVec2(0, 0));
 	draw_list->AddRect(canvas_pos, ImVec2(canvas_pos.x + canvas_size.x, canvas_pos.y + canvas_size.y), ImColor(255, 255, 255));
 
 	bool adding_preview = false;

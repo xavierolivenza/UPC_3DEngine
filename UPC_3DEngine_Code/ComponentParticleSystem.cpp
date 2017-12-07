@@ -166,7 +166,7 @@ void ComponentParticleSystem::SetTextureResource(uint uuid)
 {
 	TextureResource = (ResourceTexture*)App->resources->Get(uuid);
 	if (TextureResource != nullptr)
-		PartSystem->SetTextureResource(TextureResource->TextureDataStruct.id_texture);
+		PartSystem->SetTextureResource(TextureResource->TextureDataStruct.id_texture, TextureResource->TextureDataStruct.texture_w, TextureResource->TextureDataStruct.texture_h);
 }
 
 void ComponentParticleSystem::SetParticleResource(uint uuid)

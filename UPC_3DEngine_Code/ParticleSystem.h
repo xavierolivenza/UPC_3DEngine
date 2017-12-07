@@ -189,14 +189,23 @@ struct ParticleMeshData								//Very similar to MeshDataResource, but we copy i
 	float* texture_coords = nullptr;
 };
 
+struct ParticleTextureData
+{
+	void Set(unsigned int ID, unsigned int width, unsigned int heigth);
+
+	unsigned int TextureID = 0;
+	unsigned int TextureW = 0;
+	unsigned int TextureH = 0;
+};
+
 struct KeyInput
 {
+	void Reset();
+
 	bool Idle = false;
 	bool Up = false;
 	bool Down = false;
 	bool Repeat = false;
-
-	void Reset();
 };
 
 class ParticleSystem
@@ -211,7 +220,7 @@ public:
 
 	void SetMeshResource(ParticleMeshData& MeshData);//Set Mesh resource to use
 	void SetMeshResourcePlane();					//Delete actual mesh + load a plane
-	void SetTextureResource(unsigned int ID);
+	void SetTextureResource(unsigned int ID, unsigned int width, unsigned int heigth);
 	void SetInitialStateResource(ParticleState& state);
 	void SetFinalStateResource(ParticleState& state);
 	void SetEmitterResource(ParticleEmitter& emitter);
@@ -238,7 +247,7 @@ private:
 	ParticleState InitialState;
 	ParticleState FinalState;
 	ParticleEmitter Emitter;
-	unsigned int TextureID = 0;
+	ParticleTextureData TextureData;
 
 	enum
 	{
