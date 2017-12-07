@@ -353,10 +353,7 @@ void ParticleSystem::DrawTexturePreview()
 	if (canvas_size.x < 50.0f) canvas_size.x = 50.0f;
 	if (canvas_size.y < 50.0f) canvas_size.y = 50.0f;
 	draw_list->AddRectFilledMultiColor(canvas_pos, ImVec2(canvas_pos.x + canvas_size.x, canvas_pos.y + canvas_size.y), ImColor(50, 50, 50), ImColor(50, 50, 60), ImColor(60, 60, 70), ImColor(50, 50, 60));
-
-	//ImGui::Image((void*)resourceTexture->TextureDataStruct.id_texture, ImVec2(resourceTexture->TextureDataStruct.texture_w * texSize, resourceTexture->TextureDataStruct.texture_h * texSize), ImVec2(1, 1), ImVec2(0, 0));
-
-	draw_list->AddImage((void*)TextureData.TextureID, canvas_pos, ImVec2(canvas_pos.x + TextureData.TextureW * texSize, canvas_pos.y + TextureData.TextureH * texSize), ImVec2(1, 1), ImVec2(0, 0));
+	draw_list->AddImage((void*)TextureData.TextureID, canvas_pos, ImVec2(canvas_pos.x + TextureData.TextureW * texSize, canvas_pos.y + TextureData.TextureH * texSize), ImVec2(0, 1), ImVec2(1, 0));
 	draw_list->AddRect(canvas_pos, ImVec2(canvas_pos.x + canvas_size.x, canvas_pos.y + canvas_size.y), ImColor(255, 255, 255));
 
 	bool adding_preview = false;

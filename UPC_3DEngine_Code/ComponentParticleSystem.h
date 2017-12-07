@@ -29,10 +29,11 @@ public:
 	bool SaveComponent(JSON_Object* conf) const;
 	bool LoadComponent(JSON_Object* conf);
 
-	void ImGuiDrawPopUp();
+	void ImGuiLoadPopUp();
 	void ImGuiLoadTexturePopUp();
 	void ImGuiLoadParticlePopUp();
 	void ImGuiLoadEmitterPopUp();
+	void ImGuiSavePopUp();
 
 private:
 	void DrawDirectory(const char* directory);
@@ -41,7 +42,8 @@ private:
 	ParticleSystem* PartSystem = nullptr;
 	ResourceTexture* TextureResource = nullptr;
 	bool EditBoundBox = false;
-	bool PopUpOpen = false;
+	bool PopUpLoadOpen = false;
+	bool PopUpSaveOpen = false;
 	std::string FileToLoad;
 	std::string FileToLoadName;
 	std::string DirectoryTemporalStr;
@@ -51,7 +53,7 @@ private:
 		Texture_Resource,
 		Particle_Resource,
 		Emitter_Resource
-	} FileToLoadType = Texture_Resource;
+	} FileType = Texture_Resource;
 };
 
 #endif // __ComponentParticleSystem_H__

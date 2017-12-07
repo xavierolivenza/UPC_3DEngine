@@ -36,7 +36,8 @@ bool ComponentParticleSystem::PreUpdate(float dt)
 
 bool ComponentParticleSystem::Update(float dt)
 {
-	if (PopUpOpen) ImGuiDrawPopUp();
+	if (PopUpLoadOpen) ImGuiLoadPopUp();
+	if (PopUpSaveOpen) ImGuiSavePopUp();
 	PartSystem->MouseLeftClick.Reset();
 	switch(App->input->GetMouseButton(SDL_BUTTON_LEFT))
 	{
@@ -115,24 +116,32 @@ void ComponentParticleSystem::DrawComponentImGui()
 	{
 		ImGui::Checkbox("Show Particle Editor", &PartSystem->EditorWindowOpen);
 		ImGui::Checkbox("Edit Bounding Box", &EditBoundBox);
-		ImGui::Button("Save Particles Resource", ImVec2(170, 30));
+		if (ImGui::Button("Save Particles Resource", ImVec2(170, 30)))
+		{
+			FileType = Particle_Resource;
+			PopUpSaveOpen = true;
+		}
 		ImGui::SameLine();
 		if (ImGui::Button("Load Particles Resource", ImVec2(180, 30)))
 		{
-			FileToLoadType = Particle_Resource;
-			PopUpOpen = true;
+			FileType = Particle_Resource;
+			PopUpLoadOpen = true;
 		}
-		ImGui::Button("Save Emitter Resource", ImVec2(170, 30));
+		if (ImGui::Button("Save Emitter Resource", ImVec2(170, 30)))
+		{
+			FileType = Emitter_Resource;
+			PopUpSaveOpen = true;
+		}
 		ImGui::SameLine();
 		if (ImGui::Button("Load Emitter Resource", ImVec2(180, 30)))
 		{
-			FileToLoadType = Emitter_Resource;
-			PopUpOpen = true;
+			FileType = Emitter_Resource;
+			PopUpLoadOpen = true;
 		}
 		if (ImGui::Button("Load Texture", ImVec2(120, 30)))
 		{
-			FileToLoadType = Texture_Resource;
-			PopUpOpen = true;
+			FileType = Texture_Resource;
+			PopUpLoadOpen = true;
 		}
 	}
 }
@@ -194,10 +203,10 @@ bool ComponentParticleSystem::LoadComponent(JSON_Object* conf)
 	return true;
 }
 
-void ComponentParticleSystem::ImGuiDrawPopUp()
+void ComponentParticleSystem::ImGuiLoadPopUp()
 {
 	const char* Str = "Wrong Type";
-	switch (FileToLoadType)
+	switch (FileType)
 	{
 	case Texture_Resource: Str = "Load Texture"; break;
 	case Particle_Resource: Str = "Load Particle"; break;
@@ -209,7 +218,7 @@ void ComponentParticleSystem::ImGuiDrawPopUp()
 	{
 		ImGui::Text("Here are only shown files that are accepted\nextention files.");
 		ImGui::BeginChild("File Browser##1", ImVec2(300, 300), true);
-		switch (FileToLoadType)
+		switch (FileType)
 		{
 		case Texture_Resource: DrawDirectory(App->importer->Get_Assets_path()->c_str()); break;
 		case Particle_Resource: DrawDirectory(App->importer->Get_ParticleSystem_Particles_path()->c_str()); break;
@@ -224,19 +233,25 @@ void ComponentParticleSystem::ImGuiDrawPopUp()
 		{
 			if (!FileToLoad.empty())
 			{
-				switch (FileToLoadType)
+				switch (FileType)
 				{
 				case Texture_Resource: ImGuiLoadTexturePopUp(); break;
 				case Particle_Resource: ImGuiLoadParticlePopUp(); break;
 				case Emitter_Resource: ImGuiLoadEmitterPopUp(); break;
 				}
 			}
-			PopUpOpen = false;
+			PopUpLoadOpen = false;
+			FileToLoad.clear();
+			FileToLoadName.clear();
+			DirectoryTemporalStr.clear();
 		}
 		ImGui::SameLine();
 		if (ImGui::Button("Cancel##1", ImVec2(50, 20)))
 		{
-			PopUpOpen = false;
+			PopUpLoadOpen = false;
+			FileToLoad.clear();
+			FileToLoadName.clear();
+			DirectoryTemporalStr.clear();
 		}
 		ImGui::EndPopup();
 	}
@@ -261,6 +276,33 @@ void ComponentParticleSystem::ImGuiLoadEmitterPopUp()
 
 }
 
+void ComponentParticleSystem::ImGuiSavePopUp()
+{
+	ImGui::OpenPopup("Save File##1");
+	if (ImGui::BeginPopupModal("Save File##1", nullptr, ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_HorizontalScrollbar))
+	{
+		const char* Str = "Wrong Type";
+		switch (FileType)
+		{
+		case Particle_Resource: Str = "Save Particle"; break;
+		case Emitter_Resource: Str = "Save Emitter"; break;
+		}
+		char file_name[500] = "";
+		ImGui::InputText(Str, file_name, 500);
+		if (ImGui::Button("Ok", ImVec2(50, 20)))
+		{
+			//App->scene->SaveScene(SaveFileNameFileBrowser.c_str());
+			PopUpSaveOpen = false;
+		}
+		ImGui::SameLine();
+		if (ImGui::Button("Cancel", ImVec2(50, 20)))
+		{
+			PopUpSaveOpen = false;
+		}
+		ImGui::EndPopup();
+	}
+}
+
 void ComponentParticleSystem::DrawDirectory(const char * directory)
 {
 	for (std::experimental::filesystem::directory_iterator::value_type file_in_path : std::experimental::filesystem::directory_iterator(directory))
@@ -283,7 +325,7 @@ void ComponentParticleSystem::DrawDirectory(const char * directory)
 			bool Valid = false;
 			//Change Particle_Resource extention to .particle.json
 			//Change Emitter_Resource extention to .emitter.json
-			switch (FileToLoadType)
+			switch (FileType)
 			{
 			case Texture_Resource: if ((DirectoryTemporalStr == ".png") || (DirectoryTemporalStr == ".PNG") || (DirectoryTemporalStr == ".jpg") || (DirectoryTemporalStr == ".JPG") || (DirectoryTemporalStr == ".tga") || (DirectoryTemporalStr == ".TGA") || (DirectoryTemporalStr == ".dds") || (DirectoryTemporalStr == ".DDS")) Valid = true; break;
 			case Particle_Resource: if (DirectoryTemporalStr == ".json") Valid = true; break;
