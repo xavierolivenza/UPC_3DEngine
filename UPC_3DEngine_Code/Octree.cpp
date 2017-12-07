@@ -1,3 +1,4 @@
+#include <algorithm>
 #include "Octree.h"
 #include "GameObject.h"
 #include "ComponentMesh.h"
@@ -160,6 +161,9 @@ int OctreeNode::CollectIntersections(std::list<ComponentMesh*>& nodes, const Fru
 
 	for (std::list<ComponentMesh*>::const_iterator item = objects.begin(); item != objects.cend(); ++item)
 	{
+		std::list<ComponentMesh*>::iterator it = std::find(nodes.begin(), nodes.end(), item._Ptr->_Myval);
+		if (it != nodes.end())
+				continue;
 		ret++;
 		AABB Box;
 		item._Ptr->_Myval->GetTransformedAABB(Box);
