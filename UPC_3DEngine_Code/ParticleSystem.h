@@ -79,6 +79,7 @@ public:
 	int Lifetime = 0;								//Lifetime of emitted particles
 	int LifetimeVariation = 0;						//Lifetime variation of emitted particles
 	int EmissionDuration = 0;						//If loop is false, emission is played EmissionDuration ms
+	int ParticleFacingOptions = 1;
 	bool Loop = true;								//Ignore EmissionDuration and keep emitting
 	int ParticleNumber = 0;							//Max particles emitted at the same time
 	float Speed = 0.0f;

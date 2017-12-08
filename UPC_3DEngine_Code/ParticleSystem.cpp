@@ -527,9 +527,10 @@ void ParticleSystem::DrawEmitterOptions()
 	*/
 	ImGui::PopItemWidth();
 	ImGui::NextColumn();
-	ImGui::PushItemWidth(120);
+	ImGui::PushItemWidth(175);
 	ImGui::Combo("Emyssion Type", (int*)&Emitter.EmissionType, "Local\0World\0");
 	ImGui::Combo("Emyssion Shape", (int*)&Emitter.Type, "Sphere\0SemiSphere\0Cone\0Box\0Circle\0Edge");
+	ImGui::Combo("Particle Facing Options", &Emitter.ParticleFacingOptions, "Null\0Billboard\0Vertical Billboard\0Horizontal Billboard");
 	ImGui::PopItemWidth();
 	//Curve editor to interpolate initial-final
 	ImGui::PushItemWidth(240);
