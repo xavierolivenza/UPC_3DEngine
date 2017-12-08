@@ -114,7 +114,7 @@ ParticleEmitter::EmitterShapeUnion::EmitterShapeUnion()
 
 }
 
-Particle::Particle(ParticleMeshData* MeshResource)
+Particle::Particle(ParticleSystem* parent, ParticleMeshData* MeshResource) : ParentParticleSystem(parent)
 {
 	Properties.MeshResource = MeshResource;
 }
@@ -126,6 +126,10 @@ Particle::~Particle()
 
 bool Particle::PreUpdate(float dt)
 {
+	/*
+	float4x4 ParticleMatrix = float4x4::FromTRS(Properties.Position, Properties.Rotation, Properties.Scale);
+	float4x4::LookAt();
+	*/
 	return true;
 }
 
@@ -403,6 +407,11 @@ AABB& ParticleSystem::GetEmitterAABB()
 	return Emitter.BoundingBox;
 }
 
+void ParticleSystem::SetCameraToFaceBillboards(float3 position, float3 up)
+{
+	CameraPosition = position;
+}
+
 void ParticleSystem::GenerateMeshResourceBuffers()
 {
 	// Vertices Buffer
@@ -531,7 +540,7 @@ void ParticleSystem::DrawEmitterOptions()
 
 bool ParticleSystem::CreateParticle()
 {
-	Particle* NewParticle = new Particle(&ParticleMesh);
+	Particle* NewParticle = new Particle(this, &ParticleMesh);
 	Particles.push_back(NewParticle);
 	return true;
 }

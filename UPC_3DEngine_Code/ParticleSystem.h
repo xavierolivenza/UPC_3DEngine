@@ -5,6 +5,7 @@
 #include "MathGeoLib\Math\float2.h"
 #include "MathGeoLib\Math\float3.h"
 #include "MathGeoLib\Math\float4.h"
+#include "MathGeoLib\Math\float4x4.h"
 #include "MathGeoLib\Math\Quat.h"
 #include "MathGeoLib\Geometry\AABB.h"
 #include "MathGeoLib\Geometry\Sphere.h"
@@ -153,10 +154,12 @@ struct ParticleProperties
 	float4 RGBATint = float4::zero;					//Particle Texture tint
 };
 
+class ParticleSystem;
+
 class Particle
 {
 public:
-	Particle(ParticleMeshData* MeshResource);
+	Particle(ParticleSystem* parent, ParticleMeshData* MeshResource);
 	~Particle();
 	bool PreUpdate(float dt);
 	bool Update(float dt);
@@ -165,6 +168,7 @@ public:
 	void DrawParticle();
 
 public:
+	ParticleSystem* ParentParticleSystem = nullptr;
 	ParticleProperties Properties;					//Particle Properties
 	ParticleState* InitialState = nullptr;			//Particle Initial State Properties
 	ParticleState* FinalState = nullptr;			//Particle Final State Properties
@@ -235,6 +239,8 @@ public:
 
 	AABB& GetEmitterAABB();							//You can get the Emitter AABB and edit min and max point with gizmos
 
+	void SetCameraToFaceBillboards(float3 position, float3 up);
+
 private:
 	void GenerateMeshResourceBuffers();
 	void DrawTexturePreview();
@@ -245,6 +251,7 @@ private:
 public:
 	bool EditorWindowOpen = false;
 	KeyInput MouseLeftClick;
+	float3 CameraPosition = float3::zero;
 
 private:
 	ParticleMeshData ParticleMesh;

@@ -30,6 +30,7 @@ bool ComponentParticleSystem::Enable()
 
 bool ComponentParticleSystem::PreUpdate(float dt)
 {
+	PartSystem->SetCameraToFaceBillboards(App->camera->Position, App->camera->Y);
 	PartSystem->PreUpdate(dt);
 	return true;
 }
