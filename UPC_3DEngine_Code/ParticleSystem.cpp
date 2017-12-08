@@ -28,22 +28,89 @@ void ParticleEmitter::DebugDrawEmitter()
 
 void ParticleEmitter::DebugDrawEmitterAABB()
 {
-DrawBox(BoundingBox);
+	DrawBox(BoundingBox);
 }
 
 void ParticleEmitter::DrawSphere(const Sphere& shape)
 {
-
+	glLineWidth(4.0f);
+	glColor3f(1.0f, 1.0f, 0.0f);
+	unsigned int segments = 10;
+	float radius = 1.0f;
+	float degInRad = 360.0f / (float)segments;
+	degInRad *= DEGTORAD;
+	glBegin(GL_LINE_LOOP);
+	for (unsigned int i = 0; i < segments; i++)
+		glVertex3f(cos(degInRad * i) * radius, 0.0f, sin(degInRad * i) * radius);
+	glEnd();
+	glBegin(GL_LINE_LOOP);
+	for (unsigned int i = 0; i < segments; i++)
+		glVertex3f(cos(degInRad * i) * radius, sin(degInRad * i) * radius, 0.0f);
+	glEnd();
+	glBegin(GL_LINE_LOOP);
+	for (unsigned int i = 0; i < segments; i++)
+		glVertex3f(0.0f, sin(degInRad * i) * radius, cos(degInRad * i) * radius);
+	glEnd();
+	glLineWidth(1.0f);
+	glColor3f(1.0f, 1.0f, 1.0f);
 }
 
 void ParticleEmitter::DrawSemiSphere(const Sphere& shape)
 {
-
+	glLineWidth(4.0f);
+	glColor3f(1.0f, 1.0f, 0.0f);
+	unsigned int segments = 10;
+	float radius = 1.0f;
+	float degInRad = 360.0f / (float)segments;
+	degInRad *= DEGTORAD;
+	glBegin(GL_LINE_LOOP);
+	for (unsigned int i = 0; i < segments; i++)
+		glVertex3f(cos(degInRad * i) * radius, 0.0f, sin(degInRad * i) * radius);
+	glEnd();
+	glBegin(GL_LINE_LOOP);
+	for (unsigned int i = 0; i <= segments * 0.5f; i++)
+		glVertex3f(cos(degInRad * i) * radius, sin(degInRad * i) * radius, 0.0f);
+	glEnd();
+	glBegin(GL_LINE_LOOP);
+	for (unsigned int i = 0; i <= segments * 0.5f; i++)
+		glVertex3f(0.0f, sin(degInRad * i) * radius, cos(degInRad * i) * radius);
+	glEnd();
+	glLineWidth(1.0f);
+	glColor3f(1.0f, 1.0f, 1.0f);
 }
 
 void ParticleEmitter::DrawCone(const ConeTrunk& shape)
 {
-
+	glLineWidth(4.0f);
+	glColor3f(1.0f, 1.0f, 0.0f);
+	float Height = 1.0f;
+	unsigned int segments = 10;
+	float radius = 1.0f;
+	float radius_top = 1.5f;
+	float degInRad = 360.0f / (float)segments;
+	degInRad *= DEGTORAD;
+	glBegin(GL_LINE_LOOP);
+	for (unsigned int i = 0; i < segments; i++)
+		glVertex3f(cos(degInRad * i) * radius, 0.0f, sin(degInRad * i) * radius);
+	glEnd();
+	glBegin(GL_LINE_LOOP);
+	for (unsigned int i = 0; i <= segments; i++)
+		glVertex3f(cos(degInRad * i) * radius_top, Height, sin(degInRad * i) * radius_top);
+	glEnd();
+	glBegin(GL_LINE_LOOP);
+	glVertex3f(radius, 0.0f, 0.0f);
+	glVertex3f(radius_top, Height, 0.0f);
+	glVertex3f(-radius_top, Height, 0.0f);
+	glVertex3f(-radius, 0.0f, 0.0f);
+	glEnd();
+	glBegin(GL_LINE_LOOP);
+	glVertex3f(0.0f, 0.0f, -radius);
+	glVertex3f(0.0f, Height, -radius_top);
+	glVertex3f(0.0f, Height, radius_top);
+	glVertex3f(0.0f, 0.0f, radius);
+	glEnd();
+	glLineWidth(1.0f);
+	glColor3f(1.0f, 1.0f, 1.0f);
 }
 
 void ParticleEmitter::DrawBox(const AABB& shape)
