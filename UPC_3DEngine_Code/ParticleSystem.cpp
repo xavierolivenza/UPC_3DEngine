@@ -182,6 +182,14 @@ bool Particle::PostUpdate(float dt)
 
 void Particle::DrawParticle()
 {
+	glEnable(GL_TEXTURE_2D);
+	glEnable(GL_BLEND);
+	if (ParentParticleSystem->TextureData.TextureID != 0)
+	{
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		glBindTexture(GL_TEXTURE_2D, ParentParticleSystem->TextureData.TextureID);
+	}
+	
 	glEnableClientState(GL_VERTEX_ARRAY);
 	glBindBuffer(GL_ARRAY_BUFFER, Properties.MeshResource->id_vertices);
 	glVertexPointer(3, GL_FLOAT, 0, NULL);
@@ -206,6 +214,10 @@ void Particle::DrawParticle()
 	glDrawElements(GL_TRIANGLES, Properties.MeshResource->num_indices, GL_UNSIGNED_INT, NULL);
 
 	glPopMatrix();
+
+	glBindTexture(GL_TEXTURE_2D, 0);
+	glDisable(GL_TEXTURE_2D);
+	glDisable(GL_BLEND);
 
 	glDisableClientState(GL_VERTEX_ARRAY);
 	glDisableClientState(GL_NORMAL_ARRAY);
