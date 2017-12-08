@@ -30,7 +30,17 @@ bool ComponentParticleSystem::Enable()
 
 bool ComponentParticleSystem::PreUpdate(float dt)
 {
-	PartSystem->SetCameraToFaceBillboards(App->camera->Position, App->camera->Y);
+	//If the engine is in play mode unpaused, try to get main camera pos
+	if (App->GetEngineTimeStatus() == EngineTimeStatus::play_unpause)
+	{
+		const ComponentCamera* camera = App->scene->GetActiveCamera();
+		//If we have main camera, get pos and load
+		if (camera != nullptr) PartSystem->SetCameraPosToFollow(camera->parent->GetTransform()->GetPos());
+		//If not, continue loading editor pos
+		else PartSystem->SetCameraPosToFollow(App->camera->Position);
+	}
+	//Load editor camera pos
+	else PartSystem->SetCameraPosToFollow(App->camera->Position);
 	PartSystem->PreUpdate(dt);
 	return true;
 }

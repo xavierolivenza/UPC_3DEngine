@@ -126,10 +126,9 @@ Particle::~Particle()
 
 bool Particle::PreUpdate(float dt)
 {
-	/*
-	float4x4 ParticleMatrix = float4x4::FromTRS(Properties.Position, Properties.Rotation, Properties.Scale);
-	float4x4::LookAt();
-	*/
+	float3 Direction = ParentParticleSystem->CameraPosition - Properties.Position;
+	float4x4 RotMat = float4x4::LookAt(float3(0.0f, 0.0f, 1.0f), Direction, float3(0.0f, 1.0f, 0.0f), float3(0.0f, 1.0f, 0.0f));
+	RotMat.Decompose(Properties.Position, Properties.Rotation, Properties.Scale);
 	return true;
 }
 
@@ -173,8 +172,14 @@ void Particle::DrawParticle()
 		glTexCoordPointer(3, GL_FLOAT, 0, NULL);
 	}
 
+	glPushMatrix();
+	float4x4 ParticleMatrix = float4x4::FromTRS(Properties.Position, Properties.Rotation, Properties.Scale).Transposed();
+	glMultMatrixf(ParticleMatrix.ptr());
+
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, Properties.MeshResource->id_indices);
 	glDrawElements(GL_TRIANGLES, Properties.MeshResource->num_indices, GL_UNSIGNED_INT, NULL);
+
+	glPopMatrix();
 
 	glDisableClientState(GL_VERTEX_ARRAY);
 	glDisableClientState(GL_NORMAL_ARRAY);
@@ -407,7 +412,7 @@ AABB& ParticleSystem::GetEmitterAABB()
 	return Emitter.BoundingBox;
 }
 
-void ParticleSystem::SetCameraToFaceBillboards(float3 position, float3 up)
+void ParticleSystem::SetCameraPosToFollow(float3 position)
 {
 	CameraPosition = position;
 }

@@ -240,7 +240,7 @@ public:
 
 	AABB& GetEmitterAABB();							//You can get the Emitter AABB and edit min and max point with gizmos
 
-	void SetCameraToFaceBillboards(float3 position, float3 up);
+	void SetCameraPosToFollow(float3 position);//Set Camera position which the billboards will face
 
 private:
 	void GenerateMeshResourceBuffers();
