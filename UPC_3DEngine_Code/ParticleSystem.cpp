@@ -28,7 +28,7 @@ void ParticleEmitter::DebugDrawEmitter()
 
 void ParticleEmitter::DebugDrawEmitterAABB()
 {
-	DrawBox(BoundingBox);
+DrawBox(BoundingBox);
 }
 
 void ParticleEmitter::DrawSphere(const Sphere& shape)
@@ -126,9 +126,35 @@ Particle::~Particle()
 
 bool Particle::PreUpdate(float dt)
 {
-	float3 Direction = ParentParticleSystem->CameraPosition - Properties.Position;
-	float4x4 RotMat = float4x4::LookAt(float3(0.0f, 0.0f, 1.0f), Direction, float3(0.0f, 1.0f, 0.0f), float3(0.0f, 1.0f, 0.0f));
-	RotMat.Decompose(Properties.Position, Properties.Rotation, Properties.Scale);
+	//glDisable(GL_CULL_FACE);
+	switch (ParentParticleSystem->Emitter.ParticleFacingOptions)
+	{
+	case 0: //Null
+	{
+		break;
+	}
+	case 1: //Billboard
+	{
+		float3 Direction = ParentParticleSystem->CameraPosition - Properties.Position;
+		Properties.Rotation = Quat::LookAt(float3(0.0f, 0.0f, 1.0f), Direction, float3(0.0f, 1.0f, 0.0f), float3(0.0f, 1.0f, 0.0f));
+		break;
+	}
+	case 2: //VerticalBillboard
+	{
+		float3 Direction = ParentParticleSystem->CameraPosition - Properties.Position;
+		Direction.y = Properties.Position.y;
+		Properties.Rotation = Quat::LookAt(float3(0.0f, 0.0f, 1.0f), Direction, float3(0.0f, 1.0f, 0.0f), float3(0.0f, 1.0f, 0.0f));
+		break;
+	}
+	case 3: //HorizontalBillboard
+	{
+		float3 Direction = ParentParticleSystem->CameraPosition - Properties.Position;
+		Direction.x = Properties.Position.x;
+		Properties.Rotation = Quat::LookAt(float3(0.0f, 0.0f, 1.0f), Direction, float3(0.0f, 1.0f, 0.0f), float3(0.0f, 1.0f, 0.0f));
+		break;
+	}
+	}
+	
 	return true;
 }
 
@@ -535,7 +561,7 @@ void ParticleSystem::DrawEmitterOptions()
 	ImGui::PushItemWidth(175);
 	ImGui::Combo("Emyssion Type", (int*)&Emitter.EmissionType, "Local\0World\0");
 	ImGui::Combo("Emyssion Shape", (int*)&Emitter.Type, "Sphere\0SemiSphere\0Cone\0Box\0Circle\0Edge");
-	ImGui::Combo("Particle Facing Options", &Emitter.ParticleFacingOptions, "Null\0Billboard\0Vertical Billboard\0Horizontal Billboard");
+	ImGui::Combo("Particle Facing Options", (int*)&Emitter.ParticleFacingOptions, "Null\0Billboard\0Vertical Billboard\0Horizontal Billboard");
 	ImGui::PopItemWidth();
 	//Curve editor to interpolate initial-final
 	ImGui::PushItemWidth(240);

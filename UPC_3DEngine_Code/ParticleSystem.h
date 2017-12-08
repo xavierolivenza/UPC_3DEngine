@@ -79,7 +79,6 @@ public:
 	int Lifetime = 0;								//Lifetime of emitted particles
 	int LifetimeVariation = 0;						//Lifetime variation of emitted particles
 	int EmissionDuration = 0;						//If loop is false, emission is played EmissionDuration ms
-	int ParticleFacingOptions = 1;
 	bool Loop = true;								//Ignore EmissionDuration and keep emitting
 	int ParticleNumber = 0;							//Max particles emitted at the same time
 	float Speed = 0.0f;
@@ -105,6 +104,13 @@ public:
 		EmitterType_Box,
 		EmitterType_Circle
 	} Type = EmitterType_Box;
+	enum
+	{
+		Null,
+		Billboard,
+		VerticalBillboard,
+		HorizontalBillboard
+	} ParticleFacingOptions = Billboard;
 	union EmitterShapeUnion
 	{
 		EmitterShapeUnion();
@@ -143,7 +149,7 @@ struct ParticleProperties
 	float3 OriginalPosition = float3::zero;			//Particle EmissionOrigin Position
 	float3 Position = float3::zero;					//Particle Actual Position
 	Quat Rotation = Quat::identity;					//Particle Actual Rotation
-	float3 Scale = float3::zero;					//Particle Actual Scale
+	float3 Scale = float3::one;					//Particle Actual Scale
 	ParticleMeshData* MeshResource = nullptr;		//Mesh used by this particle plane/other mesh
 	float Speed = 0.0f;								//Particle Speed
 	float3 EmissionDirection = float3::zero;		//Particle Emission Direction
@@ -217,6 +223,7 @@ struct KeyInput
 
 class ParticleSystem
 {
+	friend class Particle;
 	bool ToDeleteBool_FirstTimeTest = true;
 
 public:
