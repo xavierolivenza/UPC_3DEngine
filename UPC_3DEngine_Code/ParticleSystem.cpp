@@ -135,6 +135,7 @@ bool Particle::PreUpdate(float dt)
 
 bool Particle::Update(float dt)
 {
+	DrawParticle();
 	//Particle Position
 	/*
 	float dt2half = dt * dt * 0.5f;
@@ -151,7 +152,6 @@ bool Particle::Update(float dt)
 
 bool Particle::PostUpdate(float dt)
 {
-	DrawParticle();
 	return true;
 }
 
