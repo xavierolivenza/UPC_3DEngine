@@ -156,7 +156,7 @@ struct ParticleProperties
 class Particle
 {
 public:
-	Particle();
+	Particle(ParticleMeshData* MeshResource);
 	~Particle();
 	bool PreUpdate(float dt);
 	bool Update(float dt);
@@ -212,6 +212,8 @@ struct KeyInput
 
 class ParticleSystem
 {
+	bool ToDeleteBool_FirstTimeTest = true;
+
 public:
 	ParticleSystem();
 	~ParticleSystem();
@@ -234,6 +236,7 @@ public:
 	AABB& GetEmitterAABB();							//You can get the Emitter AABB and edit min and max point with gizmos
 
 private:
+	void GenerateMeshResourceBuffers();
 	void DrawTexturePreview();
 	void DrawColorSelector();
 	void DrawEmitterOptions();
@@ -245,7 +248,7 @@ public:
 
 private:
 	ParticleMeshData ParticleMesh;
-	std::vector<Particle*> Particles;
+	std::vector<Particle*> Particles; //Should change to list
 	ParticleState InitialState;
 	ParticleState FinalState;
 	ParticleEmitter Emitter;

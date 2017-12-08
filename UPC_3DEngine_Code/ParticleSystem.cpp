@@ -114,9 +114,9 @@ ParticleEmitter::EmitterShapeUnion::EmitterShapeUnion()
 
 }
 
-Particle::Particle()
+Particle::Particle(ParticleMeshData* MeshResource)
 {
-
+	Properties.MeshResource = MeshResource;
 }
 
 Particle::~Particle()
@@ -147,12 +147,34 @@ bool Particle::Update(float dt)
 
 bool Particle::PostUpdate(float dt)
 {
+	DrawParticle();
 	return true;
 }
 
 void Particle::DrawParticle()
 {
+	glEnableClientState(GL_VERTEX_ARRAY);
+	glBindBuffer(GL_ARRAY_BUFFER, Properties.MeshResource->id_vertices);
+	glVertexPointer(3, GL_FLOAT, 0, NULL);
 
+	if (Properties.MeshResource->normals != nullptr)
+	{
+		glEnableClientState(GL_NORMAL_ARRAY);
+		glBindBuffer(GL_ARRAY_BUFFER, Properties.MeshResource->id_normals);
+		glNormalPointer(GL_FLOAT, 0, NULL);
+	}
+	if (Properties.MeshResource->texture_coords != nullptr) {
+		glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+		glBindBuffer(GL_ARRAY_BUFFER, Properties.MeshResource->id_texture_coords);
+		glTexCoordPointer(3, GL_FLOAT, 0, NULL);
+	}
+
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, Properties.MeshResource->id_indices);
+	glDrawElements(GL_TRIANGLES, Properties.MeshResource->num_indices, GL_UNSIGNED_INT, NULL);
+
+	glDisableClientState(GL_VERTEX_ARRAY);
+	glDisableClientState(GL_NORMAL_ARRAY);
+	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 }
 
 ParticleMeshData::ParticleMeshData()
@@ -222,7 +244,8 @@ void ParticleTextureData::Set(unsigned int ID, unsigned int width, unsigned int 
 
 ParticleSystem::ParticleSystem()
 {
-
+	SetMeshResourcePlane();
+	CreateParticle();
 }
 
 ParticleSystem::~ParticleSystem()
@@ -232,7 +255,13 @@ ParticleSystem::~ParticleSystem()
 
 bool ParticleSystem::PreUpdate(float dt)
 {
-	bool ret = false;
+	if (ToDeleteBool_FirstTimeTest)
+	{
+		GenerateMeshResourceBuffers();
+		ToDeleteBool_FirstTimeTest = false;
+	}
+
+	bool ret = true;
 	for (std::vector<Particle*>::iterator item = Particles.begin(); item != Particles.cend() && ret == true; ++item)
 		ret = (*item)->PreUpdate(dt);
 	return ret;
@@ -240,7 +269,7 @@ bool ParticleSystem::PreUpdate(float dt)
 
 bool ParticleSystem::Update(float dt)
 {
-	bool ret = false;
+	bool ret = true;
 	for (std::vector<Particle*>::iterator item = Particles.begin(); item != Particles.cend() && ret == true; ++item)
 		ret = (*item)->Update(dt);
 	return ret;
@@ -248,7 +277,7 @@ bool ParticleSystem::Update(float dt)
 
 bool ParticleSystem::PostUpdate(float dt)
 {
-	bool ret = false;
+	bool ret = true;
 	for (std::vector<Particle*>::iterator item = Particles.begin(); item != Particles.cend() && ret == true; ++item)
 		ret = (*item)->PostUpdate(dt);
 	return ret;
@@ -256,6 +285,9 @@ bool ParticleSystem::PostUpdate(float dt)
 
 bool ParticleSystem::CleanUp()
 {
+	for (std::vector<Particle*>::iterator item = Particles.begin(); item != Particles.cend(); ++item)
+		RELEASE(*item);
+	Particles.clear();
 	return true;
 }
 
@@ -279,23 +311,15 @@ void ParticleSystem::SetMeshResourcePlane()
 		0.5f, -0.5f, 0
 	};
 	memcpy(ParticleMesh.vertices, vertices, sizeof(float) * ParticleMesh.num_vertices * 3);
-	// Vertices Buffer
-	glGenBuffers(1, (GLuint*) &ParticleMesh.id_vertices);
-	glBindBuffer(GL_ARRAY_BUFFER, ParticleMesh.id_vertices);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * ParticleMesh.num_vertices * 3, ParticleMesh.vertices, GL_STATIC_DRAW);
 	//Indices
 	ParticleMesh.num_indices = 6;
 	ParticleMesh.indices = new unsigned int[ParticleMesh.num_indices];
 	unsigned int indices[] =
 	{
-		0, 1, 2,
-		1, 3, 2
+		2, 1, 0,
+		2, 3, 1
 	};
 	memcpy(ParticleMesh.indices, indices, sizeof(float) * ParticleMesh.num_indices);
-	// Indices Buffer
-	glGenBuffers(1, (GLuint*) &ParticleMesh.id_indices);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ParticleMesh.id_indices);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * ParticleMesh.num_indices, ParticleMesh.indices, GL_STATIC_DRAW);
 	// Texture coords
 	ParticleMesh.texture_coords = new float[ParticleMesh.num_vertices * 3];
 	float texture_coords[] =
@@ -306,10 +330,6 @@ void ParticleSystem::SetMeshResourcePlane()
 		1.0f, 0.0f, 0.0f
 	};
 	memcpy(ParticleMesh.texture_coords, texture_coords, sizeof(float) * ParticleMesh.num_vertices * 3);
-	// Texture coords Buffer
-	glGenBuffers(1, (GLuint*) &ParticleMesh.id_texture_coords);
-	glBindBuffer(GL_ARRAY_BUFFER, ParticleMesh.id_texture_coords);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * ParticleMesh.num_indices * 3, ParticleMesh.texture_coords, GL_STATIC_DRAW);
 }
 
 void ParticleSystem::SetTextureResource(unsigned int ID, unsigned int width, unsigned int heigth)
@@ -381,6 +401,22 @@ void ParticleSystem::DrawImGuiEditorWindow()
 AABB& ParticleSystem::GetEmitterAABB()
 {
 	return Emitter.BoundingBox;
+}
+
+void ParticleSystem::GenerateMeshResourceBuffers()
+{
+	// Vertices Buffer
+	glGenBuffers(1, (GLuint*)&ParticleMesh.id_vertices);
+	glBindBuffer(GL_ARRAY_BUFFER, ParticleMesh.id_vertices);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * ParticleMesh.num_vertices * 3, ParticleMesh.vertices, GL_STATIC_DRAW);
+	// Indices Buffer
+	glGenBuffers(1, (GLuint*)&ParticleMesh.id_indices);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ParticleMesh.id_indices);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * ParticleMesh.num_indices, ParticleMesh.indices, GL_STATIC_DRAW);
+	// Texture coords Buffer
+	glGenBuffers(1, (GLuint*)&ParticleMesh.id_texture_coords);
+	glBindBuffer(GL_ARRAY_BUFFER, ParticleMesh.id_texture_coords);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * ParticleMesh.num_indices * 3, ParticleMesh.texture_coords, GL_STATIC_DRAW);
 }
 
 void ParticleSystem::DrawTexturePreview()
@@ -495,5 +531,7 @@ void ParticleSystem::DrawEmitterOptions()
 
 bool ParticleSystem::CreateParticle()
 {
+	Particle* NewParticle = new Particle(&ParticleMesh);
+	Particles.push_back(NewParticle);
 	return true;
 }
