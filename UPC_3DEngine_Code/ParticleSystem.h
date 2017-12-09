@@ -161,7 +161,6 @@ struct ParticleProperties
 	Quat Rotation = Quat::identity;					//Particle Actual Rotation
 	float3 Scale = float3::one;						//Particle Actual Scale
 	float Size = 0.0f;								//Scale Multiplicator to modify
-	ParticleMeshData* MeshResource = nullptr;		//Mesh used by this particle plane/other mesh
 	float Speed = 0.0f;								//Particle Speed
 	float3 EmissionDirection = float3::zero;		//Particle Emission Direction
 	float3 ExternalForce = float3::zero;			//Particles influenced by external force - Direction + force (vector magnitude)
@@ -177,7 +176,7 @@ class ParticleSystem;
 class Particle
 {
 public:
-	Particle(ParticleSystem* parent, ParticleMeshData* MeshResource);
+	Particle(ParticleSystem* parent);
 	~Particle();
 	bool PreUpdate(float dt);
 	bool Update(float dt);
@@ -198,6 +197,7 @@ public:
 	ParticleProperties Properties;					//Particle Properties
 	ParticleAssignedState InitialState;				//Particle Initial State Properties with no variations, all are final values (calculated from ParticleState +- Var)
 	ParticleAssignedState FinalState;				//Particle Final State Properties with no variations, all are final values (calculated from ParticleState +- Var)
+	bool MeshChanged = false;
 };
 
 struct ParticleMeshData								//Very similar to MeshDataResource, but we copy it here to separate as much as we can the particle code from engine code (eayer to export/make a library)
@@ -265,8 +265,9 @@ public:
 	void DrawImGuiEditorWindow();					//Draw Particle Editor Window
 
 	AABB& GetEmitterAABB();							//You can get the Emitter AABB and edit min and max point with gizmos
+	const ParticleMeshData& GetParticleMeshData() const;
 
-	void SetCameraPosToFollow(float3 position);//Set Camera position which the billboards will face
+	void SetCameraPosToFollow(float3 position);		//Set Camera position which the billboards will face
 
 private:
 	void GenerateMeshResourceBuffers();

@@ -251,7 +251,12 @@ void ComponentParticleSystem::ImGuiLoadPopUp()
 	ImGui::OpenPopup(Str);
 	if (ImGui::BeginPopupModal(Str, nullptr, ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_HorizontalScrollbar))
 	{
-		if (FileType == MeshResource) ImGui::Text("You are in mesh folder of library. Here you\ncan search for files containing only one mesh.\nThis meshes are stored with the name of the\nnode containing them in the original 3d model\nfile you store in assets folder.");
+		if (FileType == MeshResource)
+		{
+			ImGui::Text("You are in mesh folder of library. Here you\ncan search for files containing only one mesh.\nThis meshes are stored with the name of the\nnode containing them in the original 3d model\nfile you store in assets folder.");
+			if (ImGui::Button("Load Plane", ImVec2(50, 20)))
+				PartSystem->SetMeshResourcePlane();
+		}
 		else ImGui::Text("Here are only shown files that are accepted\nextention files.");
 
 		ImGui::BeginChild("File Browser##1", ImVec2(300, 300), true);
