@@ -167,6 +167,11 @@ void ComponentParticleSystem::DrawComponentImGui()
 			FileType = Emitter_Resource;
 			PopUpLoadOpen = true;
 		}
+		if (ImGui::Button("Load Mesh", ImVec2(120, 30)))
+		{
+			FileType = MeshResource;
+			PopUpLoadOpen = true;
+		}
 		if (ImGui::Button("Load Texture", ImVec2(120, 30)))
 		{
 			FileType = Texture_Resource;
@@ -240,18 +245,22 @@ void ComponentParticleSystem::ImGuiLoadPopUp()
 	case Texture_Resource: Str = "Load Texture"; break;
 	case Particle_Resource: Str = "Load Particle"; break;
 	case Emitter_Resource: Str = "Load Emitter"; break;
+	case MeshResource: Str = "Load Mesh"; break;
 	}
 
 	ImGui::OpenPopup(Str);
 	if (ImGui::BeginPopupModal(Str, nullptr, ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_HorizontalScrollbar))
 	{
-		ImGui::Text("Here are only shown files that are accepted\nextention files.");
+		if (FileType == MeshResource) ImGui::Text("You are in mesh folder of library. Here you\ncan search for files containing only one mesh.\nThis meshes are stored with the name of the\nnode containing them in the original 3d model\nfile you store in assets folder.");
+		else ImGui::Text("Here are only shown files that are accepted\nextention files.");
+
 		ImGui::BeginChild("File Browser##1", ImVec2(300, 300), true);
 		switch (FileType)
 		{
 		case Texture_Resource: DrawDirectory(App->importer->Get_Assets_path()->c_str()); break;
 		case Particle_Resource: DrawDirectory(App->importer->Get_ParticleSystem_Particles_path()->c_str()); break;
 		case Emitter_Resource: DrawDirectory(App->importer->Get_ParticleSystem_Emitter_path()->c_str()); break;
+		case MeshResource: DrawDirectory(App->importer->Get_Library_mesh_path()->c_str()); break;
 		}
 		ImGui::EndChild();
 		char file_path[1000] = "";
@@ -267,6 +276,7 @@ void ComponentParticleSystem::ImGuiLoadPopUp()
 				case Texture_Resource: ImGuiLoadTexturePopUp(); break;
 				case Particle_Resource: ImGuiLoadParticlePopUp(); break;
 				case Emitter_Resource: ImGuiLoadEmitterPopUp(); break;
+				case MeshResource: ImGuiLoadMeshPopUp(); break;
 				}
 			}
 			PopUpLoadOpen = false;
@@ -303,6 +313,12 @@ void ComponentParticleSystem::ImGuiLoadParticlePopUp()
 void ComponentParticleSystem::ImGuiLoadEmitterPopUp()
 {
 
+}
+
+void ComponentParticleSystem::ImGuiLoadMeshPopUp()
+{
+	uint Meshuuid = App->resources->LoadResource(FileToLoad.c_str(), FileToLoad.c_str());
+	SetMeshResource(Meshuuid);
 }
 
 void ComponentParticleSystem::ImGuiSavePopUp()
@@ -359,6 +375,7 @@ void ComponentParticleSystem::DrawDirectory(const char * directory)
 			case Texture_Resource: if ((DirectoryTemporalStr == ".png") || (DirectoryTemporalStr == ".PNG") || (DirectoryTemporalStr == ".jpg") || (DirectoryTemporalStr == ".JPG") || (DirectoryTemporalStr == ".tga") || (DirectoryTemporalStr == ".TGA") || (DirectoryTemporalStr == ".dds") || (DirectoryTemporalStr == ".DDS")) Valid = true; break;
 			case Particle_Resource: if (DirectoryTemporalStr == ".json") Valid = true; break;
 			case Emitter_Resource: if (DirectoryTemporalStr == ".json") Valid = true; break;
+			case MeshResource: if (DirectoryTemporalStr == ("." + *App->importer->Get_Mesh_Extention())) Valid = true; break;
 			}
 			if (Valid)
 			{

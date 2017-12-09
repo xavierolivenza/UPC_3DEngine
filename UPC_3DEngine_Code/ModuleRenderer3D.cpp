@@ -690,6 +690,13 @@ bool ModuleRenderer3D::DrawComponentMeshMaterial(const ComponentTransform* trans
 			glColor3f(1.0f, 1.0f, 1.0f);
 		}
 
+	//Fix needed here, with this bools doesn't work
+	glEnable(GL_TEXTURE_2D);
+	glEnable(GL_DEPTH_TEST);
+	glEnable(GL_CULL_FACE);
+	glEnable(GL_LIGHTING);
+	glEnable(GL_COLOR_MATERIAL);
+
 	if ((material != nullptr) && (material->resourceTexture))
 	{
 		const MaterialData* materialData = &material->resourceTexture->TextureDataStruct;

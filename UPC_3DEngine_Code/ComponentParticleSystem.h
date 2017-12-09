@@ -33,6 +33,7 @@ public:
 	void ImGuiLoadTexturePopUp();
 	void ImGuiLoadParticlePopUp();
 	void ImGuiLoadEmitterPopUp();
+	void ImGuiLoadMeshPopUp();
 	void ImGuiSavePopUp();
 
 private:
@@ -53,7 +54,8 @@ private:
 	{
 		Texture_Resource,
 		Particle_Resource,
-		Emitter_Resource
+		Emitter_Resource,
+		MeshResource
 	} FileType = Texture_Resource;
 };
 
