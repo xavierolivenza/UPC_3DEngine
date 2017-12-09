@@ -671,7 +671,51 @@ void ParticleSystem::DrawColorSelector()
 
 void ParticleSystem::DrawEmitterOptions()
 {
-	ImGui::Columns(2, "##mycolumns3", false);  // 2-ways, no border
+	ImGui::Columns(3, "##mycolumns3", false);  // 2-ways, no border
+	ImGui::PushItemWidth(100);
+	ImGui::Combo("Emitter Shape", (int*)&Emitter.Type, "Sphere\0SemiSphere\0Cone\0Box\0Circle\0Edge");
+	ImGui::PopItemWidth();
+	switch (Emitter.Type)
+	{
+	case 0: //EmitterType_Sphere
+		ImGui::PushItemWidth(100);
+		ImGui::DragFloat("Radius", (float*)&Emitter.EmitterShape.Sphere_Shape.r, 0.1f, 0.0f, 100.0f);
+		ImGui::PopItemWidth();
+		ImGui::PushItemWidth(200);
+		ImGui::DragFloat3("Center Point", (float*)&Emitter.EmitterShape.Sphere_Shape.pos, 0.1f, 0.0f, 100.0f);
+		ImGui::PopItemWidth();
+		break;
+	case 1: //EmitterType_SemiSphere
+		ImGui::PushItemWidth(100);
+		ImGui::DragFloat("Radius", (float*)&Emitter.EmitterShape.Sphere_Shape.r, 0.1f, 0.0f, 100.0f);
+		ImGui::PopItemWidth();
+		ImGui::PushItemWidth(200);
+		ImGui::DragFloat3("Center Point", (float*)&Emitter.EmitterShape.Sphere_Shape.pos, 0.1f, 0.0f, 100.0f);
+		ImGui::PopItemWidth();
+		break;
+	case 2: //EmitterType_Cone
+		ImGui::PushItemWidth(100);
+		ImGui::DragFloat("Aperture Radius", (float*)&Emitter.EmitterShape.ConeTrunk_Shape.Upper_Circle.r, 0.1f, 0.0f, 100.0f);
+		ImGui::DragFloat("Base Radius", (float*)&Emitter.EmitterShape.ConeTrunk_Shape.Bottom_Circle.r, 0.1f, 0.0f, 100.0f);
+		ImGui::DragFloat("Cone Heigth", (float*)&Emitter.EmitterShape.ConeTrunk_Shape.heigth, 0.1f, 0.0f, 100.0f);
+		ImGui::PopItemWidth();
+		break;
+	case 3: //EmitterType_Box
+		ImGui::PushItemWidth(200);
+		ImGui::DragFloat3("Max Point", (float*)&Emitter.EmitterShape.Box_Shape.maxPoint, 0.1f, 0.0f, 100.0f);
+		ImGui::DragFloat3("Min Point", (float*)&Emitter.EmitterShape.Box_Shape.minPoint, 0.1f, 0.0f, 100.0f);
+		ImGui::PopItemWidth();
+		break;
+	case 4: //EmitterType_Circle
+		ImGui::PushItemWidth(100);
+		ImGui::DragFloat("Radius", (float*)&Emitter.EmitterShape.Circle_Shape.r, 0.1f, 0.0f, 100.0f);
+		ImGui::PopItemWidth();
+		ImGui::PushItemWidth(200);
+		ImGui::DragFloat3("Center Point", (float*)&Emitter.EmitterShape.Circle_Shape.pos, 0.1f, 0.0f, 100.0f);
+		ImGui::PopItemWidth();
+		break;
+	}
+	ImGui::NextColumn();
 	ImGui::PushItemWidth(100);
 	ImGui::SliderFloat("Preview Initial-Final", &Emitter.PreviewState, 0.0f, 1.0f);
 	ImGui::PopItemWidth();
@@ -700,11 +744,10 @@ void ParticleSystem::DrawEmitterOptions()
 	ImGui::NextColumn();
 	ImGui::PushItemWidth(175);
 	ImGui::Combo("Emyssion Type", (int*)&Emitter.EmissionType, "Local\0World\0");
-	ImGui::Combo("Emyssion Shape", (int*)&Emitter.Type, "Sphere\0SemiSphere\0Cone\0Box\0Circle\0Edge");
 	ImGui::Combo("Particle Facing Options", (int*)&Emitter.ParticleFacingOptions, "Null\0Billboard\0Vertical Billboard\0Horizontal Billboard");
 	ImGui::PopItemWidth();
 	//Curve editor to interpolate initial-final
-	ImGui::PushItemWidth(240);
+	ImGui::PushItemWidth(200);
 	ImGui::InputFloat3("AABB Max", &Emitter.BoundingBox.maxPoint[0], 3);
 	ImGui::InputFloat3("AABB Min", &Emitter.BoundingBox.minPoint[0], 3);
 	ImGui::PopItemWidth();

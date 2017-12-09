@@ -58,6 +58,7 @@ struct ConeTrunk
 {
 	Circle Upper_Circle;
 	Circle Bottom_Circle;
+	float heigth = 1;
 };
 
 class ParticleEmitter
