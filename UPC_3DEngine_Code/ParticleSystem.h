@@ -96,8 +96,8 @@ public:
 	float3 Position = float3::zero;					//Emitter position
 	Quat Rotation = Quat::identity;					//Emitter rotation
 	float3 Scale = float3::zero;					//Emitter scale
-	//float3 ExternalForce = float3::zero;			//Particles influenced by external force - Direction + force (vector magnitude)
-	//float3 ExternalForceVariation = float3::zero;
+	float3 ExternalForce = float3::zero;			//Particles influenced by external force - Direction + force (vector magnitude)
+	float3 ExternalForceVariation = float3::zero;
 	//Accel +- Variation							//We can add some acceleleration to particles?
 	AABB BoundingBox;								//User can set AABB for camera culling purpose (we can add physics...)
 

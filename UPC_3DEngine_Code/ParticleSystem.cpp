@@ -688,8 +688,13 @@ void ParticleSystem::DrawTexturePreview()
 	//ImGui::VSliderFloat("##SliverV", );
 	//ImGui::SliderFloat("##SliverH", );
 
-	ImGui::DragFloat2("Corner1 UV", corner1UV.ptr(), 0.001f, 0.0f, 1.0f);
-	ImGui::DragFloat2("Corner2 UV", corner2UV.ptr(), 0.001f, 0.0f, 1.0f);
+	//With the inputs below we aim to have two inputs for the user, you can set the UV with texture coords and OpenGL 0.0f-1.0f coords
+	//(if you set coords with one input type, the other is updated with same data)
+
+	ImGui::DragFloat2("Corner1 UV OpenGL", corner1UV.ptr(), 0.001f, 0.0f, 1.0f);
+	ImGui::DragFloat2("Corner2 UV OpenGL", corner2UV.ptr(), 0.001f, 0.0f, 1.0f);
+	ImGui::DragFloat2("Corner1 UV PixelCoord", corner1UV.ptr(), 0.001f, 0.0f, 1.0f);
+	ImGui::DragFloat2("Corner2 UV PixelCoord", corner2UV.ptr(), 0.001f, 0.0f, 1.0f);
 }
 
 void ParticleSystem::DrawColorSelector()
@@ -778,14 +783,13 @@ void ParticleSystem::DrawEmitterOptions()
 	ImGui::PushItemWidth(80);
 	ImGui::SliderInt("+-##Lifetime", &Emitter.Lifetime, 0.0f, 100.0f);
 	ImGui::SameLine();
-	ImGui::SliderInt("Lifetime+-Var##LifetimeVariation", &Emitter.LifetimeVariation, 0.0f, 100.0f);
+	ImGui::SliderInt("Lifetime +- Var##LifetimeVariation", &Emitter.LifetimeVariation, 0.0f, 100.0f);
 	ImGui::DragInt("Emission Duration", &Emitter.EmissionDuration, 0.1f, 0.0f, 100.0f);
 	ImGui::Checkbox("Loop", &Emitter.Loop);
 	ImGui::DragInt("Particle Num", &Emitter.ParticleNumber, 0.1f, 0.0f, 1000.0f);
 	ImGui::SliderFloat("+-##Speed", &Emitter.Speed, 0.0f, 100.0f);
 	ImGui::SameLine();
-	ImGui::SliderFloat("Speed+-Var##SpeedVariation", &Emitter.SpeedVariation, 0.0f, 100.0f);
-	/*
+	ImGui::SliderFloat("Speed +- Var##SpeedVariation", &Emitter.SpeedVariation, 0.0f, 100.0f);
 	ImGui::SliderFloat("+-##ExternalForceX", &Emitter.ExternalForce.x, 0.0f, 100.0f);
 	ImGui::SameLine();
 	ImGui::SliderFloat("ExternalForceX+-Var##ExternalForceVariationX", &Emitter.ExternalForceVariation.x, 0.0f, 100.0f);
@@ -795,7 +799,6 @@ void ParticleSystem::DrawEmitterOptions()
 	ImGui::SliderFloat("+-##ExternalForceZ", &Emitter.ExternalForce.z, 0.0f, 100.0f);
 	ImGui::SameLine();
 	ImGui::SliderFloat("ExternalForceZ+-Var##ExternalForceVariationZ", &Emitter.ExternalForceVariation.z, 0.0f, 100.0f);
-	*/
 	ImGui::PopItemWidth();
 	ImGui::NextColumn();
 	ImGui::PushItemWidth(175);
