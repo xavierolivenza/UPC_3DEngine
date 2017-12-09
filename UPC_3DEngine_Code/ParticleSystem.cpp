@@ -638,9 +638,21 @@ void ParticleSystem::DrawTexturePreview()
 	//ImGui::SliderFloat("Image Preview Size", &texSize, 0.0f, 3.0f, "%.2f");
 
 	ImVec2 canvas_pos = ImGui::GetCursorScreenPos();            // ImDrawList API uses screen coordinates!
-	ImVec2 canvas_size = ImGui::GetContentRegionAvail();        // Resize canvas to what's available
-	if (canvas_size.x < 50.0f) canvas_size.x = 50.0f;
-	if (canvas_size.y < 50.0f) canvas_size.y = 50.0f;
+	ImVec2 region_avaliable = ImGui::GetContentRegionAvail();
+	float TexW = 250.0f;
+	float TexH = 250.0f;
+	float scale = 1.0f;
+
+	if (TextureData.TextureW > 0.0f && TextureData.TextureH > 0.0f)
+	{
+		scale = region_avaliable.x / TextureData.TextureW;
+		TexW = region_avaliable.x;
+		TexH = TextureData.TextureH * scale;
+	}
+
+	ImVec2 canvas_size = ImVec2(TexW, TexH);        // Resize canvas to what's available
+//	if (canvas_size.x < 50.0f) canvas_size.x = 50.0f;
+//	if (canvas_size.y < 50.0f) canvas_size.y = 50.0f;
 
 	ImVec2 tex_screen_pos = ImGui::GetCursorScreenPos();
 	float tex_w = canvas_pos.x + TextureData.TextureW;
@@ -652,7 +664,7 @@ void ParticleSystem::DrawTexturePreview()
 	ImGui::InvisibleButton("canvas", canvas_size);
 	ImVec2 mouse_pos_in_canvas = ImVec2(ImGui::GetIO().MousePos.x, ImGui::GetIO().MousePos.y);
 	draw_list->PushClipRect(canvas_pos, ImVec2(canvas_pos.x + canvas_size.x, canvas_pos.y + canvas_size.y));      // clip lines within the canvas (if we resize it, etc.)
-	draw_list->AddImage((void*)TextureData.TextureID, canvas_pos, ImVec2(canvas_pos.x + TextureData.TextureW, canvas_pos.y + TextureData.TextureH), ImVec2(0, 1), ImVec2(1, 0)); // * TextureData.TextureW & H * texSize if uncommented
+	draw_list->AddImage((void*)TextureData.TextureID, canvas_pos, ImVec2(canvas_pos.x + canvas_size.x, canvas_pos.y + canvas_size.y), ImVec2(0, 1), ImVec2(1, 0)); // * TextureData.TextureW & H * texSize if uncommented
 	draw_list->AddRect(canvas_pos, ImVec2(canvas_pos.x + canvas_size.x, canvas_pos.y + canvas_size.y), ImColor(255, 255, 255));
 	if (mouse_pos_in_canvas.x > canvas_pos.x && mouse_pos_in_canvas.y > canvas_pos.y && mouse_pos_in_canvas.x < canvas_pos.x + canvas_size.x && mouse_pos_in_canvas.y < canvas_pos.y + canvas_size.y)
 	{
