@@ -460,7 +460,7 @@ void ParticleSystem::SetMeshResource(ParticleMeshData& MeshData)
 {
 	ParticleMesh.Copy(MeshData);
 	//ToDeleteBool_FirstTimeTest = true;
-	for (std::vector<Particle*>::iterator item = Particles.begin(); item != Particles.cend(); ++item) (*item)->MeshChanged = true;
+	//for (std::vector<Particle*>::iterator item = Particles.begin(); item != Particles.cend(); ++item) (*item)->MeshChanged = true;
 }
 
 void ParticleSystem::SetMeshResourcePlane()
@@ -605,12 +605,18 @@ void ParticleSystem::DrawTexturePreview()
 	static float texSize = 1.0f;
 	static ImVec2 InitialPos = ImVec2(0.0f, 0.0f);
 	static ImVec2 FinalPos = ImVec2(0.0f, 0.0f);
-	ImGui::SliderFloat("Image Preview Size", &texSize, 0.0f, 3.0f, "%.2f");
+	//ImGui::SliderFloat("Image Preview Size", &texSize, 0.0f, 3.0f, "%.2f");
 
 	ImVec2 canvas_pos = ImGui::GetCursorScreenPos();            // ImDrawList API uses screen coordinates!
 	ImVec2 canvas_size = ImGui::GetContentRegionAvail();        // Resize canvas to what's available
 	if (canvas_size.x < 50.0f) canvas_size.x = 50.0f;
 	if (canvas_size.y < 50.0f) canvas_size.y = 50.0f;
+
+	ImVec2 tex_screen_pos = ImGui::GetCursorScreenPos();
+	float tex_w = canvas_pos.x + TextureData.TextureW * texSize;
+	float tex_h = canvas_pos.y + TextureData.TextureH * texSize;
+	ImTextureID tex_id = (void*)TextureData.TextureID;
+
 	draw_list->AddRectFilledMultiColor(canvas_pos, ImVec2(canvas_pos.x + canvas_size.x, canvas_pos.y + canvas_size.y), ImColor(50, 50, 50), ImColor(50, 50, 60), ImColor(60, 60, 70), ImColor(50, 50, 60));
 	bool adding_preview = false;
 	ImGui::InvisibleButton("canvas", canvas_size);
@@ -624,10 +630,18 @@ void ParticleSystem::DrawTexturePreview()
 			InitialPos = ImVec2(mouse_pos_in_canvas.x, mouse_pos_in_canvas.y);
 		if (MouseLeftClick.State == KeyInput::Repeat)
 			FinalPos = ImVec2(mouse_pos_in_canvas.x, mouse_pos_in_canvas.y);
+
+		ImGui::BeginTooltip();
+		float focus_sz = 100.0f;
+		float focus_x = ImGui::GetMousePos().x - tex_screen_pos.x - focus_sz * 0.5f; if (focus_x < 0.0f) focus_x = 0.0f; else if (focus_x > tex_w - focus_sz) focus_x = tex_w - focus_sz;
+		float focus_y = ImGui::GetMousePos().y - tex_screen_pos.y - focus_sz * 0.5f; if (focus_y < 0.0f) focus_y = 0.0f; else if (focus_y > tex_h - focus_sz) focus_y = tex_h - focus_sz;
+		ImVec2 uv1 = ImVec2((focus_x) / tex_w, (focus_y) / tex_h);
+		ImVec2 uv0 = ImVec2((focus_x + focus_sz) / tex_w, (focus_y + focus_sz) / tex_h);
+		ImGui::Image(tex_id, ImVec2(128, 128), uv0, uv1, ImColor(255, 255, 255, 255), ImColor(255, 255, 255, 128));
+		ImGui::EndTooltip();
 	}
 	draw_list->AddRect(ImVec2(InitialPos.x, InitialPos.y), ImVec2(FinalPos.x, FinalPos.y), IM_COL32(255, 255, 0, 255), 0.0f, ~0);
 	draw_list->PopClipRect();
-
 	//ImGui::SameLine();
 	//ImGui::VSliderFloat("##SliverV", );
 	//ImGui::SliderFloat("##SliverH", );
