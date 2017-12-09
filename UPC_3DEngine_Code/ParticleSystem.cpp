@@ -4,9 +4,9 @@
 
 ParticleEmitter::ParticleEmitter()
 {
-	BoundingBox.SetNegativeInfinity();
 	BoundingBox.minPoint = float3(-0.5f, -0.5f, -0.5f);
 	BoundingBox.maxPoint = float3( 0.5f,  0.5f,  0.5f);
+	ResetEmitterValues();
 }
 
 ParticleEmitter::~ParticleEmitter()
@@ -31,24 +31,46 @@ void ParticleEmitter::DebugDrawEmitterAABB()
 	DrawBox(BoundingBox);
 }
 
+void ParticleEmitter::ResetEmitterValues()
+{
+	switch (Type)
+	{
+	case EmitterType_Sphere:
+	case EmitterType_SemiSphere:
+		EmitterShape.Sphere_Shape.r = 1.0f;
+		break;
+	case EmitterType_Cone:
+		EmitterShape.ConeTrunk_Shape.Upper_Circle.r = 1.5f;
+		EmitterShape.ConeTrunk_Shape.Bottom_Circle.r = 1.0f;
+		EmitterShape.ConeTrunk_Shape.heigth = 1.0f;
+		break;
+	case EmitterType_Box:
+		EmitterShape.Box_Shape.maxPoint = float3(-0.5f, -0.5f, -0.5f);
+		EmitterShape.Box_Shape.minPoint = float3(0.5f, 0.5f, 0.5f);
+		break;
+	case EmitterType_Circle:
+		EmitterShape.Circle_Shape.r = 1.0f;
+		break;
+	}
+}
+
 void ParticleEmitter::DrawSphere(const Sphere& shape)
 {
-	glLineWidth(4.0f);
-	glColor3f(1.0f, 1.0f, 0.0f);
-	unsigned int segments = 10;
+	glLineWidth(DEBUG_THICKNESS);
+	glColor3f(DEBUG_COLOR_R, DEBUG_COLOR_G, DEBUG_COLOR_B);
 	float radius = 1.0f;
-	float degInRad = 360.0f / (float)segments;
+	float degInRad = 360.0f / CIRCLES_SEGMENTS;
 	degInRad *= DEGTORAD;
 	glBegin(GL_LINE_LOOP);
-	for (unsigned int i = 0; i < segments; i++)
+	for (unsigned int i = 0; i < CIRCLES_SEGMENTS; i++)
 		glVertex3f(cos(degInRad * i) * radius, 0.0f, sin(degInRad * i) * radius);
 	glEnd();
 	glBegin(GL_LINE_LOOP);
-	for (unsigned int i = 0; i < segments; i++)
+	for (unsigned int i = 0; i < CIRCLES_SEGMENTS; i++)
 		glVertex3f(cos(degInRad * i) * radius, sin(degInRad * i) * radius, 0.0f);
 	glEnd();
 	glBegin(GL_LINE_LOOP);
-	for (unsigned int i = 0; i < segments; i++)
+	for (unsigned int i = 0; i < CIRCLES_SEGMENTS; i++)
 		glVertex3f(0.0f, sin(degInRad * i) * radius, cos(degInRad * i) * radius);
 	glEnd();
 	glLineWidth(1.0f);
@@ -57,22 +79,21 @@ void ParticleEmitter::DrawSphere(const Sphere& shape)
 
 void ParticleEmitter::DrawSemiSphere(const Sphere& shape)
 {
-	glLineWidth(4.0f);
-	glColor3f(1.0f, 1.0f, 0.0f);
-	unsigned int segments = 10;
+	glLineWidth(DEBUG_THICKNESS);
+	glColor3f(DEBUG_COLOR_R, DEBUG_COLOR_G, DEBUG_COLOR_B);
 	float radius = 1.0f;
-	float degInRad = 360.0f / (float)segments;
+	float degInRad = 360.0f / CIRCLES_SEGMENTS;
 	degInRad *= DEGTORAD;
 	glBegin(GL_LINE_LOOP);
-	for (unsigned int i = 0; i < segments; i++)
+	for (unsigned int i = 0; i < CIRCLES_SEGMENTS; i++)
 		glVertex3f(cos(degInRad * i) * radius, 0.0f, sin(degInRad * i) * radius);
 	glEnd();
 	glBegin(GL_LINE_LOOP);
-	for (unsigned int i = 0; i <= segments * 0.5f; i++)
+	for (unsigned int i = 0; i <= CIRCLES_SEGMENTS * 0.5f; i++)
 		glVertex3f(cos(degInRad * i) * radius, sin(degInRad * i) * radius, 0.0f);
 	glEnd();
 	glBegin(GL_LINE_LOOP);
-	for (unsigned int i = 0; i <= segments * 0.5f; i++)
+	for (unsigned int i = 0; i <= CIRCLES_SEGMENTS * 0.5f; i++)
 		glVertex3f(0.0f, sin(degInRad * i) * radius, cos(degInRad * i) * radius);
 	glEnd();
 	glLineWidth(1.0f);
@@ -81,20 +102,19 @@ void ParticleEmitter::DrawSemiSphere(const Sphere& shape)
 
 void ParticleEmitter::DrawCone(const ConeTrunk& shape)
 {
-	glLineWidth(4.0f);
-	glColor3f(1.0f, 1.0f, 0.0f);
+	glLineWidth(DEBUG_THICKNESS);
+	glColor3f(DEBUG_COLOR_R, DEBUG_COLOR_G, DEBUG_COLOR_B);
 	float Height = 1.0f;
-	unsigned int segments = 10;
 	float radius = 1.0f;
 	float radius_top = 1.5f;
-	float degInRad = 360.0f / (float)segments;
+	float degInRad = 360.0f / CIRCLES_SEGMENTS;
 	degInRad *= DEGTORAD;
 	glBegin(GL_LINE_LOOP);
-	for (unsigned int i = 0; i < segments; i++)
+	for (unsigned int i = 0; i < CIRCLES_SEGMENTS; i++)
 		glVertex3f(cos(degInRad * i) * radius, 0.0f, sin(degInRad * i) * radius);
 	glEnd();
 	glBegin(GL_LINE_LOOP);
-	for (unsigned int i = 0; i <= segments; i++)
+	for (unsigned int i = 0; i <= CIRCLES_SEGMENTS; i++)
 		glVertex3f(cos(degInRad * i) * radius_top, Height, sin(degInRad * i) * radius_top);
 	glEnd();
 	glBegin(GL_LINE_LOOP);
@@ -124,8 +144,8 @@ void ParticleEmitter::DrawBox(const AABB& shape)
 	float3 p6 = shape.CornerPoint(6);
 	float3 p7 = shape.CornerPoint(7);
 
-	glLineWidth(4.0f);
-	glColor3f(1.0f, 1.0f, 0.0f);
+	glLineWidth(DEBUG_THICKNESS);
+	glColor3f(DEBUG_COLOR_R, DEBUG_COLOR_G, DEBUG_COLOR_B);
 
 	glBegin(GL_LINES);
 
@@ -173,7 +193,17 @@ void ParticleEmitter::DrawBox(const AABB& shape)
 
 void ParticleEmitter::DrawCircle(const Circle& shape)
 {
-
+	glLineWidth(DEBUG_THICKNESS);
+	glColor3f(DEBUG_COLOR_R, DEBUG_COLOR_G, DEBUG_COLOR_B);
+	float radius = 1.0f;
+	float degInRad = 360.0f / (float)CIRCLES_SEGMENTS;
+	degInRad *= DEGTORAD;
+	glBegin(GL_LINE_LOOP);
+	for (unsigned int i = 0; i < CIRCLES_SEGMENTS; i++)
+		glVertex3f(cos(degInRad * i) * radius, 0.0f, sin(degInRad * i) * radius);
+	glEnd();
+	glLineWidth(1.0f);
+	glColor3f(1.0f, 1.0f, 1.0f);
 }
 
 ParticleEmitter::EmitterShapeUnion::EmitterShapeUnion()
@@ -687,24 +717,24 @@ void ParticleSystem::DrawEmitterOptions()
 {
 	ImGui::Columns(3, "##mycolumns3", false);  // 2-ways, no border
 	ImGui::PushItemWidth(100);
-	ImGui::Combo("Emitter Shape", (int*)&Emitter.Type, "Sphere\0SemiSphere\0Cone\0Box\0Circle\0Edge");
+	if (ImGui::Combo("Emitter Shape", (int*)&Emitter.Type, "Sphere\0SemiSphere\0Cone\0Box\0Circle")) Emitter.ResetEmitterValues();
 	ImGui::PopItemWidth();
 	switch (Emitter.Type)
 	{
 	case 0: //EmitterType_Sphere
 		ImGui::PushItemWidth(100);
 		ImGui::DragFloat("Radius", (float*)&Emitter.EmitterShape.Sphere_Shape.r, 0.1f, 0.0f, 100.0f);
-		ImGui::PopItemWidth();
-		ImGui::PushItemWidth(200);
-		ImGui::DragFloat3("Center Point", (float*)&Emitter.EmitterShape.Sphere_Shape.pos, 0.1f, 0.0f, 100.0f);
+		//ImGui::PopItemWidth();
+		//ImGui::PushItemWidth(200);
+		//ImGui::DragFloat3("Center Point", (float*)&Emitter.EmitterShape.Sphere_Shape.pos, 0.1f, 0.0f, 100.0f);
 		ImGui::PopItemWidth();
 		break;
 	case 1: //EmitterType_SemiSphere
 		ImGui::PushItemWidth(100);
 		ImGui::DragFloat("Radius", (float*)&Emitter.EmitterShape.Sphere_Shape.r, 0.1f, 0.0f, 100.0f);
-		ImGui::PopItemWidth();
-		ImGui::PushItemWidth(200);
-		ImGui::DragFloat3("Center Point", (float*)&Emitter.EmitterShape.Sphere_Shape.pos, 0.1f, 0.0f, 100.0f);
+		//ImGui::PopItemWidth();
+		//ImGui::PushItemWidth(200);
+		//ImGui::DragFloat3("Center Point", (float*)&Emitter.EmitterShape.Sphere_Shape.pos, 0.1f, 0.0f, 100.0f);
 		ImGui::PopItemWidth();
 		break;
 	case 2: //EmitterType_Cone
@@ -723,9 +753,9 @@ void ParticleSystem::DrawEmitterOptions()
 	case 4: //EmitterType_Circle
 		ImGui::PushItemWidth(100);
 		ImGui::DragFloat("Radius", (float*)&Emitter.EmitterShape.Circle_Shape.r, 0.1f, 0.0f, 100.0f);
-		ImGui::PopItemWidth();
-		ImGui::PushItemWidth(200);
-		ImGui::DragFloat3("Center Point", (float*)&Emitter.EmitterShape.Circle_Shape.pos, 0.1f, 0.0f, 100.0f);
+		//ImGui::PopItemWidth();
+		//ImGui::PushItemWidth(200);
+		//ImGui::DragFloat3("Center Point", (float*)&Emitter.EmitterShape.Circle_Shape.pos, 0.1f, 0.0f, 100.0f);
 		ImGui::PopItemWidth();
 		break;
 	}

@@ -54,11 +54,17 @@
 
 #define LERP(v0,v1,time) ( v0 + time * (v1 - v0))
 
+#define DEBUG_THICKNESS 4.0f
+#define DEBUG_COLOR_R 1.0f
+#define DEBUG_COLOR_G 1.0f
+#define DEBUG_COLOR_B 0.0f
+#define CIRCLES_SEGMENTS 10.0f
+
 struct ConeTrunk
 {
 	Circle Upper_Circle;
 	Circle Bottom_Circle;
-	float heigth = 1;
+	float heigth = 1.0f;
 };
 
 class ParticleEmitter
@@ -69,6 +75,7 @@ public:
 
 	void DebugDrawEmitter();
 	void DebugDrawEmitterAABB();
+	void ResetEmitterValues();
 
 private:
 	void DrawSphere(const Sphere& shape);

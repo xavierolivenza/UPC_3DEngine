@@ -59,6 +59,7 @@ bool ComponentParticleSystem::Update(float dt)
 	}
 	PartSystem->Update(dt);
 	if (PartSystem->EditorWindowOpen) PartSystem->DrawImGuiEditorWindow();
+	if (ShowEmitter) PartSystem->DebugDrawEmitter();
 	if (EditBoundBox)
 	{
 		ImGuizmo::Enable(true);
@@ -140,6 +141,7 @@ void ComponentParticleSystem::DrawComponentImGui()
 	{
 		ImGui::Checkbox("Show Particle Editor", &PartSystem->EditorWindowOpen);
 		ImGui::Checkbox("Edit Bounding Box", &EditBoundBox);
+		ImGui::Checkbox("Show Emitter", &ShowEmitter);
 		ImGui::RadioButton("Null", &AABBPointToMove, 0);
 		ImGui::SameLine();
 		if (ImGui::RadioButton("Min Point", &AABBPointToMove, 1)) parent->SetStatic(true);
