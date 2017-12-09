@@ -52,6 +52,8 @@
 	}                       \
 }
 
+#define LERP(v0,v1,time) ( v0 + time * (v1 - v0))
+
 struct ConeTrunk
 {
 	Circle Upper_Circle;
@@ -142,6 +144,14 @@ struct ParticleState
 	int picker_mode = 0;
 };
 
+struct ParticleAssignedState
+{
+	float Speed = 0.0f;								//Particle Speed
+	float3 ExternalForce = float3::zero;			//Particles influenced by external force - Direction + force (vector magnitude)
+	float Size = 0.0f;
+	float4 RGBATint = float4::one;					//Particle Texture tint
+};
+
 struct ParticleMeshData;
 
 struct ParticleProperties
@@ -149,7 +159,8 @@ struct ParticleProperties
 	float3 OriginalPosition = float3::zero;			//Particle EmissionOrigin Position
 	float3 Position = float3::zero;					//Particle Actual Position
 	Quat Rotation = Quat::identity;					//Particle Actual Rotation
-	float3 Scale = float3::one;					//Particle Actual Scale
+	float3 Scale = float3::one;						//Particle Actual Scale
+	float Size = 0.0f;								//Scale Multiplicator to modify
 	ParticleMeshData* MeshResource = nullptr;		//Mesh used by this particle plane/other mesh
 	float Speed = 0.0f;								//Particle Speed
 	float3 EmissionDirection = float3::zero;		//Particle Emission Direction
@@ -174,11 +185,19 @@ public:
 
 	void DrawParticle();
 
+private:
+	void CalculateStatesInterpolation();
+	void CalculatePosition(float LifetimeFloat);
+	void CalculateSpeed(float LifetimeFloat);
+	void CalculateExternalForce(float LifetimeFloat);
+	void CalculateSize(float LifetimeFloat);
+	void CalculateColor(float LifetimeFloat);
+
 public:
 	ParticleSystem* ParentParticleSystem = nullptr;
 	ParticleProperties Properties;					//Particle Properties
-	ParticleState* InitialState = nullptr;			//Particle Initial State Properties
-	ParticleState* FinalState = nullptr;			//Particle Final State Properties
+	ParticleAssignedState InitialState;				//Particle Initial State Properties with no variations, all are final values (calculated from ParticleState +- Var)
+	ParticleAssignedState FinalState;				//Particle Final State Properties with no variations, all are final values (calculated from ParticleState +- Var)
 };
 
 struct ParticleMeshData								//Very similar to MeshDataResource, but we copy it here to separate as much as we can the particle code from engine code (eayer to export/make a library)

@@ -227,18 +227,9 @@ bool Particle::PreUpdate(float dt)
 
 bool Particle::Update(float dt)
 {
+	Properties.LifetimeActual += (unsigned int)(dt * 1000.0f);
+	CalculateStatesInterpolation();
 	DrawParticle();
-	//Particle Position
-	/*
-	float dt2half = dt * dt * 0.5f;
-	float alpha = atan(Properties.EmissionDirection.y / Properties.EmissionDirection.x);
-	float beta = atan(Properties.EmissionDirection.x / Properties.EmissionDirection.z);
-	float gamma = atan(Properties.ExternalForce.y / Properties.ExternalForce.x);
-	float delta = atan(Properties.ExternalForce.x / Properties.ExternalForce.z);
-	Properties.Position.x = Properties.OriginalPosition.x + Properties.Speed * cos(alpha) * cos(beta) * dt + Properties.ExternalForce.Length() * cos(gamma) * cos(delta) * dt2half;
-	Properties.Position.y = Properties.OriginalPosition.y + Properties.Speed * sin(alpha) * dt + Properties.ExternalForce.Length() * sin(gamma) * dt2half;
-	Properties.Position.z = Properties.OriginalPosition.z + Properties.Speed * cos(alpha) * sin(beta) * dt + Properties.ExternalForce.Length() * cos(gamma) * sin(delta) * dt2half;
-	*/
 	return true;
 }
 
@@ -289,6 +280,56 @@ void Particle::DrawParticle()
 	glDisableClientState(GL_VERTEX_ARRAY);
 	glDisableClientState(GL_NORMAL_ARRAY);
 	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+}
+
+void Particle::CalculateStatesInterpolation()
+{
+	float LifetimeFloat = Properties.LifetimeActual * 0.001f;
+	CalculatePosition(LifetimeFloat);
+	CalculateSpeed(LifetimeFloat);
+	CalculateExternalForce(LifetimeFloat);
+	CalculateSize(LifetimeFloat);
+	CalculateColor(LifetimeFloat);
+}
+
+void Particle::CalculatePosition(float LifetimeFloat)
+{
+	//Particle Position
+	/*
+	float dt2half = dt * dt * 0.5f;
+	float alpha = atan(Properties.EmissionDirection.y / Properties.EmissionDirection.x);
+	float beta = atan(Properties.EmissionDirection.x / Properties.EmissionDirection.z);
+	float gamma = atan(Properties.ExternalForce.y / Properties.ExternalForce.x);
+	float delta = atan(Properties.ExternalForce.x / Properties.ExternalForce.z);
+	Properties.Position.x = Properties.OriginalPosition.x + Properties.Speed * cos(alpha) * cos(beta) * dt + Properties.ExternalForce.Length() * cos(gamma) * cos(delta) * dt2half;
+	Properties.Position.y = Properties.OriginalPosition.y + Properties.Speed * sin(alpha) * dt + Properties.ExternalForce.Length() * sin(gamma) * dt2half;
+	Properties.Position.z = Properties.OriginalPosition.z + Properties.Speed * cos(alpha) * sin(beta) * dt + Properties.ExternalForce.Length() * cos(gamma) * sin(delta) * dt2half;
+	*/
+}
+
+void Particle::CalculateSpeed(float LifetimeFloat)
+{
+	Properties.Speed = LERP(InitialState.Speed, FinalState.Speed, LifetimeFloat);
+}
+
+void Particle::CalculateExternalForce(float LifetimeFloat)
+{
+	Properties.ExternalForce.x = LERP(InitialState.ExternalForce.x, FinalState.ExternalForce.x, LifetimeFloat);
+	Properties.ExternalForce.y = LERP(InitialState.ExternalForce.y, FinalState.ExternalForce.y, LifetimeFloat);
+	Properties.ExternalForce.z = LERP(InitialState.ExternalForce.z, FinalState.ExternalForce.z, LifetimeFloat);
+}
+
+void Particle::CalculateSize(float LifetimeFloat)
+{
+	Properties.Size = LERP(InitialState.Size, FinalState.Size, LifetimeFloat);
+}
+
+void Particle::CalculateColor(float LifetimeFloat)
+{
+	Properties.RGBATint.x = LERP(InitialState.RGBATint.x, FinalState.RGBATint.x, LifetimeFloat);
+	Properties.RGBATint.y = LERP(InitialState.RGBATint.y, FinalState.RGBATint.y, LifetimeFloat);
+	Properties.RGBATint.z = LERP(InitialState.RGBATint.z, FinalState.RGBATint.z, LifetimeFloat);
+	Properties.RGBATint.w = LERP(InitialState.RGBATint.w, FinalState.RGBATint.w, LifetimeFloat);
 }
 
 ParticleMeshData::ParticleMeshData()
