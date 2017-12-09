@@ -58,7 +58,7 @@ void ParticleEmitter::DrawSphere(const Sphere& shape)
 {
 	glLineWidth(DEBUG_THICKNESS);
 	glColor3f(DEBUG_COLOR_R, DEBUG_COLOR_G, DEBUG_COLOR_B);
-	float radius = 1.0f;
+	float radius = shape.r;
 	float degInRad = 360.0f / CIRCLES_SEGMENTS;
 	degInRad *= DEGTORAD;
 	glBegin(GL_LINE_LOOP);
@@ -81,7 +81,7 @@ void ParticleEmitter::DrawSemiSphere(const Sphere& shape)
 {
 	glLineWidth(DEBUG_THICKNESS);
 	glColor3f(DEBUG_COLOR_R, DEBUG_COLOR_G, DEBUG_COLOR_B);
-	float radius = 1.0f;
+	float radius = shape.r;
 	float degInRad = 360.0f / CIRCLES_SEGMENTS;
 	degInRad *= DEGTORAD;
 	glBegin(GL_LINE_LOOP);
@@ -104,9 +104,9 @@ void ParticleEmitter::DrawCone(const ConeTrunk& shape)
 {
 	glLineWidth(DEBUG_THICKNESS);
 	glColor3f(DEBUG_COLOR_R, DEBUG_COLOR_G, DEBUG_COLOR_B);
-	float Height = 1.0f;
-	float radius = 1.0f;
-	float radius_top = 1.5f;
+	float Height = shape.heigth;
+	float radius = shape.Bottom_Circle.r;
+	float radius_top = shape.Upper_Circle.r;
 	float degInRad = 360.0f / CIRCLES_SEGMENTS;
 	degInRad *= DEGTORAD;
 	glBegin(GL_LINE_LOOP);
@@ -195,7 +195,7 @@ void ParticleEmitter::DrawCircle(const Circle& shape)
 {
 	glLineWidth(DEBUG_THICKNESS);
 	glColor3f(DEBUG_COLOR_R, DEBUG_COLOR_G, DEBUG_COLOR_B);
-	float radius = 1.0f;
+	float radius = shape.r;
 	float degInRad = 360.0f / (float)CIRCLES_SEGMENTS;
 	degInRad *= DEGTORAD;
 	glBegin(GL_LINE_LOOP);
@@ -746,8 +746,8 @@ void ParticleSystem::DrawEmitterOptions()
 		break;
 	case 3: //EmitterType_Box
 		ImGui::PushItemWidth(200);
-		ImGui::DragFloat3("Max Point", (float*)&Emitter.EmitterShape.Box_Shape.maxPoint, 0.1f, 0.0f, 100.0f);
-		ImGui::DragFloat3("Min Point", (float*)&Emitter.EmitterShape.Box_Shape.minPoint, 0.1f, 0.0f, 100.0f);
+		ImGui::DragFloat3("Max Point", (float*)&Emitter.EmitterShape.Box_Shape.maxPoint, 0.1f, -100.0f, 100.0f);
+		ImGui::DragFloat3("Min Point", (float*)&Emitter.EmitterShape.Box_Shape.minPoint, 0.1f, -100.0f, 100.0f);
 		ImGui::PopItemWidth();
 		break;
 	case 4: //EmitterType_Circle
