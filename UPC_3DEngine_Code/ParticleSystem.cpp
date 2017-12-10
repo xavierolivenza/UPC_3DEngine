@@ -670,6 +670,7 @@ void ParticleSystem::DrawTexturePreview()
 	float TexW = 250.0f;
 	float TexH = 250.0f;
 	float scale = 1.0f;
+	static float focus_sz = 50.0f;
 
 	if (TextureData.TextureW > 0.0f && TextureData.TextureH > 0.0f)
 	{
@@ -701,9 +702,8 @@ void ParticleSystem::DrawTexturePreview()
 			FinalPos = ImVec2(mouse_pos_in_canvas.x - canvas_pos.x, mouse_pos_in_canvas.y - canvas_pos.y);
 
 		ImGui::BeginTooltip();
-		float focus_sz = 50.0f;
-		float focus_x = mouse_pos_in_canvas.x - canvas_pos.x - focus_sz * 0.5f; if (focus_x < 0.0f) focus_x = 0.0f; else if (focus_x > tex_w - focus_sz) focus_x = tex_w - focus_sz;
-		float focus_y = mouse_pos_in_canvas.y - canvas_pos.y - focus_sz * 0.5f; if (focus_y < 0.0f) focus_y = 0.0f; else if (focus_y > tex_h - focus_sz) focus_y = tex_h - focus_sz;
+		float focus_x = mouse_pos_in_canvas.x - canvas_pos.x - focus_sz * 0.5f; if (focus_x < 0.0f) focus_x = 0.0f; else if (focus_x > canvas_size.x - focus_sz) focus_x = canvas_size.x - focus_sz;
+		float focus_y = mouse_pos_in_canvas.y - canvas_pos.y - focus_sz * 0.5f; if (focus_y < 0.0f) focus_y = 0.0f; else if (focus_y > canvas_size.y - focus_sz) focus_y = canvas_size.y - focus_sz;
 		ImVec2 uv0 = ImVec2((focus_x) / canvas_size.x, (focus_y) / canvas_size.y);
 		ImVec2 uv1 = ImVec2((focus_x + focus_sz) / canvas_size.x, (focus_y + focus_sz) / canvas_size.y);
 		uv0 = ImVec2(uv0.x, 1.0f - uv0.y);
@@ -724,6 +724,7 @@ void ParticleSystem::DrawTexturePreview()
 	ImGui::DragFloat2("Corner2 UV OpenGL", corner2UV.ptr(), 0.001f, 0.0f, 1.0f);
 	ImGui::DragFloat2("Corner1 UV PixelCoord", corner1UV.ptr(), 0.001f, 0.0f, 1.0f);
 	ImGui::DragFloat2("Corner2 UV PixelCoord", corner2UV.ptr(), 0.001f, 0.0f, 1.0f);
+	ImGui::DragFloat("Zoom", &focus_sz, 0.001f, 100.0f, 0.0f);
 }
 
 void ParticleSystem::DrawColorSelector()
