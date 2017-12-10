@@ -60,62 +60,6 @@ bool ComponentParticleSystem::Update(float dt)
 	PartSystem->SetEmitterTransform(parent->GetTransform()->GetMatrix());
 	PartSystem->Update(dt);
 	if (PartSystem->EditorWindowOpen) PartSystem->DrawImGuiEditorWindow();
-	if (ShowEmitter) PartSystem->DebugDrawEmitter();
-	if (EditBoundBox)
-	{
-		ImGuizmo::Enable(true);
-		if ((parent != nullptr) && (App->engineUI->GetSelectedGameObject() == parent) && !(App->input->GetKey(SDL_SCANCODE_LALT) == KEY_REPEAT))
-		{
-			ImGuiIO& io = ImGui::GetIO();
-			ImGuizmo::SetRect(0, 0, io.DisplaySize.x, io.DisplaySize.y);
-
-			float4x4 viewmatrix = App->camera->GetCameraComp()->frustum.ViewMatrix();
-			float4x4 projectionmatrix = App->camera->GetCameraComp()->frustum.ProjectionMatrix();
-			viewmatrix.Transpose();
-			projectionmatrix.Transpose();
-
-			AABB& Box = PartSystem->GetEmitterAABB();
-
-			switch (AABBPointToMove)
-			{
-			case 0: break;
-			case 1:
-			{
-				float4x4 MinMatrix = float4x4::FromTRS(Box.minPoint, Quat::identity, float3::one);
-				MinMatrix.Transpose();
-				ImGuizmo::Manipulate(viewmatrix.ptr(), projectionmatrix.ptr(), ImGuizmo::TRANSLATE, ImGuizmo::LOCAL, MinMatrix.ptr());
-				if (ImGuizmo::IsUsing())
-				{
-					MinMatrix.Transpose();
-					float3 position = float3::zero;
-					float3 scale = float3::zero;
-					Quat rotation = Quat::identity;
-					MinMatrix.Decompose(position, rotation, scale);
-					Box.minPoint = position;
-				}
-				break;
-			}
-			case 2:
-			{
-				float4x4 MaxMatrix = float4x4::FromTRS(Box.maxPoint, Quat::identity, float3::one);
-				MaxMatrix.Transpose();
-				ImGuizmo::Manipulate(viewmatrix.ptr(), projectionmatrix.ptr(), ImGuizmo::TRANSLATE, ImGuizmo::LOCAL, MaxMatrix.ptr());
-				if (ImGuizmo::IsUsing())
-				{
-					MaxMatrix.Transpose();
-					float3 position = float3::zero;
-					float3 scale = float3::zero;
-					Quat rotation = Quat::identity;
-					MaxMatrix.Decompose(position, rotation, scale);
-					Box.maxPoint = position;
-				}
-				break;
-			}
-			}
-		}
-		PartSystem->DebugDrawEmitterAABB();
-	}
-	if (!parent->IsStatic()) AABBPointToMove = 0;
 	return true;
 }
 
@@ -141,13 +85,6 @@ void ComponentParticleSystem::DrawComponentImGui()
 	if (ImGui::CollapsingHeader("Particle System Component", ImGuiTreeNodeFlags_DefaultOpen))
 	{
 		ImGui::Checkbox("Show Particle Editor", &PartSystem->EditorWindowOpen);
-		ImGui::Checkbox("Edit Bounding Box", &EditBoundBox);
-		ImGui::Checkbox("Show Emitter", &ShowEmitter);
-		ImGui::RadioButton("Null", &AABBPointToMove, 0);
-		ImGui::SameLine();
-		if (ImGui::RadioButton("Min Point", &AABBPointToMove, 1)) parent->SetStatic(true);
-		ImGui::SameLine();
-		if (ImGui::RadioButton("Max Point", &AABBPointToMove, 2)) parent->SetStatic(true);
 		if (ImGui::Button("Save Particles Resource", ImVec2(170, 30)))
 		{
 			FileType = Particle_Resource;

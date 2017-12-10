@@ -31,7 +31,10 @@ void ParticleEmitter::DebugDrawEmitter()
 
 void ParticleEmitter::DebugDrawEmitterAABB()
 {
+	glPushMatrix();
+	glMultMatrixf(Transform.ptr());
 	DrawBox(BoundingBox);
+	glPopMatrix();
 }
 
 void ParticleEmitter::ResetEmitterValues()
@@ -472,6 +475,8 @@ bool ParticleSystem::PreUpdate(float dt)
 
 bool ParticleSystem::Update(float dt)
 {
+	if (ShowEmitter) DebugDrawEmitter();
+	if (ShowEmitterBoundBox) DebugDrawEmitterAABB();
 	bool ret = true;
 	for (std::vector<Particle*>::iterator item = Particles.begin(); item != Particles.cend() && ret == true; ++item)
 		ret = (*item)->Update(dt);
@@ -818,10 +823,12 @@ void ParticleSystem::DrawEmitterOptions()
 	ImGui::Combo("Emyssion Type", (int*)&Emitter.EmissionType, "Local\0World\0");
 	ImGui::Combo("Particle Facing Options", (int*)&Emitter.ParticleFacingOptions, "Null\0Billboard\0Vertical Billboard\0Horizontal Billboard");
 	ImGui::PopItemWidth();
-	//Curve editor to interpolate initial-final
+	//TODO: Curve editor to interpolate initial-final
 	ImGui::PushItemWidth(200);
-	ImGui::InputFloat3("AABB Max", &Emitter.BoundingBox.maxPoint[0], 3);
-	ImGui::InputFloat3("AABB Min", &Emitter.BoundingBox.minPoint[0], 3);
+	ImGui::Checkbox("Show Emitter", &ShowEmitter);
+	ImGui::Checkbox("Show Emitter Bounding Box", &ShowEmitterBoundBox);
+	ImGui::DragFloat3("AABB Max", &Emitter.BoundingBox.maxPoint[0], 0.01f, -100.0f, 100.0f);
+	ImGui::DragFloat3("AABB Min", &Emitter.BoundingBox.minPoint[0], 0.01f, -100.0f, 100.0f);
 	ImGui::PopItemWidth();
 }
 

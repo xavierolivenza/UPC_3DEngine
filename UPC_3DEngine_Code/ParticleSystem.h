@@ -293,6 +293,8 @@ public:
 	bool EditorWindowOpen = false;
 	KeyInput MouseLeftClick;
 	float3 CameraPosition = float3::zero;
+	bool ShowEmitterBoundBox = false;
+	bool ShowEmitter = true;
 
 private:
 	ParticleMeshData ParticleMesh;

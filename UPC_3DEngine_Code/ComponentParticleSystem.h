@@ -40,13 +40,10 @@ private:
 	void DrawDirectory(const char* directory);
 
 private:
-	int AABBPointToMove = 0;
 	ParticleSystem* PartSystem = nullptr;
 	ResourceTexture* TextureResource = nullptr;
-	bool EditBoundBox = false;
 	bool PopUpLoadOpen = false;
 	bool PopUpSaveOpen = false;
-	bool ShowEmitter = true;
 	std::string FileToLoad;
 	std::string FileToLoadName;
 	std::string DirectoryTemporalStr;
