@@ -697,20 +697,20 @@ void ParticleSystem::DrawTexturePreview()
 	if (mouse_pos_in_canvas.x > canvas_pos.x && mouse_pos_in_canvas.y > canvas_pos.y && mouse_pos_in_canvas.x < canvas_pos.x + canvas_size.x && mouse_pos_in_canvas.y < canvas_pos.y + canvas_size.y)
 	{
 		if (MouseLeftClick.State == KeyInput::Down)
-			InitialPos = ImVec2(mouse_pos_in_canvas.x, mouse_pos_in_canvas.y);
+			InitialPos = ImVec2(mouse_pos_in_canvas.x - canvas_pos.x, mouse_pos_in_canvas.y - canvas_pos.y);
 		if (MouseLeftClick.State == KeyInput::Repeat)
-			FinalPos = ImVec2(mouse_pos_in_canvas.x, mouse_pos_in_canvas.y);
+			FinalPos = ImVec2(mouse_pos_in_canvas.x - canvas_pos.x, mouse_pos_in_canvas.y - canvas_pos.y);
 
 		ImGui::BeginTooltip();
-		float focus_sz = 100.0f;
-		float focus_x = ImGui::GetMousePos().x - tex_screen_pos.x - focus_sz * 0.5f; if (focus_x < 0.0f) focus_x = 0.0f; else if (focus_x > tex_w - focus_sz) focus_x = tex_w - focus_sz;
-		float focus_y = ImGui::GetMousePos().y - tex_screen_pos.y - focus_sz * 0.5f; if (focus_y < 0.0f) focus_y = 0.0f; else if (focus_y > tex_h - focus_sz) focus_y = tex_h - focus_sz;
+		float focus_sz = 150.0f;
+		float focus_x = ImGui::GetMousePos().x + canvas_pos.x - tex_screen_pos.x - focus_sz * 0.5f; if (focus_x < 0.0f) focus_x = 0.0f; else if (focus_x > tex_w - focus_sz) focus_x = tex_w - focus_sz;
+		float focus_y = ImGui::GetMousePos().y + canvas_pos.y - tex_screen_pos.y - focus_sz * 0.5f; if (focus_y < 0.0f) focus_y = 0.0f; else if (focus_y > tex_h - focus_sz) focus_y = tex_h - focus_sz;
 		ImVec2 uv1 = ImVec2((focus_x) / tex_w, (focus_y) / tex_h);
 		ImVec2 uv0 = ImVec2((focus_x + focus_sz) / tex_w, (focus_y + focus_sz) / tex_h);
 		ImGui::Image(tex_id, ImVec2(128, 128), uv0, uv1, ImColor(255, 255, 255, 255), ImColor(255, 255, 255, 128));
 		ImGui::EndTooltip();
 	}
-	draw_list->AddRect(ImVec2(InitialPos.x, InitialPos.y), ImVec2(FinalPos.x, FinalPos.y), IM_COL32(255, 255, 0, 255), 0.0f, ~0);
+	draw_list->AddRect(ImVec2(InitialPos.x + canvas_pos.x, InitialPos.y + canvas_pos.y), ImVec2(FinalPos.x + canvas_pos.x, FinalPos.y + canvas_pos.y), IM_COL32(255, 255, 0, 255), 0.0f, ~0);
 	draw_list->PopClipRect();
 	//ImGui::SameLine();
 	//ImGui::VSliderFloat("##SliverV", );
