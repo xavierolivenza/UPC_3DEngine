@@ -724,7 +724,7 @@ void ParticleSystem::DrawTexturePreview()
 	ImGui::DragFloat2("Corner2 UV OpenGL", corner2UV.ptr(), 0.001f, 0.0f, 1.0f);
 	ImGui::DragFloat2("Corner1 UV PixelCoord", corner1UV.ptr(), 0.001f, 0.0f, 1.0f);
 	ImGui::DragFloat2("Corner2 UV PixelCoord", corner2UV.ptr(), 0.001f, 0.0f, 1.0f);
-	ImGui::DragFloat("Zoom", &focus_sz, 0.001f, 100.0f, 0.0f);
+	//ImGui::DragFloat("Zoom", &focus_sz, 0.001f, 1.0f, 100.0f);
 }
 
 void ParticleSystem::DrawColorSelector()
