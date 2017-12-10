@@ -268,6 +268,16 @@ bool Particle::PreUpdate(float dt)
 
 bool Particle::Update(float dt)
 {
+	//Save external transform?
+	switch (ParentParticleSystem->Emitter.EmissionType)
+	{
+	case 0: //LocalEmission
+
+		break;
+	case 1: //WorldEmission
+
+		break;
+	}
 	Properties.LifetimeActual += (unsigned int)(dt * 1000.0f);
 	CalculateStatesInterpolation();
 	if (!MeshChanged) DrawParticle();
