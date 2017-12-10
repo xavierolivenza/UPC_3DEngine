@@ -682,7 +682,6 @@ void ParticleSystem::DrawTexturePreview()
 //	if (canvas_size.x < 50.0f) canvas_size.x = 50.0f;
 //	if (canvas_size.y < 50.0f) canvas_size.y = 50.0f;
 
-	ImVec2 tex_screen_pos = ImGui::GetCursorScreenPos();
 	float tex_w = canvas_pos.x + TextureData.TextureW;
 	float tex_h = canvas_pos.y + TextureData.TextureH;
 	ImTextureID tex_id = (void*)TextureData.TextureID;
@@ -702,11 +701,13 @@ void ParticleSystem::DrawTexturePreview()
 			FinalPos = ImVec2(mouse_pos_in_canvas.x - canvas_pos.x, mouse_pos_in_canvas.y - canvas_pos.y);
 
 		ImGui::BeginTooltip();
-		float focus_sz = 150.0f;
-		float focus_x = ImGui::GetMousePos().x + canvas_pos.x - tex_screen_pos.x - focus_sz * 0.5f; if (focus_x < 0.0f) focus_x = 0.0f; else if (focus_x > tex_w - focus_sz) focus_x = tex_w - focus_sz;
-		float focus_y = ImGui::GetMousePos().y + canvas_pos.y - tex_screen_pos.y - focus_sz * 0.5f; if (focus_y < 0.0f) focus_y = 0.0f; else if (focus_y > tex_h - focus_sz) focus_y = tex_h - focus_sz;
-		ImVec2 uv1 = ImVec2((focus_x) / tex_w, (focus_y) / tex_h);
-		ImVec2 uv0 = ImVec2((focus_x + focus_sz) / tex_w, (focus_y + focus_sz) / tex_h);
+		float focus_sz = 50.0f;
+		float focus_x = mouse_pos_in_canvas.x - canvas_pos.x - focus_sz * 0.5f; if (focus_x < 0.0f) focus_x = 0.0f; else if (focus_x > tex_w - focus_sz) focus_x = tex_w - focus_sz;
+		float focus_y = mouse_pos_in_canvas.y - canvas_pos.y - focus_sz * 0.5f; if (focus_y < 0.0f) focus_y = 0.0f; else if (focus_y > tex_h - focus_sz) focus_y = tex_h - focus_sz;
+		ImVec2 uv0 = ImVec2((focus_x) / canvas_size.x, (focus_y) / canvas_size.y);
+		ImVec2 uv1 = ImVec2((focus_x + focus_sz) / canvas_size.x, (focus_y + focus_sz) / canvas_size.y);
+		uv0 = ImVec2(uv0.x, 1.0f - uv0.y);
+		uv1 = ImVec2(uv1.x, 1.0f - uv1.y);
 		ImGui::Image(tex_id, ImVec2(128, 128), uv0, uv1, ImColor(255, 255, 255, 255), ImColor(255, 255, 255, 128));
 		ImGui::EndTooltip();
 	}
