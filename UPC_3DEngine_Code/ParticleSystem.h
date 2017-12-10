@@ -77,6 +77,8 @@ public:
 	void DebugDrawEmitterAABB();
 	void ResetEmitterValues();
 
+	void SetTransform(const float4x4& transform);
+
 private:
 	void DrawSphere(const Sphere& shape);
 	void DrawSemiSphere(const Sphere& shape);
@@ -85,6 +87,7 @@ private:
 	void DrawCircle(const Circle& shape);
 
 public:
+	float4x4 Transform = float4x4::identity;
 	float PreviewState = 0.0f;						//Preview of the particle, 0 = initial state, 1 = final state
 	int Lifetime = 0;								//Lifetime of emitted particles
 	int LifetimeVariation = 0;						//Lifetime variation of emitted particles
@@ -267,6 +270,8 @@ public:
 	void SetInitialStateResource(ParticleState& state);
 	void SetFinalStateResource(ParticleState& state);
 	void SetEmitterResource(ParticleEmitter& emitter);
+
+	void SetEmitterTransform(const float4x4& transform);
 
 	void DebugDrawEmitter();
 	void DebugDrawEmitterAABB();

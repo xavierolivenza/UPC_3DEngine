@@ -16,6 +16,8 @@ ParticleEmitter::~ParticleEmitter()
 
 void ParticleEmitter::DebugDrawEmitter()
 {
+	glPushMatrix();
+	glMultMatrixf(Transform.ptr());
 	switch (Type)
 	{
 	case EmitterType_Sphere: DrawSphere(EmitterShape.Sphere_Shape); break;
@@ -24,6 +26,7 @@ void ParticleEmitter::DebugDrawEmitter()
 	case EmitterType_Box: DrawBox(EmitterShape.Box_Shape); break;
 	case EmitterType_Circle: DrawCircle(EmitterShape.Circle_Shape); break;
 	}
+	glPopMatrix();
 }
 
 void ParticleEmitter::DebugDrawEmitterAABB()
@@ -52,6 +55,11 @@ void ParticleEmitter::ResetEmitterValues()
 		EmitterShape.Circle_Shape.r = 1.0f;
 		break;
 	}
+}
+
+void ParticleEmitter::SetTransform(const float4x4& transform)
+{
+	Transform = transform;
 }
 
 void ParticleEmitter::DrawSphere(const Sphere& shape)
@@ -549,6 +557,11 @@ void ParticleSystem::SetFinalStateResource(ParticleState& state)
 void ParticleSystem::SetEmitterResource(ParticleEmitter& emitter)
 {
 
+}
+
+void ParticleSystem::SetEmitterTransform(const float4x4 & transform)
+{
+	Emitter.SetTransform(transform);
 }
 
 void ParticleSystem::DebugDrawEmitter()

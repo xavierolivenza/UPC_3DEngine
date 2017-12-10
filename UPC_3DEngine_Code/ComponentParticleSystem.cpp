@@ -57,6 +57,7 @@ bool ComponentParticleSystem::Update(float dt)
 		case KEY_STATE::KEY_REPEAT: PartSystem->MouseLeftClick.State = KeyInput::Repeat; break;
 		case KEY_STATE::KEY_DOWN: PartSystem->MouseLeftClick.State = KeyInput::Down; break;
 	}
+	PartSystem->SetEmitterTransform(parent->GetTransform()->GetMatrix());
 	PartSystem->Update(dt);
 	if (PartSystem->EditorWindowOpen) PartSystem->DrawImGuiEditorWindow();
 	if (ShowEmitter) PartSystem->DebugDrawEmitter();
