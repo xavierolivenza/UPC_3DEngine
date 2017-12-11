@@ -88,20 +88,18 @@ private:
 
 public:
 	float4x4 Transform = float4x4::identity;
+	unsigned int SpawnRate = 2;						//How many particles are emitted every second
 	float PreviewState = 0.0f;						//Preview of the particle, 0 = initial state, 1 = final state
-	int Lifetime = 0;								//Lifetime of emitted particles
-	int LifetimeVariation = 0;						//Lifetime variation of emitted particles
+	float Lifetime = 1.0f;							//Lifetime of emitted particles
+	float LifetimeVariation = 0.0f;					//Lifetime variation of emitted particles
 	int EmissionDuration = 0;						//If loop is false, emission is played EmissionDuration ms
 	bool Loop = true;								//Ignore EmissionDuration and keep emitting
-	int ParticleNumber = 0;							//Max particles emitted at the same time
+	int ParticleNumber = 0;							//Alive particles emitted
 	float Speed = 0.0f;
 	float SpeedVariation = 0.0f;
 	float3 Position = float3::zero;					//Emitter position
 	Quat Rotation = Quat::identity;					//Emitter rotation
 	float3 Scale = float3::zero;					//Emitter scale
-	float3 ExternalForce = float3::zero;			//Particles influenced by external force - Direction + force (vector magnitude)
-	float3 ExternalForceVariation = float3::zero;
-	//Accel +- Variation							//We can add some acceleleration to particles?
 	AABB BoundingBox;								//User can set AABB for camera culling purpose (we can add physics...)
 
 	enum
@@ -138,8 +136,7 @@ struct ParticleState
 {
 	float Speed = 0.0f;								//Particle Speed
 	float SpeedVariation = 0.0f;
-	float3 ExternalForce = float3::zero;			//Particles influenced by external force - Direction + force (vector magnitude)
-	float3 ExternalForceVariation = float3::zero;
+	float2 gravity = float2(-9.81f, 0.0f);			//Gravity that affects that particle +- variation
 	float Size = 0.0f;
 	float SizeVariation = 0.0f;
 	float4 RGBATint = float4::one;					//Particle Texture tint
@@ -158,7 +155,7 @@ struct ParticleState
 struct ParticleAssignedState
 {
 	float Speed = 0.0f;								//Particle Speed
-	float3 ExternalForce = float3::zero;			//Particles influenced by external force - Direction + force (vector magnitude)
+	float gravity = -9.81f;							//Gravity that affects that particle
 	float Size = 0.0f;
 	float4 RGBATint = float4::one;					//Particle Texture tint
 };
@@ -174,10 +171,9 @@ struct ParticleProperties
 	float Size = 0.0f;								//Scale Multiplicator to modify
 	float Speed = 0.0f;								//Particle Speed
 	float3 EmissionDirection = float3::zero;		//Particle Emission Direction
-	float3 ExternalForce = float3::zero;			//Particles influenced by external force - Direction + force (vector magnitude)
-	//Accel											//We can add some acceleleration to particles?
-	unsigned int LifetimeMax = 0;					//Max Particle Lifetime
-	unsigned int LifetimeActual = 0;				//Actual Particle Lifetime
+	float gravity = -9.81f;							//Gravity that affects that particle
+	float LifetimeMax = 0;							//Max Particle Lifetime
+	float LifetimeActual = 0;						//Actual Particle Lifetime
 	unsigned int TextureID = 0;						//Texture ID used by this particle
 	float4 RGBATint = float4::zero;					//Particle Texture tint
 };
@@ -199,7 +195,7 @@ private:
 	void CalculateStatesInterpolation();
 	void CalculatePosition(float LifetimeFloat);
 	void CalculateSpeed(float LifetimeFloat);
-	void CalculateExternalForce(float LifetimeFloat);
+	void CalculateGravity(float LifetimeFloat);
 	void CalculateSize(float LifetimeFloat);
 	void CalculateColor(float LifetimeFloat);
 

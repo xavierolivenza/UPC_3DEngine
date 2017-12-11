@@ -262,7 +262,6 @@ bool Particle::PreUpdate(float dt)
 		break;
 	}
 	}
-	
 	return true;
 }
 
@@ -278,7 +277,7 @@ bool Particle::Update(float dt)
 
 		break;
 	}
-	Properties.LifetimeActual += (unsigned int)(dt * 1000.0f);
+	Properties.LifetimeActual += dt;
 	CalculateStatesInterpolation();
 	if (!MeshChanged) DrawParticle();
 	return true;
@@ -339,12 +338,11 @@ void Particle::DrawParticle()
 
 void Particle::CalculateStatesInterpolation()
 {
-	float LifetimeFloat = Properties.LifetimeActual * 0.001f;
-	CalculatePosition(LifetimeFloat);
-	CalculateSpeed(LifetimeFloat);
-	CalculateExternalForce(LifetimeFloat);
-	CalculateSize(LifetimeFloat);
-	CalculateColor(LifetimeFloat);
+	CalculatePosition(Properties.LifetimeActual);
+	CalculateSpeed(Properties.LifetimeActual);
+	CalculateGravity(Properties.LifetimeActual);
+	CalculateSize(Properties.LifetimeActual);
+	CalculateColor(Properties.LifetimeActual);
 }
 
 void Particle::CalculatePosition(float LifetimeFloat)
@@ -367,11 +365,9 @@ void Particle::CalculateSpeed(float LifetimeFloat)
 	Properties.Speed = LERP(InitialState.Speed, FinalState.Speed, LifetimeFloat);
 }
 
-void Particle::CalculateExternalForce(float LifetimeFloat)
+void Particle::CalculateGravity(float LifetimeFloat)
 {
-	Properties.ExternalForce.x = LERP(InitialState.ExternalForce.x, FinalState.ExternalForce.x, LifetimeFloat);
-	Properties.ExternalForce.y = LERP(InitialState.ExternalForce.y, FinalState.ExternalForce.y, LifetimeFloat);
-	Properties.ExternalForce.z = LERP(InitialState.ExternalForce.z, FinalState.ExternalForce.z, LifetimeFloat);
+	Properties.gravity = LERP(InitialState.gravity, FinalState.gravity, LifetimeFloat);
 }
 
 void Particle::CalculateSize(float LifetimeFloat)
@@ -758,6 +754,7 @@ void ParticleSystem::DrawColorSelector()
 	ImGui::SliderFloat("Size+-Var##SizeVariation", &state->SizeVariation, 0.0f, 100.0f);
 	ImGui::PopItemWidth();
 	ImGui::DragFloat4("Color Var##ColorVariation", (float*)&state->RGBATintVariation, 0.1f, 1.0f, 255.0f);
+	ImGui::DragFloat2("Gravity +- Var", &state->gravity[0], -100.0f, 100.0f);
 }
 
 void ParticleSystem::DrawEmitterOptions()
@@ -811,24 +808,16 @@ void ParticleSystem::DrawEmitterOptions()
 	ImGui::SliderFloat("Preview Initial-Final", &Emitter.PreviewState, 0.0f, 1.0f);
 	ImGui::PopItemWidth();
 	ImGui::PushItemWidth(80);
-	ImGui::SliderInt("+-##Lifetime", &Emitter.Lifetime, 0.0f, 100.0f);
+	ImGui::SliderInt("Particles emitted per second", (int*)&Emitter.SpawnRate, 0, 500);
+	ImGui::SliderFloat("+-##Lifetime", &Emitter.Lifetime, 0.0f, 100.0f);
 	ImGui::SameLine();
-	ImGui::SliderInt("Lifetime +- Var##LifetimeVariation", &Emitter.LifetimeVariation, 0.0f, 100.0f);
+	ImGui::SliderFloat("Lifetime +- Var##LifetimeVariation", &Emitter.LifetimeVariation, 0.0f, 100.0f);
 	ImGui::DragInt("Emission Duration", &Emitter.EmissionDuration, 0.1f, 0.0f, 100.0f);
 	ImGui::Checkbox("Loop", &Emitter.Loop);
 	ImGui::DragInt("Particle Num", &Emitter.ParticleNumber, 0.1f, 0.0f, 1000.0f);
 	ImGui::SliderFloat("+-##Speed", &Emitter.Speed, 0.0f, 100.0f);
 	ImGui::SameLine();
 	ImGui::SliderFloat("Speed +- Var##SpeedVariation", &Emitter.SpeedVariation, 0.0f, 100.0f);
-	ImGui::SliderFloat("+-##ExternalForceX", &Emitter.ExternalForce.x, 0.0f, 100.0f);
-	ImGui::SameLine();
-	ImGui::SliderFloat("ExternalForceX+-Var##ExternalForceVariationX", &Emitter.ExternalForceVariation.x, 0.0f, 100.0f);
-	ImGui::SliderFloat("+-##ExternalForceY", &Emitter.ExternalForce.y, 0.0f, 100.0f);
-	ImGui::SameLine();
-	ImGui::SliderFloat("ExternalForceY+-Var##ExternalForceVariationY", &Emitter.ExternalForceVariation.y, 0.0f, 100.0f);
-	ImGui::SliderFloat("+-##ExternalForceZ", &Emitter.ExternalForce.z, 0.0f, 100.0f);
-	ImGui::SameLine();
-	ImGui::SliderFloat("ExternalForceZ+-Var##ExternalForceVariationZ", &Emitter.ExternalForceVariation.z, 0.0f, 100.0f);
 	ImGui::PopItemWidth();
 	ImGui::NextColumn();
 	ImGui::PushItemWidth(175);
