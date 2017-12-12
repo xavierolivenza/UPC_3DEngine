@@ -1,6 +1,8 @@
+#include "Timer.h"
 #include "ParticleSystem.h"
 #include "imgui-1.51\imgui.h"
 #include "Glew\include\glew.h"
+#include "MathGeoLib\Algorithm\Random\LCG.h"
 
 ParticleEmitter::ParticleEmitter()
 {
@@ -222,9 +224,10 @@ ParticleEmitter::EmitterShapeUnion::EmitterShapeUnion()
 
 }
 
-Particle::Particle(ParticleSystem* parent) : ParentParticleSystem(parent)
+Particle::Particle(ParticleSystem* parent, const ParticleState& Initial, const ParticleState& Final) : ParentParticleSystem(parent)
 {
-
+	SetAssignedStateFromVariables(InitialState, Initial);
+	SetAssignedStateFromVariables(FinalState, Final);
 }
 
 Particle::~Particle()
@@ -334,6 +337,35 @@ void Particle::DrawParticle()
 	glDisableClientState(GL_VERTEX_ARRAY);
 	glDisableClientState(GL_NORMAL_ARRAY);
 	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+}
+
+void Particle::SetAssignedStateFromVariables(ParticleAssignedState& AState, const ParticleState& State)
+{
+	LCG RandGen;
+	AState.Speed.x = State.Speed.x + RandGen.Float(-State.SpeedVariation.x, State.SpeedVariation.x);
+	AState.Speed.y = State.Speed.y + RandGen.Float(-State.SpeedVariation.y, State.SpeedVariation.y);
+	AState.Speed.z = State.Speed.z + RandGen.Float(-State.SpeedVariation.z, State.SpeedVariation.z);
+
+	AState.force.x = State.force.x + RandGen.Float(-State.forceVariation.x, State.forceVariation.x);
+	AState.force.y = State.force.y + RandGen.Float(-State.forceVariation.y, State.forceVariation.y);
+	AState.force.z = State.force.z + RandGen.Float(-State.forceVariation.z, State.forceVariation.z);
+
+	/*
+	struct ParticleState
+	{
+		float Size = 0.0f;
+		float SizeVariation = 0.0f;
+		float4 RGBATint = float4::one;					//Particle Texture tint
+		float4 RGBATintVariation = float4::zero;
+	};
+	*/
+	/*
+	struct ParticleAssignedState
+	{
+		float Size = 0.0f;
+		float4 RGBATint = float4::one;					//Particle Texture tint
+	};
+	*/
 }
 
 void Particle::CalculateStatesInterpolation()
@@ -464,7 +496,6 @@ void ParticleTextureData::Set(unsigned int ID, unsigned int width, unsigned int 
 ParticleSystem::ParticleSystem()
 {
 	SetMeshResourcePlane();
-	CreateParticle();
 }
 
 ParticleSystem::~ParticleSystem()
@@ -490,6 +521,14 @@ bool ParticleSystem::Update(float dt)
 {
 	if (ShowEmitter) DebugDrawEmitter();
 	if (ShowEmitterBoundBox) DebugDrawEmitterAABB();
+
+	Emitter.EmissionDuration += dt;
+	float OneParticleEach = 1.0f / (float)Emitter.SpawnRate;
+	if (Emitter.EmissionDuration >= (Emitter.ParticleNumber * OneParticleEach))
+	{
+		CreateParticle();
+		Emitter.ParticleNumber++;
+	}
 	bool ret = true;
 	for (std::vector<Particle*>::iterator item = Particles.begin(); item != Particles.cend() && ret == true; ++item)
 		ret = (*item)->Update(dt);
@@ -814,6 +853,9 @@ void ParticleSystem::DrawEmitterOptions()
 		break;
 	}
 	ImGui::NextColumn();
+	ImGui::PushItemWidth(80);
+	ImGui::DragFloat("Emitter Life", &Emitter.EmitterLifeMax, 0.1f, -1.0f, 120.0f);
+	ImGui::PopItemWidth();
 	ImGui::PushItemWidth(100);
 	ImGui::SliderFloat("Preview Initial-Final", &Emitter.PreviewState, 0.0f, 1.0f);
 	ImGui::PopItemWidth();
@@ -822,7 +864,7 @@ void ParticleSystem::DrawEmitterOptions()
 	ImGui::SliderFloat("+-##Lifetime", &Emitter.Lifetime, 0.0f, 100.0f);
 	ImGui::SameLine();
 	ImGui::SliderFloat("Lifetime +- Var##LifetimeVariation", &Emitter.LifetimeVariation, 0.0f, 100.0f);
-	ImGui::DragInt("Emission Duration", &Emitter.EmissionDuration, 0.1f, 0.0f, 100.0f);
+	ImGui::DragFloat("Emission Duration", &Emitter.EmissionDuration, 0.1f, 0.0f, 100.0f);
 	ImGui::Checkbox("Loop", &Emitter.Loop);
 	ImGui::DragInt("Particle Num", &Emitter.ParticleNumber, 0.1f, 0.0f, 1000.0f);
 	ImGui::SliderFloat("+-##Speed", &Emitter.Speed, 0.0f, 100.0f);
@@ -845,7 +887,27 @@ void ParticleSystem::DrawEmitterOptions()
 
 bool ParticleSystem::CreateParticle()
 {
-	Particle* NewParticle = new Particle(this);
+	Particle* NewParticle = new Particle(this, InitialState, FinalState);
+
+	switch (Emitter.Type)
+	{
+	case 0: //EmitterType_Sphere
+
+		break;
+	case 1: //EmitterType_SemiSphere
+
+		break;
+	case 2: //EmitterType_Cone
+
+		break;
+	case 3: //EmitterType_Box
+
+		break;
+	case 4: //EmitterType_Circle
+
+		break;
+	}
+
 	Particles.push_back(NewParticle);
 	return true;
 }

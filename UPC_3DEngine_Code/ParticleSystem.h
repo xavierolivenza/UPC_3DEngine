@@ -87,12 +87,14 @@ private:
 	void DrawCircle(const Circle& shape);
 
 public:
+	float EmitterLifeMax = -1.0f;					//EmitterLife, after that, we can execute another child particle system, if -1, infinite life
+	float EmitterLife = 0.0f;						//Emitter Real Life
 	float4x4 Transform = float4x4::identity;
 	unsigned int SpawnRate = 2;						//How many particles are emitted every second
 	float PreviewState = 0.0f;						//Preview of the particle, 0 = initial state, 1 = final state
 	float Lifetime = 1.0f;							//Lifetime of emitted particles
 	float LifetimeVariation = 0.0f;					//Lifetime variation of emitted particles
-	int EmissionDuration = 0;						//If loop is false, emission is played EmissionDuration ms
+	float EmissionDuration = 0.0f;					//If loop is false, emission is played EmissionDuration
 	bool Loop = true;								//Ignore EmissionDuration and keep emitting
 	int ParticleNumber = 0;							//Alive particles emitted
 	float Speed = 0.0f;
@@ -183,7 +185,7 @@ class ParticleSystem;
 class Particle
 {
 public:
-	Particle(ParticleSystem* parent);
+	Particle(ParticleSystem* parent, const ParticleState& Initial, const ParticleState& Final);
 	~Particle();
 	bool PreUpdate(float dt);
 	bool Update(float dt);
@@ -192,6 +194,7 @@ public:
 	void DrawParticle();
 
 private:
+	void SetAssignedStateFromVariables(ParticleAssignedState& AState, const ParticleState& State);
 	void CalculateStatesInterpolation();
 	void CalculatePosition(float LifetimeFloat);
 	void CalculateSpeed(float LifetimeFloat);
