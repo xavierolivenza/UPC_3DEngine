@@ -712,13 +712,23 @@ void ParticleSystem::GenerateMeshResourceBuffers()
 	for (std::vector<Particle*>::iterator item = Particles.begin(); item != Particles.cend(); ++item) (*item)->MeshChanged = false;
 }
 
+void ParticleSystem::GenerateTexturesUVs()
+{
+	//WIP
+	//Variables we can use
+	//TextureData.TextureW;
+	//TextureData.TextureH;
+	//columns;
+	//rows;
+	//numberOfFrames;
+	//TODO - We have some maths on paper
+}
+
 void ParticleSystem::DrawTexturePreview()
 {
 	ImDrawList* draw_list = ImGui::GetWindowDrawList();
-	//static float texSize = 1.0f;
 	static ImVec2 InitialPos = ImVec2(0.0f, 0.0f);
 	static ImVec2 FinalPos = ImVec2(0.0f, 0.0f);
-	//ImGui::SliderFloat("Image Preview Size", &texSize, 0.0f, 3.0f, "%.2f");
 
 	ImVec2 canvas_pos = ImGui::GetCursorScreenPos();            // ImDrawList API uses screen coordinates!
 	ImVec2 region_avaliable = ImGui::GetContentRegionAvail();
@@ -772,15 +782,15 @@ void ParticleSystem::DrawTexturePreview()
 	for (int i = 1; i < rows; i++)
 		draw_list->AddLine(ImVec2(canvas_pos.x, canvas_pos.y + (canvas_size.y / rows) * i), ImVec2(canvas_pos.x + canvas_size.x, canvas_pos.y + (canvas_size.y / rows) * i), IM_COL32(255, 255, 0, 255));
 	ImGui::PushItemWidth(95);
-	ImGui::SliderInt("Columns", &columns, 1, 20);
+	if (ImGui::SliderInt("Columns", &columns, 1, 20)) GenerateTexturesUVs();
 	ImGui::SameLine();
-	ImGui::SliderInt("Rows", &rows, 1, 20);
+	if (ImGui::SliderInt("Rows", &rows, 1, 20)) GenerateTexturesUVs();
 	ImGui::PopItemWidth();
 	float maxFrames = rows * columns;
 	if (maxFrames > 1)
 	{
 		ImGui::PushItemWidth(140);
-		ImGui::DragInt("Number of Frames", &numberOfFrames, 0.1f, 1, maxFrames);
+		if (ImGui::DragInt("Number of Frames", &numberOfFrames, 0.1f, 1, maxFrames)) GenerateTexturesUVs();
 		ImGui::PopItemWidth();
 	}
 	ImGui::PushItemWidth(80);

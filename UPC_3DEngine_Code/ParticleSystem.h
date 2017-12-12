@@ -284,6 +284,7 @@ public:
 
 private:
 	void GenerateMeshResourceBuffers();
+	void GenerateTexturesUVs();
 	void DrawTexturePreview();
 	void DrawColorSelector();
 	void DrawEmitterOptions();
@@ -303,6 +304,7 @@ private:
 	ParticleState FinalState;
 	ParticleEmitter Emitter;
 	ParticleTextureData TextureData;
+	std::vector<float4> TexturesUV;		//UV0 = X-Y		UV1 = Z-W
 
 	int columns = 1;
 	int rows = 1;
