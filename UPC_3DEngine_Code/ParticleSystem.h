@@ -134,9 +134,10 @@ public:
 
 struct ParticleState
 {
-	float Speed = 0.0f;								//Particle Speed
-	float SpeedVariation = 0.0f;
-	float2 gravity = float2(-9.81f, 0.0f);			//Gravity that affects that particle +- variation
+	float3 Speed = float3::zero;					//Particle Speed
+	float3 SpeedVariation = float3::zero;
+	float3 force = float3(0.0f, -9.81f, 0.0f);		//Force that effects that particle
+	float3 forceVariation = float3(0.0f, 0.0f, 0.0f);//Force that effects that particle variation
 	float Size = 0.0f;
 	float SizeVariation = 0.0f;
 	float4 RGBATint = float4::one;					//Particle Texture tint
@@ -154,8 +155,8 @@ struct ParticleState
 
 struct ParticleAssignedState
 {
-	float Speed = 0.0f;								//Particle Speed
-	float gravity = -9.81f;							//Gravity that affects that particle
+	float3 Speed = float3::zero;					//Particle Speed
+	float3 force = float3::zero;					//Gravity that affects that particle
 	float Size = 0.0f;
 	float4 RGBATint = float4::one;					//Particle Texture tint
 };
@@ -164,14 +165,13 @@ struct ParticleMeshData;
 
 struct ParticleProperties
 {
-	float3 OriginalPosition = float3::zero;			//Particle EmissionOrigin Position
 	float3 Position = float3::zero;					//Particle Actual Position
 	Quat Rotation = Quat::identity;					//Particle Actual Rotation
 	float3 Scale = float3::one;						//Particle Actual Scale
 	float Size = 0.0f;								//Scale Multiplicator to modify
-	float Speed = 0.0f;								//Particle Speed
+	float3 Speed = float3::zero;					//Particle Speed
 	float3 EmissionDirection = float3::zero;		//Particle Emission Direction
-	float gravity = -9.81f;							//Gravity that affects that particle
+	float3 force = float3::zero;					//Force that effects that particle
 	float LifetimeMax = 0;							//Max Particle Lifetime
 	float LifetimeActual = 0;						//Actual Particle Lifetime
 	unsigned int TextureID = 0;						//Texture ID used by this particle

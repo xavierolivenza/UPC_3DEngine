@@ -347,6 +347,9 @@ void Particle::CalculateStatesInterpolation()
 
 void Particle::CalculatePosition(float LifetimeFloat)
 {
+	Properties.Speed += Properties.force * LifetimeFloat;
+	Properties.Position += Properties.Speed * LifetimeFloat;
+
 	//Particle Position
 	/*
 	float dt2half = dt * dt * 0.5f;
@@ -362,12 +365,16 @@ void Particle::CalculatePosition(float LifetimeFloat)
 
 void Particle::CalculateSpeed(float LifetimeFloat)
 {
-	Properties.Speed = LERP(InitialState.Speed, FinalState.Speed, LifetimeFloat);
+	Properties.Speed.x = LERP(InitialState.Speed.x, FinalState.Speed.x, LifetimeFloat);
+	Properties.Speed.y = LERP(InitialState.Speed.y, FinalState.Speed.y, LifetimeFloat);
+	Properties.Speed.z = LERP(InitialState.Speed.z, FinalState.Speed.z, LifetimeFloat);
 }
 
 void Particle::CalculateGravity(float LifetimeFloat)
 {
-	Properties.gravity = LERP(InitialState.gravity, FinalState.gravity, LifetimeFloat);
+	Properties.force.x = LERP(InitialState.force.x, FinalState.force.x, LifetimeFloat);
+	Properties.force.y = LERP(InitialState.force.y, FinalState.force.y, LifetimeFloat);
+	Properties.force.z = LERP(InitialState.force.z, FinalState.force.z, LifetimeFloat);
 }
 
 void Particle::CalculateSize(float LifetimeFloat)
@@ -754,7 +761,10 @@ void ParticleSystem::DrawColorSelector()
 	ImGui::SliderFloat("Size+-Var##SizeVariation", &state->SizeVariation, 0.0f, 100.0f);
 	ImGui::PopItemWidth();
 	ImGui::DragFloat4("Color Var##ColorVariation", (float*)&state->RGBATintVariation, 0.1f, 1.0f, 255.0f);
-	ImGui::DragFloat2("Gravity +- Var", &state->gravity[0], -100.0f, 100.0f);
+	ImGui::PushItemWidth(175);
+	ImGui::SliderFloat3("Gravity##Gravity", &state->force[0], -10.0f, 10.0f);
+	ImGui::SliderFloat3("Gravity Var##GravityVariation", &state->forceVariation[0], -10.0f, 10.0f);
+	ImGui::PopItemWidth();
 }
 
 void ParticleSystem::DrawEmitterOptions()
