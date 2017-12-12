@@ -224,11 +224,12 @@ ParticleEmitter::EmitterShapeUnion::EmitterShapeUnion()
 
 }
 
-Particle::Particle(ParticleSystem* parent, const ParticleState& Initial, const ParticleState& Final, float3 Speed) : ParentParticleSystem(parent)
+Particle::Particle(ParticleSystem* parent, const ParticleState& Initial, const ParticleState& Final, float3 Speed, float LifetimeMax) : ParentParticleSystem(parent)
 {
 	SetAssignedStateFromVariables(InitialState, Initial);
 	SetAssignedStateFromVariables(FinalState, Final);
 	Properties.Speed = Speed;
+	Properties.LifetimeMax = LifetimeMax;
 }
 
 Particle::~Particle()
@@ -289,7 +290,14 @@ bool Particle::Update(float dt)
 
 bool Particle::PostUpdate(float dt)
 {
+	if (Properties.LifetimeActual >= Properties.LifetimeMax)
+		ToDelete = true;
 	return true;
+}
+
+bool Particle::isDead()
+{
+	return ToDelete;
 }
 
 void Particle::DrawParticle()
@@ -528,7 +536,17 @@ bool ParticleSystem::PostUpdate(float dt)
 {
 	bool ret = true;
 	for (std::vector<Particle*>::iterator item = Particles.begin(); item != Particles.cend() && ret == true; ++item)
+	{
 		ret = (*item)->PostUpdate(dt);
+		if ((*item)->isDead())
+		{
+			Emitter.ParticleNumber--;
+			/*
+			RELEASE(*item);
+			Particles.erase(item);
+			*/
+		}
+	}
 	return ret;
 }
 
@@ -630,20 +648,20 @@ void ParticleSystem::DrawImGuiEditorWindow()
 		float ChildsWidth = (WindowSize.x - 28.0f) * 0.33f;
 		float ChildsHeight = (WindowSize.y - 52.0f) * 0.5f;
 
-		ImGui::BeginChild("Preview", ImVec2(ChildsWidth, ChildsHeight), true);
+		ImGui::BeginChild("Preview", ImVec2(ChildsWidth, ChildsHeight), true, ImGuiWindowFlags_AlwaysVerticalScrollbar);
 		DrawTexturePreview();
 		ImGui::EndChild();
 
 		ImGui::SameLine();
 
-		ImGui::BeginChild("Initial State", ImVec2(ChildsWidth, ChildsHeight), true);
+		ImGui::BeginChild("Initial State", ImVec2(ChildsWidth, ChildsHeight), true, ImGuiWindowFlags_AlwaysVerticalScrollbar);
 		ParticleStateEnum = InitialState_Enum;
 		DrawColorSelector();
 		ImGui::EndChild();
 
 		ImGui::SameLine();
 
-		ImGui::BeginChild("Final State", ImVec2(ChildsWidth, ChildsHeight), true);
+		ImGui::BeginChild("Final State", ImVec2(ChildsWidth, ChildsHeight), true, ImGuiWindowFlags_AlwaysVerticalScrollbar);
 		ParticleStateEnum = FinalState_Enum;
 		DrawColorSelector();
 		ImGui::EndChild();
@@ -901,10 +919,11 @@ bool ParticleSystem::CreateParticle()
 
 		break;
 	case 4: //EmitterType_Circle
-
+		float angleRadians = RandGen.Float(0.0f, 360.0f * DEGTORAD);
+		Direction = Emitter.EmitterShape.Circle_Shape.GetPoint(angleRadians);
 		break;
 	}
-	Particle* NewParticle = new Particle(this, InitialState, FinalState, Direction.Normalized() * (Emitter.Speed + RandGen.Float(-Emitter.SpeedVariation, Emitter.SpeedVariation)));
+	Particle* NewParticle = new Particle(this, InitialState, FinalState, Direction.Normalized() * (Emitter.Speed + RandGen.Float(-Emitter.SpeedVariation, Emitter.SpeedVariation)), Emitter.Lifetime + RandGen.Float(-Emitter.LifetimeVariation, Emitter.LifetimeVariation));
 	Particles.push_back(NewParticle);
 	return true;
 }

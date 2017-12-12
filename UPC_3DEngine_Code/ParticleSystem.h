@@ -97,7 +97,7 @@ public:
 	float EmissionDuration = 0.0f;					//If loop is false, emission is played EmissionDuration
 	bool Loop = true;								//Ignore EmissionDuration and keep emitting
 	int ParticleNumber = 0;							//Alive particles emitted
-	float Speed = 0.0f;
+	float Speed = 5.0f;
 	float SpeedVariation = 0.0f;
 	float3 Position = float3::zero;					//Emitter position
 	Quat Rotation = Quat::identity;					//Emitter rotation
@@ -182,11 +182,13 @@ class ParticleSystem;
 class Particle
 {
 public:
-	Particle(ParticleSystem* parent, const ParticleState& Initial, const ParticleState& Final, float3 Speed);
+	Particle(ParticleSystem* parent, const ParticleState& Initial, const ParticleState& Final, float3 Speed, float LifetimeMax);
 	~Particle();
 	bool PreUpdate(float dt);
 	bool Update(float dt);
 	bool PostUpdate(float dt);
+
+	bool isDead();
 
 	void DrawParticle();
 
@@ -204,6 +206,9 @@ public:
 	ParticleAssignedState InitialState;				//Particle Initial State Properties with no variations, all are final values (calculated from ParticleState +- Var)
 	ParticleAssignedState FinalState;				//Particle Final State Properties with no variations, all are final values (calculated from ParticleState +- Var)
 	bool MeshChanged = false;
+
+private:
+	bool ToDelete = false;
 };
 
 struct ParticleMeshData								//Very similar to MeshDataResource, but we copy it here to separate as much as we can the particle code from engine code (eayer to export/make a library)
