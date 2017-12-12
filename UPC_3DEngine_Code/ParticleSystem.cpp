@@ -49,7 +49,11 @@ void ParticleEmitter::ResetEmitterValues()
 		break;
 	case EmitterType_Cone:
 		EmitterShape.ConeTrunk_Shape.Upper_Circle.r = 1.5f;
+		EmitterShape.ConeTrunk_Shape.Upper_Circle.pos = float3::zero;
+		EmitterShape.ConeTrunk_Shape.Upper_Circle.normal = float3(0.0f, 1.0f, 0.0f);
 		EmitterShape.ConeTrunk_Shape.Bottom_Circle.r = 1.0f;
+		EmitterShape.ConeTrunk_Shape.Bottom_Circle.pos = float3::zero;
+		EmitterShape.ConeTrunk_Shape.Bottom_Circle.normal = float3(0.0f, 1.0f, 0.0f);
 		EmitterShape.ConeTrunk_Shape.heigth = 1.0f;
 		break;
 	case EmitterType_Box:
@@ -58,6 +62,8 @@ void ParticleEmitter::ResetEmitterValues()
 		break;
 	case EmitterType_Circle:
 		EmitterShape.Circle_Shape.r = 1.0f;
+		EmitterShape.Circle_Shape.pos = float3::zero;
+		EmitterShape.Circle_Shape.normal = float3(0.0f, 1.0f, 0.0f);
 		break;
 	}
 }
@@ -502,10 +508,10 @@ ParticleSystem::~ParticleSystem()
 
 bool ParticleSystem::PreUpdate(float dt)
 {
-	if (ToDeleteBool_FirstTimeTest)
+	if (GenerateBuffers)
 	{
 		GenerateMeshResourceBuffers();
-		ToDeleteBool_FirstTimeTest = false;
+		GenerateBuffers = false;
 	}
 
 	bool ret = true;
@@ -599,7 +605,7 @@ void ParticleSystem::SetMeshResourcePlane()
 		1.0f, 0.0f, 0.0f
 	};
 	memcpy(ParticleMesh.texture_coords, texture_coords, sizeof(float) * ParticleMesh.num_vertices * 3);
-	ToDeleteBool_FirstTimeTest = true;
+	GenerateBuffers = true;
 	for (std::vector<Particle*>::iterator item = Particles.begin(); item != Particles.cend(); ++item) (*item)->MeshChanged = true;
 }
 
@@ -913,9 +919,18 @@ bool ParticleSystem::CreateParticle()
 		Direction.y = abs(Direction.y);
 		break;
 	case 2: //EmitterType_Cone
-
+	{
+		float3 BasePoint = Emitter.EmitterShape.ConeTrunk_Shape.Bottom_Circle.RandomPointInside(RandGen);
+		float3 TopPoint = (Emitter.EmitterShape.ConeTrunk_Shape.Upper_Circle.r * BasePoint) / Emitter.EmitterShape.ConeTrunk_Shape.Bottom_Circle.r;
+		TopPoint.y = Emitter.EmitterShape.ConeTrunk_Shape.heigth;
+		Direction = TopPoint - BasePoint;
 		break;
+	}
 	case 3: //EmitterType_Box
+
+
+
+
 
 		break;
 	case 4: //EmitterType_Circle

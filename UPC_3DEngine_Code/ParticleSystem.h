@@ -254,7 +254,7 @@ struct KeyInput
 class ParticleSystem
 {
 	friend class Particle;
-	bool ToDeleteBool_FirstTimeTest = true;
+	bool GenerateBuffers = true;
 
 public:
 	ParticleSystem();
