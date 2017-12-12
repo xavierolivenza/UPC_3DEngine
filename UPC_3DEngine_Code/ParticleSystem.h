@@ -136,8 +136,6 @@ public:
 
 struct ParticleState
 {
-	float3 Speed = float3::zero;					//Particle Speed
-	float3 SpeedVariation = float3::zero;
 	float3 force = float3(0.0f, -9.81f, 0.0f);		//Force that effects that particle
 	float3 forceVariation = float3(0.0f, 0.0f, 0.0f);//Force that effects that particle variation
 	float Size = 0.0f;
@@ -157,7 +155,6 @@ struct ParticleState
 
 struct ParticleAssignedState
 {
-	float3 Speed = float3::zero;					//Particle Speed
 	float3 force = float3::zero;					//Gravity that affects that particle
 	float Size = 0.0f;
 	float4 RGBATint = float4::one;					//Particle Texture tint
@@ -185,7 +182,7 @@ class ParticleSystem;
 class Particle
 {
 public:
-	Particle(ParticleSystem* parent, const ParticleState& Initial, const ParticleState& Final);
+	Particle(ParticleSystem* parent, const ParticleState& Initial, const ParticleState& Final, float3 Speed);
 	~Particle();
 	bool PreUpdate(float dt);
 	bool Update(float dt);
@@ -197,7 +194,6 @@ private:
 	void SetAssignedStateFromVariables(ParticleAssignedState& AState, const ParticleState& State);
 	void CalculateStatesInterpolation();
 	void CalculatePosition(float LifetimeFloat);
-	void CalculateSpeed(float LifetimeFloat);
 	void CalculateGravity(float LifetimeFloat);
 	void CalculateSize(float LifetimeFloat);
 	void CalculateColor(float LifetimeFloat);

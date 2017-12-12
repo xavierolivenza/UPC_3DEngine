@@ -224,10 +224,11 @@ ParticleEmitter::EmitterShapeUnion::EmitterShapeUnion()
 
 }
 
-Particle::Particle(ParticleSystem* parent, const ParticleState& Initial, const ParticleState& Final) : ParentParticleSystem(parent)
+Particle::Particle(ParticleSystem* parent, const ParticleState& Initial, const ParticleState& Final, float3 Speed) : ParentParticleSystem(parent)
 {
 	SetAssignedStateFromVariables(InitialState, Initial);
 	SetAssignedStateFromVariables(FinalState, Final);
+	Properties.Speed = Speed;
 }
 
 Particle::~Particle()
@@ -342,10 +343,6 @@ void Particle::DrawParticle()
 void Particle::SetAssignedStateFromVariables(ParticleAssignedState& AState, const ParticleState& State)
 {
 	LCG RandGen;
-	AState.Speed.x = State.Speed.x + RandGen.Float(-State.SpeedVariation.x, State.SpeedVariation.x);
-	AState.Speed.y = State.Speed.y + RandGen.Float(-State.SpeedVariation.y, State.SpeedVariation.y);
-	AState.Speed.z = State.Speed.z + RandGen.Float(-State.SpeedVariation.z, State.SpeedVariation.z);
-
 	AState.force.x = State.force.x + RandGen.Float(-State.forceVariation.x, State.forceVariation.x);
 	AState.force.y = State.force.y + RandGen.Float(-State.forceVariation.y, State.forceVariation.y);
 	AState.force.z = State.force.z + RandGen.Float(-State.forceVariation.z, State.forceVariation.z);
@@ -371,7 +368,6 @@ void Particle::SetAssignedStateFromVariables(ParticleAssignedState& AState, cons
 void Particle::CalculateStatesInterpolation()
 {
 	CalculatePosition(Properties.LifetimeActual);
-	CalculateSpeed(Properties.LifetimeActual);
 	CalculateGravity(Properties.LifetimeActual);
 	CalculateSize(Properties.LifetimeActual);
 	CalculateColor(Properties.LifetimeActual);
@@ -393,13 +389,6 @@ void Particle::CalculatePosition(float LifetimeFloat)
 	Properties.Position.y = Properties.OriginalPosition.y + Properties.Speed * sin(alpha) * dt + Properties.ExternalForce.Length() * sin(gamma) * dt2half;
 	Properties.Position.z = Properties.OriginalPosition.z + Properties.Speed * cos(alpha) * sin(beta) * dt + Properties.ExternalForce.Length() * cos(gamma) * sin(delta) * dt2half;
 	*/
-}
-
-void Particle::CalculateSpeed(float LifetimeFloat)
-{
-	Properties.Speed.x = LERP(InitialState.Speed.x, FinalState.Speed.x, LifetimeFloat);
-	Properties.Speed.y = LERP(InitialState.Speed.y, FinalState.Speed.y, LifetimeFloat);
-	Properties.Speed.z = LERP(InitialState.Speed.z, FinalState.Speed.z, LifetimeFloat);
 }
 
 void Particle::CalculateGravity(float LifetimeFloat)
@@ -887,15 +876,16 @@ void ParticleSystem::DrawEmitterOptions()
 
 bool ParticleSystem::CreateParticle()
 {
-	Particle* NewParticle = new Particle(this, InitialState, FinalState);
-
+	LCG RandGen;
+	float3 Direction = float3::zero;
 	switch (Emitter.Type)
 	{
 	case 0: //EmitterType_Sphere
-
+		Direction = Emitter.EmitterShape.Sphere_Shape.RandomPointOnSurface(RandGen);
 		break;
 	case 1: //EmitterType_SemiSphere
-
+		Direction = Emitter.EmitterShape.Sphere_Shape.RandomPointOnSurface(RandGen);
+		Direction.y = abs(Direction.y);
 		break;
 	case 2: //EmitterType_Cone
 
@@ -907,7 +897,7 @@ bool ParticleSystem::CreateParticle()
 
 		break;
 	}
-
+	Particle* NewParticle = new Particle(this, InitialState, FinalState, Direction.Normalized() * (Emitter.Speed + RandGen.Float(-Emitter.SpeedVariation, Emitter.SpeedVariation)));
 	Particles.push_back(NewParticle);
 	return true;
 }
