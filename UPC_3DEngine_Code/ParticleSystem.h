@@ -299,8 +299,15 @@ private:
 	ParticleEmitter Emitter;
 	ParticleTextureData TextureData;
 
-	float2 corner1UV = float2::zero;
-	float2 corner2UV = float2::one;
+	int columns = 1;
+	int rows = 1;
+	int numberOfFrames = 1;
+
+	enum
+	{
+		Right,
+		Down
+	}AnimationOrder = Right;
 
 	enum
 	{

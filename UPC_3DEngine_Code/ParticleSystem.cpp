@@ -711,11 +711,8 @@ void ParticleSystem::DrawTexturePreview()
 	}
 
 	ImVec2 canvas_size = ImVec2(TexW, TexH);        // Resize canvas to what's available
-//	if (canvas_size.x < 50.0f) canvas_size.x = 50.0f;
-//	if (canvas_size.y < 50.0f) canvas_size.y = 50.0f;
-
-	float tex_w = canvas_pos.x + TextureData.TextureW;
-	float tex_h = canvas_pos.y + TextureData.TextureH;
+	float tex_w = canvas_pos.x + TextureData.TextureW;		//	if (canvas_size.x < 50.0f) canvas_size.x = 50.0f;
+	float tex_h = canvas_pos.y + TextureData.TextureH;		//	if (canvas_size.y < 50.0f) canvas_size.y = 50.0f;
 	ImTextureID tex_id = (void*)TextureData.TextureID;
 
 	draw_list->AddRectFilledMultiColor(canvas_pos, ImVec2(canvas_pos.x + canvas_size.x, canvas_pos.y + canvas_size.y), ImColor(50, 50, 50), ImColor(50, 50, 60), ImColor(60, 60, 70), ImColor(50, 50, 60));
@@ -727,10 +724,12 @@ void ParticleSystem::DrawTexturePreview()
 	draw_list->AddRect(canvas_pos, ImVec2(canvas_pos.x + canvas_size.x, canvas_pos.y + canvas_size.y), ImColor(255, 255, 255));
 	if (mouse_pos_in_canvas.x > canvas_pos.x && mouse_pos_in_canvas.y > canvas_pos.y && mouse_pos_in_canvas.x < canvas_pos.x + canvas_size.x && mouse_pos_in_canvas.y < canvas_pos.y + canvas_size.y)
 	{
+		/*
 		if (MouseLeftClick.State == KeyInput::Down)
-			InitialPos = ImVec2(mouse_pos_in_canvas.x - canvas_pos.x, mouse_pos_in_canvas.y - canvas_pos.y);
+		InitialPos = ImVec2(mouse_pos_in_canvas.x - canvas_pos.x, mouse_pos_in_canvas.y - canvas_pos.y);
 		if (MouseLeftClick.State == KeyInput::Repeat)
-			FinalPos = ImVec2(mouse_pos_in_canvas.x - canvas_pos.x, mouse_pos_in_canvas.y - canvas_pos.y);
+		FinalPos = ImVec2(mouse_pos_in_canvas.x - canvas_pos.x, mouse_pos_in_canvas.y - canvas_pos.y);
+		*/
 
 		ImGui::BeginTooltip();
 		float focus_x = mouse_pos_in_canvas.x - canvas_pos.x - focus_sz * 0.5f; if (focus_x < 0.0f) focus_x = 0.0f; else if (focus_x > canvas_size.x - focus_sz) focus_x = canvas_size.x - focus_sz;
@@ -742,19 +741,27 @@ void ParticleSystem::DrawTexturePreview()
 		ImGui::Image(tex_id, ImVec2(128, 128), uv0, uv1, ImColor(255, 255, 255, 255), ImColor(255, 255, 255, 128));
 		ImGui::EndTooltip();
 	}
-	draw_list->AddRect(ImVec2(InitialPos.x + canvas_pos.x, InitialPos.y + canvas_pos.y), ImVec2(FinalPos.x + canvas_pos.x, FinalPos.y + canvas_pos.y), IM_COL32(255, 255, 0, 255), 0.0f, ~0);
+	//draw_list->AddRect(ImVec2(InitialPos.x + canvas_pos.x, InitialPos.y + canvas_pos.y), ImVec2(FinalPos.x + canvas_pos.x, FinalPos.y + canvas_pos.y), IM_COL32(255, 255, 0, 255), 0.0f, ~0);
 	draw_list->PopClipRect();
-	//ImGui::SameLine();
-	//ImGui::VSliderFloat("##SliverV", );
-	//ImGui::SliderFloat("##SliverH", );
-
-	//With the inputs below we aim to have two inputs for the user, you can set the UV with texture coords and OpenGL 0.0f-1.0f coords
-	//(if you set coords with one input type, the other is updated with same data)
-
-	ImGui::DragFloat2("Corner1 UV OpenGL", corner1UV.ptr(), 0.001f, 0.0f, 1.0f);
-	ImGui::DragFloat2("Corner2 UV OpenGL", corner2UV.ptr(), 0.001f, 0.0f, 1.0f);
-	ImGui::DragFloat2("Corner1 UV PixelCoord", corner1UV.ptr(), 0.001f, 0.0f, 1.0f);
-	ImGui::DragFloat2("Corner2 UV PixelCoord", corner2UV.ptr(), 0.001f, 0.0f, 1.0f);
+	for (int i = 1; i < columns; i++)
+		draw_list->AddLine(ImVec2(canvas_pos.x + (canvas_size.x / columns) * i, canvas_pos.y), ImVec2(canvas_pos.x + (canvas_size.x / columns) * i, canvas_pos.y + canvas_size.y), IM_COL32(255, 255, 0, 255));
+	for (int i = 1; i < rows; i++)
+		draw_list->AddLine(ImVec2(canvas_pos.x, canvas_pos.y + (canvas_size.y / rows) * i), ImVec2(canvas_pos.x + canvas_size.x, canvas_pos.y + (canvas_size.y / rows) * i), IM_COL32(255, 255, 0, 255));
+	ImGui::PushItemWidth(95);
+	ImGui::SliderInt("Columns", &columns, 1, 20);
+	ImGui::SameLine();
+	ImGui::SliderInt("Rows", &rows, 1, 20);
+	ImGui::PopItemWidth();
+	float maxFrames = rows * columns;
+	if (maxFrames > 1)
+	{
+		ImGui::PushItemWidth(140);
+		ImGui::DragInt("Number of Frames", &numberOfFrames, 0.1f, 1, maxFrames);
+		ImGui::PopItemWidth();
+	}
+	ImGui::PushItemWidth(80);
+	ImGui::Combo("Animation Order", (int*)&AnimationOrder, "Right\0Down\0");
+	ImGui::PopItemWidth();
 	//ImGui::DragFloat("Zoom", &focus_sz, 0.001f, 1.0f, 100.0f);
 }
 
@@ -790,8 +797,8 @@ void ParticleSystem::DrawColorSelector()
 	ImGui::PopItemWidth();
 	ImGui::DragFloat4("Color Var##ColorVariation", (float*)&state->RGBATintVariation, 0.1f, 1.0f, 255.0f);
 	ImGui::PushItemWidth(175);
-	ImGui::SliderFloat3("Gravity##Gravity", &state->force[0], -10.0f, 10.0f);
-	ImGui::SliderFloat3("Gravity Var##GravityVariation", &state->forceVariation[0], -10.0f, 10.0f);
+	ImGui::DragFloat3("Gravity##Gravity", &state->force[0], 0.01, -10.0f, 10.0f, "%.2f");
+	ImGui::DragFloat3("Gravity Var##GravityVariation", &state->forceVariation[0], 0.01, -10.0f, 10.0f, "%.2f");
 	ImGui::PopItemWidth();
 }
 
