@@ -546,14 +546,7 @@ bool ParticleSystem::PreUpdate(float dt)
 		ret = (*item)->PreUpdate(dt);
 	}
 
-
-	//Particles.sort([](const ipair & a, const ipair & b) { return a.first < b.first; });
-
-
-
-	//Particles.sort();
-
-	//if (Particles.size() > 0) std::sort(Particles.begin(), Particles.end());
+	Particles.sort([](const Particle* a, const Particle* b) { return a->CameraDistance > b->CameraDistance; });
 
 	return ret;
 }

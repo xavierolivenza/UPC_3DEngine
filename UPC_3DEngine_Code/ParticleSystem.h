@@ -202,11 +202,6 @@ public:
 
 	void DrawParticle();
 
-	bool operator<(Particle& other1)
-	{
-		return this->CameraDistance > other1.CameraDistance;
-	}
-	
 private:
 	void SetAssignedStateFromVariables(ParticleAssignedState& AState, const ParticleState& State);
 	void CalculateStatesInterpolation();
