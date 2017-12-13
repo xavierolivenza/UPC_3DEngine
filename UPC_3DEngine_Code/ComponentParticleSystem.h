@@ -34,6 +34,8 @@ public:
 	void ImGuiLoadEmitterPopUp();
 	void ImGuiLoadMeshPopUp();
 	void ImGuiSavePopUp();
+	void ImGuiSaveParticlePopUp();
+	void ImGuiSaveEmitterPopUp();
 
 private:
 	void DrawDirectory(const char* directory);

@@ -643,19 +643,34 @@ void ParticleSystem::SetTextureResource(unsigned int ID, unsigned int width, uns
 	TextureData.Set(ID, width, heigth);
 }
 
-void ParticleSystem::SetInitialStateResource(ParticleState& state)
+void ParticleSystem::SetInitialStateResource(const ParticleState& state)
 {
-
+	InitialState = state;
 }
 
-void ParticleSystem::SetFinalStateResource(ParticleState& state)
+void ParticleSystem::SetFinalStateResource(const ParticleState& state)
 {
-
+	FinalState = state;
 }
 
-void ParticleSystem::SetEmitterResource(ParticleEmitter& emitter)
+void ParticleSystem::SetEmitterResource(const ParticleEmitter& emitter)
 {
+	Emitter = emitter;
+}
 
+void ParticleSystem::GetInitialState(ParticleState & state) const
+{
+	state = InitialState;
+}
+
+void ParticleSystem::GetFinalState(ParticleState & state) const
+{
+	state = FinalState;
+}
+
+void ParticleSystem::GetEmitter(ParticleEmitter & emitter) const
+{
+	emitter = Emitter;
 }
 
 void ParticleSystem::SetEmitterTransform(const float4x4 & transform)

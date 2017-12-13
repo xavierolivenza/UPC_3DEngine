@@ -272,9 +272,13 @@ public:
 	void SetMeshResource(ParticleMeshData& MeshData);//Set Mesh resource to use
 	void SetMeshResourcePlane();					//Delete actual mesh + load a plane
 	void SetTextureResource(unsigned int ID, unsigned int width, unsigned int heigth);
-	void SetInitialStateResource(ParticleState& state);
-	void SetFinalStateResource(ParticleState& state);
-	void SetEmitterResource(ParticleEmitter& emitter);
+
+	void SetInitialStateResource(const ParticleState& state);	//Set Particle Initial State if you want to load it as a resource
+	void SetFinalStateResource(const ParticleState& state);		//Set Particle Final State if you want to load it as a resource
+	void SetEmitterResource(const ParticleEmitter& emitter);	//Set Particle Emitter if you want to load it as a resource
+	void GetInitialState(ParticleState& state) const;			//Get Particle Initial State if you want to save it as a resource
+	void GetFinalState(ParticleState& state) const;				//Get Particle Final State if you want to save it as a resource
+	void GetEmitter(ParticleEmitter& emitter) const;			//Get Particle Emitter if you want to save it as a resource
 
 	void SetEmitterTransform(const float4x4& transform);
 
