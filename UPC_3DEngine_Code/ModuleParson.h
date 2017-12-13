@@ -9,6 +9,8 @@
 
 class GameObject;
 class Resource;
+struct ParticleState;
+class ParticleEmitter;
 
 class ParsonJSON
 {
@@ -26,6 +28,13 @@ public:
 
 	bool SaveResource(const Resource* mesh) const;
 	bool LoadResource(Resource& mesh);
+
+	//States and emitters are here because we don't want to have JSON_Object inside ParticleSystem.h/.cpp, we want to be as independent as possible
+	bool SaveParticleStates(const ParticleState* stateI, const ParticleState* stateF) const;
+	bool LoadParticleStates(ParticleState& stateI, ParticleState& stateF) const;
+
+	bool SaveParticleEmitter(const ParticleEmitter* emitter) const;
+	bool LoadParticleEmitter(ParticleEmitter& emitter) const;
 
 	int GetInt(JSON_Object* conf, const char* field, int default = 0) const;
 	uint GetUInt(JSON_Object* conf, const char* field, uint default = 0) const;

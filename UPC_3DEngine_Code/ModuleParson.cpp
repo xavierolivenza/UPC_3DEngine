@@ -186,6 +186,26 @@ bool ParsonJSON::LoadResource(Resource& mesh)
 	return true;
 }
 
+bool ParsonJSON::SaveParticleStates(const ParticleState* stateI, const ParticleState* stateF) const
+{
+	return true;
+}
+
+bool ParsonJSON::LoadParticleStates(ParticleState& stateI, ParticleState& stateF) const
+{
+	return true;
+}
+
+bool ParsonJSON::SaveParticleEmitter(const ParticleEmitter* emitter) const
+{
+	return true;
+}
+
+bool ParsonJSON::LoadParticleEmitter(ParticleEmitter& emitter) const
+{
+	return true;
+}
+
 int ParsonJSON::GetInt(JSON_Object* conf, const char* field, int default) const
 {
 	JSON_Value* value = json_object_get_value(conf, field);
