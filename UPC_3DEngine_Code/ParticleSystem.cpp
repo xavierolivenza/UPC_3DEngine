@@ -332,6 +332,8 @@ void Particle::DrawParticle()
 {
 	const ParticleMeshData& Mesh = ParentParticleSystem->GetParticleMeshData();
 
+	glColor4f(Properties.RGBATint.x, Properties.RGBATint.y, Properties.RGBATint.z, Properties.RGBATint.w);
+
 	glDisable(GL_CULL_FACE);
 
 	glEnable(GL_TEXTURE_2D);
@@ -374,6 +376,8 @@ void Particle::DrawParticle()
 	glDisableClientState(GL_VERTEX_ARRAY);
 	glDisableClientState(GL_NORMAL_ARRAY);
 	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+
+	glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 }
 
 void Particle::SetAssignedStateFromVariables(ParticleAssignedState& AState, const ParticleState& State)
@@ -383,22 +387,12 @@ void Particle::SetAssignedStateFromVariables(ParticleAssignedState& AState, cons
 	AState.force.y = State.force.y + RandGen.Float(-State.forceVariation.y, State.forceVariation.y);
 	AState.force.z = State.force.z + RandGen.Float(-State.forceVariation.z, State.forceVariation.z);
 
-	/*
-	struct ParticleState
-	{
-		float Size = 0.0f;
-		float SizeVariation = 0.0f;
-		float4 RGBATint = float4::one;					//Particle Texture tint
-		float4 RGBATintVariation = float4::zero;
-	};
-	*/
-	/*
-	struct ParticleAssignedState
-	{
-		float Size = 0.0f;
-		float4 RGBATint = float4::one;					//Particle Texture tint
-	};
-	*/
+	AState.Size = State.Size + RandGen.Float(-State.SizeVariation, State.SizeVariation);
+
+	AState.RGBATint.x = State.RGBATint.x + RandGen.Float(-State.RGBATintVariation.x, State.RGBATintVariation.x);
+	AState.RGBATint.y = State.RGBATint.y + RandGen.Float(-State.RGBATintVariation.y, State.RGBATintVariation.y);
+	AState.RGBATint.z = State.RGBATint.z + RandGen.Float(-State.RGBATintVariation.z, State.RGBATintVariation.z);
+	AState.RGBATint.w = State.RGBATint.w + RandGen.Float(-State.RGBATintVariation.w, State.RGBATintVariation.w);
 }
 
 void Particle::CalculateStatesInterpolation()
@@ -570,17 +564,17 @@ bool ParticleSystem::Update(float dt)
 bool ParticleSystem::PostUpdate(float dt)
 {
 	bool ret = true;
-	for (std::list<Particle*>::iterator item = Particles.begin(); item != Particles.cend() && ret == true; ++item)
+	for (std::list<Particle*>::iterator item = Particles.begin(); item != Particles.cend() && ret == true; )
 	{
 		ret = (*item)->PostUpdate(dt);
 		if ((*item)->isDead())
 		{
 			Emitter.ParticleNumber--;
-			/*
 			RELEASE(*item);
-			Particles.erase(item);
-			*/
+			item = Particles.erase(item);
 		}
+		else
+			++item;
 	}
 	return ret;
 }
@@ -939,9 +933,12 @@ void ParticleSystem::DrawEmitterOptions()
 	ImGui::SliderFloat("+-##Lifetime", &Emitter.Lifetime, 0.0f, 100.0f);
 	ImGui::SameLine();
 	ImGui::SliderFloat("Lifetime +- Var##LifetimeVariation", &Emitter.LifetimeVariation, 0.0f, 100.0f);
-	ImGui::DragFloat("Emission Duration", &Emitter.EmissionDuration, 0.1f, 0.0f, 100.0f);
+	char title[100] = "";
+	sprintf_s(title, 100, "Emission Duration: %.3f", Emitter.EmissionDuration);
+	ImGui::Text(title);
 	ImGui::Checkbox("Loop", &Emitter.Loop);
-	ImGui::DragInt("Particle Num", &Emitter.ParticleNumber, 0.1f, 0.0f, 1000.0f);
+	sprintf_s(title, 100, "Particle Num: %i", Particles.size());
+	ImGui::Text(title);
 	ImGui::SliderFloat("+-##Speed", &Emitter.Speed, 0.0f, 100.0f);
 	ImGui::SameLine();
 	ImGui::SliderFloat("Speed +- Var##SpeedVariation", &Emitter.SpeedVariation, 0.0f, 100.0f);
