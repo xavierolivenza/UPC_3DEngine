@@ -354,11 +354,13 @@ void Particle::DrawParticle()
 		glBindBuffer(GL_ARRAY_BUFFER, Mesh.id_normals);
 		glNormalPointer(GL_FLOAT, 0, NULL);
 	}
+	/*
 	if (Mesh.texture_coords != nullptr) {
 		glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 		glBindBuffer(GL_ARRAY_BUFFER, Mesh.id_texture_coords);
 		glTexCoordPointer(3, GL_FLOAT, 0, NULL);
 	}
+	*/
 
 	glPushMatrix();
 	float4x4 ParticleMatrix = float4x4::FromTRS(Properties.Position, Properties.Rotation, Properties.Scale).Transposed();
@@ -466,9 +468,11 @@ void ParticleMeshData::Copy(ParticleMeshData& Other)
 	id_normals = Other.id_normals;
 	normals = new float[num_vertices * 3];
 	memcpy(normals, Other.normals, sizeof(float) * num_vertices * 3);
+	/*
 	id_texture_coords = Other.id_texture_coords;
 	texture_coords = new float[num_vertices * 3];
 	memcpy(texture_coords, Other.texture_coords, sizeof(float) * num_vertices * 3);
+	*/
 }
 
 void ParticleMeshData::Clean()
@@ -496,6 +500,7 @@ void ParticleMeshData::Clean()
 		id_normals = 0;
 		RELEASE_ARRAY(normals);
 	}
+	/*
 	if (texture_coords != nullptr)
 	{
 		if (id_texture_coords > 0)
@@ -503,6 +508,7 @@ void ParticleMeshData::Clean()
 		id_texture_coords = 0;
 		RELEASE_ARRAY(texture_coords);
 	}
+	*/
 }
 
 void ParticleTextureData::Set(unsigned int ID, unsigned int width, unsigned int heigth)
@@ -587,12 +593,14 @@ bool ParticleSystem::CleanUp()
 	return true;
 }
 
+/*
 void ParticleSystem::SetMeshResource(ParticleMeshData& MeshData)
 {
 	ParticleMesh.Copy(MeshData);
 	//ToDeleteBool_FirstTimeTest = true;
 	//for (std::vector<Particle*>::iterator item = Particles.begin(); item != Particles.cend(); ++item) (*item)->MeshChanged = true;
 }
+*/
 
 void ParticleSystem::SetMeshResourcePlane()
 {
@@ -619,6 +627,7 @@ void ParticleSystem::SetMeshResourcePlane()
 	};
 	memcpy(ParticleMesh.indices, indices, sizeof(float) * ParticleMesh.num_indices);
 	// Texture coords
+	/*
 	ParticleMesh.texture_coords = new float[ParticleMesh.num_vertices * 3];
 	float texture_coords[] =
 	{
@@ -628,6 +637,7 @@ void ParticleSystem::SetMeshResourcePlane()
 		1.0f, 0.0f, 0.0f
 	};
 	memcpy(ParticleMesh.texture_coords, texture_coords, sizeof(float) * ParticleMesh.num_vertices * 3);
+	*/
 	GenerateBuffers = true;
 	for (std::list<Particle*>::iterator item = Particles.begin(); item != Particles.cend(); ++item) (*item)->MeshChanged = true;
 }
@@ -744,23 +754,70 @@ void ParticleSystem::GenerateMeshResourceBuffers()
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ParticleMesh.id_indices);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * ParticleMesh.num_indices, ParticleMesh.indices, GL_STATIC_DRAW);
 	// Texture coords Buffer
+	/*
 	glGenBuffers(1, (GLuint*)&ParticleMesh.id_texture_coords);
 	glBindBuffer(GL_ARRAY_BUFFER, ParticleMesh.id_texture_coords);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * ParticleMesh.num_indices * 3, ParticleMesh.texture_coords, GL_STATIC_DRAW);
+	*/
 	for (std::list<Particle*>::iterator item = Particles.begin(); item != Particles.cend(); ++item) (*item)->MeshChanged = false;
 	GenerateBuffers = false;
 }
 
+void ParticleSystem::GenerateUVBuffers()
+{
+	for (std::vector<unsigned int>::iterator item = TexturesUV_ID.begin(); item != TexturesUV_ID.cend(); ++item)
+		if (*item > 0) glDeleteBuffers(1, &(*item));
+	TexturesUV_ID.clear();
+
+	for (unsigned int i = 0; i < columns * rows; i++)
+	{
+		unsigned int NewID = 0;
+
+		/*
+		float* texture_coords = new float[ParticleMesh.num_vertices * 3];
+		float texture_coords[] =
+		{
+			0.0f, 1.0f, 0.0f,
+			1.0f, 1.0f, 0.0f,
+			0.0f, 0.0f, 0.0f,
+			1.0f, 0.0f, 0.0f
+		};
+		memcpy(ParticleMesh.texture_coords, texture_coords, sizeof(float) * ParticleMesh.num_vertices * 3);
+
+		glGenBuffers(1, (GLuint*)&NewID);
+		glBindBuffer(GL_ARRAY_BUFFER, NewID);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(float) * ParticleMesh.num_indices * 3, texture_coords, GL_STATIC_DRAW);
+		*/
+
+		TexturesUV_ID.push_back(NewID);
+	}
+}
+
 void ParticleSystem::GenerateTexturesUVs()
 {
-	//WIP
-	//Variables we can use
-	//TextureData.TextureW;
-	//TextureData.TextureH;
-	//columns;
-	//rows;
-	//numberOfFrames;
-	//TODO - We have some maths on paper
+	TexturesUV_Data.clear();
+	for (unsigned int i = 0; i < columns * rows; i++)
+	{
+		float4 NewUV = float4::zero;
+		float2 ColumRow = float2::zero;
+		switch (AnimationOrder)
+		{
+		case Right:
+			ColumRow.x = i / columns; //Row
+			ColumRow.y = i % columns; //Column
+			break;
+		case Down:
+			ColumRow.x = i % columns; //Column
+			ColumRow.y = i / columns; //Row
+			break;
+		}
+		NewUV.x = (1.0f / (float)columns) * ColumRow.y;
+		NewUV.y = (1.0f / (float)rows) * ((float)rows - ColumRow.x - 1.0f);
+		NewUV.z = (1.0f / (float)columns) * (ColumRow.y + 1.0f);
+		NewUV.w = (1.0f / (float)rows) * ((float)rows - ColumRow.x);
+		TexturesUV_Data.push_back(NewUV);
+	}
+	GenerateUVBuffers();
 }
 
 void ParticleSystem::DrawTexturePreview()
@@ -821,9 +878,17 @@ void ParticleSystem::DrawTexturePreview()
 	for (int i = 1; i < rows; i++)
 		draw_list->AddLine(ImVec2(canvas_pos.x, canvas_pos.y + (canvas_size.y / rows) * i), ImVec2(canvas_pos.x + canvas_size.x, canvas_pos.y + (canvas_size.y / rows) * i), IM_COL32(255, 255, 0, 255));
 	ImGui::PushItemWidth(95);
-	if (ImGui::SliderInt("Columns", &columns, 1, 20)) GenerateTexturesUVs();
+	if (ImGui::SliderInt("Columns", &columns, 1, 20))
+	{
+		numberOfFrames = rows * columns;
+		GenerateTexturesUVs();
+	}
 	ImGui::SameLine();
-	if (ImGui::SliderInt("Rows", &rows, 1, 20)) GenerateTexturesUVs();
+	if (ImGui::SliderInt("Rows", &rows, 1, 20))
+	{
+		numberOfFrames = rows * columns;
+		GenerateTexturesUVs();
+	}
 	ImGui::PopItemWidth();
 	float maxFrames = rows * columns;
 	if (maxFrames > 1)
@@ -973,7 +1038,7 @@ bool ParticleSystem::CreateParticle()
 	case 2: //EmitterType_Cone
 	{
 		float3 BasePoint = float3::zero;
-		float3 TopPoint = float3::zero;
+		float3 TopPoint = float3(0.0f, Emitter.EmitterShape.ConeTrunk_Shape.heigth, 0.0f);
 		if (Emitter.EmitterShape.ConeTrunk_Shape.Bottom_Circle.r > 0.0f)
 			BasePoint = Emitter.EmitterShape.ConeTrunk_Shape.Bottom_Circle.RandomPointInside(RandGen);
 		if (Emitter.EmitterShape.ConeTrunk_Shape.Upper_Circle.r > 0.0f)

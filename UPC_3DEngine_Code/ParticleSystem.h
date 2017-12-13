@@ -232,8 +232,8 @@ struct ParticleMeshData								//Very similar to MeshDataResource, but we copy i
 	unsigned int* indices = nullptr;
 	unsigned int id_normals = 0;					// ID in VRAM
 	float* normals = nullptr;
-	unsigned int id_texture_coords = 0;				// ID in VRAM
-	float* texture_coords = nullptr;
+	//unsigned int id_texture_coords = 0;				// ID in VRAM
+	//float* texture_coords = nullptr;
 };
 
 struct ParticleTextureData
@@ -269,7 +269,7 @@ public:
 	bool PostUpdate(float dt);
 	bool CleanUp();
 
-	void SetMeshResource(ParticleMeshData& MeshData);//Set Mesh resource to use
+	//void SetMeshResource(ParticleMeshData& MeshData);//Set Mesh resource to use
 	void SetMeshResourcePlane();					//Delete actual mesh + load a plane
 	void SetTextureResource(unsigned int ID, unsigned int width, unsigned int heigth);
 
@@ -293,6 +293,7 @@ public:
 
 private:
 	void GenerateMeshResourceBuffers();
+	void GenerateUVBuffers();
 	void GenerateTexturesUVs();
 	void DrawTexturePreview();
 	void DrawColorSelector();
@@ -313,7 +314,8 @@ private:
 	ParticleState FinalState;
 	ParticleEmitter Emitter;
 	ParticleTextureData TextureData;
-	std::vector<float4> TexturesUV;		//UV0 = X-Y		UV1 = Z-W
+	std::vector<float4> TexturesUV_Data;		//UV0 = X-Y		UV1 = Z-W
+	std::vector<unsigned int> TexturesUV_ID;	//IDs
 
 	float NextParticleTime = 0.0f;
 

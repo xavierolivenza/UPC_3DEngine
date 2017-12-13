@@ -107,11 +107,13 @@ void ComponentParticleSystem::DrawComponentImGui()
 			FileType = Emitter_Resource;
 			PopUpLoadOpen = true;
 		}
+		/*
 		if (ImGui::Button("Load Mesh", ImVec2(120, 30)))
 		{
 			FileType = MeshResource;
 			PopUpLoadOpen = true;
 		}
+		*/
 		if (ImGui::Button("Load Texture", ImVec2(120, 30)))
 		{
 			FileType = Texture_Resource;
@@ -122,6 +124,7 @@ void ComponentParticleSystem::DrawComponentImGui()
 
 void ComponentParticleSystem::SetMeshResource(uint uuid)
 {
+	/*
 	ResourceMesh* resourceMesh = (ResourceMesh*)App->resources->Get(uuid);
 	if (resourceMesh != nullptr)
 	{
@@ -143,6 +146,7 @@ void ComponentParticleSystem::SetMeshResource(uint uuid)
 		memcpy(ParticleMesh.texture_coords, resourceMesh->SimpleMeshDataStruct.texture_coords, sizeof(float) * ParticleMesh.num_vertices * 3);
 		PartSystem->SetMeshResource(ParticleMesh);
 	}
+	*/
 }
 
 void ComponentParticleSystem::SetTextureResource(uint uuid)
