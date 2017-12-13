@@ -1,3 +1,4 @@
+#include <algorithm>
 #include "Timer.h"
 #include "ParticleSystem.h"
 #include "imgui-1.51\imgui.h"
@@ -368,7 +369,7 @@ void Particle::DrawParticle()
 	glTexCoordPointer(3, GL_FLOAT, 0, NULL);
 
 	glPushMatrix();
-	float4x4 ParticleMatrix = float4x4::FromTRS(Properties.Position, Properties.Rotation, Properties.Scale).Transposed();
+	float4x4 ParticleMatrix = float4x4::FromTRS(Properties.Position, Properties.Rotation, Properties.Scale * Properties.Size).Transposed();
 	glMultMatrixf(ParticleMatrix.ptr());
 
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, Mesh.id_indices);
@@ -540,7 +541,20 @@ bool ParticleSystem::PreUpdate(float dt)
 
 	bool ret = true;
 	for (std::list<Particle*>::iterator item = Particles.begin(); item != Particles.cend() && ret == true; ++item)
+	{
+		(*item)->CameraDistance = (CameraPosition - (*item)->Properties.Position).Length();
 		ret = (*item)->PreUpdate(dt);
+	}
+
+
+	//Particles.sort([](const ipair & a, const ipair & b) { return a.first < b.first; });
+
+
+
+	//Particles.sort();
+
+	//if (Particles.size() > 0) std::sort(Particles.begin(), Particles.end());
+
 	return ret;
 }
 

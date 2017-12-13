@@ -148,7 +148,7 @@ struct ParticleState
 {
 	float3 force = float3(0.0f, -9.81f, 0.0f);		//Force that effects that particle
 	float3 forceVariation = float3(0.0f, 0.0f, 0.0f);//Force that effects that particle variation
-	float Size = 0.0f;
+	float Size = 1.0f;
 	float SizeVariation = 0.0f;
 	float4 RGBATint = float4::one;					//Particle Texture tint
 	float4 RGBATintVariation = float4::zero;
@@ -166,7 +166,7 @@ struct ParticleState
 struct ParticleAssignedState
 {
 	float3 force = float3::zero;					//Gravity that affects that particle
-	float Size = 0.0f;
+	float Size = 1.0f;
 	float4 RGBATint = float4::one;					//Particle Texture tint
 };
 
@@ -177,7 +177,7 @@ struct ParticleProperties
 	float3 Position = float3::zero;					//Particle Actual Position
 	Quat Rotation = Quat::identity;					//Particle Actual Rotation
 	float3 Scale = float3::one;						//Particle Actual Scale
-	float Size = 0.0f;								//Scale Multiplicator to modify
+	float Size = 1.0f;								//Scale Multiplicator to modify
 	float3 Speed = float3::zero;					//Particle Speed
 	float3 EmissionDirection = float3::zero;		//Particle Emission Direction
 	float3 force = float3::zero;					//Force that effects that particle
@@ -202,6 +202,11 @@ public:
 
 	void DrawParticle();
 
+	bool operator<(Particle& other1)
+	{
+		return this->CameraDistance > other1.CameraDistance;
+	}
+	
 private:
 	void SetAssignedStateFromVariables(ParticleAssignedState& AState, const ParticleState& State);
 	void CalculateStatesInterpolation();
@@ -216,6 +221,7 @@ public:
 	ParticleAssignedState InitialState;				//Particle Initial State Properties with no variations, all are final values (calculated from ParticleState +- Var)
 	ParticleAssignedState FinalState;				//Particle Final State Properties with no variations, all are final values (calculated from ParticleState +- Var)
 	bool MeshChanged = false;
+	float CameraDistance = 0.0f;
 
 private:
 	bool ToDelete = false;
@@ -316,7 +322,7 @@ public:
 
 private:
 	ParticleMeshData ParticleMesh;
-	std::list<Particle*> Particles; //Should change to list
+	std::list<Particle*> Particles;				//Particles created
 	ParticleState InitialState;
 	ParticleState FinalState;
 	ParticleEmitter Emitter;
