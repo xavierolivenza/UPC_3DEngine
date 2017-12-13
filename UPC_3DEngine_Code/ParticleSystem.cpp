@@ -362,6 +362,11 @@ void Particle::DrawParticle()
 	}
 	*/
 
+	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+	unsigned int ID = ParentParticleSystem->GetTextureID(Properties.LifetimeMax, Properties.LifetimeActual);
+	glBindBuffer(GL_ARRAY_BUFFER, ID);
+	glTexCoordPointer(3, GL_FLOAT, 0, NULL);
+
 	glPushMatrix();
 	float4x4 ParticleMatrix = float4x4::FromTRS(Properties.Position, Properties.Rotation, Properties.Scale).Transposed();
 	glMultMatrixf(ParticleMatrix.ptr());
@@ -743,6 +748,12 @@ void ParticleSystem::SetCameraPosToFollow(float3 position)
 	CameraPosition = position;
 }
 
+unsigned int ParticleSystem::GetTextureID(float MaxParticleLife, float time)
+{
+	unsigned int ID = (unsigned int)(time / (MaxParticleLife / (float)numberOfFrames));
+	return TexturesUV_ID[CLAMP(ID, 0, TexturesUV_ID.size() - 1)];
+}
+
 void ParticleSystem::GenerateMeshResourceBuffers()
 {
 	// Vertices Buffer
@@ -768,26 +779,28 @@ void ParticleSystem::GenerateUVBuffers()
 	for (std::vector<unsigned int>::iterator item = TexturesUV_ID.begin(); item != TexturesUV_ID.cend(); ++item)
 		if (*item > 0) glDeleteBuffers(1, &(*item));
 	TexturesUV_ID.clear();
+	//for (std::vector<float*>::iterator item = TexturesUV_Data_ptr.begin(); item != TexturesUV_Data_ptr.cend(); ++item)
+	//	RELEASE_ARRAY(*item);
+	//TexturesUV_Data_ptr.clear();
 
 	for (unsigned int i = 0; i < columns * rows; i++)
 	{
 		unsigned int NewID = 0;
 
-		/*
-		float* texture_coords = new float[ParticleMesh.num_vertices * 3];
+		//float* texture_coords_ptr = new float[ParticleMesh.num_vertices * 3];
 		float texture_coords[] =
 		{
-			0.0f, 1.0f, 0.0f,
-			1.0f, 1.0f, 0.0f,
-			0.0f, 0.0f, 0.0f,
-			1.0f, 0.0f, 0.0f
+			TexturesUV_Data[i].z, TexturesUV_Data[i].y, 0.0f,
+			TexturesUV_Data[i].z, TexturesUV_Data[i].w, 0.0f,
+			TexturesUV_Data[i].x, TexturesUV_Data[i].y, 0.0f,
+			TexturesUV_Data[i].x, TexturesUV_Data[i].w, 0.0f
 		};
-		memcpy(ParticleMesh.texture_coords, texture_coords, sizeof(float) * ParticleMesh.num_vertices * 3);
+		//memcpy(texture_coords_ptr, texture_coords, sizeof(float) * ParticleMesh.num_vertices * 3);
+		//TexturesUV_Data_ptr.push_back(texture_coords_ptr);
 
 		glGenBuffers(1, (GLuint*)&NewID);
 		glBindBuffer(GL_ARRAY_BUFFER, NewID);
 		glBufferData(GL_ARRAY_BUFFER, sizeof(float) * ParticleMesh.num_indices * 3, texture_coords, GL_STATIC_DRAW);
-		*/
 
 		TexturesUV_ID.push_back(NewID);
 	}

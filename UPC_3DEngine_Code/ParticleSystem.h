@@ -53,6 +53,11 @@
 	}                       \
 }
 
+#ifdef CLAMP
+#undef CLAMP
+#endif
+#define CLAMP(n,min,max) ((n <= min) ? n=min : (n >= max) ? n=max : n=n)
+
 #define LERP(v0,v1,time) ( v0 + time * (v1 - v0))
 
 #define DEBUG_THICKNESS 4.0f
@@ -291,6 +296,8 @@ public:
 
 	void SetCameraPosToFollow(float3 position);		//Set Camera position which the billboards will face
 
+	unsigned int GetTextureID(float MaxParticleLife, float time);
+
 private:
 	void GenerateMeshResourceBuffers();
 	void GenerateUVBuffers();
@@ -315,6 +322,7 @@ private:
 	ParticleEmitter Emitter;
 	ParticleTextureData TextureData;
 	std::vector<float4> TexturesUV_Data;		//UV0 = X-Y		UV1 = Z-W
+	//std::vector<float*> TexturesUV_Data_ptr;
 	std::vector<unsigned int> TexturesUV_ID;	//IDs
 
 	float NextParticleTime = 0.0f;
