@@ -73,6 +73,27 @@ void ParticleEmitter::SetTransform(const float4x4& transform)
 	Transform = transform;
 }
 
+void ParticleEmitter::GetPosition(float3 & pos)
+{
+	Quat rotation = Quat::identity;
+	float3 scale = float3::zero;
+	Transform.Transposed().Decompose(pos, rotation, scale);
+}
+
+void ParticleEmitter::GetRotation(Quat & rot)
+{
+	float3 position = float3::zero;
+	float3 scale = float3::zero;
+	Transform.Transposed().Decompose(position, rot, scale);
+}
+
+void ParticleEmitter::GetScale(float3 & sca)
+{
+	float3 position = float3::zero;
+	Quat rotation = Quat::identity;
+	Transform.Transposed().Decompose(position, rotation, sca);
+}
+
 void ParticleEmitter::DrawSphere(const Sphere& shape)
 {
 	glLineWidth(DEBUG_THICKNESS);
@@ -236,6 +257,7 @@ Particle::Particle(ParticleSystem* parent, const ParticleState& Initial, const P
 	SetAssignedStateFromVariables(FinalState, Final);
 	Properties.Speed = Speed;
 	Properties.LifetimeMax = LifetimeMax;
+	parent->Emitter.GetPosition(Properties.Position);
 }
 
 Particle::~Particle()
@@ -523,6 +545,7 @@ bool ParticleSystem::Update(float dt)
 	if (ShowEmitterBoundBox) DebugDrawEmitterAABB();
 
 	Emitter.EmissionDuration += dt;
+
 	/*
 	float OneParticleEach = 1.0f / (float)Emitter.SpawnRate;
 	if (Emitter.EmissionDuration >= (Emitter.ParticleNumber * OneParticleEach))
@@ -959,7 +982,14 @@ bool ParticleSystem::CreateParticle()
 		Direction = Emitter.EmitterShape.Circle_Shape.GetPoint(angleRadians);
 		break;
 	}
-	Particle* NewParticle = new Particle(this, InitialState, FinalState, Direction.Normalized() * (Emitter.Speed + RandGen.Float(-Emitter.SpeedVariation, Emitter.SpeedVariation)), Emitter.Lifetime + RandGen.Float(-Emitter.LifetimeVariation, Emitter.LifetimeVariation));
+
+	Quat Rotation = Quat::identity;
+	Emitter.GetRotation(Rotation);
+	Quat Rot = Rotation * Quat(Direction, 1.0f) *Rotation.Conjugated();
+	Direction = float3(Rot.x, Rot.y, Rot.z);
+
+	Particle* NewParticle = new Particle(this, InitialState, FinalState, Direction * (Emitter.Speed + RandGen.Float(-Emitter.SpeedVariation, Emitter.SpeedVariation)), Emitter.Lifetime + RandGen.Float(-Emitter.LifetimeVariation, Emitter.LifetimeVariation));
+	//Particle* NewParticle = new Particle(this, InitialState, FinalState, Direction.Normalized() * (Emitter.Speed + RandGen.Float(-Emitter.SpeedVariation, Emitter.SpeedVariation)), Emitter.Lifetime + RandGen.Float(-Emitter.LifetimeVariation, Emitter.LifetimeVariation));
 	Particles.push_back(NewParticle);
 	return true;
 }

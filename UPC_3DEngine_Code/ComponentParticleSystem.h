@@ -3,7 +3,6 @@
 
 #include "Component.h"
 
-//class ResourceMesh;
 class ParticleSystem;
 class ResourceTexture;
 

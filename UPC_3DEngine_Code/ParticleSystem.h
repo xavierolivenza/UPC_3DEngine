@@ -80,6 +80,10 @@ public:
 
 	void SetTransform(const float4x4& transform);
 
+	void GetPosition(float3& pos);
+	void GetRotation(Quat& rot);
+	void GetScale(float3& sca);
+
 private:
 	void DrawSphere(const Sphere& shape);
 	void DrawSemiSphere(const Sphere& shape);
