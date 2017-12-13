@@ -252,12 +252,19 @@ void ComponentParticleSystem::ImGuiLoadTexturePopUp()
 
 void ComponentParticleSystem::ImGuiLoadParticlePopUp()
 {
-
+	ParticleState InitialState;
+	//TODO load resource
+	PartSystem->SetInitialStateResource(InitialState);
+	ParticleState FinalState;
+	//TODO load resource
+	PartSystem->SetFinalStateResource(FinalState);
 }
 
 void ComponentParticleSystem::ImGuiLoadEmitterPopUp()
 {
-
+	ParticleEmitter Emitter;
+	//TODO load resource
+	PartSystem->SetEmitterResource(Emitter);
 }
 
 void ComponentParticleSystem::ImGuiLoadMeshPopUp()
@@ -291,6 +298,23 @@ void ComponentParticleSystem::ImGuiSavePopUp()
 		}
 		ImGui::EndPopup();
 	}
+}
+
+void ComponentParticleSystem::ImGuiSaveParticlePopUp()
+{
+	ParticleState InitialState;
+	PartSystem->GetInitialState(InitialState);
+	//TODO save resource
+	ParticleState FinalState;
+	PartSystem->GetFinalState(FinalState);
+	//TODO save resource
+}
+
+void ComponentParticleSystem::ImGuiSaveEmitterPopUp()
+{
+	ParticleEmitter Emitter;
+	PartSystem->GetEmitter(Emitter);
+	//TODO save resource
 }
 
 void ComponentParticleSystem::DrawDirectory(const char * directory)
