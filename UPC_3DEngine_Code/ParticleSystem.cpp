@@ -509,13 +509,10 @@ ParticleSystem::~ParticleSystem()
 bool ParticleSystem::PreUpdate(float dt)
 {
 	if (GenerateBuffers)
-	{
 		GenerateMeshResourceBuffers();
-		GenerateBuffers = false;
-	}
 
 	bool ret = true;
-	for (std::vector<Particle*>::iterator item = Particles.begin(); item != Particles.cend() && ret == true; ++item)
+	for (std::list<Particle*>::iterator item = Particles.begin(); item != Particles.cend() && ret == true; ++item)
 		ret = (*item)->PreUpdate(dt);
 	return ret;
 }
@@ -526,14 +523,23 @@ bool ParticleSystem::Update(float dt)
 	if (ShowEmitterBoundBox) DebugDrawEmitterAABB();
 
 	Emitter.EmissionDuration += dt;
+	/*
 	float OneParticleEach = 1.0f / (float)Emitter.SpawnRate;
 	if (Emitter.EmissionDuration >= (Emitter.ParticleNumber * OneParticleEach))
 	{
 		CreateParticle();
 		Emitter.ParticleNumber++;
 	}
+	*/
+
+	if ((Emitter.SpawnRate > 0) && (NextParticleTime < Emitter.EmissionDuration))
+	{
+		CreateParticle();
+		NextParticleTime = Emitter.EmissionDuration + (1.0f / (float)Emitter.SpawnRate);
+	}
+
 	bool ret = true;
-	for (std::vector<Particle*>::iterator item = Particles.begin(); item != Particles.cend() && ret == true; ++item)
+	for (std::list<Particle*>::iterator item = Particles.begin(); item != Particles.cend() && ret == true; ++item)
 		ret = (*item)->Update(dt);
 	return ret;
 }
@@ -541,7 +547,7 @@ bool ParticleSystem::Update(float dt)
 bool ParticleSystem::PostUpdate(float dt)
 {
 	bool ret = true;
-	for (std::vector<Particle*>::iterator item = Particles.begin(); item != Particles.cend() && ret == true; ++item)
+	for (std::list<Particle*>::iterator item = Particles.begin(); item != Particles.cend() && ret == true; ++item)
 	{
 		ret = (*item)->PostUpdate(dt);
 		if ((*item)->isDead())
@@ -558,7 +564,7 @@ bool ParticleSystem::PostUpdate(float dt)
 
 bool ParticleSystem::CleanUp()
 {
-	for (std::vector<Particle*>::iterator item = Particles.begin(); item != Particles.cend(); ++item)
+	for (std::list<Particle*>::iterator item = Particles.begin(); item != Particles.cend(); ++item)
 		RELEASE(*item);
 	Particles.clear();
 	return true;
@@ -606,7 +612,7 @@ void ParticleSystem::SetMeshResourcePlane()
 	};
 	memcpy(ParticleMesh.texture_coords, texture_coords, sizeof(float) * ParticleMesh.num_vertices * 3);
 	GenerateBuffers = true;
-	for (std::vector<Particle*>::iterator item = Particles.begin(); item != Particles.cend(); ++item) (*item)->MeshChanged = true;
+	for (std::list<Particle*>::iterator item = Particles.begin(); item != Particles.cend(); ++item) (*item)->MeshChanged = true;
 }
 
 void ParticleSystem::SetTextureResource(unsigned int ID, unsigned int width, unsigned int heigth)
@@ -709,7 +715,8 @@ void ParticleSystem::GenerateMeshResourceBuffers()
 	glGenBuffers(1, (GLuint*)&ParticleMesh.id_texture_coords);
 	glBindBuffer(GL_ARRAY_BUFFER, ParticleMesh.id_texture_coords);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * ParticleMesh.num_indices * 3, ParticleMesh.texture_coords, GL_STATIC_DRAW);
-	for (std::vector<Particle*>::iterator item = Particles.begin(); item != Particles.cend(); ++item) (*item)->MeshChanged = false;
+	for (std::list<Particle*>::iterator item = Particles.begin(); item != Particles.cend(); ++item) (*item)->MeshChanged = false;
+	GenerateBuffers = false;
 }
 
 void ParticleSystem::GenerateTexturesUVs()
@@ -890,7 +897,7 @@ void ParticleSystem::DrawEmitterOptions()
 	ImGui::SliderFloat("Preview Initial-Final", &Emitter.PreviewState, 0.0f, 1.0f);
 	ImGui::PopItemWidth();
 	ImGui::PushItemWidth(80);
-	ImGui::SliderInt("Particles emitted per second", (int*)&Emitter.SpawnRate, 0, 500);
+	ImGui::SliderInt("Particles emitted per second", (int*)&Emitter.SpawnRate, 0, 50);
 	ImGui::SliderFloat("+-##Lifetime", &Emitter.Lifetime, 0.0f, 100.0f);
 	ImGui::SameLine();
 	ImGui::SliderFloat("Lifetime +- Var##LifetimeVariation", &Emitter.LifetimeVariation, 0.0f, 100.0f);

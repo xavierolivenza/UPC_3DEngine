@@ -2,6 +2,7 @@
 #define __ParticleSystem_H__
 
 #include <vector>
+#include <list>
 #include "MathGeoLib\Math\float2.h"
 #include "MathGeoLib\Math\float3.h"
 #include "MathGeoLib\Math\float4.h"
@@ -299,12 +300,14 @@ public:
 
 private:
 	ParticleMeshData ParticleMesh;
-	std::vector<Particle*> Particles; //Should change to list
+	std::list<Particle*> Particles; //Should change to list
 	ParticleState InitialState;
 	ParticleState FinalState;
 	ParticleEmitter Emitter;
 	ParticleTextureData TextureData;
 	std::vector<float4> TexturesUV;		//UV0 = X-Y		UV1 = Z-W
+
+	float NextParticleTime = 0.0f;
 
 	int columns = 1;
 	int rows = 1;
