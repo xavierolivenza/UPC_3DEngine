@@ -937,8 +937,12 @@ bool ParticleSystem::CreateParticle()
 		break;
 	case 2: //EmitterType_Cone
 	{
-		float3 BasePoint = Emitter.EmitterShape.ConeTrunk_Shape.Bottom_Circle.RandomPointInside(RandGen);
-		float3 TopPoint = (Emitter.EmitterShape.ConeTrunk_Shape.Upper_Circle.r * BasePoint) / Emitter.EmitterShape.ConeTrunk_Shape.Bottom_Circle.r;
+		float3 BasePoint = float3::zero;
+		float3 TopPoint = float3::zero;
+		if (Emitter.EmitterShape.ConeTrunk_Shape.Bottom_Circle.r > 0.0f)
+			BasePoint = Emitter.EmitterShape.ConeTrunk_Shape.Bottom_Circle.RandomPointInside(RandGen);
+		if (Emitter.EmitterShape.ConeTrunk_Shape.Upper_Circle.r > 0.0f)
+			TopPoint = (Emitter.EmitterShape.ConeTrunk_Shape.Upper_Circle.r * BasePoint) / Emitter.EmitterShape.ConeTrunk_Shape.Bottom_Circle.r;
 		TopPoint.y = Emitter.EmitterShape.ConeTrunk_Shape.heigth;
 		Direction = TopPoint - BasePoint;
 		break;
