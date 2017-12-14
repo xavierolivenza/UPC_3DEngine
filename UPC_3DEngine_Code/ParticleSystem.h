@@ -124,7 +124,7 @@ public:
 		EmitterType_Cone,
 		EmitterType_Box,
 		EmitterType_Circle
-	} Type = EmitterType_Box;
+	} Type = EmitterType_Cone;
 	enum
 	{
 		Null,

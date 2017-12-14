@@ -64,6 +64,7 @@ void ParticleEmitter::ResetEmitterValues()
 	{
 	case EmitterType_Sphere:
 	case EmitterType_SemiSphere:
+		EmitterShape.Sphere_Shape.pos = float3::zero;
 		EmitterShape.Sphere_Shape.r = 1.0f;
 		break;
 	case EmitterType_Cone:
