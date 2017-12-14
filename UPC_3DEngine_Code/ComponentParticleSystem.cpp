@@ -268,8 +268,8 @@ void ComponentParticleSystem::ImGuiLoadParticlePopUp()
 	if (Loaded) parsonjson->LoadParticleStates(InitialState, FinalState);
 	RELEASE(parsonjson);
 
-	//PartSystem->SetInitialStateResource(InitialState);
-	//PartSystem->SetFinalStateResource(FinalState);
+	PartSystem->SetInitialStateResource(InitialState);
+	PartSystem->SetFinalStateResource(FinalState);
 }
 
 void ComponentParticleSystem::ImGuiLoadEmitterPopUp()
@@ -285,7 +285,7 @@ void ComponentParticleSystem::ImGuiLoadEmitterPopUp()
 	if (Meta) parsonjson->LoadParticleEmitter(Emitter);
 	RELEASE(parsonjson);
 
-	//PartSystem->SetEmitterResource(Emitter);
+	PartSystem->SetEmitterResource(Emitter);
 }
 
 void ComponentParticleSystem::ImGuiLoadMeshPopUp()

@@ -205,14 +205,14 @@ bool ParsonJSON::SaveParticleStates(const ParticleState* stateI, const ParticleS
 		if (i == 0)
 		{
 			State = stateI;
-			json_object_set_value(root_object, "initial_state", json_value_init_object());
-			conf = json_object_get_object(root_object, "initial_state");
+			json_object_set_value(file_conf, "initial_state", json_value_init_object());
+			conf = json_object_get_object(file_conf, "initial_state");
 		}
 		else
 		{
 			State = stateF;
-			json_object_set_value(root_object, "final_state", json_value_init_object());
-			conf = json_object_get_object(root_object, "final_state");
+			json_object_set_value(file_conf, "final_state", json_value_init_object());
+			conf = json_object_get_object(file_conf, "final_state");
 		}
 		SetFloat3(conf, "force", State->force);
 		SetFloat3(conf, "forceVariation", State->forceVariation);
@@ -236,6 +236,35 @@ bool ParsonJSON::SaveParticleStates(const ParticleState* stateI, const ParticleS
 
 bool ParsonJSON::LoadParticleStates(ParticleState& stateI, ParticleState& stateF) const
 {
+	JSON_Object* file_conf = nullptr;
+	file_conf = json_object_get_object(root_object, "particlestate");
+
+	ParticleState& State = stateI;
+	JSON_Object* conf = json_object_get_object(file_conf, "initial_state");
+	for (uint i = 0; i < 2; i++)
+	{
+		if (i > 0)
+		{																																																																																																																																																																																																																																																												
+			State = stateF;
+			conf = json_object_get_object(file_conf, "initial_state");
+		}
+
+		State.force = GetFloat3(conf, "force");
+		State.forceVariation = GetFloat3(conf, "forceVariation");
+		State.Size = GetFloat(conf, "Size");
+		State.SizeVariation = GetFloat(conf, "SizeVariation");
+		State.RGBATint = GetFloat4(conf, "RGBATint");
+		State.RGBATintVariation = GetFloat4(conf, "RGBATintVariation");
+		State.alpha_preview = GetBool(conf, "alpha_preview");
+		State.alpha_half_preview = GetBool(conf, "alpha_half_preview");
+		State.options_menu = GetBool(conf, "options_menu");
+		State.alpha = GetBool(conf, "alpha");
+		State.alpha_bar = GetBool(conf, "alpha_bar");
+		State.side_preview = GetBool(conf, "side_preview");
+		State.inputs_mode = GetUInt(conf, "inputs_mode");
+		State.picker_mode = GetUInt(conf, "picker_mode");
+	}
+
 	return true;
 }
 
@@ -265,12 +294,71 @@ bool ParsonJSON::SaveParticleEmitter(const ParticleEmitter* emitter) const
 	SetUInt(conf, "Type", emitter->Type);
 	SetUInt(conf, "ParticleFacingOptions", emitter->ParticleFacingOptions);
 
+	switch (emitter->Type)
+	{
+	case 0: //EmitterType_Sphere
+	case 1: //EmitterType_SemiSphere
+		SetFloat(conf, "Radius", emitter->EmitterShape.Sphere_Shape.r);
+		break;
+	case 2: //EmitterType_Cone
+		SetFloat(conf, "URadius", emitter->EmitterShape.ConeTrunk_Shape.Upper_Circle.r);
+		SetFloat(conf, "BRadius", emitter->EmitterShape.ConeTrunk_Shape.Bottom_Circle.r);
+		SetFloat(conf, "heigth", emitter->EmitterShape.ConeTrunk_Shape.heigth);
+		break;
+	case 3: //EmitterType_Box
+		SetFloat3(conf, "EmitterAABB_min", emitter->EmitterShape.Box_Shape.minPoint);
+		SetFloat3(conf, "EmitterAABB_max", emitter->EmitterShape.Box_Shape.maxPoint);
+		break;
+	case 4: //EmitterType_Circle
+		SetFloat(conf, "Radius", emitter->EmitterShape.Circle_Shape.r);
+		break;
+	}
+
 	json_serialize_to_file(root_value, file_name.c_str());
 	return true;
 }
 
 bool ParsonJSON::LoadParticleEmitter(ParticleEmitter& emitter) const
 {
+	JSON_Object* conf = nullptr;
+	conf = json_object_get_object(root_object, "emitter");
+
+	emitter.EmitterLifeMax = GetFloat(conf, "EmitterLifeMax");
+	emitter.Transform = GetFloat4x4(conf, "Transform");
+	emitter.SpawnRate = GetUInt(conf, "SpawnRate");
+	emitter.PreviewState = GetFloat(conf, "PreviewState");
+	emitter.Lifetime = GetFloat(conf, "Lifetime");
+	emitter.LifetimeVariation = GetFloat(conf, "LifetimeVariation");
+	emitter.EmissionDuration = GetFloat(conf, "EmissionDuration");
+	emitter.Loop = GetBool(conf, "Loop");
+	emitter.Speed = GetFloat(conf, "Speed");
+	emitter.SpeedVariation = GetFloat(conf, "SpeedVariation");
+	emitter.BoundingBox.minPoint = GetFloat3(conf, "BoundingBox_min");
+	emitter.BoundingBox.maxPoint = GetFloat3(conf, "BoundingBox_max");
+	emitter.EmissionType = (ParticleEmitter::TypeEmission)GetUInt(conf, "EmissionType");
+	emitter.Type = (ParticleEmitter::TypeEmitter)GetUInt(conf, "Type");
+	emitter.ParticleFacingOptions = (ParticleEmitter::TypeBillboard)GetUInt(conf, "ParticleFacingOptions");
+
+	switch (emitter.Type)
+	{
+	case 0: //EmitterType_Sphere
+	case 1: //EmitterType_SemiSphere
+		emitter.EmitterShape.Sphere_Shape.r = GetFloat(conf, "Radius");
+		break;
+	case 2: //EmitterType_Cone
+		emitter.EmitterShape.ConeTrunk_Shape.Upper_Circle.r = GetFloat(conf, "URadius");
+		emitter.EmitterShape.ConeTrunk_Shape.Bottom_Circle.r = GetFloat(conf, "BRadius");
+		emitter.EmitterShape.ConeTrunk_Shape.heigth = GetFloat(conf, "heigth");
+		break;
+	case 3: //EmitterType_Box
+		emitter.EmitterShape.Box_Shape.minPoint = GetFloat3(conf, "EmitterAABB_min");
+		emitter.EmitterShape.Box_Shape.maxPoint = GetFloat3(conf, "EmitterAABB_max");
+		break;
+	case 4: //EmitterType_Circle
+		emitter.EmitterShape.Circle_Shape.r = GetFloat(conf, "Radius");
+		break;
+	}
+
 	return true;
 }
 
