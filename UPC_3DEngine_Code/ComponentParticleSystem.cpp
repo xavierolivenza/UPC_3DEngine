@@ -256,36 +256,36 @@ void ComponentParticleSystem::ImGuiLoadTexturePopUp()
 
 void ComponentParticleSystem::ImGuiLoadParticlePopUp()
 {
-	/*
 	ParticleState InitialState;
 	ParticleState FinalState;
 
-	const char* filepath_name = "";
+	size_t bar_pos = FileToLoad.rfind("\\") + 1;
+	size_t dot_pos = FileToLoad.rfind(".");
+	FileToLoadName = FileToLoad.substr(0, dot_pos);
 
-	ParsonJSON* parsonjson = new ParsonJSON(filepath_name, false, false, false);
-	bool Meta = parsonjson->Init();
-	if (Meta) parsonjson->LoadParticleStates(InitialState, FinalState);
+	ParsonJSON* parsonjson = new ParsonJSON(FileToLoadName.c_str(), true, false, false);
+	bool Loaded = parsonjson->Init();
+	if (Loaded) parsonjson->LoadParticleStates(InitialState, FinalState);
 	RELEASE(parsonjson);
 
-	PartSystem->SetInitialStateResource(InitialState);
-	PartSystem->SetFinalStateResource(FinalState);
-	*/
+	//PartSystem->SetInitialStateResource(InitialState);
+	//PartSystem->SetFinalStateResource(FinalState);
 }
 
 void ComponentParticleSystem::ImGuiLoadEmitterPopUp()
 {
-	/*
 	ParticleEmitter Emitter;
 
-	const char* filepath_name = "";
+	size_t bar_pos = FileToLoad.rfind("\\") + 1;
+	size_t dot_pos = FileToLoad.rfind(".");
+	FileToLoadName = FileToLoad.substr(0, dot_pos);
 
-	ParsonJSON* parsonjson = new ParsonJSON(filepath_name, false, false, false);
+	ParsonJSON* parsonjson = new ParsonJSON(FileToLoadName.c_str(), true, false, false);
 	bool Meta = parsonjson->Init();
 	if (Meta) parsonjson->LoadParticleEmitter(Emitter);
 	RELEASE(parsonjson);
 
-	PartSystem->SetEmitterResource(Emitter);
-	*/
+	//PartSystem->SetEmitterResource(Emitter);
 }
 
 void ComponentParticleSystem::ImGuiLoadMeshPopUp()
@@ -305,16 +305,21 @@ void ComponentParticleSystem::ImGuiSavePopUp()
 		case Particle_Resource: Str = "Save Particle"; break;
 		case Emitter_Resource: Str = "Save Emitter"; break;
 		}
-		char file_name[500] = "";
+		static char file_name[500] = "";
 		ImGui::InputText(Str, file_name, 500);
 		if (ImGui::Button("Ok", ImVec2(50, 20)))
 		{
-			switch (FileType)
+			if (strcmp(file_name, ""))
 			{
-			case Particle_Resource: ImGuiSaveParticlePopUp(); break;
-			case Emitter_Resource: ImGuiSaveEmitterPopUp(); break;
+				FileToSave = file_name;
+				switch (FileType)
+				{
+				case Particle_Resource: ImGuiSaveParticlePopUp(); break;
+				case Emitter_Resource: ImGuiSaveEmitterPopUp(); break;
+				}
 			}
 			PopUpSaveOpen = false;
+			FileToLoad.clear();
 		}
 		ImGui::SameLine();
 		if (ImGui::Button("Cancel", ImVec2(50, 20)))
@@ -327,34 +332,30 @@ void ComponentParticleSystem::ImGuiSavePopUp()
 
 void ComponentParticleSystem::ImGuiSaveParticlePopUp()
 {
-	/*
 	ParticleState InitialState;
-	PartSystem->GetInitialState(InitialState);
+	//PartSystem->GetInitialState(InitialState);
 	ParticleState FinalState;
-	PartSystem->GetFinalState(FinalState);
+	//PartSystem->GetFinalState(FinalState);
 
-	const char* filepath_name = "";
+	FileToSaveName = *App->importer->Get_ParticleSystem_Particles_path() + "\\" + FileToSave;
 
-	ParsonJSON* parsonjson = new ParsonJSON(filepath_name, false, false, false);
+	ParsonJSON* parsonjson = new ParsonJSON(FileToSaveName.c_str(), true, false, false);
 	bool Meta = parsonjson->Init();
 	if (Meta) parsonjson->SaveParticleStates(&InitialState, &FinalState);
 	RELEASE(parsonjson);
-	*/
 }
 
 void ComponentParticleSystem::ImGuiSaveEmitterPopUp()
 {
-	/*
 	ParticleEmitter Emitter;
-	PartSystem->GetEmitter(Emitter);
+	//PartSystem->GetEmitter(Emitter);
 
-	const char* filepath_name = "";
+	FileToSaveName = *App->importer->Get_ParticleSystem_Particles_path() + "\\" + FileToSave;
 
-	ParsonJSON* parsonjson = new ParsonJSON(filepath_name, false, false, false);
+	ParsonJSON* parsonjson = new ParsonJSON(FileToSaveName.c_str(), true, false, false);
 	bool Meta = parsonjson->Init();
 	if (Meta) parsonjson->SaveParticleEmitter(&Emitter);
 	RELEASE(parsonjson);
-	*/
 }
 
 void ComponentParticleSystem::DrawDirectory(const char * directory)

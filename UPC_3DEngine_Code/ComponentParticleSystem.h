@@ -47,6 +47,8 @@ private:
 	bool PopUpSaveOpen = false;
 	std::string FileToLoad;
 	std::string FileToLoadName;
+	std::string FileToSave;
+	std::string FileToSaveName;
 	std::string DirectoryTemporalStr;
 
 	enum
