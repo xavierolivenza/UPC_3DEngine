@@ -218,8 +218,8 @@ bool ParsonJSON::SaveParticleStates(const ParticleState* stateI, const ParticleS
 		SetFloat3(conf, "forceVariation", State->forceVariation);
 		SetFloat(conf, "Size", State->Size);
 		SetFloat(conf, "SizeVariation", State->SizeVariation);
-		SetFloat4(conf, "forceVariation", State->RGBATint);
-		SetFloat4(conf, "forceVariation", State->RGBATintVariation);
+		SetFloat4(conf, "RGBATint", State->RGBATint);
+		SetFloat4(conf, "RGBATintVariation", State->RGBATintVariation);
 		SetBool(conf, "alpha_preview", State->alpha_preview);
 		SetBool(conf, "alpha_half_preview", State->alpha_half_preview);
 		SetBool(conf, "options_menu", State->options_menu);
@@ -239,30 +239,35 @@ bool ParsonJSON::LoadParticleStates(ParticleState& stateI, ParticleState& stateF
 	JSON_Object* file_conf = nullptr;
 	file_conf = json_object_get_object(root_object, "particlestate");
 
-	ParticleState& State = stateI;
-	JSON_Object* conf = json_object_get_object(file_conf, "initial_state");
+	ParticleState* State = nullptr;
+	JSON_Object* conf = nullptr;
 	for (uint i = 0; i < 2; i++)
 	{
-		if (i > 0)
-		{																																																																																																																																																																																																																																																												
-			State = stateF;
+		if (i == 0)
+		{
+			State = &stateI;
 			conf = json_object_get_object(file_conf, "initial_state");
 		}
+		else
+		{
+			State = &stateF;
+			conf = json_object_get_object(file_conf, "final_state");
+		}
 
-		State.force = GetFloat3(conf, "force");
-		State.forceVariation = GetFloat3(conf, "forceVariation");
-		State.Size = GetFloat(conf, "Size");
-		State.SizeVariation = GetFloat(conf, "SizeVariation");
-		State.RGBATint = GetFloat4(conf, "RGBATint");
-		State.RGBATintVariation = GetFloat4(conf, "RGBATintVariation");
-		State.alpha_preview = GetBool(conf, "alpha_preview");
-		State.alpha_half_preview = GetBool(conf, "alpha_half_preview");
-		State.options_menu = GetBool(conf, "options_menu");
-		State.alpha = GetBool(conf, "alpha");
-		State.alpha_bar = GetBool(conf, "alpha_bar");
-		State.side_preview = GetBool(conf, "side_preview");
-		State.inputs_mode = GetUInt(conf, "inputs_mode");
-		State.picker_mode = GetUInt(conf, "picker_mode");
+		State->force = GetFloat3(conf, "force");
+		State->forceVariation = GetFloat3(conf, "forceVariation");
+		State->Size = GetFloat(conf, "Size");
+		State->SizeVariation = GetFloat(conf, "SizeVariation");
+		State->RGBATint = GetFloat4(conf, "RGBATint");
+		State->RGBATintVariation = GetFloat4(conf, "RGBATintVariation");
+		State->alpha_preview = GetBool(conf, "alpha_preview");
+		State->alpha_half_preview = GetBool(conf, "alpha_half_preview");
+		State->options_menu = GetBool(conf, "options_menu");
+		State->alpha = GetBool(conf, "alpha");
+		State->alpha_bar = GetBool(conf, "alpha_bar");
+		State->side_preview = GetBool(conf, "side_preview");
+		State->inputs_mode = GetUInt(conf, "inputs_mode");
+		State->picker_mode = GetUInt(conf, "picker_mode");
 	}
 
 	return true;
