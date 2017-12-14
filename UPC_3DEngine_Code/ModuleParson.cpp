@@ -286,7 +286,6 @@ bool ParsonJSON::SaveParticleEmitter(const ParticleEmitter* emitter) const
 	SetFloat(conf, "EmitterLifeMax", emitter->EmitterLifeMax);
 	SetFloat4x4(conf, "Transform", emitter->Transform);
 	SetUInt(conf, "SpawnRate", emitter->SpawnRate);
-	SetFloat(conf, "PreviewState", emitter->PreviewState);
 	SetFloat(conf, "Lifetime", emitter->Lifetime);
 	SetFloat(conf, "LifetimeVariation", emitter->LifetimeVariation);
 	SetFloat(conf, "EmissionDuration", emitter->EmissionDuration);
@@ -331,7 +330,6 @@ bool ParsonJSON::LoadParticleEmitter(ParticleEmitter& emitter) const
 	emitter.EmitterLifeMax = GetFloat(conf, "EmitterLifeMax");
 	emitter.Transform = GetFloat4x4(conf, "Transform");
 	emitter.SpawnRate = GetUInt(conf, "SpawnRate");
-	emitter.PreviewState = GetFloat(conf, "PreviewState");
 	emitter.Lifetime = GetFloat(conf, "Lifetime");
 	emitter.LifetimeVariation = GetFloat(conf, "LifetimeVariation");
 	emitter.EmissionDuration = GetFloat(conf, "EmissionDuration");

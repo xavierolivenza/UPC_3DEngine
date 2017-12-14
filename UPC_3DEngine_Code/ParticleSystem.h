@@ -99,7 +99,6 @@ public:
 	float EmitterLife = 0.0f;						//Emitter Real Life
 	float4x4 Transform = float4x4::identity;
 	unsigned int SpawnRate = 2;						//How many particles are emitted every second
-	float PreviewState = 0.0f;						//Preview of the particle, 0 = initial state, 1 = final state
 	float Lifetime = 1.0f;							//Lifetime of emitted particles
 	float LifetimeVariation = 0.0f;					//Lifetime variation of emitted particles
 	float EmissionDuration = 0.0f;					//If loop is false, emission is played EmissionDuration
