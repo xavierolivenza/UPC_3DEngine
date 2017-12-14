@@ -551,8 +551,11 @@ ParticleSystem::~ParticleSystem()
 bool ParticleSystem::PreUpdate(float dt)
 {
 	if (GenerateBuffers)
+	{
 		GenerateMeshResourceBuffers();
-
+		GenerateTexturesUVs();
+	}
+	
 	bool ret = true;
 	for (std::list<Particle*>::iterator item = Particles.begin(); item != Particles.cend() && ret == true; ++item)
 	{
