@@ -5,6 +5,24 @@
 #include "Glew\include\glew.h"
 #include "MathGeoLib\Algorithm\Random\LCG.h"
 
+float ParticleSystem_Lerp(float v0, float v1, float time, float Maxtime)
+{
+	float Time = time / Maxtime;
+	return (1.0f - Time) * v0 + Time * v1;
+}
+
+float3 ParticleSystem_Lerp(float3 v0, float3 v1, float time, float Maxtime)
+{
+	float Time = time / Maxtime;
+	return (1.0f - Time) * v0 + Time * v1;
+}
+
+float4 ParticleSystem_Lerp(float4 v0, float4 v1, float time, float Maxtime)
+{
+	float Time = time / Maxtime;
+	return (1.0f - Time) * v0 + Time * v1;
+}
+
 ParticleEmitter::ParticleEmitter()
 {
 	BoundingBox.minPoint = float3(-0.5f, -0.5f, -0.5f);
@@ -403,15 +421,15 @@ void Particle::SetAssignedStateFromVariables(ParticleAssignedState& AState, cons
 	AState.RGBATint.w = State.RGBATint.w + RandGen.Float(-State.RGBATintVariation.w, State.RGBATintVariation.w);
 }
 
-void Particle::CalculateStatesInterpolation()
+inline void Particle::CalculateStatesInterpolation()
 {
 	CalculatePosition(Properties.LifetimeActual);
-	CalculateGravity(Properties.LifetimeActual);
-	CalculateSize(Properties.LifetimeActual);
-	CalculateColor(Properties.LifetimeActual);
+	CalculateGravity(Properties.LifetimeActual, Properties.LifetimeMax);
+	CalculateSize(Properties.LifetimeActual, Properties.LifetimeMax);
+	CalculateColor(Properties.LifetimeActual, Properties.LifetimeMax);
 }
 
-void Particle::CalculatePosition(float LifetimeFloat)
+inline void Particle::CalculatePosition(float LifetimeFloat)
 {
 	Properties.Speed += Properties.force * LifetimeFloat;
 	Properties.Position += Properties.Speed * LifetimeFloat;
@@ -429,24 +447,19 @@ void Particle::CalculatePosition(float LifetimeFloat)
 	*/
 }
 
-void Particle::CalculateGravity(float LifetimeFloat)
+inline void Particle::CalculateGravity(float LifetimeFloat, float MaxLifetimeFloat)
 {
-	Properties.force.x = LERP(InitialState.force.x, FinalState.force.x, LifetimeFloat);
-	Properties.force.y = LERP(InitialState.force.y, FinalState.force.y, LifetimeFloat);
-	Properties.force.z = LERP(InitialState.force.z, FinalState.force.z, LifetimeFloat);
+	Properties.force = ParticleSystem_Lerp(InitialState.force, FinalState.force, LifetimeFloat, MaxLifetimeFloat);
 }
 
-void Particle::CalculateSize(float LifetimeFloat)
+inline void Particle::CalculateSize(float LifetimeFloat, float MaxLifetimeFloat)
 {
-	Properties.Size = LERP(InitialState.Size, FinalState.Size, LifetimeFloat);
+	Properties.Size = ParticleSystem_Lerp(InitialState.Size, FinalState.Size, LifetimeFloat, MaxLifetimeFloat);
 }
 
-void Particle::CalculateColor(float LifetimeFloat)
+inline void Particle::CalculateColor(float LifetimeFloat, float MaxLifetimeFloat)
 {
-	Properties.RGBATint.x = LERP(InitialState.RGBATint.x, FinalState.RGBATint.x, LifetimeFloat);
-	Properties.RGBATint.y = LERP(InitialState.RGBATint.y, FinalState.RGBATint.y, LifetimeFloat);
-	Properties.RGBATint.z = LERP(InitialState.RGBATint.z, FinalState.RGBATint.z, LifetimeFloat);
-	Properties.RGBATint.w = LERP(InitialState.RGBATint.w, FinalState.RGBATint.w, LifetimeFloat);
+	Properties.RGBATint = ParticleSystem_Lerp(InitialState.RGBATint, FinalState.RGBATint, LifetimeFloat, MaxLifetimeFloat);
 }
 
 ParticleMeshData::ParticleMeshData()

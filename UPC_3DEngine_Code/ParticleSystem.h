@@ -58,8 +58,6 @@
 #endif
 #define CLAMP(n,min,max) ((n <= min) ? n=min : (n >= max) ? n=max : n=n)
 
-#define LERP(v0,v1,time) ( v0 + time * (v1 - v0))
-
 #define DEBUG_THICKNESS 4.0f
 #define DEBUG_COLOR_R 1.0f
 #define DEBUG_COLOR_G 1.0f
@@ -204,11 +202,11 @@ public:
 
 private:
 	void SetAssignedStateFromVariables(ParticleAssignedState& AState, const ParticleState& State);
-	void CalculateStatesInterpolation();
-	void CalculatePosition(float LifetimeFloat);
-	void CalculateGravity(float LifetimeFloat);
-	void CalculateSize(float LifetimeFloat);
-	void CalculateColor(float LifetimeFloat);
+	inline void CalculateStatesInterpolation();
+	inline void CalculatePosition(float LifetimeFloat);
+	inline void CalculateGravity(float LifetimeFloat, float MaxLifetimeFloat);
+	inline void CalculateSize(float LifetimeFloat, float MaxLifetimeFloat);
+	inline void CalculateColor(float LifetimeFloat, float MaxLifetimeFloat);
 
 public:
 	ParticleSystem* ParentParticleSystem = nullptr;
