@@ -356,6 +356,8 @@ void Particle::DrawParticle()
 
 	glDisable(GL_CULL_FACE);
 
+	glEnable(GL_NORMALIZE);
+
 	glEnable(GL_TEXTURE_2D);
 	glEnable(GL_BLEND);
 	if (ParentParticleSystem->TextureData.TextureID != 0)
@@ -399,6 +401,8 @@ void Particle::DrawParticle()
 	glBindTexture(GL_TEXTURE_2D, 0);
 	glDisable(GL_TEXTURE_2D);
 	glDisable(GL_BLEND);
+
+	glDisable(GL_NORMALIZE);
 
 	glDisableClientState(GL_VERTEX_ARRAY);
 	glDisableClientState(GL_NORMAL_ARRAY);
@@ -661,6 +665,16 @@ void ParticleSystem::SetMeshResourcePlane()
 		2, 3, 1
 	};
 	memcpy(ParticleMesh.indices, indices, sizeof(float) * ParticleMesh.num_indices);
+	//Normals
+	ParticleMesh.normals = new float[ParticleMesh.num_vertices * 3];
+	float normals[] =
+	{
+		0.0f, 0.0f, 1.0f,
+		0.0f, 0.0f, 1.0f,
+		0.0f, 0.0f, 1.0f,
+		0.0f, 0.0f, 1.0f
+	};
+	memcpy(ParticleMesh.normals, normals, sizeof(float) * ParticleMesh.num_vertices * 3);
 	// Texture coords
 	/*
 	ParticleMesh.texture_coords = new float[ParticleMesh.num_vertices * 3];
@@ -794,6 +808,10 @@ void ParticleSystem::GenerateMeshResourceBuffers()
 	glGenBuffers(1, (GLuint*)&ParticleMesh.id_indices);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ParticleMesh.id_indices);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * ParticleMesh.num_indices, ParticleMesh.indices, GL_STATIC_DRAW);
+	// Indices Buffer
+	glGenBuffers(1, (GLuint*)&ParticleMesh.id_normals);
+	glBindBuffer(GL_ARRAY_BUFFER, ParticleMesh.id_normals);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * ParticleMesh.num_vertices * 3, ParticleMesh.normals, GL_STATIC_DRAW);
 	// Texture coords Buffer
 	/*
 	glGenBuffers(1, (GLuint*)&ParticleMesh.id_texture_coords);
