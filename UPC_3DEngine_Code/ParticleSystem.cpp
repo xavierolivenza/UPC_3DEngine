@@ -559,8 +559,6 @@ bool ParticleSystem::PreUpdate(float dt)
 		ret = (*item)->PreUpdate(dt);
 	}
 
-	Particles.sort([](const Particle* a, const Particle* b) { return a->CameraDistance > b->CameraDistance; });
-
 	return ret;
 }
 
@@ -585,6 +583,14 @@ bool ParticleSystem::Update(float dt)
 		CreateParticle();
 		NextParticleTime = Emitter.EmissionDuration + (1.0f / (float)Emitter.SpawnRate);
 	}
+
+	//First time using Lambda operator, so i left a short explanation to don't forget what exactly is.
+	//[]->Lambda -> Shortcut to a function (or object that ca be called as a function, defined by operator ())
+	//Enables to bypass the creation of a function object, usefull to encapsulate short codes passed to algorithms.
+	//So we use lambda operator here to send to the algorithm sort of std::list, the max and min values to search,
+	//and the function used to compare values in the algorithm.
+	//This sort can be modified using > operator override, and changing the sort function used
+	Particles.sort([](const Particle* a, const Particle* b) { return a->CameraDistance > b->CameraDistance; });
 
 	bool ret = true;
 	for (std::list<Particle*>::iterator item = Particles.begin(); item != Particles.cend() && ret == true; ++item)
