@@ -308,6 +308,12 @@ void ModuleEngineUI::ImGuiDrawMenuBar()
 			TestCamera->CreateCameraComponent(true);
 			App->scene->AddChildToRoot(TestCamera);
 		}
+		if (ImGui::MenuItem("Create Particle System"))
+		{
+			GameObject* TestParticleSystem = new GameObject("Particle System", true, true);
+			TestParticleSystem->CreateParticleSystemComponent(true);
+			App->scene->AddChildToRoot(TestParticleSystem);
+		}
 		ImGui::EndMenu();
 	}
 	if (ImGui::BeginMenu("Help"))
