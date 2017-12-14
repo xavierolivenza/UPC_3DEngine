@@ -8,6 +8,8 @@
 #include "ResourceMesh.h"
 #include "ResourceTexture.h"
 
+#include "ParticleSystem.h"
+
 /*
 static int malloc_count;
 static void* counted_malloc(size_t size);
@@ -188,6 +190,47 @@ bool ParsonJSON::LoadResource(Resource& mesh)
 
 bool ParsonJSON::SaveParticleStates(const ParticleState* stateI, const ParticleState* stateF) const
 {
+	JSON_Object* file_conf = nullptr;
+
+	//If this entry does not exist, create it
+	if (json_object_get_object(root_object, "particlestate") == NULL)
+		json_object_set_value(root_object, "particlestate", json_value_init_object());
+	//Save
+	file_conf = json_object_get_object(root_object, "particlestate");
+
+	const ParticleState* State = nullptr;
+	JSON_Object* conf = nullptr;
+	for (uint i = 0; i < 2; i++)
+	{
+		if (i == 0)
+		{
+			State = stateI;
+			json_object_set_value(root_object, "initial_state", json_value_init_object());
+			conf = json_object_get_object(root_object, "initial_state");
+		}
+		else
+		{
+			State = stateF;
+			json_object_set_value(root_object, "final_state", json_value_init_object());
+			conf = json_object_get_object(root_object, "final_state");
+		}
+		SetFloat3(conf, "force", State->force);
+		SetFloat3(conf, "forceVariation", State->forceVariation);
+		SetFloat(conf, "Size", State->Size);
+		SetFloat(conf, "SizeVariation", State->SizeVariation);
+		SetFloat4(conf, "forceVariation", State->RGBATint);
+		SetFloat4(conf, "forceVariation", State->RGBATintVariation);
+		SetBool(conf, "alpha_preview", State->alpha_preview);
+		SetBool(conf, "alpha_half_preview", State->alpha_half_preview);
+		SetBool(conf, "options_menu", State->options_menu);
+		SetBool(conf, "alpha", State->alpha);
+		SetBool(conf, "alpha_bar", State->alpha_bar);
+		SetBool(conf, "side_preview", State->side_preview);
+		SetUInt(conf, "inputs_mode", State->inputs_mode);
+		SetUInt(conf, "picker_mode", State->picker_mode);
+	}
+
+	json_serialize_to_file(root_value, file_name.c_str());
 	return true;
 }
 
@@ -198,6 +241,31 @@ bool ParsonJSON::LoadParticleStates(ParticleState& stateI, ParticleState& stateF
 
 bool ParsonJSON::SaveParticleEmitter(const ParticleEmitter* emitter) const
 {
+	JSON_Object* conf = nullptr;
+
+	//If this entry does not exist, create it
+	if (json_object_get_object(root_object, "emitter") == NULL)
+		json_object_set_value(root_object, "emitter", json_value_init_object());
+	//Save
+	conf = json_object_get_object(root_object, "emitter");
+
+	SetFloat(conf, "EmitterLifeMax", emitter->EmitterLifeMax);
+	SetFloat4x4(conf, "Transform", emitter->Transform);
+	SetUInt(conf, "SpawnRate", emitter->SpawnRate);
+	SetFloat(conf, "PreviewState", emitter->PreviewState);
+	SetFloat(conf, "Lifetime", emitter->Lifetime);
+	SetFloat(conf, "LifetimeVariation", emitter->LifetimeVariation);
+	SetFloat(conf, "EmissionDuration", emitter->EmissionDuration);
+	SetBool(conf, "Loop", emitter->Loop);
+	SetFloat(conf, "Speed", emitter->Speed);
+	SetFloat(conf, "SpeedVariation", emitter->SpeedVariation);
+	SetFloat3(conf, "BoundingBox_min", emitter->BoundingBox.minPoint);
+	SetFloat3(conf, "BoundingBox_max", emitter->BoundingBox.maxPoint);
+	SetUInt(conf, "EmissionType", emitter->EmissionType);
+	SetUInt(conf, "Type", emitter->Type);
+	SetUInt(conf, "ParticleFacingOptions", emitter->ParticleFacingOptions);
+
+	json_serialize_to_file(root_value, file_name.c_str());
 	return true;
 }
 
@@ -283,6 +351,22 @@ float3 ParsonJSON::GetFloat3(JSON_Object* conf, const char* field, float3 defaul
 	return ret;
 }
 
+float4 ParsonJSON::GetFloat4(JSON_Object * conf, const char * field, float4 default) const
+{
+	float4 ret = float4::zero;
+	JSON_Object* float4_iterate = nullptr;
+	//If this entry does not exist, create it
+	if (json_object_get_object(conf, field) == NULL)
+		json_object_set_value(conf, field, json_value_init_object());
+	float4_iterate = json_object_get_object(conf, field);
+
+	ret.x = GetFloat(float4_iterate, "x", default.x);
+	ret.y = GetFloat(float4_iterate, "y", default.y);
+	ret.z = GetFloat(float4_iterate, "z", default.z);
+	ret.w = GetFloat(float4_iterate, "w", default.w);
+	return ret;
+}
+
 float4x4 ParsonJSON::GetFloat4x4(JSON_Object* conf, const char* field, float4x4 default) const
 {
 	float4x4 ret = float4x4::identity;
@@ -347,39 +431,39 @@ Color ParsonJSON::GetColor(JSON_Object* conf, const char* field, Color default) 
 	return ret;
 }
 
-bool ParsonJSON::SetInt(JSON_Object* conf, const char * field, int value)
+bool ParsonJSON::SetInt(JSON_Object* conf, const char * field, int value) const
 {
 	return json_object_set_number(conf, field, (double)value) == JSONSuccess;
 }
 
-bool ParsonJSON::SetUInt(JSON_Object* conf, const char * field, uint value)
+bool ParsonJSON::SetUInt(JSON_Object* conf, const char * field, uint value) const
 {
 	return json_object_set_number(conf, field, (double)value) == JSONSuccess;
 }
 
-bool ParsonJSON::SetFloat(JSON_Object* conf, const char * field, float value)
+bool ParsonJSON::SetFloat(JSON_Object* conf, const char * field, float value) const
 {
 	return json_object_set_number(conf, field, (double)value) == JSONSuccess;
 }
 
-bool ParsonJSON::SetDouble(JSON_Object* conf, const char * field, double value)
+bool ParsonJSON::SetDouble(JSON_Object* conf, const char * field, double value) const
 {
 	return json_object_set_number(conf, field, (double)value) == JSONSuccess;
 }
 
-bool ParsonJSON::SetBool(JSON_Object* conf, const char * field, bool value)
+bool ParsonJSON::SetBool(JSON_Object* conf, const char * field, bool value) const
 {
 	uint boolean = 0;
 	if(value) boolean = 1;
 	return json_object_set_boolean(conf, field, boolean) == JSONSuccess;
 }
 
-bool ParsonJSON::SetString(JSON_Object* conf, const char * field, const char* value)
+bool ParsonJSON::SetString(JSON_Object* conf, const char * field, const char* value) const
 {
 	return json_object_set_string(conf, field, value) == JSONSuccess;
 }
 
-bool ParsonJSON::SetFloat2(JSON_Object* conf, const char* field, float2 value)
+bool ParsonJSON::SetFloat2(JSON_Object* conf, const char* field, float2 value) const
 {
 	bool ret = true;
 	JSON_Object* float2_iterate = nullptr;
@@ -394,7 +478,7 @@ bool ParsonJSON::SetFloat2(JSON_Object* conf, const char* field, float2 value)
 	return ret;
 }
 
-bool ParsonJSON::SetFloat3(JSON_Object* conf, const char* field, float3 value)
+bool ParsonJSON::SetFloat3(JSON_Object* conf, const char* field, float3 value) const
 {
 	bool ret = true;
 	JSON_Object* float3_iterate = nullptr;
@@ -411,7 +495,26 @@ bool ParsonJSON::SetFloat3(JSON_Object* conf, const char* field, float3 value)
 	return ret;
 }
 
-bool ParsonJSON::SetFloat4x4(JSON_Object* conf, const char* field, float4x4 value)
+bool ParsonJSON::SetFloat4(JSON_Object * conf, const char * field, float4 value) const
+{
+	bool ret = true;
+	JSON_Object* float4_iterate = nullptr;
+	//If this entry does not exist, create it
+	if (json_object_get_object(conf, field) == NULL)
+		json_object_set_value(conf, field, json_value_init_object());
+	float4_iterate = json_object_get_object(conf, field);
+
+	ret = SetFloat(float4_iterate, "x", value.x);
+	if (!ret) return false;
+	ret = SetFloat(float4_iterate, "y", value.y);
+	if (!ret) return false;
+	ret = SetFloat(float4_iterate, "z", value.z);
+	if (!ret) return false;
+	ret = SetFloat(float4_iterate, "w", value.w);
+	return ret;
+}
+
+bool ParsonJSON::SetFloat4x4(JSON_Object* conf, const char* field, float4x4 value) const
 {
 	bool ret = true;
 	JSON_Object* float4x4_iterate = nullptr;
@@ -457,7 +560,7 @@ bool ParsonJSON::SetFloat4x4(JSON_Object* conf, const char* field, float4x4 valu
 	return ret;
 }
 
-bool ParsonJSON::SetQuat(JSON_Object* conf, const char* field, Quat value)
+bool ParsonJSON::SetQuat(JSON_Object* conf, const char* field, Quat value) const
 {
 	bool ret = true;
 	JSON_Object* quat_iterate = nullptr;
@@ -476,7 +579,7 @@ bool ParsonJSON::SetQuat(JSON_Object* conf, const char* field, Quat value)
 	return ret;
 }
 
-bool ParsonJSON::SetColor(JSON_Object* conf, const char* field, Color color)
+bool ParsonJSON::SetColor(JSON_Object* conf, const char* field, Color color) const
 {
 	bool ret = true;
 	JSON_Object* color_iterate = nullptr;

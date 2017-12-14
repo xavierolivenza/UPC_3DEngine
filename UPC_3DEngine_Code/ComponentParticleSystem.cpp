@@ -333,9 +333,9 @@ void ComponentParticleSystem::ImGuiSavePopUp()
 void ComponentParticleSystem::ImGuiSaveParticlePopUp()
 {
 	ParticleState InitialState;
-	//PartSystem->GetInitialState(InitialState);
+	PartSystem->GetInitialState(InitialState);
 	ParticleState FinalState;
-	//PartSystem->GetFinalState(FinalState);
+	PartSystem->GetFinalState(FinalState);
 
 	FileToSaveName = *App->importer->Get_ParticleSystem_Particles_path() + "\\" + FileToSave;
 
@@ -348,9 +348,9 @@ void ComponentParticleSystem::ImGuiSaveParticlePopUp()
 void ComponentParticleSystem::ImGuiSaveEmitterPopUp()
 {
 	ParticleEmitter Emitter;
-	//PartSystem->GetEmitter(Emitter);
+	PartSystem->GetEmitter(Emitter);
 
-	FileToSaveName = *App->importer->Get_ParticleSystem_Particles_path() + "\\" + FileToSave;
+	FileToSaveName = *App->importer->Get_ParticleSystem_Emitter_path() + "\\" + FileToSave;
 
 	ParsonJSON* parsonjson = new ParsonJSON(FileToSaveName.c_str(), true, false, false);
 	bool Meta = parsonjson->Init();

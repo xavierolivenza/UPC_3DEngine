@@ -107,9 +107,6 @@ public:
 	int ParticleNumber = 0;							//Alive particles emitted
 	float Speed = 5.0f;
 	float SpeedVariation = 0.0f;
-	float3 Position = float3::zero;					//Emitter position
-	Quat Rotation = Quat::identity;					//Emitter rotation
-	float3 Scale = float3::zero;					//Emitter scale
 	AABB BoundingBox;								//User can set AABB for camera culling purpose (we can add physics...)
 
 	enum
