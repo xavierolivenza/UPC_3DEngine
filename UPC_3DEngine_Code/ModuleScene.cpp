@@ -4,6 +4,7 @@
 #include "GameObject.h"
 #include "Component.h"
 #include "ComponentCamera.h"
+#include "ComponentParticleSystem.h"
 
 ModuleScene::ModuleScene(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
@@ -67,7 +68,7 @@ update_status ModuleScene::Update(float dt)
 	if (octree_draw)
 		scene_octree.DebugDraw();
 
-	/*
+	/**/
 	if (((App->GetEngineTimeStatus() == EngineTimeStatus::play_unpause)) && (App->input->GetKey(SDL_SCANCODE_1) == KEY_DOWN))
 	{
 		GameObject* TestParticleSystem = new GameObject("Particle System", true, true);
@@ -87,16 +88,18 @@ update_status ModuleScene::Update(float dt)
 
 			break;
 		}
+		FireworkToAirName_Particle = "..\\Game\\Assets\\Particle System\\Particles\\Firework_test";
+		FireworkToAirName_Emitter = "..\\Game\\Assets\\Particle System\\Emitter\\Firework_test";
 
-		FireworkToAirName = "Firework_test"; //Emitter and particle resources named the same
-		FireworkExplosionName = "Firework_test_explosion"; //Emitter and particle resources named the same
+		//FireworkExplosionName = "Firework_test_explosion"; //Emitter and particle resources named the same
 
-		//TODO: Load particle system resources
-
+		((ComponentParticleSystem*)Particle)->LoadParticleResource(FireworkToAirName_Particle.c_str());
+		((ComponentParticleSystem*)Particle)->LoadEmitterResource(FireworkToAirName_Emitter.c_str());
+		
 		App->scene->AddChildToRoot(TestParticleSystem);
 		FireworkSparkleGameObjects.push_back(TestParticleSystem);
 	}
-	*/
+	/**/
 
 	return UPDATE_CONTINUE;
 }

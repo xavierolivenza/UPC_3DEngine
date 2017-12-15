@@ -37,6 +37,8 @@ public:
 	void ImGuiSaveParticlePopUp();
 	void ImGuiSaveEmitterPopUp();
 
+	void LoadParticleResource(const char* filename);
+	void LoadEmitterResource(const char* filename);
 	bool IsEmitterDead(); //Usefull to execute an other emitter from the outside when this dies
 
 private:

@@ -538,6 +538,32 @@ void ComponentParticleSystem::ImGuiSaveEmitterPopUp()
 	RELEASE(parsonjson);
 }
 
+void ComponentParticleSystem::LoadParticleResource(const char * filename)
+{
+	ParticleState InitialState;
+	ParticleState FinalState;
+
+	ParsonJSON* parsonjson = new ParsonJSON(filename, true, false, false);
+	bool Loaded = parsonjson->Init();
+	if (Loaded) parsonjson->LoadParticleStates(InitialState, FinalState);
+	RELEASE(parsonjson);
+
+	PartSystem->SetInitialStateResource(InitialState);
+	PartSystem->SetFinalStateResource(FinalState);
+}
+
+void ComponentParticleSystem::LoadEmitterResource(const char * filename)
+{
+	ParticleEmitter Emitter;
+
+	ParsonJSON* parsonjson = new ParsonJSON(filename, true, false, false);
+	bool Meta = parsonjson->Init();
+	if (Meta) parsonjson->LoadParticleEmitter(Emitter);
+	RELEASE(parsonjson);
+
+	PartSystem->SetEmitterResource(Emitter);
+}
+
 bool ComponentParticleSystem::IsEmitterDead()
 {
 	return PartSystem->IsEmitterDead();
