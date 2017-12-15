@@ -164,6 +164,12 @@ bool GameObject::LoadGameObject(JSON_Object* conf)
 				newCamera->LoadComponent(array_object);
 				break;
 			}
+			case ComponentType::ParticleSystem_Component:
+			{
+				ComponentParticleSystem* newParticleSystem = CreateParticleSystemComponent(true);
+				newParticleSystem->LoadComponent(array_object);
+				break;
+			}
 			case ComponentType::Null_ComponentType:
 			{
 				LOGP("Error trying to load component. Null type.");

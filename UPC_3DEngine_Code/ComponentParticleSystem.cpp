@@ -173,6 +173,11 @@ void ComponentParticleSystem::SetEmitterResource(uint uuid)
 
 bool ComponentParticleSystem::SaveComponent(JSON_Object* conf) const
 {
+	App->parsonjson->SetUInt(conf, "UUID", UUID);
+	App->parsonjson->SetUInt(conf, "UUID_Parent", parent->GetUUID());
+	App->parsonjson->SetBool(conf, "Active", Active);
+	App->parsonjson->SetUInt(conf, "Type", type);
+
 	JSON_Object* file_conf = nullptr;
 
 	const ParticleState* State = nullptr;
@@ -251,6 +256,77 @@ bool ComponentParticleSystem::SaveComponent(JSON_Object* conf) const
 
 bool ComponentParticleSystem::LoadComponent(JSON_Object* conf)
 {
+	UUID = App->parsonjson->GetUInt(conf, "UUID", 0);
+	Active = App->parsonjson->GetBool(conf, "Active", true);
+
+	JSON_Object* file_conf = nullptr;
+
+	for (uint i = 0; i < 2; i++)
+	{
+		if (i == 0) file_conf = json_object_get_object(conf, "initial_state");
+		else file_conf = json_object_get_object(conf, "final_state");
+
+		ParticleState State;
+
+		State.force = App->parsonjson->GetFloat3(file_conf, "force");
+		State.forceVariation = App->parsonjson->GetFloat3(file_conf, "forceVariation");
+		State.Size = App->parsonjson->GetFloat(file_conf, "Size");
+		State.SizeVariation = App->parsonjson->GetFloat(file_conf, "SizeVariation");
+		State.RGBATint = App->parsonjson->GetFloat4(file_conf, "RGBATint");
+		State.RGBATintVariation = App->parsonjson->GetFloat4(file_conf, "RGBATintVariation");
+		State.alpha_preview = App->parsonjson->GetBool(file_conf, "alpha_preview");
+		State.alpha_half_preview = App->parsonjson->GetBool(file_conf, "alpha_half_preview");
+		State.options_menu = App->parsonjson->GetBool(file_conf, "options_menu");
+		State.alpha = App->parsonjson->GetBool(file_conf, "alpha");
+		State.alpha_bar = App->parsonjson->GetBool(file_conf, "alpha_bar");
+		State.side_preview = App->parsonjson->GetBool(file_conf, "side_preview");
+		State.inputs_mode = App->parsonjson->GetUInt(file_conf, "inputs_mode");
+		State.picker_mode = App->parsonjson->GetUInt(file_conf, "picker_mode");
+
+		if (i == 0) PartSystem->SetInitialStateResource(State);
+		else PartSystem->SetFinalStateResource(State);
+	}
+
+	file_conf = json_object_get_object(conf, "emitter");
+
+	ParticleEmitter emitter;
+
+	emitter.EmitterLifeMax = App->parsonjson->GetFloat(file_conf, "EmitterLifeMax");
+	emitter.Transform = App->parsonjson->GetFloat4x4(file_conf, "Transform");
+	emitter.SpawnRate = App->parsonjson->GetUInt(file_conf, "SpawnRate");
+	emitter.Lifetime = App->parsonjson->GetFloat(file_conf, "Lifetime");
+	emitter.LifetimeVariation = App->parsonjson->GetFloat(file_conf, "LifetimeVariation");
+	emitter.EmissionDuration = App->parsonjson->GetFloat(file_conf, "EmissionDuration");
+	emitter.Loop = App->parsonjson->GetBool(file_conf, "Loop");
+	emitter.Speed = App->parsonjson->GetFloat(file_conf, "Speed");
+	emitter.SpeedVariation = App->parsonjson->GetFloat(file_conf, "SpeedVariation");
+	emitter.BoundingBox.minPoint = App->parsonjson->GetFloat3(file_conf, "BoundingBox_min");
+	emitter.BoundingBox.maxPoint = App->parsonjson->GetFloat3(file_conf, "BoundingBox_max");
+	emitter.EmissionType = (ParticleEmitter::TypeEmission)App->parsonjson->GetUInt(file_conf, "EmissionType");
+	emitter.Type = (ParticleEmitter::TypeEmitter)App->parsonjson->GetUInt(file_conf, "Type");
+	emitter.ParticleFacingOptions = (ParticleEmitter::TypeBillboard)App->parsonjson->GetUInt(file_conf, "ParticleFacingOptions");
+
+	switch (emitter.Type)
+	{
+	case 0: //EmitterType_Sphere
+	case 1: //EmitterType_SemiSphere
+		emitter.EmitterShape.Sphere_Shape.r = App->parsonjson->GetFloat(file_conf, "Radius");
+		break;
+	case 2: //EmitterType_Cone
+		emitter.EmitterShape.ConeTrunk_Shape.Upper_Circle.r = App->parsonjson->GetFloat(file_conf, "URadius");
+		emitter.EmitterShape.ConeTrunk_Shape.Bottom_Circle.r = App->parsonjson->GetFloat(file_conf, "BRadius");
+		emitter.EmitterShape.ConeTrunk_Shape.heigth = App->parsonjson->GetFloat(file_conf, "heigth");
+		break;
+	case 3: //EmitterType_Box
+		emitter.EmitterShape.Box_Shape.minPoint = App->parsonjson->GetFloat3(file_conf, "EmitterAABB_min");
+		emitter.EmitterShape.Box_Shape.maxPoint = App->parsonjson->GetFloat3(file_conf, "EmitterAABB_max");
+		break;
+	case 4: //EmitterType_Circle
+		emitter.EmitterShape.Circle_Shape.r = App->parsonjson->GetFloat(file_conf, "Radius");
+		break;
+	}
+
+	PartSystem->SetEmitterResource(emitter);
 
 	return true;
 }
