@@ -1,6 +1,3 @@
-
-#Web README Test
-
 # UPC_3DEngine
 
 UPC_3DEngine is a project for the subject 3DEngine of the VideoGame Developing career in CITM, UPC fundation in Terrassa.
@@ -10,7 +7,7 @@ The main objective is to create a simple 3D game editor.
 
 ### Xavier Olivenza Busquets
 
-![alt text](https://github.com/xavierolivenza/UPC_3DEngine/blob/master/docs/Xavier%20Olivenza.jpeg)
+https://github.com/xavierolivenza/UPC_3DEngine/blob/master/docs/Xavier%20Olivenza.jpeg
 
 - Github: https://github.com/xavierolivenza
 
@@ -22,7 +19,7 @@ I have worked in the Octree implementation and usage with frustum culling, I hav
 
  - Github: https://github.com/Sergio111
 
-### WINDOWS
+### CORE SUB-SYSTEMS
 
 -Profiler: This window shows the ms wasted in every module
 
