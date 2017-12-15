@@ -119,7 +119,33 @@ update_status ModuleScene::Update(float dt)
 		Position += (Direction * dt * Speed);
 		Transform->SetPos(Position);
 		if (((ComponentParticleSystem*)(*item)->FindComponentFirstNoConst(ComponentType::ParticleSystem_Component))->IsEmitterDead())
+		{
+			GameObject* TestParticleSystem = new GameObject("Particle System", true, true);
+			ComponentTransform* Transform = (ComponentTransform*)TestParticleSystem->GetTransform();
+			Transform->SetPos(((ComponentTransform*)(*item)->GetTransform())->GetPos());
+			TestParticleSystem->CreateParticleSystemComponent(true);
+			Component* Particle = TestParticleSystem->FindComponentFirstNoConst(ComponentType::ParticleSystem_Component);
+
+			switch (RandGen.Int(0, 2)) //Switch for 3 different firework (explosion) particle system
+			{
+			case 0:
+
+				break;
+			case 1:
+
+				break;
+			case 2:
+
+				break;
+			}
+			FireworkToAirName_Particle = "..\\Game\\Assets\\Particle System\\Particles\\Firework_test_explosion";
+			FireworkToAirName_Emitter = "..\\Game\\Assets\\Particle System\\Emitter\\Firework_test_explosion";
+
+			((ComponentParticleSystem*)Particle)->LoadParticleResource(FireworkToAirName_Particle.c_str());
+			((ComponentParticleSystem*)Particle)->LoadEmitterResource(FireworkToAirName_Emitter.c_str());
+			App->scene->AddChildToRoot(TestParticleSystem);
 			item = FireworkSparkleGameObjects.erase(item);
+		}
 		else ++item;
 	}
 
