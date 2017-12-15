@@ -71,8 +71,8 @@ update_status ModuleScene::Update(float dt)
 
 	/**/
 	LCG RandGen;
-	float Speed = RandGen.Float(10.0f, 20.0f);
-	float AngleDiff = 25.0f;
+	float Speed = RandGen.Float(25.0f, 50.0f);
+	float AngleDiff = 45.0f;
 	if (((App->GetEngineTimeStatus() == EngineTimeStatus::play_unpause)) && (App->input->GetKey(SDL_SCANCODE_1) == KEY_DOWN))
 	{
 		GameObject* TestParticleSystem = new GameObject("Particle System", true, true);
@@ -109,7 +109,7 @@ update_status ModuleScene::Update(float dt)
 		FireworkSparkleGameObjects.push_back(TestParticleSystem);
 	}
 
-	for (std::list<GameObject*>::const_iterator item = FireworkSparkleGameObjects.cbegin(); item != FireworkSparkleGameObjects.cend(); ++item)
+	for (std::list<GameObject*>::const_iterator item = FireworkSparkleGameObjects.cbegin(); item != FireworkSparkleGameObjects.cend();)
 	{
 		ComponentTransform* Transform = (ComponentTransform*)(*item)->GetTransform();
 		float3 Position = Transform->GetPos();
@@ -118,6 +118,9 @@ update_status ModuleScene::Update(float dt)
 		Direction = Rotation.Transform(Direction);
 		Position += (Direction * dt * Speed);
 		Transform->SetPos(Position);
+		if (((ComponentParticleSystem*)(*item)->FindComponentFirstNoConst(ComponentType::ParticleSystem_Component))->IsEmitterDead())
+			item = FireworkSparkleGameObjects.erase(item);
+		else ++item;
 	}
 
 	/**/

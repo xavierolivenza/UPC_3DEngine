@@ -877,7 +877,7 @@ unsigned int ParticleSystem::GetTextureID(float MaxParticleLife, float time)
 bool ParticleSystem::IsEmitterDead() const
 {
 	bool ret = false;
-	if ((Emitter.EmitterLifeMax <= 0.0f) || Emitter.Loop)
+	if ((Emitter.EmitterLifeMax >= 0.0f) && !Emitter.Loop)
 		if (Emitter.EmitterLife > Emitter.EmitterLifeMax)
 			ret = true;
 	return ret;
