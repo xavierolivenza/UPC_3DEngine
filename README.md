@@ -49,7 +49,7 @@ TIPS:
 
 -Camera controls
 
-	-Right click + “WASD” fps-like movement
+	-Right click + "WASD" fps-like movement
 	
 	-Mouse wheel zooms in and out. If the mouse cursor is over engine UI or you have focus on any input text, wheel is disabled, press enter or move your mouse to world view to solve this.
 	
