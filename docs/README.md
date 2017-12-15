@@ -6,6 +6,22 @@
 UPC_3DEngine is a project for the subject 3DEngine of the VideoGame Developing career in CITM, UPC fundation in Terrassa.
 The main objective is to create a simple 3D game editor.
 
+## TEAM MEMBERS
+
+### Xavier Olivenza Busquets
+
+PHOTO TEMPLATE
+
+- Github: https://github.com/xavierolivenza
+
+### Sergio Alvarez Llorca
+
+PHOTO TEMPLATE
+
+I have worked in the Octree implementation and usage with frustum culling, I have worked in the UI of the Engine, I have worked in camera serialization, I have worked in actualizing some of the libraries used, I have worked in some primitives and I have created some smokes and fireworks of the particle system.
+
+ - Github: https://github.com/Sergio111
+
 ## INSTALLATION
 
 Unzip the realese folder and execute the .exe file.
@@ -107,111 +123,10 @@ TIPS:
 -Help: This window has the options to download latest release, report bug, and show the documentation. It also has about, which is a window with useful information like license, libraries used, authors, etc...
 
 -Close: Closes the engine
-
-## Innovation grade candidates
-
--Adaptative Octree
-
--Gizmos
-
-## CHANGELOG
-
-v0.7.1(Second Assignment):
-
-	-Added debug info and variables for octree
-	-Fixed octree
-	-Fixed import manager
-	-New console/assets/library window
-	-Texture importing options added
-	-Gizmos improved
-	-Menu create camera
-	-Changed UI colors
-	-Radio Buttons added
-
-v0.7.0:
-
-	-Resource manager implemented
-	-Frustum culling working with adaptative octree
-	-Added gizmos to dynamic geometry (WIP)
-	-Added time window with play, stop and pause
-	-Added mouse picking
-	-Save and Load process enhanced
-
-v0.6:
-
-	-New structure with game objects and components.
-	-Components mesh, matrial, transformation working, camera components only shows frustum, WIP.
-	-Now fbx are imported to library/Mesh as own format
-	-MeshAlvOli, contains only one mesh. GameObjectMeshAlvOli contains multiples meshes
-	-Textures are imported as dds to library/materials
-	-By now this importing system takes everything inside assets folder and import them.
-	-By now the load process only acceps own format files (open library/mesh to get the files to drop)
-
-v0.5(First Assignment):
-
-	-Framerate cap implemented
-	-Implemented properties window which shows useful data about loaded geometry
-	-Now normal length can be modified
-	-If there's charged geometry now multiples textures can be loaded
-	-Added new variables in some modules in module variables window
-	-The camera now is centred in the centre of the scene when charging geometry, not in the mesh centre. The user can force it manually by pressing f
-	-Added more debug data about CPU and VRAM
-
-v0.4:
-
-	-Camera autocentre + autoframe to loaded geometry
-	-DevIL library added to load textures
-	-FBX load their own textures from Assets folder
-	-New style for the GUI(WIP, may will change)
-	-Camera log "hit" if looking to the loaded geometry
-	-Cube primitive texure coords added
-	-Camera controls changed to be Unity-like
-
-v0.3:
-
-	-Profiler window
-	-Module variables window
-	-Primitive cube and sphere
-	-Drag & drop
-	-Assimp implemented
-	-Load fbx files
-	-Show vertices normals
-	-New more clean layout
-
-v0.2:
-
-	-Added Console
-	-OpenGl totally operative
-	-Added geometry options: Fog, Wireframe, Lightning, Culling, etc...
-	-All modules frame, ms, memory usage plot
-	-First triangles printed on screen
-	-Random generator feature added
-	-Help and close menu added
-	-Hardware data
-	-Now you can modify variables from the editor
-	-Parson save & load
-
-v0.1:
-
-	-Added base code.
-	-Integrated ImGui library.
-	-Added menu on top of screen.
-	-Added menu that shows example window.
 	
 ## CREDITS
 
 Github project page: https://github.com/xavierolivenza/UPC_3DEngine
-
-Web Page: https://xavierolivenza.github.io/UPC_3DEngine/
-
-Sergio Alvarez's Github account
-
- - Github: https://github.com/Sergio111
-
-
-Xavier Olivenza's Github account
-
- - Github: https://github.com/xavierolivenza
 
 ## LICENSE
 
