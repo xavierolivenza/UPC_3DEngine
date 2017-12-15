@@ -186,7 +186,7 @@ class ParticleSystem;
 class Particle
 {
 public:
-	Particle(ParticleSystem* parent, const ParticleState& Initial, const ParticleState& Final, float3 Speed, float LifetimeMax);
+	Particle(ParticleSystem* parent, const ParticleState& Initial, const ParticleState& Final, float3 Speed, float3 offset, float LifetimeMax);
 	~Particle();
 	bool PreUpdate(float dt);
 	bool Update(float dt);
@@ -239,11 +239,21 @@ struct ParticleMeshData								//Very similar to MeshDataResource, but we copy i
 
 struct ParticleTextureData
 {
-	void Set(unsigned int ID, unsigned int width, unsigned int heigth);
+	void Set(unsigned int ID, unsigned int width, unsigned int heigth, int columns = 1, int rows = 1, int numberOfFrames = 1, unsigned int AnimationOrder = 0);
 
 	unsigned int TextureID = 0;
 	unsigned int TextureW = 0;
 	unsigned int TextureH = 0;
+
+	int columns = 1;
+	int rows = 1;
+	int numberOfFrames = 1;
+
+	enum OrderAnimation
+	{
+		Right,
+		Down
+	}AnimationOrder = Right;
 };
 
 struct KeyInput
@@ -272,7 +282,8 @@ public:
 
 	//void SetMeshResource(ParticleMeshData& MeshData);//Set Mesh resource to use
 	void SetMeshResourcePlane();					//Delete actual mesh + load a plane
-	void SetTextureResource(unsigned int ID, unsigned int width, unsigned int heigth);
+	const ParticleTextureData* GetTextureResource() const;
+	void SetTextureResource(unsigned int ID, unsigned int width, unsigned int heigth, int columns = 1, int rows = 1, int numberOfFrames = 1, unsigned int AnimationOrder = 0);
 
 	void SetInitialStateResource(const ParticleState& state);	//Set Particle Initial State if you want to load it as a resource
 	void SetFinalStateResource(const ParticleState& state);		//Set Particle Final State if you want to load it as a resource
@@ -323,18 +334,7 @@ private:
 	std::vector<float4> TexturesUV_Data;		//UV0 = X-Y		UV1 = Z-W
 	//std::vector<float*> TexturesUV_Data_ptr;
 	std::vector<unsigned int> TexturesUV_ID;	//IDs
-
 	float NextParticleTime = 0.0f;
-
-	int columns = 1;
-	int rows = 1;
-	int numberOfFrames = 1;
-
-	enum
-	{
-		Right,
-		Down
-	}AnimationOrder = Right;
 
 	enum
 	{

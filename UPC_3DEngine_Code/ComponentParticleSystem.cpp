@@ -149,12 +149,12 @@ void ComponentParticleSystem::SetMeshResource(uint uuid)
 	*/
 }
 
-void ComponentParticleSystem::SetTextureResource(uint uuid)
+void ComponentParticleSystem::SetTextureResource(uint uuid, int columns, int rows, int numberOfFrames, uint AnimationOrder)
 {
 	if (TextureResource != nullptr) TextureResource->UnLoad();
 	TextureResource = (ResourceTexture*)App->resources->Get(uuid);
 	if (TextureResource != nullptr)
-		PartSystem->SetTextureResource(TextureResource->TextureDataStruct.id_texture, TextureResource->TextureDataStruct.texture_w, TextureResource->TextureDataStruct.texture_h);
+		PartSystem->SetTextureResource(TextureResource->TextureDataStruct.id_texture, TextureResource->TextureDataStruct.texture_w, TextureResource->TextureDataStruct.texture_h, columns, rows, numberOfFrames, AnimationOrder);
 }
 
 void ComponentParticleSystem::SetParticleResource(uint uuid)
@@ -181,6 +181,16 @@ bool ComponentParticleSystem::SaveComponent(JSON_Object* conf) const
 
 	JSON_Object* file_conf = nullptr;
 
+	json_object_set_value(conf, "texture", json_value_init_object());
+	file_conf = json_object_get_object(conf, "texture");
+
+	const ParticleTextureData* Texture = PartSystem->GetTextureResource();
+	App->parsonjson->SetString(file_conf, "texture_path", TextureResource->GetOriginalFile().c_str());
+	App->parsonjson->SetInt(file_conf, "columns", Texture->columns);
+	App->parsonjson->SetInt(file_conf, "rows", Texture->rows);
+	App->parsonjson->SetInt(file_conf, "numberOfFrames", Texture->numberOfFrames);
+	App->parsonjson->SetUInt(file_conf, "AnimationOrder", Texture->AnimationOrder);
+	
 	const ParticleState* State = nullptr;
 	for (uint i = 0; i < 2; i++)
 	{
@@ -261,6 +271,21 @@ bool ComponentParticleSystem::LoadComponent(JSON_Object* conf)
 	Active = App->parsonjson->GetBool(conf, "Active", true);
 
 	JSON_Object* file_conf = nullptr;
+
+	file_conf = json_object_get_object(conf, "texture");
+
+	const char* Path = App->parsonjson->GetString(file_conf, "texture_path");
+	int columns = App->parsonjson->GetInt(file_conf, "columns");
+	int rows = App->parsonjson->GetInt(file_conf, "rows");
+	int numberOfFrames = App->parsonjson->GetInt(file_conf, "numberOfFrames");
+	uint AnimationOrder = App->parsonjson->GetUInt(file_conf, "AnimationOrder");
+
+	FileToLoad = Path;
+	size_t bar_pos = FileToLoad.rfind("\\") + 1;
+	size_t dot_pos = FileToLoad.rfind(".");
+	FileToLoadName = FileToLoad.substr(bar_pos, dot_pos - bar_pos);
+	uint Texuuid = App->resources->LoadResource((*App->importer->Get_Library_material_path() + "\\" + FileToLoadName + ".dds").c_str(), FileToLoad.c_str());
+	SetTextureResource(Texuuid, columns, rows, numberOfFrames, AnimationOrder);
 
 	for (uint i = 0; i < 2; i++)
 	{

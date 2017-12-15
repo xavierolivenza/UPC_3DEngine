@@ -21,7 +21,7 @@ public:
 	void DrawComponentImGui();
 
 	void SetMeshResource(uint uuid);
-	void SetTextureResource(uint uuid);
+	void SetTextureResource(uint uuid, int columns = 1, int rows = 1, int numberOfFrames = 1, uint AnimationOrder = 0);
 	void SetParticleResource(uint uuid);
 	void SetEmitterResource(uint uuid);
 

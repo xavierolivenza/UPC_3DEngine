@@ -271,13 +271,14 @@ ParticleEmitter::EmitterShapeUnion::EmitterShapeUnion()
 
 }
 
-Particle::Particle(ParticleSystem* parent, const ParticleState& Initial, const ParticleState& Final, float3 Speed, float LifetimeMax) : ParentParticleSystem(parent)
+Particle::Particle(ParticleSystem* parent, const ParticleState& Initial, const ParticleState& Final, float3 Speed, float3 offset, float LifetimeMax) : ParentParticleSystem(parent)
 {
 	SetAssignedStateFromVariables(InitialState, Initial);
 	SetAssignedStateFromVariables(FinalState, Final);
 	Properties.Speed = Speed;
 	Properties.LifetimeMax = LifetimeMax;
 	parent->Emitter.GetPosition(Properties.Position);
+	Properties.Position += offset;
 }
 
 Particle::~Particle()
@@ -541,11 +542,15 @@ void ParticleMeshData::Clean()
 	*/
 }
 
-void ParticleTextureData::Set(unsigned int ID, unsigned int width, unsigned int heigth)
+void ParticleTextureData::Set(unsigned int ID, unsigned int width, unsigned int heigth, int columns, int rows, int numberOfFrames, unsigned int AnimationOrder)
 {
 	TextureID = ID;
 	TextureW = width;
 	TextureH = heigth;
+	this->columns = columns;
+	this->rows = rows;
+	this->numberOfFrames = numberOfFrames;
+	this->AnimationOrder = (OrderAnimation)AnimationOrder;
 }
 
 ParticleSystem::ParticleSystem()
@@ -733,9 +738,15 @@ void ParticleSystem::SetMeshResourcePlane()
 	for (std::list<Particle*>::iterator item = Particles.begin(); item != Particles.cend(); ++item) (*item)->MeshChanged = true;
 }
 
-void ParticleSystem::SetTextureResource(unsigned int ID, unsigned int width, unsigned int heigth)
+const ParticleTextureData * ParticleSystem::GetTextureResource() const
 {
-	TextureData.Set(ID, width, heigth);
+	return &TextureData;
+}
+
+void ParticleSystem::SetTextureResource(unsigned int ID, unsigned int width, unsigned int heigth, int columns, int rows, int numberOfFrames, unsigned int AnimationOrder)
+{
+	TextureData.Set(ID, width, heigth, columns, rows, numberOfFrames, AnimationOrder);
+	GenerateTexturesUVs();
 	Emitter.EmitterLife = 0.0f;
 	Emitter.EmissionDuration = 0.0f;
 }
@@ -859,7 +870,7 @@ void ParticleSystem::SetCameraPosToFollow(float3 position)
 
 unsigned int ParticleSystem::GetTextureID(float MaxParticleLife, float time)
 {
-	unsigned int ID = (unsigned int)(time / (MaxParticleLife / (float)numberOfFrames));
+	unsigned int ID = (unsigned int)(time / (MaxParticleLife / (float)TextureData.numberOfFrames));
 	return TexturesUV_ID[CLAMP(ID, 0, TexturesUV_ID.size() - 1)];
 }
 
@@ -896,7 +907,7 @@ void ParticleSystem::GenerateUVBuffers()
 	//	RELEASE_ARRAY(*item);
 	//TexturesUV_Data_ptr.clear();
 
-	for (unsigned int i = 0; i < columns * rows; i++)
+	for (unsigned int i = 0; i < TextureData.columns * TextureData.rows; i++)
 	{
 		unsigned int NewID = 0;
 
@@ -922,25 +933,25 @@ void ParticleSystem::GenerateUVBuffers()
 void ParticleSystem::GenerateTexturesUVs()
 {
 	TexturesUV_Data.clear();
-	for (unsigned int i = 0; i < columns * rows; i++)
+	for (unsigned int i = 0; i < TextureData.columns * TextureData.rows; i++)
 	{
 		float4 NewUV = float4::zero;
 		float2 ColumRow = float2::zero;
-		switch (AnimationOrder)
+		switch (TextureData.AnimationOrder)
 		{
-		case Right:
-			ColumRow.x = i / columns; //Row
-			ColumRow.y = i % columns; //Column
+		case 0: //Right
+			ColumRow.x = i / TextureData.columns; //Row
+			ColumRow.y = i % TextureData.columns; //Column
 			break;
-		case Down:
-			ColumRow.x = i % columns; //Column
-			ColumRow.y = i / columns; //Row
+		case 1: //Down
+			ColumRow.x = i % TextureData.columns; //Column
+			ColumRow.y = i / TextureData.columns; //Row
 			break;
 		}
-		NewUV.x = (1.0f / (float)columns) * ColumRow.y;
-		NewUV.y = (1.0f / (float)rows) * ((float)rows - ColumRow.x - 1.0f);
-		NewUV.z = (1.0f / (float)columns) * (ColumRow.y + 1.0f);
-		NewUV.w = (1.0f / (float)rows) * ((float)rows - ColumRow.x);
+		NewUV.x = (1.0f / (float)TextureData.columns) * ColumRow.y;
+		NewUV.y = (1.0f / (float)TextureData.rows) * ((float)TextureData.rows - ColumRow.x - 1.0f);
+		NewUV.z = (1.0f / (float)TextureData.columns) * (ColumRow.y + 1.0f);
+		NewUV.w = (1.0f / (float)TextureData.rows) * ((float)TextureData.rows - ColumRow.x);
 		TexturesUV_Data.push_back(NewUV);
 	}
 	GenerateUVBuffers();
@@ -999,32 +1010,32 @@ void ParticleSystem::DrawTexturePreview()
 	}
 	//draw_list->AddRect(ImVec2(InitialPos.x + canvas_pos.x, InitialPos.y + canvas_pos.y), ImVec2(FinalPos.x + canvas_pos.x, FinalPos.y + canvas_pos.y), IM_COL32(255, 255, 0, 255), 0.0f, ~0);
 	draw_list->PopClipRect();
-	for (int i = 1; i < columns; i++)
-		draw_list->AddLine(ImVec2(canvas_pos.x + (canvas_size.x / columns) * i, canvas_pos.y), ImVec2(canvas_pos.x + (canvas_size.x / columns) * i, canvas_pos.y + canvas_size.y), IM_COL32(255, 255, 0, 255));
-	for (int i = 1; i < rows; i++)
-		draw_list->AddLine(ImVec2(canvas_pos.x, canvas_pos.y + (canvas_size.y / rows) * i), ImVec2(canvas_pos.x + canvas_size.x, canvas_pos.y + (canvas_size.y / rows) * i), IM_COL32(255, 255, 0, 255));
+	for (int i = 1; i < TextureData.columns; i++)
+		draw_list->AddLine(ImVec2(canvas_pos.x + (canvas_size.x / TextureData.columns) * i, canvas_pos.y), ImVec2(canvas_pos.x + (canvas_size.x / TextureData.columns) * i, canvas_pos.y + canvas_size.y), IM_COL32(255, 255, 0, 255));
+	for (int i = 1; i < TextureData.rows; i++)
+		draw_list->AddLine(ImVec2(canvas_pos.x, canvas_pos.y + (canvas_size.y / TextureData.rows) * i), ImVec2(canvas_pos.x + canvas_size.x, canvas_pos.y + (canvas_size.y / TextureData.rows) * i), IM_COL32(255, 255, 0, 255));
 	ImGui::PushItemWidth(95);
-	if (ImGui::SliderInt("Columns", &columns, 1, 20))
+	if (ImGui::SliderInt("Columns", &TextureData.columns, 1, 20))
 	{
-		numberOfFrames = rows * columns;
+		TextureData.numberOfFrames = TextureData.rows * TextureData.columns;
 		GenerateTexturesUVs();
 	}
 	ImGui::SameLine();
-	if (ImGui::SliderInt("Rows", &rows, 1, 20))
+	if (ImGui::SliderInt("Rows", &TextureData.rows, 1, 20))
 	{
-		numberOfFrames = rows * columns;
+		TextureData.numberOfFrames = TextureData.rows * TextureData.columns;
 		GenerateTexturesUVs();
 	}
 	ImGui::PopItemWidth();
-	float maxFrames = rows * columns;
+	float maxFrames = TextureData.rows * TextureData.columns;
 	if (maxFrames > 1)
 	{
 		ImGui::PushItemWidth(140);
-		if (ImGui::DragInt("Number of Frames", &numberOfFrames, 0.1f, 1, maxFrames)) GenerateTexturesUVs();
+		if (ImGui::DragInt("Number of Frames", &TextureData.numberOfFrames, 0.1f, 1, maxFrames)) GenerateTexturesUVs();
 		ImGui::PopItemWidth();
 	}
 	ImGui::PushItemWidth(80);
-	ImGui::Combo("Animation Order", (int*)&AnimationOrder, "Right\0Down\0");
+	ImGui::Combo("Animation Order", (int*)&TextureData.AnimationOrder, "Right\0Down\0");
 	ImGui::PopItemWidth();
 	//ImGui::DragFloat("Zoom", &focus_sz, 0.001f, 1.0f, 100.0f);
 }
@@ -1147,6 +1158,7 @@ bool ParticleSystem::CreateParticle()
 {
 	LCG RandGen;
 	float3 Direction = float3::zero;
+	float3 offset = float3::zero;
 	switch (Emitter.Type)
 	{
 	case 0: //EmitterType_Sphere
@@ -1169,12 +1181,32 @@ bool ParticleSystem::CreateParticle()
 		break;
 	}
 	case 3: //EmitterType_Box
+	{
+		float Size = Emitter.EmitterShape.Box_Shape.maxPoint.x - Emitter.EmitterShape.Box_Shape.minPoint.x;
+		offset.x = RandGen.Float(Size / 2.0f, -Size / 2.0f);
+		offset.z = RandGen.Float(Size / 2.0f, -Size / 2.0f);
 
+		Direction = float3(0.0f, Size, 0.0f);
 
+		/*
+		float Size = Emitter.EmitterShape.Box_Shape.maxPoint.x - Emitter.EmitterShape.Box_Shape.minPoint.x;
+		float3 BasePoint = float3::zero;
+		BasePoint.x = RandGen.Float(Size / 2.0f, -Size / 2.0f);
+		BasePoint.y = 0.0f;
+		BasePoint.z = RandGen.Float(Size / 2.0f, -Size / 2.0f);
+		float3 TopPoint = BasePoint;
+		TopPoint.y = Size / 2.0f;
+		*/
 
-
-
+		/*
+		float3 BasePoint = Emitter.EmitterShape.Box_Shape.RandomPointInside(RandGen);
+		//BasePoint.y = 0.0f;
+		float3 TopPoint = BasePoint;
+		TopPoint.y = Emitter.EmitterShape.Box_Shape.maxPoint.x - Emitter.EmitterShape.Box_Shape.minPoint.x;
+		Direction = BasePoint - TopPoint;
+		*/
 		break;
+	}
 	case 4: //EmitterType_Circle
 		float angleRadians = RandGen.Float(0.0f, 360.0f * DEGTORAD);
 		Direction = Emitter.EmitterShape.Circle_Shape.GetPoint(angleRadians);
@@ -1186,7 +1218,7 @@ bool ParticleSystem::CreateParticle()
 	Quat Rot = Rotation * Quat(Direction, 1.0f) *Rotation.Conjugated();
 	Direction = float3(Rot.x, Rot.y, Rot.z);
 
-	Particle* NewParticle = new Particle(this, InitialState, FinalState, Direction * (Emitter.Speed + RandGen.Float(-Emitter.SpeedVariation, Emitter.SpeedVariation)), Emitter.Lifetime + RandGen.Float(-Emitter.LifetimeVariation, Emitter.LifetimeVariation));
+	Particle* NewParticle = new Particle(this, InitialState, FinalState, Direction * (Emitter.Speed + RandGen.Float(-Emitter.SpeedVariation, Emitter.SpeedVariation)), offset, Emitter.Lifetime + RandGen.Float(-Emitter.LifetimeVariation, Emitter.LifetimeVariation));
 	//Particle* NewParticle = new Particle(this, InitialState, FinalState, Direction.Normalized() * (Emitter.Speed + RandGen.Float(-Emitter.SpeedVariation, Emitter.SpeedVariation)), Emitter.Lifetime + RandGen.Float(-Emitter.LifetimeVariation, Emitter.LifetimeVariation));
 	Particles.push_back(NewParticle);
 	return true;
