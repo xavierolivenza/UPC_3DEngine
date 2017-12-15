@@ -173,11 +173,85 @@ void ComponentParticleSystem::SetEmitterResource(uint uuid)
 
 bool ComponentParticleSystem::SaveComponent(JSON_Object* conf) const
 {
+	JSON_Object* file_conf = nullptr;
+
+	const ParticleState* State = nullptr;
+	for (uint i = 0; i < 2; i++)
+	{
+		if (i == 0)
+		{
+			State = PartSystem->GetInitialState();
+			json_object_set_value(conf, "initial_state", json_value_init_object());
+			file_conf = json_object_get_object(conf, "initial_state");
+		}
+		else
+		{
+			State = PartSystem->GetFinalState();
+			json_object_set_value(conf, "final_state", json_value_init_object());
+			file_conf = json_object_get_object(conf, "final_state");
+		}
+		App->parsonjson->SetFloat3(file_conf, "force", State->force);
+		App->parsonjson->SetFloat3(file_conf, "forceVariation", State->forceVariation);
+		App->parsonjson->SetFloat(file_conf, "Size", State->Size);
+		App->parsonjson->SetFloat(file_conf, "SizeVariation", State->SizeVariation);
+		App->parsonjson->SetFloat4(file_conf, "RGBATint", State->RGBATint);
+		App->parsonjson->SetFloat4(file_conf, "RGBATintVariation", State->RGBATintVariation);
+		App->parsonjson->SetBool(file_conf, "alpha_preview", State->alpha_preview);
+		App->parsonjson->SetBool(file_conf, "alpha_half_preview", State->alpha_half_preview);
+		App->parsonjson->SetBool(file_conf, "options_menu", State->options_menu);
+		App->parsonjson->SetBool(file_conf, "alpha", State->alpha);
+		App->parsonjson->SetBool(file_conf, "alpha_bar", State->alpha_bar);
+		App->parsonjson->SetBool(file_conf, "side_preview", State->side_preview);
+		App->parsonjson->SetUInt(file_conf, "inputs_mode", State->inputs_mode);
+		App->parsonjson->SetUInt(file_conf, "picker_mode", State->picker_mode);
+	}
+
+	const ParticleEmitter* emitter = PartSystem->GetEmitter();
+
+	json_object_set_value(conf, "emitter", json_value_init_object());
+	file_conf = json_object_get_object(conf, "emitter");
+
+	App->parsonjson->SetFloat(file_conf, "EmitterLifeMax", emitter->EmitterLifeMax);
+	App->parsonjson->SetFloat4x4(file_conf, "Transform", emitter->Transform);
+	App->parsonjson->SetUInt(file_conf, "SpawnRate", emitter->SpawnRate);
+	App->parsonjson->SetFloat(file_conf, "Lifetime", emitter->Lifetime);
+	App->parsonjson->SetFloat(file_conf, "LifetimeVariation", emitter->LifetimeVariation);
+	App->parsonjson->SetFloat(file_conf, "EmissionDuration", emitter->EmissionDuration);
+	App->parsonjson->SetBool(file_conf, "Loop", emitter->Loop);
+	App->parsonjson->SetFloat(file_conf, "Speed", emitter->Speed);
+	App->parsonjson->SetFloat(file_conf, "SpeedVariation", emitter->SpeedVariation);
+	App->parsonjson->SetFloat3(file_conf, "BoundingBox_min", emitter->BoundingBox.minPoint);
+	App->parsonjson->SetFloat3(file_conf, "BoundingBox_max", emitter->BoundingBox.maxPoint);
+	App->parsonjson->SetUInt(file_conf, "EmissionType", emitter->EmissionType);
+	App->parsonjson->SetUInt(file_conf, "Type", emitter->Type);
+	App->parsonjson->SetUInt(file_conf, "ParticleFacingOptions", emitter->ParticleFacingOptions);
+
+	switch (emitter->Type)
+	{
+	case 0: //EmitterType_Sphere
+	case 1: //EmitterType_SemiSphere
+		App->parsonjson->SetFloat(file_conf, "Radius", emitter->EmitterShape.Sphere_Shape.r);
+		break;
+	case 2: //EmitterType_Cone
+		App->parsonjson->SetFloat(file_conf, "URadius", emitter->EmitterShape.ConeTrunk_Shape.Upper_Circle.r);
+		App->parsonjson->SetFloat(file_conf, "BRadius", emitter->EmitterShape.ConeTrunk_Shape.Bottom_Circle.r);
+		App->parsonjson->SetFloat(file_conf, "heigth", emitter->EmitterShape.ConeTrunk_Shape.heigth);
+		break;
+	case 3: //EmitterType_Box
+		App->parsonjson->SetFloat3(file_conf, "EmitterAABB_min", emitter->EmitterShape.Box_Shape.minPoint);
+		App->parsonjson->SetFloat3(file_conf, "EmitterAABB_max", emitter->EmitterShape.Box_Shape.maxPoint);
+		break;
+	case 4: //EmitterType_Circle
+		App->parsonjson->SetFloat(file_conf, "Radius", emitter->EmitterShape.Circle_Shape.r);
+		break;
+	}
+
 	return true;
 }
 
 bool ComponentParticleSystem::LoadComponent(JSON_Object* conf)
 {
+
 	return true;
 }
 

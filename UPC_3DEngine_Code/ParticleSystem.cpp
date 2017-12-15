@@ -726,6 +726,21 @@ void ParticleSystem::GetEmitter(ParticleEmitter & emitter) const
 	emitter = Emitter;
 }
 
+const ParticleState * ParticleSystem::GetInitialState() const
+{
+	return &InitialState;
+}
+
+const ParticleState * ParticleSystem::GetFinalState() const
+{
+	return &FinalState;
+}
+
+const ParticleEmitter * ParticleSystem::GetEmitter() const
+{
+	return &Emitter;
+}
+
 void ParticleSystem::SetEmitterTransform(const float4x4 & transform)
 {
 	Emitter.SetTransform(transform);
