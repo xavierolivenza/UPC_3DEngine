@@ -57,4 +57,8 @@ private:
 	bool SceneToLoad = false;
 	std::string EditorScene_ToLoad;
 	std::vector<GameObject*> SceneGameObjects;
+
+	//Fireworks
+	std::list<GameObject*> FireworkSparkleGameObjects;
+	std::list<GameObject*> FireworkExplosionGameObjects;
 };

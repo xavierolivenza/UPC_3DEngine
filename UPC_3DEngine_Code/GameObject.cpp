@@ -348,6 +348,18 @@ const Component* GameObject::FindComponentFirst(ComponentType type) const
 	return ret;
 }
 
+Component * GameObject::FindComponentFirstNoConst(ComponentType type) const
+{
+	Component* ret = nullptr;
+	for (std::vector<Component*>::const_iterator item = components.cbegin(); item != components.cend(); ++item)
+		if (type == (*item)->GetType())
+		{
+			ret = (*item);
+			break;
+		}
+	return ret;
+}
+
 const Component* GameObject::FindComponentLast(ComponentType type) const
 {
 	Component* ret = nullptr;

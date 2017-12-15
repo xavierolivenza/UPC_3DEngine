@@ -66,6 +66,21 @@ update_status ModuleScene::Update(float dt)
 	root->Update(dt);
 	if (octree_draw)
 		scene_octree.DebugDraw();
+
+	/*
+	if (App->input->GetKey(SDL_SCANCODE_1) == KEY_DOWN)
+	{
+		GameObject* TestParticleSystem = new GameObject("Particle System", true, true);
+		TestParticleSystem->CreateParticleSystemComponent(true);
+		Component* Particle = TestParticleSystem->FindComponentFirstNoConst(ComponentType::ParticleSystem_Component);
+
+		//TODO: Load particle system resources
+
+		App->scene->AddChildToRoot(TestParticleSystem);
+		FireworkSparkleGameObjects.push_back(TestParticleSystem);
+	}
+	*/
+
 	return UPDATE_CONTINUE;
 }
 
