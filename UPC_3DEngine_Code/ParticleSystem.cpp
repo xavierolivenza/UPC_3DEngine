@@ -592,12 +592,48 @@ bool ParticleSystem::Update(float dt)
 	}
 	*/
 
-	if ((Emitter.SpawnRate > 0) && (NextParticleTime < Emitter.EmissionDuration))
+	float SpawnRate = 1.0f / (float)Emitter.SpawnRate;
+
+	if ((Emitter.EmitterLifeMax <= 0.0f) || Emitter.Loop)
 	{
-		CreateParticle();
-		NextParticleTime = Emitter.EmissionDuration + (1.0f / (float)Emitter.SpawnRate);
+		if ((Emitter.SpawnRate > 0) && (NextParticleTime < Emitter.EmissionDuration))
+		{
+			if (SpawnRate < dt)
+			{
+				unsigned int ParticlesToSpawn = dt / SpawnRate;
+				for (unsigned int i = 0; i < ParticlesToSpawn; i++)
+					CreateParticle();
+			}
+			else
+				CreateParticle();
+			NextParticleTime = Emitter.EmissionDuration + SpawnRate;
+		}
+	}
+	else
+	{
+		if (Emitter.EmitterLifeMax > Emitter.EmitterLife)
+		{
+			if ((Emitter.SpawnRate > 0) && (NextParticleTime < Emitter.EmissionDuration))
+			{
+				if (SpawnRate < dt)
+				{
+					unsigned int ParticlesToSpawn = dt / SpawnRate;
+					for (unsigned int i = 0; i < ParticlesToSpawn; i++)
+						CreateParticle();
+				}
+				else
+					CreateParticle();
+				NextParticleTime = Emitter.EmissionDuration + SpawnRate;
+
+				//CreateParticle();
+				//NextParticleTime = Emitter.EmissionDuration + (1.0f / (float)Emitter.SpawnRate);
+			}
+			Emitter.EmitterLife += dt;
+		}
 	}
 
+	
+	
 	//First time using Lambda operator, so i left a short explanation to don't forget what exactly is.
 	//[]->Lambda -> Shortcut to a function (or object that ca be called as a function, defined by operator ())
 	//Enables to bypass the creation of a function object, usefull to encapsulate short codes passed to algorithms.
@@ -700,21 +736,29 @@ void ParticleSystem::SetMeshResourcePlane()
 void ParticleSystem::SetTextureResource(unsigned int ID, unsigned int width, unsigned int heigth)
 {
 	TextureData.Set(ID, width, heigth);
+	Emitter.EmitterLife = 0.0f;
+	Emitter.EmissionDuration = 0.0f;
 }
 
 void ParticleSystem::SetInitialStateResource(const ParticleState& state)
 {
 	InitialState = state;
+	Emitter.EmitterLife = 0.0f;
+	Emitter.EmissionDuration = 0.0f;
 }
 
 void ParticleSystem::SetFinalStateResource(const ParticleState& state)
 {
 	FinalState = state;
+	Emitter.EmitterLife = 0.0f;
+	Emitter.EmissionDuration = 0.0f;
 }
 
 void ParticleSystem::SetEmitterResource(const ParticleEmitter& emitter)
 {
 	Emitter = emitter;
+	Emitter.EmitterLife = 0.0f;
+	Emitter.EmissionDuration = 0.0f;
 }
 
 void ParticleSystem::GetInitialState(ParticleState & state) const
@@ -1071,7 +1115,7 @@ void ParticleSystem::DrawEmitterOptions()
 	ImGui::NextColumn();
 	ImGui::PushItemWidth(80);
 	ImGui::DragFloat("Emitter Life", &Emitter.EmitterLifeMax, 0.1f, -1.0f, 120.0f);
-	ImGui::SliderInt("Particles emitted per second", (int*)&Emitter.SpawnRate, 0, 50);
+	ImGui::SliderInt("Particles emitted per second", (int*)&Emitter.SpawnRate, 0, 1000);
 	ImGui::DragFloat("+-##Lifetime", &Emitter.Lifetime, 0.01f, 0.0f, 100.0f);
 	ImGui::SameLine();
 	ImGui::DragFloat("Lifetime +- Var##LifetimeVariation", &Emitter.LifetimeVariation, 0.01f, 0.0f, 100.0f);
