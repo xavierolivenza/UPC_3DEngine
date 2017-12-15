@@ -320,18 +320,21 @@ bool Particle::PreUpdate(float dt)
 
 bool Particle::Update(float dt)
 {
-	//Save external transform?
-	switch (ParentParticleSystem->Emitter.EmissionType)
+	if (dt > 0.001f)
 	{
-	case 0: //LocalEmission
+		//Save external transform?
+		switch (ParentParticleSystem->Emitter.EmissionType)
+		{
+		case 0: //LocalEmission
 
-		break;
-	case 1: //WorldEmission
+			break;
+		case 1: //WorldEmission
 
-		break;
+			break;
+		}
+		Properties.LifetimeActual += dt;
+		CalculateStatesInterpolation();
 	}
-	Properties.LifetimeActual += dt;
-	CalculateStatesInterpolation();
 	if (!MeshChanged) DrawParticle();
 	return true;
 }
