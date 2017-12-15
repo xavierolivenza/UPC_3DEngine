@@ -308,6 +308,8 @@ public:
 
 	unsigned int GetTextureID(float MaxParticleLife, float time);
 
+	bool IsEmitterDead() const;
+
 private:
 	void GenerateMeshResourceBuffers();
 	void GenerateUVBuffers();

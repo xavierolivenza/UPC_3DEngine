@@ -68,11 +68,28 @@ update_status ModuleScene::Update(float dt)
 		scene_octree.DebugDraw();
 
 	/*
-	if (App->input->GetKey(SDL_SCANCODE_1) == KEY_DOWN)
+	if (((App->GetEngineTimeStatus() == EngineTimeStatus::play_unpause)) && (App->input->GetKey(SDL_SCANCODE_1) == KEY_DOWN))
 	{
 		GameObject* TestParticleSystem = new GameObject("Particle System", true, true);
 		TestParticleSystem->CreateParticleSystemComponent(true);
 		Component* Particle = TestParticleSystem->FindComponentFirstNoConst(ComponentType::ParticleSystem_Component);
+
+		LCG RandGen;
+		switch (RandGen.Int(0, 2)) //Switch for 3 different firework (to the air) particle system
+		{
+		case 0:
+
+			break;
+		case 1:
+
+			break;
+		case 2:
+
+			break;
+		}
+
+		FireworkToAirName = "Firework_test"; //Emitter and particle resources named the same
+		FireworkExplosionName = "Firework_test_explosion"; //Emitter and particle resources named the same
 
 		//TODO: Load particle system resources
 

@@ -61,4 +61,6 @@ private:
 	//Fireworks
 	std::list<GameObject*> FireworkSparkleGameObjects;
 	std::list<GameObject*> FireworkExplosionGameObjects;
+	std::string FireworkToAirName;
+	std::string FireworkExplosionName;
 };

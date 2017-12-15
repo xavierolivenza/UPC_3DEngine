@@ -874,6 +874,15 @@ unsigned int ParticleSystem::GetTextureID(float MaxParticleLife, float time)
 	return TexturesUV_ID[CLAMP(ID, 0, TexturesUV_ID.size() - 1)];
 }
 
+bool ParticleSystem::IsEmitterDead() const
+{
+	bool ret = false;
+	if ((Emitter.EmitterLifeMax <= 0.0f) || Emitter.Loop)
+		if (Emitter.EmitterLife > Emitter.EmitterLifeMax)
+			ret = true;
+	return ret;
+}
+
 void ParticleSystem::GenerateMeshResourceBuffers()
 {
 	// Vertices Buffer

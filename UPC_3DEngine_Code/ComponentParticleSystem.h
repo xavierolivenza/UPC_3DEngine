@@ -37,6 +37,8 @@ public:
 	void ImGuiSaveParticlePopUp();
 	void ImGuiSaveEmitterPopUp();
 
+	bool IsEmitterDead(); //Usefull to execute an other emitter from the outside when this dies
+
 private:
 	void DrawDirectory(const char* directory);
 
