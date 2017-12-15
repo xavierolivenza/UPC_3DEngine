@@ -7,7 +7,7 @@ The main objective is to create a simple 3D game editor.
 
 ### Xavier Olivenza Busquets
 
-https://github.com/xavierolivenza/UPC_3DEngine/blob/master/docs/Xavier%20Olivenza.jpeg
+![alt text](https://github.com/xavierolivenza/UPC_3DEngine/blob/master/docs/Xavier_Olivenza.png)
 
 - Github: https://github.com/xavierolivenza
 
