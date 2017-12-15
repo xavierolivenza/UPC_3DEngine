@@ -5,6 +5,7 @@
 #include "Component.h"
 #include "ComponentCamera.h"
 #include "ComponentParticleSystem.h"
+#include "ComponentTransform.h"
 
 ModuleScene::ModuleScene(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
@@ -69,13 +70,21 @@ update_status ModuleScene::Update(float dt)
 		scene_octree.DebugDraw();
 
 	/**/
+	LCG RandGen;
+	float Speed = RandGen.Float(10.0f, 20.0f);
+	float AngleDiff = 25.0f;
 	if (((App->GetEngineTimeStatus() == EngineTimeStatus::play_unpause)) && (App->input->GetKey(SDL_SCANCODE_1) == KEY_DOWN))
 	{
 		GameObject* TestParticleSystem = new GameObject("Particle System", true, true);
+		ComponentTransform* Transform = (ComponentTransform*)TestParticleSystem->GetTransform();
+		float3 EulerRot = Transform->GetRotEuler();
+		EulerRot.x = RandGen.Float(-AngleDiff, AngleDiff);
+		EulerRot.z = RandGen.Float(-AngleDiff, AngleDiff);
+		Quat rot = rot.FromEulerXYZ(EulerRot.x * DEGTORAD, EulerRot.y * DEGTORAD, EulerRot.z * DEGTORAD);
+		Transform->SetRot(rot);
 		TestParticleSystem->CreateParticleSystemComponent(true);
 		Component* Particle = TestParticleSystem->FindComponentFirstNoConst(ComponentType::ParticleSystem_Component);
 
-		LCG RandGen;
 		switch (RandGen.Int(0, 2)) //Switch for 3 different firework (to the air) particle system
 		{
 		case 0:
@@ -99,6 +108,18 @@ update_status ModuleScene::Update(float dt)
 		App->scene->AddChildToRoot(TestParticleSystem);
 		FireworkSparkleGameObjects.push_back(TestParticleSystem);
 	}
+
+	for (std::list<GameObject*>::const_iterator item = FireworkSparkleGameObjects.cbegin(); item != FireworkSparkleGameObjects.cend(); ++item)
+	{
+		ComponentTransform* Transform = (ComponentTransform*)(*item)->GetTransform();
+		float3 Position = Transform->GetPos();
+		Quat Rotation = Transform->GetRot();
+		float3 Direction = float3(0.0f, 1.0f, 0.0f);
+		Direction = Rotation.Transform(Direction);
+		Position += (Direction * dt * Speed);
+		Transform->SetPos(Position);
+	}
+
 	/**/
 
 	return UPDATE_CONTINUE;
