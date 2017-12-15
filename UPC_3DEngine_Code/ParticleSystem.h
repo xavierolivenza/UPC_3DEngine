@@ -198,6 +198,7 @@ public:
 
 private:
 	void SetAssignedStateFromVariables(ParticleAssignedState& AState, const ParticleState& State);
+	void OrientateParticle();
 	inline void CalculateStatesInterpolation();
 	inline void CalculatePosition(float LifetimeFloat);
 	inline void CalculateGravity(float LifetimeFloat, float MaxLifetimeFloat);

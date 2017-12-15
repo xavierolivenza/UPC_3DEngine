@@ -295,7 +295,7 @@ bool ModuleSceneImporter::ImportFBX(std::string* file_to_import, std::string& ou
 				{
 					if (MeshInstance->mFaces[i].mNumIndices != 3)
 					{
-						MeshDataStruct.num_indices -= MeshInstance->mFaces[i].mNumIndices;
+						MeshDataStruct.num_indices -= 3;
 						LOGP("WARNING, geometry face with != 3 indices!");
 					}
 					else

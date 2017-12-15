@@ -287,39 +287,6 @@ Particle::~Particle()
 
 bool Particle::PreUpdate(float dt)
 {
-	//glDisable(GL_CULL_FACE);
-	switch (ParentParticleSystem->Emitter.ParticleFacingOptions)
-	{
-	case 0: //Null
-	{
-		break;
-	}
-	case 1: //Billboard
-	{
-		float3 Direction = ParentParticleSystem->CameraPosition - Properties.Position;
-		Properties.Rotation = Quat::LookAt(float3(0.0f, 0.0f, 1.0f), Direction, float3(0.0f, 1.0f, 0.0f), float3(0.0f, 1.0f, 0.0f));
-		break;
-	}
-	case 2: //VerticalBillboard
-	{
-		float3 Direction = ParentParticleSystem->CameraPosition - Properties.Position;
-		Direction.y = Properties.Position.y;
-		Properties.Rotation = Quat::LookAt(float3(0.0f, 0.0f, 1.0f), Direction, float3(0.0f, 1.0f, 0.0f), float3(0.0f, 1.0f, 0.0f));
-		break;
-	}
-	case 3: //HorizontalBillboard
-	{
-		float3 Direction = ParentParticleSystem->CameraPosition - Properties.Position;
-		Direction.x = Properties.Position.x;
-		Properties.Rotation = Quat::LookAt(float3(0.0f, 0.0f, 1.0f), Direction, float3(0.0f, 1.0f, 0.0f), float3(0.0f, 1.0f, 0.0f));
-		break;
-	}
-	}
-	return true;
-}
-
-bool Particle::Update(float dt)
-{
 	if (dt > 0.001f)
 	{
 		//Save external transform?
@@ -335,14 +302,19 @@ bool Particle::Update(float dt)
 		Properties.LifetimeActual += dt;
 		CalculateStatesInterpolation();
 	}
+	return true;
+}
+
+bool Particle::Update(float dt)
+{
+	OrientateParticle();
 	if (!MeshChanged) DrawParticle();
 	return true;
 }
 
 bool Particle::PostUpdate(float dt)
 {
-	if (Properties.LifetimeActual >= Properties.LifetimeMax)
-		ToDelete = true;
+	if (Properties.LifetimeActual >= Properties.LifetimeMax) ToDelete = true;
 	return true;
 }
 
@@ -427,6 +399,37 @@ void Particle::SetAssignedStateFromVariables(ParticleAssignedState& AState, cons
 	AState.RGBATint.y = State.RGBATint.y + RandGen.Float(-State.RGBATintVariation.y, State.RGBATintVariation.y);
 	AState.RGBATint.z = State.RGBATint.z + RandGen.Float(-State.RGBATintVariation.z, State.RGBATintVariation.z);
 	AState.RGBATint.w = State.RGBATint.w + RandGen.Float(-State.RGBATintVariation.w, State.RGBATintVariation.w);
+}
+
+void Particle::OrientateParticle()
+{
+	switch (ParentParticleSystem->Emitter.ParticleFacingOptions)
+	{
+	case 0: //Null
+	{
+		break;
+	}
+	case 1: //Billboard
+	{
+		float3 Direction = ParentParticleSystem->CameraPosition - Properties.Position;
+		Properties.Rotation = Quat::LookAt(float3(0.0f, 0.0f, 1.0f), Direction, float3(0.0f, 1.0f, 0.0f), float3(0.0f, 1.0f, 0.0f));
+		break;
+	}
+	case 2: //VerticalBillboard
+	{
+		float3 Direction = ParentParticleSystem->CameraPosition - Properties.Position;
+		Direction.y = Properties.Position.y;
+		Properties.Rotation = Quat::LookAt(float3(0.0f, 0.0f, 1.0f), Direction, float3(0.0f, 1.0f, 0.0f), float3(0.0f, 1.0f, 0.0f));
+		break;
+	}
+	case 3: //HorizontalBillboard
+	{
+		float3 Direction = ParentParticleSystem->CameraPosition - Properties.Position;
+		Direction.x = Properties.Position.x;
+		Properties.Rotation = Quat::LookAt(float3(0.0f, 0.0f, 1.0f), Direction, float3(0.0f, 1.0f, 0.0f), float3(0.0f, 1.0f, 0.0f));
+		break;
+	}
+	}
 }
 
 inline void Particle::CalculateStatesInterpolation()

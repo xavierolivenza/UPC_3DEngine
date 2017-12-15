@@ -44,23 +44,27 @@ update_status ModuleResources::PostUpdate(float dt)
 {
 	if (ResToUnload)
 	{
-		for (std::map<uint, Resource*>::iterator item = resources.begin(); item != resources.end(); ++item)
+		for (std::map<uint, Resource*>::iterator item = resources.begin(); item != resources.end();)
 		{
 			switch (item->second->type)
 			{
 			case Resource::Type::mesh:
 				if (((ResourceMesh*)item->second)->loaded == 0)
 				{
-					resources.erase(item);
 					RELEASE(item->second);
+					item = resources.erase(item);
+					App->engineUI->ResouceSelected = nullptr;
 				}
+				else ++item;
 				break;
 			case Resource::Type::texture:
 				if (((ResourceTexture*)item->second)->loaded == 0)
 				{
-					resources.erase(item);
 					RELEASE(item->second);
+					item = resources.erase(item);
+					App->engineUI->ResouceSelected = nullptr;
 				}
+				else ++item;
 				break;
 			case Resource::Type::null:
 				break;

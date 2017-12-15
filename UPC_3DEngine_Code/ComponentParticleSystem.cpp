@@ -151,6 +151,7 @@ void ComponentParticleSystem::SetMeshResource(uint uuid)
 
 void ComponentParticleSystem::SetTextureResource(uint uuid)
 {
+	if (TextureResource != nullptr) TextureResource->UnLoad();
 	TextureResource = (ResourceTexture*)App->resources->Get(uuid);
 	if (TextureResource != nullptr)
 		PartSystem->SetTextureResource(TextureResource->TextureDataStruct.id_texture, TextureResource->TextureDataStruct.texture_w, TextureResource->TextureDataStruct.texture_h);
