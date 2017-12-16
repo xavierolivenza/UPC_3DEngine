@@ -150,11 +150,11 @@ update_status ModuleScene::Update(float dt)
 	}
 	/**/
 
-	/*
-	LCG RandGen;
-	float Speed = RandGen.Float(25.0f, 50.0f);
-	float AngleDiff = 45.0f;
-	if (((App->GetEngineTimeStatus() == EngineTimeStatus::play_unpause)) && (App->input->GetKey(SDL_SCANCODE_1) == KEY_DOWN))
+	/**/
+	//LCG RandGen;
+	//float Speed = RandGen.Float(25.0f, 50.0f);
+	//float AngleDiff = 45.0f;
+	if (((App->GetEngineTimeStatus() == EngineTimeStatus::play_unpause)) && (App->input->GetKey(SDL_SCANCODE_2) == KEY_DOWN))
 	{
 		GameObject* TestParticleSystem = new GameObject("Particle System", true, true);
 		ComponentTransform* Transform = (ComponentTransform*)TestParticleSystem->GetTransform();
@@ -178,8 +178,8 @@ update_status ModuleScene::Update(float dt)
 
 			break;
 		}
-		FireworkToAirName_Particle = "..\\Game\\Assets\\Particle System\\Particles\\Firework_test";
-		FireworkToAirName_Emitter = "..\\Game\\Assets\\Particle System\\Emitter\\Firework_test";
+		FireworkToAirName_Particle = "..\\Game\\Assets\\Particle System\\Particles\\firework_01_toair";
+		FireworkToAirName_Emitter = "..\\Game\\Assets\\Particle System\\Emitter\\firework_01_toair";
 
 		//FireworkExplosionName = "Firework_test_explosion"; //Emitter and particle resources named the same
 
@@ -187,10 +187,10 @@ update_status ModuleScene::Update(float dt)
 		((ComponentParticleSystem*)Particle)->LoadEmitterResource(FireworkToAirName_Emitter.c_str());
 		
 		App->scene->AddChildToRoot(TestParticleSystem);
-		FireworkSparkleGameObjects.push_back(TestParticleSystem);
+		FireworkSparkleGameObjects_NoChild.push_back(TestParticleSystem);
 	}
 
-	for (std::list<GameObject*>::const_iterator item = FireworkSparkleGameObjects.cbegin(); item != FireworkSparkleGameObjects.cend();)
+	for (std::list<GameObject*>::const_iterator item = FireworkSparkleGameObjects_NoChild.cbegin(); item != FireworkSparkleGameObjects_NoChild.cend();)
 	{
 		ComponentTransform* Transform = (ComponentTransform*)(*item)->GetTransform();
 		float3 Position = Transform->GetPos();
@@ -219,17 +219,17 @@ update_status ModuleScene::Update(float dt)
 
 				break;
 			}
-			FireworkToAirName_Particle = "..\\Game\\Assets\\Particle System\\Particles\\Firework_test_explosion";
-			FireworkToAirName_Emitter = "..\\Game\\Assets\\Particle System\\Emitter\\Firework_test_explosion";
+			FireworkToAirName_Particle = "..\\Game\\Assets\\Particle System\\Particles\\firework_01_explosion";
+			FireworkToAirName_Emitter = "..\\Game\\Assets\\Particle System\\Emitter\\firework_01_explosion";
 
 			((ComponentParticleSystem*)Particle)->LoadParticleResource(FireworkToAirName_Particle.c_str());
 			((ComponentParticleSystem*)Particle)->LoadEmitterResource(FireworkToAirName_Emitter.c_str());
 			App->scene->AddChildToRoot(TestParticleSystem);
-			item = FireworkSparkleGameObjects.erase(item);
+			item = FireworkSparkleGameObjects_NoChild.erase(item);
 		}
 		else ++item;
 	}
-	*/
+	/**/
 
 	return UPDATE_CONTINUE;
 }
@@ -243,6 +243,7 @@ update_status ModuleScene::PostUpdate(float dt)
 		CleanUpGameObjectTree(root, false);
 		scene_octree.Clear(false);
 		FireworkSparkleGameObjects.clear();
+		FireworkSparkleGameObjects_NoChild.clear();
 		CleanScene = false;
 	}
 	if (SceneToLoad)
