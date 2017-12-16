@@ -211,7 +211,7 @@ public:
 	ParticleAssignedState InitialState;				//Particle Initial State Properties with no variations, all are final values (calculated from ParticleState +- Var)
 	ParticleAssignedState FinalState;				//Particle Final State Properties with no variations, all are final values (calculated from ParticleState +- Var)
 	bool MeshChanged = false;
-	float CameraDistance = 0.0f;
+	long double CameraDistance = 0.0;
 
 private:
 	bool ToDelete = false;

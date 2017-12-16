@@ -578,7 +578,11 @@ bool ParticleSystem::PreUpdate(float dt)
 	bool ret = true;
 	for (std::list<Particle*>::iterator item = Particles.begin(); item != Particles.cend() && ret == true; ++item)
 	{
-		(*item)->CameraDistance = (CameraPosition - (*item)->Properties.Position).Length();
+		//long double X = (long double)CameraPosition.x - (long double)(*item)->Properties.Position.x;
+		//long double Y = (long double)CameraPosition.y - (long double)(*item)->Properties.Position.y;
+		//long double Z = (long double)CameraPosition.z - (long double)(*item)->Properties.Position.z;
+		//(*item)->CameraDistance = X*X + Y*Y + Z*Z;
+		(*item)->CameraDistance = (long double)((CameraPosition - (*item)->Properties.Position).Length());
 		ret = (*item)->PreUpdate(dt);
 	}
 

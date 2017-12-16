@@ -26,6 +26,8 @@ public:
 
 	void SetParticleResource(uint uuid);
 	void SetEmitterResource(uint uuid);
+	void SetDebugOptions(bool ShowEmitterBoundBox, bool ShowEmitter);
+	void GetDebugOptions(bool& ShowEmitterBoundBox, bool& ShowEmitter);
 
 	bool SaveComponent(JSON_Object* conf) const;
 	bool LoadComponent(JSON_Object* conf);

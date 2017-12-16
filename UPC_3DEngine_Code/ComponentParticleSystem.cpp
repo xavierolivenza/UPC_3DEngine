@@ -183,12 +183,27 @@ void ComponentParticleSystem::SetEmitterResource(uint uuid)
 	//PartSystem->SetEmitterResource(Emitter);
 }
 
+void ComponentParticleSystem::SetDebugOptions(bool ShowEmitterBoundBox, bool ShowEmitter)
+{
+	PartSystem->ShowEmitterBoundBox = ShowEmitterBoundBox;
+	PartSystem->ShowEmitter = ShowEmitter;
+}
+
+void ComponentParticleSystem::GetDebugOptions(bool & ShowEmitterBoundBox, bool & ShowEmitter)
+{
+	ShowEmitterBoundBox = PartSystem->ShowEmitterBoundBox;
+	ShowEmitter = PartSystem->ShowEmitter;
+}
+
 bool ComponentParticleSystem::SaveComponent(JSON_Object* conf) const
 {
 	App->parsonjson->SetUInt(conf, "UUID", UUID);
 	App->parsonjson->SetUInt(conf, "UUID_Parent", parent->GetUUID());
 	App->parsonjson->SetBool(conf, "Active", Active);
 	App->parsonjson->SetUInt(conf, "Type", type);
+
+	App->parsonjson->SetBool(conf, "ShowEmitterBoundBox", PartSystem->ShowEmitterBoundBox);
+	App->parsonjson->SetBool(conf, "ShowEmitter", PartSystem->ShowEmitter);
 
 	JSON_Object* file_conf = nullptr;
 
@@ -282,6 +297,9 @@ bool ComponentParticleSystem::LoadComponent(JSON_Object* conf)
 {
 	UUID = App->parsonjson->GetUInt(conf, "UUID", 0);
 	Active = App->parsonjson->GetBool(conf, "Active", true);
+
+	PartSystem->ShowEmitterBoundBox = App->parsonjson->GetBool(conf, "ShowEmitterBoundBox", false);
+	PartSystem->ShowEmitter = App->parsonjson->GetBool(conf, "ShowEmitter", true);
 
 	JSON_Object* file_conf = nullptr;
 
@@ -473,7 +491,7 @@ void ComponentParticleSystem::ImGuiLoadEmitterPopUp()
 
 	ParsonJSON* parsonjson = new ParsonJSON(FileToLoadName.c_str(), true, false, false);
 	bool Meta = parsonjson->Init();
-	if (Meta) parsonjson->LoadParticleEmitter(Emitter);
+	if (Meta) parsonjson->LoadParticleEmitter(this, Emitter);
 	RELEASE(parsonjson);
 
 	PartSystem->SetEmitterResource(Emitter);
@@ -546,7 +564,7 @@ void ComponentParticleSystem::ImGuiSaveEmitterPopUp()
 
 	ParsonJSON* parsonjson = new ParsonJSON(FileToSaveName.c_str(), true, false, false);
 	bool Meta = parsonjson->Init();
-	if (Meta) parsonjson->SaveParticleEmitter(&Emitter);
+	if (Meta) parsonjson->SaveParticleEmitter(this, &Emitter);
 	RELEASE(parsonjson);
 }
 
@@ -570,7 +588,7 @@ void ComponentParticleSystem::LoadEmitterResource(const char * filename)
 
 	ParsonJSON* parsonjson = new ParsonJSON(filename, true, false, false);
 	bool Meta = parsonjson->Init();
-	if (Meta) parsonjson->LoadParticleEmitter(Emitter);
+	if (Meta) parsonjson->LoadParticleEmitter(this, Emitter);
 	RELEASE(parsonjson);
 
 	PartSystem->SetEmitterResource(Emitter);

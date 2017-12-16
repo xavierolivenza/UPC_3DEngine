@@ -36,8 +36,8 @@ public:
 	bool SaveParticleStates(const ResourceTexture* TextureResource, const ParticleTextureData* TexData, const ParticleState* stateI, const ParticleState* stateF) const;
 	bool LoadParticleStates(ComponentParticleSystem* system, ParticleState& stateI, ParticleState& stateF) const;
 
-	bool SaveParticleEmitter(const ParticleEmitter* emitter) const;
-	bool LoadParticleEmitter(ParticleEmitter& emitter) const;
+	bool SaveParticleEmitter(ComponentParticleSystem* system, const ParticleEmitter* emitter) const;
+	bool LoadParticleEmitter(ComponentParticleSystem* system, ParticleEmitter& emitter) const;
 
 	int GetInt(JSON_Object* conf, const char* field, int default = 0) const;
 	uint GetUInt(JSON_Object* conf, const char* field, uint default = 0) const;

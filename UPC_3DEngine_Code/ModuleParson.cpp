@@ -298,7 +298,7 @@ bool ParsonJSON::LoadParticleStates(ComponentParticleSystem* system, ParticleSta
 	return true;
 }
 
-bool ParsonJSON::SaveParticleEmitter(const ParticleEmitter* emitter) const
+bool ParsonJSON::SaveParticleEmitter(ComponentParticleSystem* system, const ParticleEmitter* emitter) const
 {
 	JSON_Object* conf = nullptr;
 
@@ -307,6 +307,12 @@ bool ParsonJSON::SaveParticleEmitter(const ParticleEmitter* emitter) const
 		json_object_set_value(root_object, "emitter", json_value_init_object());
 	//Save
 	conf = json_object_get_object(root_object, "emitter");
+
+	bool ShowEmitterBoundBox = false;
+	bool ShowEmitter = false;
+	system->GetDebugOptions(ShowEmitterBoundBox, ShowEmitter);
+	SetBool(conf, "ShowEmitterBoundBox", ShowEmitterBoundBox);
+	SetBool(conf, "ShowEmitter", ShowEmitter);
 
 	SetFloat(conf, "EmitterLifeMax", emitter->EmitterLifeMax);
 	SetFloat4x4(conf, "Transform", emitter->Transform);
@@ -347,10 +353,14 @@ bool ParsonJSON::SaveParticleEmitter(const ParticleEmitter* emitter) const
 	return true;
 }
 
-bool ParsonJSON::LoadParticleEmitter(ParticleEmitter& emitter) const
+bool ParsonJSON::LoadParticleEmitter(ComponentParticleSystem* system, ParticleEmitter& emitter) const
 {
 	JSON_Object* conf = nullptr;
 	conf = json_object_get_object(root_object, "emitter");
+
+	bool ShowEmitterBoundBox = GetBool(conf, "ShowEmitterBoundBox");
+	bool ShowEmitter = GetBool(conf, "ShowEmitter");
+	system->SetDebugOptions(ShowEmitterBoundBox, ShowEmitter);
 
 	emitter.EmitterLifeMax = GetFloat(conf, "EmitterLifeMax");
 	emitter.Transform = GetFloat4x4(conf, "Transform");
