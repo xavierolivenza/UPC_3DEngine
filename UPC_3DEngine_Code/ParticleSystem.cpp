@@ -641,8 +641,6 @@ bool ParticleSystem::Update(float dt)
 		}
 	}
 
-	
-	
 	//First time using Lambda operator, so i left a short explanation to don't forget what exactly is.
 	//[]->Lambda -> Shortcut to a function (or object that ca be called as a function, defined by operator ())
 	//Enables to bypass the creation of a function object, usefull to encapsulate short codes passed to algorithms.
@@ -752,28 +750,28 @@ void ParticleSystem::SetTextureResource(unsigned int ID, unsigned int width, uns
 	TextureData.Set(ID, width, heigth, columns, rows, numberOfFrames, AnimationOrder);
 	GenerateTexturesUVs();
 	Emitter.EmitterLife = 0.0f;
-	Emitter.EmissionDuration = 0.0f;
+	//Emitter.EmissionDuration = 0.0f;
 }
 
 void ParticleSystem::SetInitialStateResource(const ParticleState& state)
 {
 	InitialState = state;
 	Emitter.EmitterLife = 0.0f;
-	Emitter.EmissionDuration = 0.0f;
+	//Emitter.EmissionDuration = 0.0f;
 }
 
 void ParticleSystem::SetFinalStateResource(const ParticleState& state)
 {
 	FinalState = state;
 	Emitter.EmitterLife = 0.0f;
-	Emitter.EmissionDuration = 0.0f;
+	//Emitter.EmissionDuration = 0.0f;
 }
 
 void ParticleSystem::SetEmitterResource(const ParticleEmitter& emitter)
 {
 	Emitter = emitter;
 	Emitter.EmitterLife = 0.0f;
-	Emitter.EmissionDuration = 0.0f;
+	//Emitter.EmissionDuration = 0.0f;
 }
 
 void ParticleSystem::GetInitialState(ParticleState & state) const
