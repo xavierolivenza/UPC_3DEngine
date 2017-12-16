@@ -55,6 +55,18 @@ I have worked in the Octree implementation and usage with frustum culling, I hav
 
 ## PARTICLE SYSTEM
 
+Our particle system is an aproach to Unity particle system. You can create a particle system component. When creating a particle component, a part of all the transformation options that you have in all components there's an option to visualize a particle editor. The particle editor has multiple options.
+
+If you have loaded a texture in the preview particle texture window, you can set the number of columns and rows you want in the preview to choose a posible limitation in animation frames, you can also choose in which direction the animation of the texture has to be readed.
+
+You have initial and final state editor window. In these windows the options are the same, the difference is in which moment of the life of the particle the modifications are going to be applied. The options that you have in these windows are changing the color and alpha of the particle, setting a color variation, setting an acceleration (gravity is the one predefined) and set an acceleration variation.
+
+Finally you have the emitter options editor. In this window you can choose the shape of the emitter and some variables depending on the shape, for example aperture and base radius and height for the cone. You can also choose the emitter life, how many particles is the emitter emitting per second, the lifetime of the particles, lifetime variation, if you want loop in the emision or not, you can see the emission duration, the number if particles in scene, the speed of the particles and a variation if speed, the emyssion type (Local or World), the particle facing (Null, Billboard, Horizontal Billboard, Vertical Billboard), if you want the emitter to be shown, if you want the emitter AABB to be shown and finally AABB min and max.
+
+Once you have all the options in a way you like, just press play button and see the particle component running in scene. While running you can continue editing each particle component.
+
+Finally you can save and load all the particle resources and emitters each with its texture, pressing the buttons in each particle system component.
+
 ![](https://github.com/xavierolivenza/UPC_3DEngine/blob/master/docs/GIF01.gif)
 	
 ## CREDITS
