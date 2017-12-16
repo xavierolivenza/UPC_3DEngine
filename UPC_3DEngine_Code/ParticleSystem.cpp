@@ -77,8 +77,8 @@ void ParticleEmitter::ResetEmitterValues()
 		EmitterShape.ConeTrunk_Shape.heigth = 1.0f;
 		break;
 	case EmitterType_Box:
-		EmitterShape.Box_Shape.maxPoint = float3(-0.5f, -0.5f, -0.5f);
-		EmitterShape.Box_Shape.minPoint = float3(0.5f, 0.5f, 0.5f);
+		EmitterShape.Box_Shape.maxPoint = float3(0.5f, 0.5f, 0.5f);
+		EmitterShape.Box_Shape.minPoint = float3(-0.5f, -0.5f, -0.5f);
 		break;
 	case EmitterType_Circle:
 		EmitterShape.Circle_Shape.r = 1.0f;
@@ -1118,11 +1118,29 @@ void ParticleSystem::DrawEmitterOptions()
 		ImGui::PopItemWidth();
 		break;
 	case 3: //EmitterType_Box
+	{
 		ImGui::PushItemWidth(200);
-		ImGui::DragFloat3("Max Point", (float*)&Emitter.EmitterShape.Box_Shape.maxPoint, 0.1f, -100.0f, 100.0f);
-		ImGui::DragFloat3("Min Point", (float*)&Emitter.EmitterShape.Box_Shape.minPoint, 0.1f, -100.0f, 100.0f);
+		static float SizeX = 1.0f;
+		if (ImGui::DragFloat("Size X", &SizeX, 0.1f, 0.0f, 100.0f))
+		{
+			Emitter.EmitterShape.Box_Shape.maxPoint.x = SizeX / 2.0f;
+			Emitter.EmitterShape.Box_Shape.minPoint.x = -SizeX / 2.0f;
+		}
+		static float SizeY = 1.0f;
+		if (ImGui::DragFloat("Size Y", &SizeY, 0.1f, 0.0f, 100.0f))
+		{
+			Emitter.EmitterShape.Box_Shape.maxPoint.y = SizeY / 2.0f;
+			Emitter.EmitterShape.Box_Shape.minPoint.y = -SizeY / 2.0f;
+		}
+		static float SizeZ = 1.0f;
+		if (ImGui::DragFloat("Size Z", &SizeZ, 0.1f, 0.0f, 100.0f))
+		{
+			Emitter.EmitterShape.Box_Shape.maxPoint.z = SizeZ / 2.0f;
+			Emitter.EmitterShape.Box_Shape.minPoint.z = -SizeZ / 2.0f;
+		}
 		ImGui::PopItemWidth();
 		break;
+	}
 	case 4: //EmitterType_Circle
 		ImGui::PushItemWidth(100);
 		ImGui::DragFloat("Radius", (float*)&Emitter.EmitterShape.Circle_Shape.r, 0.1f, 0.0f, 100.0f);
@@ -1182,38 +1200,26 @@ bool ParticleSystem::CreateParticle()
 		float3 BasePoint = float3::zero;
 		float3 TopPoint = float3(0.0f, Emitter.EmitterShape.ConeTrunk_Shape.heigth, 0.0f);
 		if (Emitter.EmitterShape.ConeTrunk_Shape.Bottom_Circle.r > 0.0f)
-			BasePoint = Emitter.EmitterShape.ConeTrunk_Shape.Bottom_Circle.RandomPointInside(RandGen);
+		{
+			float radius = RandGen.Float(0.0f, Emitter.EmitterShape.ConeTrunk_Shape.Bottom_Circle.r);
+			float angle = RandGen.Float(0.0f, 360.0f) * DEGTORAD;
+			BasePoint = float3(cos(angle) * radius, 0.0f, sin(angle) * radius);
+		}
 		if (Emitter.EmitterShape.ConeTrunk_Shape.Upper_Circle.r > 0.0f)
 			TopPoint = (Emitter.EmitterShape.ConeTrunk_Shape.Upper_Circle.r * BasePoint) / Emitter.EmitterShape.ConeTrunk_Shape.Bottom_Circle.r;
 		TopPoint.y = Emitter.EmitterShape.ConeTrunk_Shape.heigth;
+		offset = BasePoint;
 		Direction = TopPoint - BasePoint;
 		break;
 	}
 	case 3: //EmitterType_Box
 	{
-		float Size = Emitter.EmitterShape.Box_Shape.maxPoint.x - Emitter.EmitterShape.Box_Shape.minPoint.x;
-		offset.x = RandGen.Float(Size / 2.0f, -Size / 2.0f);
-		offset.z = RandGen.Float(Size / 2.0f, -Size / 2.0f);
-
-		Direction = float3(0.0f, Size, 0.0f);
-
-		/*
-		float Size = Emitter.EmitterShape.Box_Shape.maxPoint.x - Emitter.EmitterShape.Box_Shape.minPoint.x;
-		float3 BasePoint = float3::zero;
-		BasePoint.x = RandGen.Float(Size / 2.0f, -Size / 2.0f);
-		BasePoint.y = 0.0f;
-		BasePoint.z = RandGen.Float(Size / 2.0f, -Size / 2.0f);
-		float3 TopPoint = BasePoint;
-		TopPoint.y = Size / 2.0f;
-		*/
-
-		/*
-		float3 BasePoint = Emitter.EmitterShape.Box_Shape.RandomPointInside(RandGen);
-		//BasePoint.y = 0.0f;
-		float3 TopPoint = BasePoint;
-		TopPoint.y = Emitter.EmitterShape.Box_Shape.maxPoint.x - Emitter.EmitterShape.Box_Shape.minPoint.x;
-		Direction = BasePoint - TopPoint;
-		*/
+		float SizeX = abs(Emitter.EmitterShape.Box_Shape.maxPoint.x - Emitter.EmitterShape.Box_Shape.minPoint.x);
+		float SizeY = abs(Emitter.EmitterShape.Box_Shape.maxPoint.y - Emitter.EmitterShape.Box_Shape.minPoint.y);
+		float SizeZ = abs(Emitter.EmitterShape.Box_Shape.maxPoint.z - Emitter.EmitterShape.Box_Shape.minPoint.z);
+		offset.x = RandGen.Float(SizeX / 2.0f, -SizeX / 2.0f);
+		offset.z = RandGen.Float(SizeZ / 2.0f, -SizeZ / 2.0f);
+		Direction = float3(0.0f, SizeY, 0.0f);
 		break;
 	}
 	case 4: //EmitterType_Circle
