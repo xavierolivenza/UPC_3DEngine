@@ -95,7 +95,7 @@ update_status ModuleScene::Update(float dt)
 	if (octree_draw)
 		scene_octree.DebugDraw();
 
-	/*
+	/**/
 	LCG RandGen;
 	float Speed = RandGen.Float(25.0f, 50.0f);
 	float AngleDiff = 45.0f;
@@ -148,9 +148,9 @@ update_status ModuleScene::Update(float dt)
 			item = FireworkSparkleGameObjects.erase(item);
 		else ++item;
 	}
-	*/
-
 	/**/
+
+	/*
 	LCG RandGen;
 	float Speed = RandGen.Float(25.0f, 50.0f);
 	float AngleDiff = 45.0f;
@@ -229,7 +229,7 @@ update_status ModuleScene::Update(float dt)
 		}
 		else ++item;
 	}
-	/**/
+	*/
 
 	return UPDATE_CONTINUE;
 }
