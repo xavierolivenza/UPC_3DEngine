@@ -153,6 +153,8 @@ void ComponentParticleSystem::DrawComponentImGui()
 			FileType = Child_Emitter_Resource;
 			PopUpLoadOpen = true;
 		}
+		if (ImGui::Button("Unload children", ImVec2(120, 30)))
+			ChildParticle = ChildEmitter = "";
 		char title[1000] = "";
 		if (ChildParticle.length() <= 950)
 		{
@@ -331,7 +333,7 @@ bool ComponentParticleSystem::SaveComponent(JSON_Object* conf) const
 	App->parsonjson->SetFloat(file_conf, "SpeedVariation", emitter->SpeedVariation);
 	App->parsonjson->SetFloat3(file_conf, "BoundingBox_min", emitter->BoundingBox.minPoint);
 	App->parsonjson->SetFloat3(file_conf, "BoundingBox_max", emitter->BoundingBox.maxPoint);
-	App->parsonjson->SetUInt(file_conf, "EmissionType", emitter->EmissionType);
+	//App->parsonjson->SetUInt(file_conf, "EmissionType", emitter->EmissionType);
 	App->parsonjson->SetUInt(file_conf, "Type", emitter->Type);
 	App->parsonjson->SetUInt(file_conf, "ParticleFacingOptions", emitter->ParticleFacingOptions);
 
@@ -431,7 +433,7 @@ bool ComponentParticleSystem::LoadComponent(JSON_Object* conf)
 	emitter.SpeedVariation = App->parsonjson->GetFloat(file_conf, "SpeedVariation");
 	emitter.BoundingBox.minPoint = App->parsonjson->GetFloat3(file_conf, "BoundingBox_min");
 	emitter.BoundingBox.maxPoint = App->parsonjson->GetFloat3(file_conf, "BoundingBox_max");
-	emitter.EmissionType = (ParticleEmitter::TypeEmission)App->parsonjson->GetUInt(file_conf, "EmissionType");
+	//emitter.EmissionType = (ParticleEmitter::TypeEmission)App->parsonjson->GetUInt(file_conf, "EmissionType");
 	emitter.Type = (ParticleEmitter::TypeEmitter)App->parsonjson->GetUInt(file_conf, "Type");
 	emitter.ParticleFacingOptions = (ParticleEmitter::TypeBillboard)App->parsonjson->GetUInt(file_conf, "ParticleFacingOptions");
 

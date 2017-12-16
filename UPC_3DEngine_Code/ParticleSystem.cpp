@@ -356,8 +356,8 @@ void Particle::DrawParticle()
 	glTexCoordPointer(3, GL_FLOAT, 0, NULL);
 
 	glPushMatrix();
-	//float4x4 ParticleMatrix = float4x4::FromTRS(Properties.Position, Properties.Rotation, Properties.Scale * Properties.Size).Transposed();
-	/**/
+	float4x4 ParticleMatrix = float4x4::FromTRS(Properties.Position, Properties.Rotation, Properties.Scale * Properties.Size).Transposed();
+	/*
 	float4x4 ParticleMatrix = float4x4::identity;
 	if (ParentParticleSystem->Emitter.EmissionType == 0)//LocalEmission
 	{
@@ -370,7 +370,7 @@ void Particle::DrawParticle()
 	}
 	else
 		ParticleMatrix = float4x4::FromTRS(Properties.Position, Properties.Rotation, Properties.Scale * Properties.Size).Transposed();
-	/**/
+	*/
 	glMultMatrixf(ParticleMatrix.ptr());
 
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, Mesh.id_indices);
@@ -1179,7 +1179,7 @@ void ParticleSystem::DrawEmitterOptions()
 	ImGui::PopItemWidth();
 	ImGui::NextColumn();
 	ImGui::PushItemWidth(175);
-	ImGui::Combo("Emyssion Type", (int*)&Emitter.EmissionType, "Local\0World\0");
+	//ImGui::Combo("Emyssion Type", (int*)&Emitter.EmissionType, "Local\0World\0");
 	ImGui::Combo("Particle Facing Options", (int*)&Emitter.ParticleFacingOptions, "Null\0Billboard\0Vertical Billboard\0Horizontal Billboard");
 	ImGui::PopItemWidth();
 	//TODO: Curve editor to interpolate initial-final

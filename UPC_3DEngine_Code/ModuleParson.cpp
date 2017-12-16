@@ -330,7 +330,7 @@ bool ParsonJSON::SaveParticleEmitter(ComponentParticleSystem* system, const Part
 	SetFloat(conf, "SpeedVariation", emitter->SpeedVariation);
 	SetFloat3(conf, "BoundingBox_min", emitter->BoundingBox.minPoint);
 	SetFloat3(conf, "BoundingBox_max", emitter->BoundingBox.maxPoint);
-	SetUInt(conf, "EmissionType", emitter->EmissionType);
+	//SetUInt(conf, "EmissionType", emitter->EmissionType);
 	SetUInt(conf, "Type", emitter->Type);
 	SetUInt(conf, "ParticleFacingOptions", emitter->ParticleFacingOptions);
 
@@ -383,7 +383,7 @@ bool ParsonJSON::LoadParticleEmitter(ComponentParticleSystem* system, ParticleEm
 	emitter.SpeedVariation = GetFloat(conf, "SpeedVariation");
 	emitter.BoundingBox.minPoint = GetFloat3(conf, "BoundingBox_min");
 	emitter.BoundingBox.maxPoint = GetFloat3(conf, "BoundingBox_max");
-	emitter.EmissionType = (ParticleEmitter::TypeEmission)GetUInt(conf, "EmissionType");
+	//emitter.EmissionType = (ParticleEmitter::TypeEmission)GetUInt(conf, "EmissionType");
 	emitter.Type = (ParticleEmitter::TypeEmitter)GetUInt(conf, "Type");
 	emitter.ParticleFacingOptions = (ParticleEmitter::TypeBillboard)GetUInt(conf, "ParticleFacingOptions");
 

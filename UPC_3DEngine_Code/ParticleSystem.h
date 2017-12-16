@@ -108,11 +108,13 @@ public:
 	float SpeedVariation = 0.0f;
 	AABB BoundingBox;								//User can set AABB for camera culling purpose (we can add physics...)
 
+	/*
 	enum TypeEmission
 	{
 		LocalEmission,
 		WorldEmission
 	} EmissionType = WorldEmission;
+	*/
 	enum TypeEmitter
 	{
 		EmitterType_Sphere,
