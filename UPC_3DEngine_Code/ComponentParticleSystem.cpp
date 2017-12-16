@@ -251,6 +251,12 @@ void ComponentParticleSystem::GetDebugOptions(bool & ShowEmitterBoundBox, bool &
 	ShowEmitter = PartSystem->ShowEmitter;
 }
 
+void ComponentParticleSystem::SetChild(const char* Particle, const char* Emitter)
+{
+	ChildParticle = Particle;
+	ChildEmitter = Emitter;
+}
+
 bool ComponentParticleSystem::SaveComponent(JSON_Object* conf) const
 {
 	App->parsonjson->SetUInt(conf, "UUID", UUID);
@@ -260,6 +266,9 @@ bool ComponentParticleSystem::SaveComponent(JSON_Object* conf) const
 
 	App->parsonjson->SetBool(conf, "ShowEmitterBoundBox", PartSystem->ShowEmitterBoundBox);
 	App->parsonjson->SetBool(conf, "ShowEmitter", PartSystem->ShowEmitter);
+
+	App->parsonjson->SetString(conf, "ChildParticle", ChildParticle.c_str());
+	App->parsonjson->SetString(conf, "ChildEmitter", ChildEmitter.c_str());
 
 	JSON_Object* file_conf = nullptr;
 
@@ -356,6 +365,11 @@ bool ComponentParticleSystem::LoadComponent(JSON_Object* conf)
 
 	PartSystem->ShowEmitterBoundBox = App->parsonjson->GetBool(conf, "ShowEmitterBoundBox", false);
 	PartSystem->ShowEmitter = App->parsonjson->GetBool(conf, "ShowEmitter", true);
+
+	const char* ChildParticle = App->parsonjson->GetString(conf, "ChildParticle");
+	const char* ChildEmitter = App->parsonjson->GetString(conf, "ChildEmitter");
+	if ((ChildParticle != nullptr) && (ChildEmitter != nullptr))
+		SetChild(ChildParticle, ChildEmitter);
 
 	JSON_Object* file_conf = nullptr;
 
@@ -655,6 +669,18 @@ void ComponentParticleSystem::LoadEmitterResource(const char * filename)
 bool ComponentParticleSystem::IsEmitterDead()
 {
 	return PartSystem->IsEmitterDead();
+}
+
+const std::string* ComponentParticleSystem::GetChildParticle() const
+{
+	if (!ChildParticle.empty()) return &ChildParticle;
+	return nullptr;
+}
+
+const std::string* ComponentParticleSystem::GetChildEmitter() const
+{
+	if (!ChildEmitter.empty()) return &ChildEmitter;
+	return nullptr;
 }
 
 void ComponentParticleSystem::DrawDirectory(const char * directory)

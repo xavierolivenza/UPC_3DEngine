@@ -29,6 +29,8 @@ public:
 	void SetDebugOptions(bool ShowEmitterBoundBox, bool ShowEmitter);
 	void GetDebugOptions(bool& ShowEmitterBoundBox, bool& ShowEmitter);
 
+	void SetChild(const char* Particle, const char* Emitter);
+
 	bool SaveComponent(JSON_Object* conf) const;
 	bool LoadComponent(JSON_Object* conf);
 
@@ -44,6 +46,9 @@ public:
 	void LoadParticleResource(const char* filename);
 	void LoadEmitterResource(const char* filename);
 	bool IsEmitterDead(); //Usefull to execute an other emitter from the outside when this dies
+
+	const std::string* GetChildParticle() const;
+	const std::string* GetChildEmitter() const;
 
 private:
 	void DrawDirectory(const char* directory);

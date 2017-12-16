@@ -754,6 +754,7 @@ void ParticleSystem::SetTextureResource(unsigned int ID, unsigned int width, uns
 	TextureData.Set(ID, width, heigth, columns, rows, numberOfFrames, AnimationOrder);
 	GenerateTexturesUVs();
 	Emitter.EmitterLife = 0.0f;
+	NextParticleTime = 0.0f;
 	//Emitter.EmissionDuration = 0.0f;
 }
 
@@ -761,6 +762,7 @@ void ParticleSystem::SetInitialStateResource(const ParticleState& state)
 {
 	InitialState = state;
 	Emitter.EmitterLife = 0.0f;
+	NextParticleTime = 0.0f;
 	//Emitter.EmissionDuration = 0.0f;
 }
 
@@ -768,6 +770,7 @@ void ParticleSystem::SetFinalStateResource(const ParticleState& state)
 {
 	FinalState = state;
 	Emitter.EmitterLife = 0.0f;
+	NextParticleTime = 0.0f;
 	//Emitter.EmissionDuration = 0.0f;
 }
 
@@ -775,6 +778,7 @@ void ParticleSystem::SetEmitterResource(const ParticleEmitter& emitter)
 {
 	Emitter = emitter;
 	Emitter.EmitterLife = 0.0f;
+	NextParticleTime = 0.0f;
 	//Emitter.EmissionDuration = 0.0f;
 }
 

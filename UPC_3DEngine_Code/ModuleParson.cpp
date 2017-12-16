@@ -314,6 +314,11 @@ bool ParsonJSON::SaveParticleEmitter(ComponentParticleSystem* system, const Part
 	SetBool(conf, "ShowEmitterBoundBox", ShowEmitterBoundBox);
 	SetBool(conf, "ShowEmitter", ShowEmitter);
 
+	if (system->GetChildParticle() != nullptr)
+		SetString(conf, "ChildParticle", system->GetChildParticle()->c_str());
+	if (system->GetChildEmitter() != nullptr)
+		SetString(conf, "ChildEmitter", system->GetChildEmitter()->c_str());
+
 	SetFloat(conf, "EmitterLifeMax", emitter->EmitterLifeMax);
 	SetFloat4x4(conf, "Transform", emitter->Transform);
 	SetUInt(conf, "SpawnRate", emitter->SpawnRate);
@@ -361,6 +366,11 @@ bool ParsonJSON::LoadParticleEmitter(ComponentParticleSystem* system, ParticleEm
 	bool ShowEmitterBoundBox = GetBool(conf, "ShowEmitterBoundBox");
 	bool ShowEmitter = GetBool(conf, "ShowEmitter");
 	system->SetDebugOptions(ShowEmitterBoundBox, ShowEmitter);
+
+	const char* ChildParticle = GetString(conf, "ChildParticle");
+	const char* ChildEmitter = GetString(conf, "ChildEmitter");
+	if ((ChildParticle != nullptr) && (ChildEmitter != nullptr))
+		system->SetChild(ChildParticle, ChildEmitter);
 
 	emitter.EmitterLifeMax = GetFloat(conf, "EmitterLifeMax");
 	emitter.Transform = GetFloat4x4(conf, "Transform");
@@ -586,7 +596,8 @@ bool ParsonJSON::SetBool(JSON_Object* conf, const char * field, bool value) cons
 
 bool ParsonJSON::SetString(JSON_Object* conf, const char * field, const char* value) const
 {
-	return json_object_set_string(conf, field, value) == JSONSuccess;
+	if(value != nullptr) return json_object_set_string(conf, field, value) == JSONSuccess;
+	return false;
 }
 
 bool ParsonJSON::SetFloat2(JSON_Object* conf, const char* field, float2 value) const
