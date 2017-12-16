@@ -52,6 +52,10 @@ I have worked in the Octree implementation and usage with frustum culling, I hav
 -Help: This window has the options to download latest release, report bug, and show the documentation. It also has about, which is a window with useful information like license, libraries used, authors, etc...
 
 -Close: Closes the engine
+
+## PARTICLE SYSTEM
+
+![](https://github.com/xavierolivenza/UPC_3DEngine/blob/master/docs/GIF01.gif)
 	
 ## CREDITS
 
