@@ -157,6 +157,16 @@ void ComponentParticleSystem::SetTextureResource(uint uuid, int columns, int row
 		PartSystem->SetTextureResource(TextureResource->TextureDataStruct.id_texture, TextureResource->TextureDataStruct.texture_w, TextureResource->TextureDataStruct.texture_h, columns, rows, numberOfFrames, AnimationOrder);
 }
 
+void ComponentParticleSystem::SetTextureResource(const char * Path, int columns, int rows, int numberOfFrames, uint AnimationOrder)
+{
+	FileToLoad = Path;
+	size_t bar_pos = FileToLoad.rfind("\\") + 1;
+	size_t dot_pos = FileToLoad.rfind(".");
+	FileToLoadName = FileToLoad.substr(bar_pos, dot_pos - bar_pos);
+	uint Texuuid = App->resources->LoadResource((*App->importer->Get_Library_material_path() + "\\" + FileToLoadName + ".dds").c_str(), FileToLoad.c_str());
+	SetTextureResource(Texuuid, columns, rows, numberOfFrames, AnimationOrder);
+}
+
 void ComponentParticleSystem::SetParticleResource(uint uuid)
 {
 	//ParticleState InitialState;
@@ -445,7 +455,7 @@ void ComponentParticleSystem::ImGuiLoadParticlePopUp()
 
 	ParsonJSON* parsonjson = new ParsonJSON(FileToLoadName.c_str(), true, false, false);
 	bool Loaded = parsonjson->Init();
-	if (Loaded) parsonjson->LoadParticleStates(InitialState, FinalState);
+	if (Loaded) parsonjson->LoadParticleStates(this, InitialState, FinalState);
 	RELEASE(parsonjson);
 
 	PartSystem->SetInitialStateResource(InitialState);
@@ -521,7 +531,8 @@ void ComponentParticleSystem::ImGuiSaveParticlePopUp()
 
 	ParsonJSON* parsonjson = new ParsonJSON(FileToSaveName.c_str(), true, false, false);
 	bool Meta = parsonjson->Init();
-	if (Meta) parsonjson->SaveParticleStates(&InitialState, &FinalState);
+	if (Meta) parsonjson->SaveParticleStates(TextureResource, PartSystem->GetTextureResource(),&InitialState, &FinalState);
+
 	RELEASE(parsonjson);
 }
 
@@ -545,7 +556,7 @@ void ComponentParticleSystem::LoadParticleResource(const char * filename)
 
 	ParsonJSON* parsonjson = new ParsonJSON(filename, true, false, false);
 	bool Loaded = parsonjson->Init();
-	if (Loaded) parsonjson->LoadParticleStates(InitialState, FinalState);
+	if (Loaded) parsonjson->LoadParticleStates(this, InitialState, FinalState);
 	RELEASE(parsonjson);
 
 	PartSystem->SetInitialStateResource(InitialState);

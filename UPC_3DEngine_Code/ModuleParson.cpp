@@ -9,6 +9,7 @@
 #include "ResourceTexture.h"
 
 #include "ParticleSystem.h"
+#include "ComponentParticleSystem.h"
 
 /*
 static int malloc_count;
@@ -188,7 +189,7 @@ bool ParsonJSON::LoadResource(Resource& mesh)
 	return true;
 }
 
-bool ParsonJSON::SaveParticleStates(const ParticleState* stateI, const ParticleState* stateF) const
+bool ParsonJSON::SaveParticleStates(const ResourceTexture* TextureResource, const ParticleTextureData* TexData, const ParticleState* stateI, const ParticleState* stateF) const
 {
 	JSON_Object* file_conf = nullptr;
 
@@ -200,6 +201,18 @@ bool ParsonJSON::SaveParticleStates(const ParticleState* stateI, const ParticleS
 
 	const ParticleState* State = nullptr;
 	JSON_Object* conf = nullptr;
+
+	if (TextureResource != nullptr)
+	{
+		json_object_set_value(file_conf, "texture", json_value_init_object());
+		conf = json_object_get_object(file_conf, "texture");
+		SetString(conf, "texture_path", TextureResource->GetOriginalFile().c_str());
+		SetInt(conf, "columns", TexData->columns);
+		SetInt(conf, "rows", TexData->rows);
+		SetInt(conf, "numberOfFrames", TexData->numberOfFrames);
+		SetUInt(conf, "AnimationOrder", TexData->AnimationOrder);
+	}
+
 	for (uint i = 0; i < 2; i++)
 	{
 		if (i == 0)
@@ -234,13 +247,25 @@ bool ParsonJSON::SaveParticleStates(const ParticleState* stateI, const ParticleS
 	return true;
 }
 
-bool ParsonJSON::LoadParticleStates(ParticleState& stateI, ParticleState& stateF) const
+bool ParsonJSON::LoadParticleStates(ComponentParticleSystem* system, ParticleState& stateI, ParticleState& stateF) const
 {
 	JSON_Object* file_conf = nullptr;
 	file_conf = json_object_get_object(root_object, "particlestate");
 
 	ParticleState* State = nullptr;
 	JSON_Object* conf = nullptr;
+
+	conf = json_object_get_object(file_conf, "texture");
+	if (conf != nullptr)
+	{
+		const char* Path = App->parsonjson->GetString(conf, "texture_path");
+		int columns = App->parsonjson->GetInt(conf, "columns");
+		int rows = App->parsonjson->GetInt(conf, "rows");
+		int numberOfFrames = App->parsonjson->GetInt(conf, "numberOfFrames");
+		uint AnimationOrder = App->parsonjson->GetUInt(conf, "AnimationOrder");
+		system->SetTextureResource(Path, columns, rows, numberOfFrames, AnimationOrder);
+	}
+
 	for (uint i = 0; i < 2; i++)
 	{
 		if (i == 0)
