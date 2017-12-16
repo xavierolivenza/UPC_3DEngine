@@ -92,7 +92,7 @@ void ComponentParticleSystem::DrawComponentImGui()
 			PopUpSaveOpen = true;
 		}
 		ImGui::SameLine();
-		if (ImGui::Button("Load Particles Resource", ImVec2(180, 30)))
+		if (ImGui::Button("Load Particles Resource", ImVec2(170, 30)))
 		{
 			FileType = Particle_Resource;
 			PopUpLoadOpen = true;
@@ -103,10 +103,32 @@ void ComponentParticleSystem::DrawComponentImGui()
 			PopUpSaveOpen = true;
 		}
 		ImGui::SameLine();
-		if (ImGui::Button("Load Emitter Resource", ImVec2(180, 30)))
+		if (ImGui::Button("Load Emitter Resource", ImVec2(170, 30)))
 		{
 			FileType = Emitter_Resource;
 			PopUpLoadOpen = true;
+		}
+		if (ImGui::Button("Load Child Particles Res", ImVec2(170, 30)))
+		{
+			FileType = Child_Particle_Resource;
+			PopUpLoadOpen = true;
+		}
+		ImGui::SameLine();
+		if (ImGui::Button("Load Child Emitter Res", ImVec2(170, 30)))
+		{
+			FileType = Child_Emitter_Resource;
+			PopUpLoadOpen = true;
+		}
+		char title[1000] = "";
+		if (ChildParticle.length() <= 950)
+		{
+			sprintf_s(title, 1000, "Loaded Child Particle: %s", ChildParticle.c_str());
+			ImGui::Text(title);
+		}
+		if (ChildEmitter.length() <= 950)
+		{
+			sprintf_s(title, 1000, "Loaded Child Emitter: %s", ChildEmitter.c_str());
+			ImGui::Text(title);
 		}
 		/*
 		if (ImGui::Button("Load Mesh", ImVec2(120, 30)))
@@ -398,6 +420,8 @@ void ComponentParticleSystem::ImGuiLoadPopUp()
 	case Texture_Resource: Str = "Load Texture"; break;
 	case Particle_Resource: Str = "Load Particle"; break;
 	case Emitter_Resource: Str = "Load Emitter"; break;
+	case Child_Particle_Resource: Str = "Load Child Particle"; break;
+	case Child_Emitter_Resource: Str = "Load Child Emitter"; break;
 	case MeshResource: Str = "Load Mesh"; break;
 	}
 
@@ -416,8 +440,8 @@ void ComponentParticleSystem::ImGuiLoadPopUp()
 		switch (FileType)
 		{
 		case Texture_Resource: DrawDirectory(App->importer->Get_Assets_path()->c_str()); break;
-		case Particle_Resource: DrawDirectory(App->importer->Get_ParticleSystem_Particles_path()->c_str()); break;
-		case Emitter_Resource: DrawDirectory(App->importer->Get_ParticleSystem_Emitter_path()->c_str()); break;
+		case Particle_Resource: case Child_Particle_Resource: DrawDirectory(App->importer->Get_ParticleSystem_Particles_path()->c_str()); break;
+		case Emitter_Resource: case Child_Emitter_Resource: DrawDirectory(App->importer->Get_ParticleSystem_Emitter_path()->c_str()); break;
 		case MeshResource: DrawDirectory(App->importer->Get_Library_mesh_path()->c_str()); break;
 		}
 		ImGui::EndChild();
@@ -434,6 +458,8 @@ void ComponentParticleSystem::ImGuiLoadPopUp()
 				case Texture_Resource: ImGuiLoadTexturePopUp(); break;
 				case Particle_Resource: ImGuiLoadParticlePopUp(); break;
 				case Emitter_Resource: ImGuiLoadEmitterPopUp(); break;
+				case Child_Particle_Resource: ChildParticle = FileToLoad; break;
+				case Child_Emitter_Resource: ChildEmitter = FileToLoad; break;
 				case MeshResource: ImGuiLoadMeshPopUp(); break;
 				}
 			}
@@ -624,8 +650,7 @@ void ComponentParticleSystem::DrawDirectory(const char * directory)
 			switch (FileType)
 			{
 			case Texture_Resource: if ((DirectoryTemporalStr == ".png") || (DirectoryTemporalStr == ".PNG") || (DirectoryTemporalStr == ".jpg") || (DirectoryTemporalStr == ".JPG") || (DirectoryTemporalStr == ".tga") || (DirectoryTemporalStr == ".TGA") || (DirectoryTemporalStr == ".dds") || (DirectoryTemporalStr == ".DDS")) Valid = true; break;
-			case Particle_Resource: if (DirectoryTemporalStr == ".json") Valid = true; break;
-			case Emitter_Resource: if (DirectoryTemporalStr == ".json") Valid = true; break;
+			case Particle_Resource: case Child_Particle_Resource: case Emitter_Resource: case Child_Emitter_Resource: if (DirectoryTemporalStr == ".json") Valid = true; break;
 			case MeshResource: if (DirectoryTemporalStr == ("." + *App->importer->Get_Mesh_Extention())) Valid = true; break;
 			}
 			if (Valid)

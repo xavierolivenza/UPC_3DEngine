@@ -59,11 +59,16 @@ private:
 	std::string FileToSaveName;
 	std::string DirectoryTemporalStr;
 
+	std::string ChildParticle;
+	std::string ChildEmitter;
+
 	enum
 	{
 		Texture_Resource,
 		Particle_Resource,
 		Emitter_Resource,
+		Child_Particle_Resource,
+		Child_Emitter_Resource,
 		MeshResource
 	} FileType = Texture_Resource;
 };
