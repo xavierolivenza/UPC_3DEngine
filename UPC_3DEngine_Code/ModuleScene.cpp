@@ -242,6 +242,7 @@ update_status ModuleScene::PostUpdate(float dt)
 	{
 		CleanUpGameObjectTree(root, false);
 		scene_octree.Clear(false);
+		FireworkSparkleGameObjects.clear();
 		CleanScene = false;
 	}
 	if (SceneToLoad)
