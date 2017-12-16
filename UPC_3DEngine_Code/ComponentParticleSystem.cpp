@@ -20,7 +20,7 @@ ComponentParticleSystem::ComponentParticleSystem(GameObject* parent, bool Active
 
 ComponentParticleSystem::~ComponentParticleSystem()
 {
-	RELEASE(PartSystem);
+	
 }
 
 bool ComponentParticleSystem::Enable()
@@ -77,6 +77,7 @@ bool ComponentParticleSystem::Disable()
 bool ComponentParticleSystem::CleanUp()
 {
 	PartSystem->CleanUp();
+	RELEASE(PartSystem);
 	return true;
 }
 
