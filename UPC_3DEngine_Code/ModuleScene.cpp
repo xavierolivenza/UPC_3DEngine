@@ -95,6 +95,61 @@ update_status ModuleScene::Update(float dt)
 	if (octree_draw)
 		scene_octree.DebugDraw();
 
+	/*
+	LCG RandGen;
+	float Speed = RandGen.Float(25.0f, 50.0f);
+	float AngleDiff = 45.0f;
+	if (((App->GetEngineTimeStatus() == EngineTimeStatus::play_unpause)) && (App->input->GetKey(SDL_SCANCODE_1) == KEY_DOWN))
+	{
+		GameObject* TestParticleSystem = new GameObject("Particle System", true, true);
+		ComponentTransform* Transform = (ComponentTransform*)TestParticleSystem->GetTransform();
+		float3 EulerRot = Transform->GetRotEuler();
+		EulerRot.x = RandGen.Float(-AngleDiff, AngleDiff);
+		EulerRot.z = RandGen.Float(-AngleDiff, AngleDiff);
+		Quat rot = rot.FromEulerXYZ(EulerRot.x * DEGTORAD, EulerRot.y * DEGTORAD, EulerRot.z * DEGTORAD);
+		Transform->SetRot(rot);
+		TestParticleSystem->CreateParticleSystemComponent(true);
+		Component* Particle = TestParticleSystem->FindComponentFirstNoConst(ComponentType::ParticleSystem_Component);
+
+		switch (RandGen.Int(0, 2)) //Switch for 3 different firework (to the air) particle system
+		{
+		case 0:
+
+			break;
+		case 1:
+
+			break;
+		case 2:
+
+			break;
+		}
+		FireworkToAirName_Particle = "..\\Game\\Assets\\Particle System\\Particles\\firework_01";
+		FireworkToAirName_Emitter = "..\\Game\\Assets\\Particle System\\Emitter\\firework_01";
+
+		//FireworkExplosionName = "Firework_test_explosion"; //Emitter and particle resources named the same
+
+		((ComponentParticleSystem*)Particle)->LoadParticleResource(FireworkToAirName_Particle.c_str());
+		((ComponentParticleSystem*)Particle)->LoadEmitterResource(FireworkToAirName_Emitter.c_str());
+
+		App->scene->AddChildToRoot(TestParticleSystem);
+		FireworkSparkleGameObjects.push_back(TestParticleSystem);
+	}
+
+	for (std::list<GameObject*>::const_iterator item = FireworkSparkleGameObjects.cbegin(); item != FireworkSparkleGameObjects.cend();)
+	{
+		ComponentTransform* Transform = (ComponentTransform*)(*item)->GetTransform();
+		float3 Position = Transform->GetPos();
+		Quat Rotation = Transform->GetRot();
+		float3 Direction = float3(0.0f, 1.0f, 0.0f);
+		Direction = Rotation.Transform(Direction);
+		Position += (Direction * dt * Speed);
+		Transform->SetPos(Position);
+		if (((ComponentParticleSystem*)(*item)->FindComponentFirstNoConst(ComponentType::ParticleSystem_Component))->IsEmitterDead())
+			item = FireworkSparkleGameObjects.erase(item);
+		else ++item;
+	}
+	*/
+
 	/**/
 	LCG RandGen;
 	float Speed = RandGen.Float(25.0f, 50.0f);
@@ -174,7 +229,6 @@ update_status ModuleScene::Update(float dt)
 		}
 		else ++item;
 	}
-
 	/**/
 
 	return UPDATE_CONTINUE;
