@@ -57,6 +57,40 @@ bool ComponentParticleSystem::Update(float dt)
 		case KEY_STATE::KEY_REPEAT: PartSystem->MouseLeftClick.State = KeyInput::Repeat; break;
 		case KEY_STATE::KEY_DOWN: PartSystem->MouseLeftClick.State = KeyInput::Down; break;
 	}
+
+	if (!ChildLoaded && PartSystem->IsEmitterDead() && !ChildParticle.empty() && !ChildEmitter.empty())
+	{
+		//Load Child Particle
+		ParticleState InitialState;
+		ParticleState FinalState;
+
+		size_t dot_pos = ChildParticle.rfind(".");
+		ChildParticleName = ChildParticle.substr(0, dot_pos);
+
+		ParsonJSON* parsonjson = new ParsonJSON(ChildParticleName.c_str(), true, false, false);
+		bool Loaded = parsonjson->Init();
+		if (Loaded) parsonjson->LoadParticleStates(this, InitialState, FinalState);
+		RELEASE(parsonjson);
+
+		PartSystem->SetInitialStateResource(InitialState);
+		PartSystem->SetFinalStateResource(FinalState);
+
+		//Load Child Emitter
+		ParticleEmitter Emitter;
+
+		dot_pos = ChildEmitter.rfind(".");
+		ChildEmitterName = ChildEmitter.substr(0, dot_pos);
+
+		parsonjson = new ParsonJSON(ChildEmitterName.c_str(), true, false, false);
+		bool Meta = parsonjson->Init();
+		if (Meta) parsonjson->LoadParticleEmitter(this, Emitter);
+		RELEASE(parsonjson);
+
+		PartSystem->SetEmitterResource(Emitter);
+
+		ChildLoaded = false;
+	}
+
 	PartSystem->SetEmitterTransform(parent->GetTransform()->GetMatrix());
 	PartSystem->Update(dt);
 	if (PartSystem->EditorWindowOpen) PartSystem->DrawImGuiEditorWindow();
@@ -494,7 +528,6 @@ void ComponentParticleSystem::ImGuiLoadParticlePopUp()
 	ParticleState InitialState;
 	ParticleState FinalState;
 
-	size_t bar_pos = FileToLoad.rfind("\\") + 1;
 	size_t dot_pos = FileToLoad.rfind(".");
 	FileToLoadName = FileToLoad.substr(0, dot_pos);
 
@@ -511,7 +544,6 @@ void ComponentParticleSystem::ImGuiLoadEmitterPopUp()
 {
 	ParticleEmitter Emitter;
 
-	size_t bar_pos = FileToLoad.rfind("\\") + 1;
 	size_t dot_pos = FileToLoad.rfind(".");
 	FileToLoadName = FileToLoad.substr(0, dot_pos);
 

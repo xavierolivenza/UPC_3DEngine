@@ -60,7 +60,10 @@ private:
 	std::string DirectoryTemporalStr;
 
 	std::string ChildParticle;
+	std::string ChildParticleName;
 	std::string ChildEmitter;
+	std::string ChildEmitterName;
+	bool ChildLoaded = false;
 
 	enum
 	{
