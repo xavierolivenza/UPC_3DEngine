@@ -876,11 +876,9 @@ void ModuleEngineUI::ImGuiTimeManager()
 		if (ImGui::Button("Stop"))
 		{
 			App->Stop();
-			//Destroy all current scene
 			App->scene->CleanUpScene();
-			GameObjectSelected = nullptr;
-			//Load Saved Scene
 			App->scene->LoadEditorScene((*App->importer->Get_Scenes_path() + "\\" + "EditorScene_Backup.json").c_str());
+			GameObjectSelected = nullptr;
 		}
 	}
 	ImGui::SameLine();
