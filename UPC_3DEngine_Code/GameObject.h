@@ -18,6 +18,7 @@ public:
 
 	bool PreUpdate(float dt);
 	bool Update(float dt);
+	bool ManualUpdate(float dt);
 	bool PostUpdate(float dt);
 	bool CleanUp();
 	bool CleanChildrenVec();
@@ -65,6 +66,7 @@ private:
 	bool CanCreateOneMoreComponent(ComponentType type);
 
 public:
+	float CameraDistance = 0.0f;
 	std::string name;
 	bool DrawMesh = true; //Used with culling options
 

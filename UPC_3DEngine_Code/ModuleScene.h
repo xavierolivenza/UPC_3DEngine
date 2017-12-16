@@ -1,4 +1,6 @@
 #pragma once
+#include <map>
+
 #include "Module.h"
 #include "Octree.h"
 
@@ -57,6 +59,7 @@ private:
 	bool SceneToLoad = false;
 	std::string EditorScene_ToLoad;
 	std::vector<GameObject*> SceneGameObjects;
+	std::list<GameObject*> SceneParticleSystem;
 
 	//Fireworks
 	std::list<GameObject*> FireworkSparkleGameObjects;

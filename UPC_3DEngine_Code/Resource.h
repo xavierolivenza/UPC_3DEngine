@@ -13,8 +13,6 @@ public:
 	{
 		mesh,
 		texture,
-		particle,
-		emitter,
 		null
 	};
 

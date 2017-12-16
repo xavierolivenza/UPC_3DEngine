@@ -213,6 +213,11 @@ bool ComponentCamera::IsCulling() const
 	return FrustumCulling;
 }
 
+float3 ComponentCamera::GetPos() const
+{
+	return parent->GetTransform()->GetPos();
+}
+
 float4x4 ComponentCamera::GetViewMatrix() const
 {
 	math::float4x4 matrix = frustum.ViewMatrix();

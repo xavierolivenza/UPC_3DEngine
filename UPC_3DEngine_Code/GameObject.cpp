@@ -44,6 +44,17 @@ bool GameObject::Update(float dt)
 	return true;
 }
 
+bool GameObject::ManualUpdate(float dt)
+{
+	if (Active)
+	{
+		for (std::vector<Component*>::const_iterator item = components.cbegin(); item != components.cend(); ++item)
+			if ((*item)->IsActive())
+				(*item)->Update(dt);
+	}
+	return true;
+}
+
 bool GameObject::PostUpdate(float dt)
 {
 	if (Active)

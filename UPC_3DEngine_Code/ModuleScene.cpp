@@ -65,7 +65,33 @@ update_status ModuleScene::PreUpdate(float dt)
 
 update_status ModuleScene::Update(float dt)
 {
-	root->Update(dt);
+	for (std::vector<GameObject*>::const_iterator item = SceneGameObjects.cbegin(); item != SceneGameObjects.cend(); ++item)
+	{
+		bool Find = false;
+		for (std::list<GameObject*>::const_iterator it = SceneParticleSystem.cbegin(); it != SceneParticleSystem.cend(); ++it)
+			if (*item == *it)
+			{
+				Find = true;
+				break;
+			}
+		if (Find == false)
+			(*item)->ManualUpdate(dt);
+	}
+	for (std::list<GameObject*>::const_iterator item = SceneParticleSystem.cbegin(); item != SceneParticleSystem.cend(); ++item)
+	{
+		float3 Camerapos = App->camera->Position;
+		if (App->GetEngineTimeStatus() == EngineTimeStatus::play_unpause)
+		{
+			const ComponentCamera* camera = App->scene->GetActiveCamera();
+			if (camera != nullptr)Camerapos = camera->GetPos();
+		}
+		float3 Distance = App->camera->Position - ((ComponentTransform*)(*item)->GetTransform())->GetPos();
+		(*item)->CameraDistance = Distance.Length();
+	}
+	SceneParticleSystem.sort([](const GameObject* a, const GameObject* b) { return a->CameraDistance > b->CameraDistance; });
+	for (std::list<GameObject*>::const_iterator item = SceneParticleSystem.cbegin(); item != SceneParticleSystem.cend(); ++item)
+		(*item)->ManualUpdate(dt);
+
 	if (octree_draw)
 		scene_octree.DebugDraw();
 
@@ -323,4 +349,11 @@ void ModuleScene::GetAllSceneGameObjectsCalc()
 {
 	SceneGameObjects.clear();
 	root->GetAllSceneGameObjects(SceneGameObjects);
+	SceneParticleSystem.clear();
+	for (std::vector<GameObject*>::const_iterator item = SceneGameObjects.cbegin(); item != SceneGameObjects.cend(); ++item)
+	{
+		const Component* comp = (*item)->FindComponentFirst(ComponentType::ParticleSystem_Component);
+		if (comp != nullptr)
+			SceneParticleSystem.push_back(*item);
+	}
 }

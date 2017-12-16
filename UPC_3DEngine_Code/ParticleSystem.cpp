@@ -290,16 +290,6 @@ bool Particle::PreUpdate(float dt)
 {
 	if (dt > 0.001f)
 	{
-		//Save external transform?
-		switch (ParentParticleSystem->Emitter.EmissionType)
-		{
-		case 0: //LocalEmission
-
-			break;
-		case 1: //WorldEmission
-
-			break;
-		}
 		Properties.LifetimeActual += dt;
 		CalculateStatesInterpolation();
 	}
@@ -367,6 +357,20 @@ void Particle::DrawParticle()
 
 	glPushMatrix();
 	float4x4 ParticleMatrix = float4x4::FromTRS(Properties.Position, Properties.Rotation, Properties.Scale * Properties.Size).Transposed();
+	/*
+	float4x4 ParticleMatrix = float4x4::identity;
+	if (ParentParticleSystem->Emitter.EmissionType == 0)//LocalEmission
+	{
+		float4x4 gresg = float4x4::FromTRS(Properties.Position, Properties.Rotation, Properties.Scale * Properties.Size);
+		ParticleMatrix = ParentParticleSystem->Emitter.Transform.Transposed() * gresg;
+		//ParticleMatrix.Inverse();
+		ParticleMatrix.Transpose();
+		//ParticleMatrix = float4x4::FromTRS(Properties.Position, Properties.Rotation, Properties.Scale * Properties.Size) * ParentParticleSystem->Emitter.Transform;
+		//ParticleMatrix.Transpose();
+	}
+	else
+		ParticleMatrix = float4x4::FromTRS(Properties.Position, Properties.Rotation, Properties.Scale * Properties.Size).Transposed();
+	*/
 	glMultMatrixf(ParticleMatrix.ptr());
 
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, Mesh.id_indices);
@@ -1044,7 +1048,7 @@ void ParticleSystem::DrawTexturePreview()
 		ImGui::PopItemWidth();
 	}
 	ImGui::PushItemWidth(80);
-	ImGui::Combo("Animation Order", (int*)&TextureData.AnimationOrder, "Right\0Down\0");
+	if (ImGui::Combo("Animation Order", (int*)&TextureData.AnimationOrder, "Right\0Down\0")) GenerateTexturesUVs();
 	ImGui::PopItemWidth();
 	//ImGui::DragFloat("Zoom", &focus_sz, 0.001f, 1.0f, 100.0f);
 }

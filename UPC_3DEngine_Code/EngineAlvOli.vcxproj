@@ -215,9 +215,7 @@
     <ClInclude Include="ParticleSystem.h" />
     <ClInclude Include="Primitive.h" />
     <ClInclude Include="Resource.h" />
-    <ClInclude Include="ResourceEmitter.h" />
     <ClInclude Include="ResourceMesh.h" />
-    <ClInclude Include="ResourceParticle.h" />
     <ClInclude Include="ResourceTexture.h" />
     <ClInclude Include="Timer.h" />
   </ItemGroup>
@@ -290,9 +288,7 @@
     <ClCompile Include="ParticleSystem.cpp" />
     <ClCompile Include="Primitive.cpp" />
     <ClCompile Include="Resource.cpp" />
-    <ClCompile Include="ResourceEmitter.cpp" />
     <ClCompile Include="ResourceMesh.cpp" />
-    <ClCompile Include="ResourceParticle.cpp" />
     <ClCompile Include="ResourceTexture.cpp" />
     <ClCompile Include="Timer.cpp" />
   </ItemGroup>
