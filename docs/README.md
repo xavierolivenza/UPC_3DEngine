@@ -11,47 +11,55 @@ The main objective is to create a simple 3D game editor.
 
 - Github: https://github.com/xavierolivenza
 
+I have done:
+-The implementation of Assimp in the code to be able to read fbx files, collect the data of vertices, indices, normals and UVs, save them and show the model on screen with OpenGL.
+-The implementation of DevIL in the code to be able to read image files, load them in memory and change their format.
+-Hierarchy of GameObjects and components. Every object in the world is a GameObject, and this acquires meaning depending on which components it has. I created the transformation, mesh and material components.
+-Since reading files with assimp or devil is too slow (not because the libraries, but the formats and all the data they contain), I've implemented own file formats for greater loading speed, for the fbx files, format .meshAlvOli/.GameObjectMeshAlvoli and for the textures .dds format.
+-For the frustrum culling I created the camera component, which contains the frustum. Thanks to this component and the collision test with the AABB of the other GameObjects, frustrum culling is achieved.
+-I have also done the whole system of saving and loading the scene, which entails saving all the GameObjects with their hierarchy, and all the components of each GameObjects with their characteristics.
+-Mouse picking, using the frustum of the editor's camera and the click of the mouse, I made it possible to select the GameObjects with AABB in the scene, which is useful to click a GameObject and visualize its components in the inspector window.
+-I enabled the time management, with the play/stop, pause/continue and frame buttons, there is also a window in which you can see how the time advances for the real time and the time of the game, there is also the possibility to modify the time, accelerating it or slowing it down.
+-Resources, I have implemented a resource system to load meshes and textures only once in memory, so if several GameObjects/components have the same mesh or texture loaded, they all use the same resource.
+-With ImGuizmo I created the gizmos to move, rotate and scale the game objects.
+-I also made a small modification in the octree to make it adaptive to the scene that is loaded.
+-Finally, I made the particle system, first making an UML to organize the code and functionality. I have programmed the emission, movement, characteristics and behavior of the particles. The files ParticleSystem.h/.cpp have some repeated functionality from the whole engine, but I wanted to keep it as independent as possible, so for example, it has an internal storage system for meshes and textures. So I have made sure that these two files are 100% independent of all the code (can be compiled in a dll and export), who is responsible for linking these files with the whole engine is the particle system component, it is responsible for receiving information from engine and user input, and react by calculating different things and filling the ParticleSystem with information only calling its methods.
+
 ### Sergio Alvarez Llorca
 
 PHOTO TEMPLATE
 
-I have worked in the Octree implementation and usage with frustum culling, I have worked in the UI of the Engine, I have worked in camera serialization, I have worked in actualizing some of the libraries used, I have worked in some primitives and I have created some smokes and fireworks of the particle system.
+![](https://github.com/xavierolivenza/UPC_3DEngine/blob/master/docs/Sergio_Alvarez.png?raw=true)
+
+-I have worked in the Octree implementation and usage with frustum culling.
+-I have worked in the UI of the Engine, I have worked in camera serialization.
+-I have worked in actualizing some of the libraries used.
+-I have worked in some primitives.
+-I have created some smokes and fireworks of the particle system.
 
  - Github: https://github.com/Sergio111
 
 ### CORE SUB-SYSTEMS
 
--Profiler: This window shows the ms wasted in every module
+### Structure of GameObjects and Components
 
--Hierarchy: This window shows game object hierarchy, if you clic one node, the inspector window updates with the new data to show
+The engine uses a structure of GameObjects. All the GameObject have a tranformation component and several components which determine their GameObject type, for example, component mesh, component material, component camera, etc... All the GameObjects have an active and static button to choose if the user can or can't modifiy the transformation. The component transformation has three dragfloat3 to modify rotation, scale and translation.
 
--Inspector: This window shows game object and associated components configuration
+### Resource Manager
 
--Console: Can show a console that LOGS all the engine process, the files in assets foilder and the files inside library folder
+Thanks to this implementation now the mesh and texture are loaded only once in memory. So, if a GameObject or a component have the same mesh or texture loaded, they will use the same resource and not restore it again. This is an important optimization, it's good to not store in memory things that are already stored.
 
--Configuration:
+### Assimp and Own File Format
 
-	-Application: This window shows useful information of the app, FPS, memory usage, etc... It also allows the user to cap FPS, change app name, etc...
-	
-	-Time: Allow you to see time variables and edit time distortion
-	
-	-Window: This window shows different window information and allows the user to modify some window variables
-	
-	-Hardware: This window shows useful hardware information
-	
--Module Variables: This window shows useful information about every module. And allows the user to modifiy some variables in some of them
+At first we draw geometry with direct draw mode of openGL. Then we started using Assimp in the code to be able to read fbx files, collect the data of vertices, indices, normals and UVs, save them and show the model on screen with OpenGL. This was not very good in terms of performance because reading files with assimp or devil is too slow (not because the libraries, but the formats and all the data they contain) and has a lot of cost. To solve this, we implemented our own file format to enhance the performance in loading by reading all the data stored in our format files, that is much faster than Assimp importation.
 
--Resource: First frame shows in memory resources, if you click one, the second frame show information about that resource and if texture, its importing options, change them and click import button to update the resource.
+### Scene serialization
 
--File: Option load to load fbx and scenes from assets, you have a shorcut directory to scenes folder. Option save to save the actual scene to scene folder. Option Clear Scene to clean all scene game objects.
+You can save any scene you have worked in by clicking File->Save File and introducing a name to the scene, if the name is already in use, it will overwritte the first one. We store the hierarchy of the GameObjects, and all it's components. All this information is stored in a JSON.
 
--View: This window let the user choose which windows visualize. It can also be done with LAlt + number (1 to 8 by now)
+### Mouse Picking
 
--Create: One option Create Camera to create one gameobject with camera.
-
--Help: This window has the options to download latest release, report bug, and show the documentation. It also has about, which is a window with useful information like license, libraries used, authors, etc...
-
--Close: Closes the engine
+When you click a geometry that is inside the editor camera, we use the raycast to find which object's AABB you have clicked, so the user can select any GameObject in the scene to visualize and modify it's components.
 
 ## PARTICLE SYSTEM
 
@@ -68,7 +76,10 @@ Once you have all the options in a way you like, just press play button and see 
 Finally you can save and load all the particle resources and emitters each with its texture, pressing the buttons in each particle system component.
 
 ![](https://github.com/xavierolivenza/UPC_3DEngine/blob/master/docs/GIF01.gif?raw=true)
-	
+![](https://github.com/xavierolivenza/UPC_3DEngine/blob/master/docs/GIF02.gif?raw=true)
+![](https://github.com/xavierolivenza/UPC_3DEngine/blob/master/docs/GIF03.gif?raw=true)
+![](https://github.com/xavierolivenza/UPC_3DEngine/blob/master/docs/GIF04.gif?raw=true)
+
 ## CREDITS
 
 Github project page: https://github.com/xavierolivenza/UPC_3DEngine
