@@ -114,20 +114,19 @@ update_status ModuleScene::Update(float dt)
 		switch (RandGen.Int(0, 2)) //Switch for 3 different firework (to the air) particle system
 		{
 		case 0:
-
+			FireworkToAirName_Particle = "..\\Game\\Assets\\Particle System\\Particles\\firework_01";
+			FireworkToAirName_Emitter = "..\\Game\\Assets\\Particle System\\Emitter\\firework_01";
 			break;
 		case 1:
-
+			FireworkToAirName_Particle = "..\\Game\\Assets\\Particle System\\Particles\\firework_02";
+			FireworkToAirName_Emitter = "..\\Game\\Assets\\Particle System\\Emitter\\firework_02";
 			break;
 		case 2:
-
+			FireworkToAirName_Particle = "..\\Game\\Assets\\Particle System\\Particles\\firework_01";
+			FireworkToAirName_Emitter = "..\\Game\\Assets\\Particle System\\Emitter\\firework_01";
 			break;
 		}
-		FireworkToAirName_Particle = "..\\Game\\Assets\\Particle System\\Particles\\firework_01";
-		FireworkToAirName_Emitter = "..\\Game\\Assets\\Particle System\\Emitter\\firework_01";
-
-		//FireworkExplosionName = "Firework_test_explosion"; //Emitter and particle resources named the same
-
+		
 		((ComponentParticleSystem*)Particle)->LoadParticleResource(FireworkToAirName_Particle.c_str());
 		((ComponentParticleSystem*)Particle)->LoadEmitterResource(FireworkToAirName_Emitter.c_str());
 
@@ -169,20 +168,19 @@ update_status ModuleScene::Update(float dt)
 		switch (RandGen.Int(0, 2)) //Switch for 3 different firework (to the air) particle system
 		{
 		case 0:
-
+			FireworkToAirName_Particle = "..\\Game\\Assets\\Particle System\\Particles\\firework_01_toair";
+			FireworkToAirName_Emitter = "..\\Game\\Assets\\Particle System\\Emitter\\firework_01_toair";
 			break;
 		case 1:
-
+			FireworkToAirName_Particle = "..\\Game\\Assets\\Particle System\\Particles\\firework_02_toair";
+			FireworkToAirName_Emitter = "..\\Game\\Assets\\Particle System\\Emitter\\firework_02_toair";
 			break;
 		case 2:
-
+			FireworkToAirName_Particle = "..\\Game\\Assets\\Particle System\\Particles\\firework_01_toair";
+			FireworkToAirName_Emitter = "..\\Game\\Assets\\Particle System\\Emitter\\firework_01_toair";
 			break;
 		}
-		FireworkToAirName_Particle = "..\\Game\\Assets\\Particle System\\Particles\\firework_01_toair";
-		FireworkToAirName_Emitter = "..\\Game\\Assets\\Particle System\\Emitter\\firework_01_toair";
-
-		//FireworkExplosionName = "Firework_test_explosion"; //Emitter and particle resources named the same
-
+		
 		((ComponentParticleSystem*)Particle)->LoadParticleResource(FireworkToAirName_Particle.c_str());
 		((ComponentParticleSystem*)Particle)->LoadEmitterResource(FireworkToAirName_Emitter.c_str());
 		
@@ -210,18 +208,19 @@ update_status ModuleScene::Update(float dt)
 			switch (RandGen.Int(0, 2)) //Switch for 3 different firework (explosion) particle system
 			{
 			case 0:
-
+				FireworkToAirName_Particle = "..\\Game\\Assets\\Particle System\\Particles\\firework_01_explosion";
+				FireworkToAirName_Emitter = "..\\Game\\Assets\\Particle System\\Emitter\\firework_01_explosion";
 				break;
 			case 1:
-
+				FireworkToAirName_Particle = "..\\Game\\Assets\\Particle System\\Particles\\firework_02_explosion";
+				FireworkToAirName_Emitter = "..\\Game\\Assets\\Particle System\\Emitter\\firework_02_explosion";
 				break;
 			case 2:
-
+				FireworkToAirName_Particle = "..\\Game\\Assets\\Particle System\\Particles\\firework_01_explosion";
+				FireworkToAirName_Emitter = "..\\Game\\Assets\\Particle System\\Emitter\\firework_01_explosion";
 				break;
 			}
-			FireworkToAirName_Particle = "..\\Game\\Assets\\Particle System\\Particles\\firework_01_explosion";
-			FireworkToAirName_Emitter = "..\\Game\\Assets\\Particle System\\Emitter\\firework_01_explosion";
-
+			
 			((ComponentParticleSystem*)Particle)->LoadParticleResource(FireworkToAirName_Particle.c_str());
 			((ComponentParticleSystem*)Particle)->LoadEmitterResource(FireworkToAirName_Emitter.c_str());
 			App->scene->AddChildToRoot(TestParticleSystem);
