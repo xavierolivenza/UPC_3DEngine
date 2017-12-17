@@ -65,11 +65,7 @@ What I have done:
 
 The engine uses a structure of GameObjects. All the GameObject have a tranformation component and several components which determine their GameObject type, for example, component mesh, component material, component camera, etc... All the GameObjects have an active and static button to choose if the user can or can't modifiy the transformation. The component transformation has three dragfloat3 to modify rotation, scale and translation.
 
-### Resource Manager
-
-Thanks to this implementation now the mesh and texture are loaded only once in memory. So, if a GameObject or a component have the same mesh or texture loaded, they will use the same resource and not restore it again. This is an important optimization, it's good to not store in memory things that are already stored.
-
-### Assimp and Own File Format
+### Assimp, DevIL and Own File Format //TODO
 
 At first we draw geometry with direct draw mode of openGL. Then we started using Assimp in the code to be able to read fbx files, collect the data of vertices, indices, normals and UVs, save them and show the model on screen with OpenGL. This was not very good in terms of performance because reading files with assimp or devil is too slow (not because the libraries, but the formats and all the data they contain) and has a lot of cost. To solve this, we implemented our own file format to enhance the performance in loading by reading all the data stored in our format files, that is much faster than Assimp importation.
 
@@ -77,9 +73,17 @@ At first we draw geometry with direct draw mode of openGL. Then we started using
 
 You can save any scene you have worked in by clicking File->Save File and introducing a name to the scene, if the name is already in use, it will overwritte the first one. We store the hierarchy of the GameObjects, and all it's components. All this information is stored in a JSON.
 
+### Frustrum culling and octree //TODO
+
 ### Mouse Picking
 
 When you click a geometry that is inside the editor camera, we use the raycast to find which object's AABB you have clicked, so the user can select any GameObject in the scene to visualize and modify it's components.
+
+### Time manager //TODO
+
+### Resource Manager
+
+Thanks to this implementation now the mesh and texture are loaded only once in memory. So, if a GameObject or a component have the same mesh or texture loaded, they will use the same resource and not restore it again. This is an important optimization, it's good to not store in memory things that are already stored.
 
 ## PARTICLE SYSTEM
 
