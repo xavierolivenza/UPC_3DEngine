@@ -99,6 +99,7 @@ update_status ModuleScene::Update(float dt)
 	LCG RandGen;
 	float Speed = RandGen.Float(25.0f, 50.0f);
 	float AngleDiff = 45.0f;
+	int Fireworks_num = 2; //from 0 to Fireworks_num
 	if (((App->GetEngineTimeStatus() == EngineTimeStatus::play_unpause)) && (App->input->GetKey(SDL_SCANCODE_1) == KEY_DOWN))
 	{
 		GameObject* TestParticleSystem = new GameObject("Particle System", true, true);
@@ -111,7 +112,7 @@ update_status ModuleScene::Update(float dt)
 		TestParticleSystem->CreateParticleSystemComponent(true);
 		Component* Particle = TestParticleSystem->FindComponentFirstNoConst(ComponentType::ParticleSystem_Component);
 
-		switch (RandGen.Int(0, 2)) //Switch for 3 different firework (to the air) particle system
+		switch (RandGen.Int(0, Fireworks_num)) //Switch different firework particle system with child
 		{
 		case 0:
 			FireworkToAirName_Particle = "..\\Game\\Assets\\Particle System\\Particles\\firework_01";
@@ -122,8 +123,8 @@ update_status ModuleScene::Update(float dt)
 			FireworkToAirName_Emitter = "..\\Game\\Assets\\Particle System\\Emitter\\firework_02";
 			break;
 		case 2:
-			FireworkToAirName_Particle = "..\\Game\\Assets\\Particle System\\Particles\\firework_01";
-			FireworkToAirName_Emitter = "..\\Game\\Assets\\Particle System\\Emitter\\firework_01";
+			FireworkToAirName_Particle = "..\\Game\\Assets\\Particle System\\Particles\\firework_03";
+			FireworkToAirName_Emitter = "..\\Game\\Assets\\Particle System\\Emitter\\firework_03";
 			break;
 		}
 		
@@ -165,7 +166,7 @@ update_status ModuleScene::Update(float dt)
 		TestParticleSystem->CreateParticleSystemComponent(true);
 		Component* Particle = TestParticleSystem->FindComponentFirstNoConst(ComponentType::ParticleSystem_Component);
 
-		switch (RandGen.Int(0, 2)) //Switch for 3 different firework (to the air) particle system
+		switch (RandGen.Int(0, Fireworks_num)) //Switch different firework (to the air) particle system
 		{
 		case 0:
 			FireworkToAirName_Particle = "..\\Game\\Assets\\Particle System\\Particles\\firework_01_toair";
@@ -176,8 +177,8 @@ update_status ModuleScene::Update(float dt)
 			FireworkToAirName_Emitter = "..\\Game\\Assets\\Particle System\\Emitter\\firework_02_toair";
 			break;
 		case 2:
-			FireworkToAirName_Particle = "..\\Game\\Assets\\Particle System\\Particles\\firework_01_toair";
-			FireworkToAirName_Emitter = "..\\Game\\Assets\\Particle System\\Emitter\\firework_01_toair";
+			FireworkToAirName_Particle = "..\\Game\\Assets\\Particle System\\Particles\\firework_03_toair";
+			FireworkToAirName_Emitter = "..\\Game\\Assets\\Particle System\\Emitter\\firework_03_toair";
 			break;
 		}
 		
@@ -205,7 +206,7 @@ update_status ModuleScene::Update(float dt)
 			TestParticleSystem->CreateParticleSystemComponent(true);
 			Component* Particle = TestParticleSystem->FindComponentFirstNoConst(ComponentType::ParticleSystem_Component);
 
-			switch (RandGen.Int(0, 2)) //Switch for 3 different firework (explosion) particle system
+			switch (RandGen.Int(0, Fireworks_num)) //Switch different firework (explosion) particle system
 			{
 			case 0:
 				FireworkToAirName_Particle = "..\\Game\\Assets\\Particle System\\Particles\\firework_01_explosion";
@@ -216,8 +217,8 @@ update_status ModuleScene::Update(float dt)
 				FireworkToAirName_Emitter = "..\\Game\\Assets\\Particle System\\Emitter\\firework_02_explosion";
 				break;
 			case 2:
-				FireworkToAirName_Particle = "..\\Game\\Assets\\Particle System\\Particles\\firework_01_explosion";
-				FireworkToAirName_Emitter = "..\\Game\\Assets\\Particle System\\Emitter\\firework_01_explosion";
+				FireworkToAirName_Particle = "..\\Game\\Assets\\Particle System\\Particles\\firework_03_explosion";
+				FireworkToAirName_Emitter = "..\\Game\\Assets\\Particle System\\Emitter\\firework_03_explosion";
 				break;
 			}
 			
