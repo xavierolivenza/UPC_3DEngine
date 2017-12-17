@@ -24,8 +24,6 @@ public:
 	void SetTextureResource(uint uuid, int columns = 1, int rows = 1, int numberOfFrames = 1, uint AnimationOrder = 0);
 	void SetTextureResource(const char* Path, int columns, int rows, int numberOfFrames, uint AnimationOrder);
 
-	void SetParticleResource(uint uuid);
-	void SetEmitterResource(uint uuid);
 	void SetDebugOptions(bool ShowEmitterBoundBox, bool ShowEmitter);
 	void GetDebugOptions(bool& ShowEmitterBoundBox, bool& ShowEmitter);
 

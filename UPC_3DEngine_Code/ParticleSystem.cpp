@@ -756,6 +756,7 @@ void ParticleSystem::SetTextureResource(unsigned int ID, unsigned int width, uns
 	Emitter.EmitterLife = 0.0f;
 	NextParticleTime = 0.0f;
 	//Emitter.EmissionDuration = 0.0f;
+	CleanUp(); //Delete all active particles
 }
 
 void ParticleSystem::SetInitialStateResource(const ParticleState& state)
@@ -764,6 +765,7 @@ void ParticleSystem::SetInitialStateResource(const ParticleState& state)
 	Emitter.EmitterLife = 0.0f;
 	NextParticleTime = 0.0f;
 	//Emitter.EmissionDuration = 0.0f;
+	CleanUp(); //Delete all active particles
 }
 
 void ParticleSystem::SetFinalStateResource(const ParticleState& state)
@@ -772,6 +774,7 @@ void ParticleSystem::SetFinalStateResource(const ParticleState& state)
 	Emitter.EmitterLife = 0.0f;
 	NextParticleTime = 0.0f;
 	//Emitter.EmissionDuration = 0.0f;
+	CleanUp(); //Delete all active particles
 }
 
 void ParticleSystem::SetEmitterResource(const ParticleEmitter& emitter)
@@ -780,6 +783,7 @@ void ParticleSystem::SetEmitterResource(const ParticleEmitter& emitter)
 	Emitter.EmitterLife = 0.0f;
 	NextParticleTime = 0.0f;
 	//Emitter.EmissionDuration = 0.0f;
+	CleanUp(); //Delete all active particles
 }
 
 void ParticleSystem::GetInitialState(ParticleState & state) const

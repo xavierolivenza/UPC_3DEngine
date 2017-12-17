@@ -322,7 +322,7 @@ ComponentCamera* GameObject::CreateCameraComponent(bool active)
 	return nullptr;
 }
 
-ComponentParticleSystem * GameObject::CreateParticleSystemComponent(bool active)
+ComponentParticleSystem* GameObject::CreateParticleSystemComponent(bool active)
 {
 	if (CanCreateOneMoreComponent(ComponentType::ParticleSystem_Component))
 	{
