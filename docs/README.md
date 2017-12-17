@@ -45,7 +45,9 @@ What I have done:
 
 -I have worked in the Octree implementation and usage with frustum culling.
 
--I have worked in the UI of the Engine, I have worked in camera serialization.
+-I have worked in the UI of the Engine.
+
+-I have worked in camera serialization.
 
 -I have worked in actualizing some of the libraries used.
 
