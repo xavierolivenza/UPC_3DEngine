@@ -9,7 +9,7 @@ Made by Xavier Olivenza and Sergio Alvarez. The main objective is to create a si
 
 <img src="https://github.com/xavierolivenza/UPC_3DEngine/blob/master/docs/Xavier_Olivenza.png?raw=true" width="300">
 
-- Github: <a="https://github.com/xavierolivenza"></a>
+- Github: <a href="https://github.com/xavierolivenza">Link</a>
 
 What I have done:
 
@@ -57,7 +57,7 @@ What I have done:
 
 -I have created some smokes and fireworks of the particle system.
 
- - Github: <a="https://github.com/Sergio111">
+ - Github: <a href="https://github.com/Sergio111">Link</a>
 
 ### CORE SUB-SYSTEMS
 
@@ -137,15 +137,15 @@ Finally there is a button to select the texture that you want to load in the par
 
 ## CREDITS
 
-Github project page: <a="https://github.com/xavierolivenza/UPC_3DEngine">
+Github project page: <a href="https://github.com/xavierolivenza/UPC_3DEngine">Link</a>
 
 Sergio Alvarez's Github account
 
- - Github: <a="https://github.com/Sergio111">
+ - Github: <a href="https://github.com/Sergio111">Link</a>
 
 Xavier Olivenza's Github account
 
- - Github: <a="https://github.com/xavierolivenza">
+ - Github: <a href="https://github.com/xavierolivenza">Link</a>
 
 ## LICENSE
 
