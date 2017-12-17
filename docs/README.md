@@ -9,7 +9,7 @@ Made by Xavier Olivenza and Sergio Alvarez. The main objective is to create a si
 
 <img src="https://github.com/xavierolivenza/UPC_3DEngine/blob/master/docs/Xavier_Olivenza.png?raw=true" width="300">
 
-- Github: [](https://github.com/xavierolivenza)
+- Github: <a href="https://github.com/xavierolivenza"></a>
 
 What I have done:
 
@@ -120,7 +120,7 @@ The particle editor consists of three boxes and a larger box at the bottom area.
 
 - The editor of the initial/final state of the particles: In these editors you can set initial and final states options with values and variables. These states are linearly interpolated during the lifetime of the particle. You can select a color filter and alpha, size and variation, color variation of the filter (from 0.0f to 1.0f) and you can finally establish an external force in three axes and its variation.
 
-- The last and largest box is for the emitter options, with three columns.
+The last and largest box is for the emitter options, with three columns.
 
 - The first column serves to set the shape of the emitter, sphere, semisphere, cone, box and circle, each with its variables.
 
