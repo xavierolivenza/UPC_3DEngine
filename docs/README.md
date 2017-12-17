@@ -9,7 +9,7 @@ The main objective is to create a simple 3D game editor.
 
 <img src="https://github.com/xavierolivenza/UPC_3DEngine/blob/master/docs/Xavier_Olivenza.png?raw=true" width="300">
 
-- Github: <a="https://github.com/xavierolivenza">
+- Github: <a href="https://github.com/xavierolivenza">
 
 What I have done:
 
