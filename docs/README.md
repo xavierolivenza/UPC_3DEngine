@@ -53,6 +53,8 @@ What I have done:
 
 -I have worked in some primitives.
 
+-I have worked in particles editor UI.
+
 -I have created some smokes and fireworks of the particle system.
 
  - Github: https://github.com/Sergio111
