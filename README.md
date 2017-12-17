@@ -7,7 +7,7 @@ The main objective is to create a simple 3D game editor.
 
 Web Page: https://xavierolivenza.github.io/UPC_3DEngine/
 
-##Assignment 3
+## Assignment 3
 
 To see particle systems with the street scene, you can click the file menu of the upper left corner, select load file, go to the scenes directory (../Game/Assets/Scenes/), and select one of the three scenes named as:
 
