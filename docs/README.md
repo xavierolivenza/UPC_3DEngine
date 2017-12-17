@@ -11,30 +11,46 @@ The main objective is to create a simple 3D game editor.
 
 - Github: https://github.com/xavierolivenza
 
-I have done:
+What I have done:
+
 -The implementation of Assimp in the code to be able to read fbx files, collect the data of vertices, indices, normals and UVs, save them and show the model on screen with OpenGL.
+
 -The implementation of DevIL in the code to be able to read image files, load them in memory and change their format.
+
 -Hierarchy of GameObjects and components. Every object in the world is a GameObject, and this acquires meaning depending on which components it has. I created the transformation, mesh and material components.
+
 -Since reading files with assimp or devil is too slow (not because the libraries, but the formats and all the data they contain), I've implemented own file formats for greater loading speed, for the fbx files, format .meshAlvOli/.GameObjectMeshAlvoli and for the textures .dds format.
+
 -For the frustrum culling I created the camera component, which contains the frustum. Thanks to this component and the collision test with the AABB of the other GameObjects, frustrum culling is achieved.
+
 -I have also done the whole system of saving and loading the scene, which entails saving all the GameObjects with their hierarchy, and all the components of each GameObjects with their characteristics.
+
 -Mouse picking, using the frustum of the editor's camera and the click of the mouse, I made it possible to select the GameObjects with AABB in the scene, which is useful to click a GameObject and visualize its components in the inspector window.
+
 -I enabled the time management, with the play/stop, pause/continue and frame buttons, there is also a window in which you can see how the time advances for the real time and the time of the game, there is also the possibility to modify the time, accelerating it or slowing it down.
+
 -Resources, I have implemented a resource system to load meshes and textures only once in memory, so if several GameObjects/components have the same mesh or texture loaded, they all use the same resource.
+
 -With ImGuizmo I created the gizmos to move, rotate and scale the game objects.
+
 -I also made a small modification in the octree to make it adaptive to the scene that is loaded.
+
 -Finally, I made the particle system, first making an UML to organize the code and functionality. I have programmed the emission, movement, characteristics and behavior of the particles. The files ParticleSystem.h/.cpp have some repeated functionality from the whole engine, but I wanted to keep it as independent as possible, so for example, it has an internal storage system for meshes and textures. So I have made sure that these two files are 100% independent of all the code (can be compiled in a dll and export), who is responsible for linking these files with the whole engine is the particle system component, it is responsible for receiving information from engine and user input, and react by calculating different things and filling the ParticleSystem with information only calling its methods.
 
 ### Sergio Alvarez Llorca
 
-PHOTO TEMPLATE
-
 ![](https://github.com/xavierolivenza/UPC_3DEngine/blob/master/docs/Sergio_Alvarez.png?raw=true)
 
+What I have done:
+
 -I have worked in the Octree implementation and usage with frustum culling.
+
 -I have worked in the UI of the Engine, I have worked in camera serialization.
+
 -I have worked in actualizing some of the libraries used.
+
 -I have worked in some primitives.
+
 -I have created some smokes and fireworks of the particle system.
 
  - Github: https://github.com/Sergio111
