@@ -7,6 +7,18 @@ The main objective is to create a simple 3D game editor.
 
 Web Page: https://xavierolivenza.github.io/UPC_3DEngine/
 
+##Assignment 3
+
+To see particle systems with the street scene, you can click the file menu of the upper left corner, select load file, go to the scenes directory (../Game/Assets/Scenes/), and select one of the three scenes named as:
+
+- Assignment3_street_with_smoke
+
+- Assignment3_street_with_smoke_and_snow
+
+- Assignment3_street_with_smoke_and_fire_and_land_smoke
+
+If you want to open an other scene, go to the file menu and click Clear Scene option, now you can load an other scene without having multiple scenes loaded at once, we don't do this automatically because you can use scenes as prefabs, so we let you load multiple times the same scene, and if you want to reset, you must do it manually.
+
 ## INSTALLATION
 
 Unzip the realese folder and execute the .exe file.
