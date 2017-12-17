@@ -43,19 +43,19 @@ What I have done:
 
 What I have done:
 
--I have worked in the Octree implementation and usage with frustum culling.
+-I have worked in the Octree implementation and usage with frustum culling. I implemented an octree that Xavier helped me to make adaptative to collect all static GameObjects candidates and with frustum culling only print the ones inside the main camera.
 
--I have worked in the UI of the Engine.
+-I have worked in the UI of the Engine. I used ImGui to try to make an easy to use and nice to watch UI, but we had so many options so sometimes it is overloaded.
 
--I have worked in camera serialization.
+-I have worked in camera serialization. I made the camera work as a GameObject component.
 
--I have worked in actualizing some of the libraries used.
+-I have worked in actualizing some of the libraries used. I erased MathGL and implemented MathGeoLib in our engine.
 
--I have worked in some primitives.
+-I have worked in some primitives. I worked on creating and printing spheres.
 
--I have worked in particles editor UI.
+-I have worked in particles editor UI. I  made almost all particles editor UI to be able to work with particles code.
 
--I have created some smokes and fireworks of the particle system.
+-I have created some smokes and fireworks of the particle system. I have used our own engine and some textures to design and create some nice smokes and fireworks.
 
  - Github: <a href="https://github.com/Sergio111">Link</a>
 
