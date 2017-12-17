@@ -226,28 +226,13 @@ void ComponentParticleSystem::SetTextureResource(const char * Path, int columns,
 	SetTextureResource(Texuuid, columns, rows, numberOfFrames, AnimationOrder);
 }
 
-void ComponentParticleSystem::SetParticleResource(uint uuid)
-{
-	//ParticleState InitialState;
-	//PartSystem->SetInitialStateResource(InitialState);
-	//ParticleState FinalState;
-	//PartSystem->SetFinalStateResource(FinalState);
-	//SetTextureResource();
-}
-
-void ComponentParticleSystem::SetEmitterResource(uint uuid)
-{
-	//ParticleEmitter Emitter;
-	//PartSystem->SetEmitterResource(Emitter);
-}
-
 void ComponentParticleSystem::SetDebugOptions(bool ShowEmitterBoundBox, bool ShowEmitter)
 {
 	PartSystem->ShowEmitterBoundBox = ShowEmitterBoundBox;
 	PartSystem->ShowEmitter = ShowEmitter;
 }
 
-void ComponentParticleSystem::GetDebugOptions(bool & ShowEmitterBoundBox, bool & ShowEmitter)
+void ComponentParticleSystem::GetDebugOptions(bool& ShowEmitterBoundBox, bool& ShowEmitter)
 {
 	ShowEmitterBoundBox = PartSystem->ShowEmitterBoundBox;
 	ShowEmitter = PartSystem->ShowEmitter;
