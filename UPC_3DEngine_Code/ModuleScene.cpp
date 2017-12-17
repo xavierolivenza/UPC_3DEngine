@@ -99,7 +99,7 @@ update_status ModuleScene::Update(float dt)
 	LCG RandGen;
 	float Speed = RandGen.Float(25.0f, 50.0f);
 	float AngleDiff = 45.0f;
-	int Fireworks_num = 2; //from 0 to Fireworks_num
+	int Fireworks_num = 4; //from 0 to Fireworks_num
 	if (((App->GetEngineTimeStatus() == EngineTimeStatus::play_unpause)) && (App->input->GetKey(SDL_SCANCODE_1) == KEY_DOWN))
 	{
 		GameObject* TestParticleSystem = new GameObject("Particle System", true, true);
@@ -125,6 +125,14 @@ update_status ModuleScene::Update(float dt)
 		case 2:
 			FireworkToAirName_Particle = "..\\Game\\Assets\\Particle System\\Particles\\firework_03";
 			FireworkToAirName_Emitter = "..\\Game\\Assets\\Particle System\\Emitter\\firework_03";
+			break;
+		case 3:
+			FireworkToAirName_Particle = "..\\Game\\Assets\\Particle System\\Particles\\firework_04";
+			FireworkToAirName_Emitter = "..\\Game\\Assets\\Particle System\\Emitter\\firework_04";
+			break;
+		case 4:
+			FireworkToAirName_Particle = "..\\Game\\Assets\\Particle System\\Particles\\firework_05";
+			FireworkToAirName_Emitter = "..\\Game\\Assets\\Particle System\\Emitter\\firework_05";
 			break;
 		}
 		
@@ -180,6 +188,14 @@ update_status ModuleScene::Update(float dt)
 			FireworkToAirName_Particle = "..\\Game\\Assets\\Particle System\\Particles\\firework_03_toair";
 			FireworkToAirName_Emitter = "..\\Game\\Assets\\Particle System\\Emitter\\firework_03_toair";
 			break;
+		case 3:
+			FireworkToAirName_Particle = "..\\Game\\Assets\\Particle System\\Particles\\firework_04_toair";
+			FireworkToAirName_Emitter = "..\\Game\\Assets\\Particle System\\Emitter\\firework_04_toair";
+			break;
+		case 4:
+			FireworkToAirName_Particle = "..\\Game\\Assets\\Particle System\\Particles\\firework_05_toair";
+			FireworkToAirName_Emitter = "..\\Game\\Assets\\Particle System\\Emitter\\firework_05_toair";
+			break;
 		}
 		
 		((ComponentParticleSystem*)Particle)->LoadParticleResource(FireworkToAirName_Particle.c_str());
@@ -219,6 +235,14 @@ update_status ModuleScene::Update(float dt)
 			case 2:
 				FireworkToAirName_Particle = "..\\Game\\Assets\\Particle System\\Particles\\firework_03_explosion";
 				FireworkToAirName_Emitter = "..\\Game\\Assets\\Particle System\\Emitter\\firework_03_explosion";
+				break;
+			case 3:
+				FireworkToAirName_Particle = "..\\Game\\Assets\\Particle System\\Particles\\firework_04_explosion";
+				FireworkToAirName_Emitter = "..\\Game\\Assets\\Particle System\\Emitter\\firework_04_explosion";
+				break;
+			case 4:
+				FireworkToAirName_Particle = "..\\Game\\Assets\\Particle System\\Particles\\firework_05_explosion";
+				FireworkToAirName_Emitter = "..\\Game\\Assets\\Particle System\\Emitter\\firework_05_explosion";
 				break;
 			}
 			
