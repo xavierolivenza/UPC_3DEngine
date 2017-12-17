@@ -17,7 +17,14 @@ To see particle systems with the street scene, you can click the file menu of th
 
 - Assignment3_street_with_smoke_and_fire_and_land_smoke
 
+Warning: The smoke comming out of the chimneys have a little position problem because the texture that the particles are using is not perfectly centred, so the billboards are well placed, but the texture is not centred and depending on which angle you see the chimneys, it seems the smoke do not come from the chimneys holes exactly.
+
 If you want to open an other scene, go to the file menu and click Clear Scene option, now you can load an other scene without having multiple scenes loaded at once, we don't do this automatically because you can use scenes as prefabs, so we let you load multiple times the same scene, and if you want to reset, you must do it manually.
+
+Tip: To see particles working, you must be in play mode, so press play button of time manager.
+Tip: You can open View->Configuration->Time, to make time distortion while play mode.
+Tip: For more info about controls, go to "Controls" and check "Particle System controls".
+Tip: Also if you want to learn how to use the particle system, there is a "PARTICLE SYSTEM TUTORIAL" below "Controls".
 
 ## INSTALLATION
 
@@ -84,6 +91,8 @@ TIPS:
 	-Press R to enable Scalation gizmo
 	
 -Particle System controls
+
+Only works in play mode, so fist of all, press play button of time manager.
 	
 	-Spawn fireworks that execute a child emitter with 1
 	
@@ -126,6 +135,8 @@ TIPS:
 -Close: Closes the engine
 
 ## PARTICLE SYSTEM TUTORIAL
+
+First of all, to see particle emitter working, you must be in play mode, so fist of all, press play button of time manager.
 
 In the particle system component you can see a checkbox to open the particle editor.
 
