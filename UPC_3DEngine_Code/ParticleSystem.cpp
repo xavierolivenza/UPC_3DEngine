@@ -1085,11 +1085,11 @@ void ParticleSystem::DrawColorSelector()
 	if (state->inputs_mode == 4) flags |= ImGuiColorEditFlags_HEX;
 	ImGui::ColorPicker4("Color##Color", (float*)&state->RGBATint, flags);
 	ImGui::PushItemWidth(80);
-	ImGui::DragFloat("+-##Size", &state->Size, 0.01f, 0.0f, 100.0f);
+	ImGui::DragFloat("+-##Size", &state->Size, 0.001f, 0.0f, 100.0f);
 	ImGui::SameLine();
-	ImGui::DragFloat("Size+-Var##SizeVariation", &state->SizeVariation, 0.01f, 0.0f, 100.0f);
+	ImGui::DragFloat("Size+-Var##SizeVariation", &state->SizeVariation, 0.001f, 0.0f, 100.0f);
 	ImGui::PopItemWidth();
-	ImGui::DragFloat4("Color Var##ColorVariation", (float*)&state->RGBATintVariation, 0.1f, 1.0f, 255.0f);
+	ImGui::DragFloat4("Color Var##ColorVariation", (float*)&state->RGBATintVariation, 0.01f, 0.0f, 1.0f);
 	ImGui::PushItemWidth(175);
 	ImGui::DragFloat3("Gravity##Gravity", &state->force[0], 0.01, -10.0f, 10.0f, "%.2f");
 	ImGui::DragFloat3("Gravity Var##GravityVariation", &state->forceVariation[0], 0.01, -10.0f, 10.0f, "%.2f");
