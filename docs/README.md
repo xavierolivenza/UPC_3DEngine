@@ -9,7 +9,7 @@ The main objective is to create a simple 3D game editor.
 
 <img src="https://github.com/xavierolivenza/UPC_3DEngine/blob/master/docs/Xavier_Olivenza.png?raw=true" width="300">
 
-- Github: [](https://github.com/xavierolivenza)
+- Github: <a="https://github.com/xavierolivenza">
 
 What I have done:
 
@@ -57,7 +57,7 @@ What I have done:
 
 -I have created some smokes and fireworks of the particle system.
 
- - Github: https://github.com/Sergio111
+ - Github: <a="https://github.com/Sergio111">
 
 ### CORE SUB-SYSTEMS
 
@@ -107,11 +107,45 @@ Finally you can save and load all the particle resources and emitters each with 
 ![](https://github.com/xavierolivenza/UPC_3DEngine/blob/master/docs/GIF02.gif?raw=true)
 ![](https://github.com/xavierolivenza/UPC_3DEngine/blob/master/docs/GIF03.gif?raw=true)
 ![](https://github.com/xavierolivenza/UPC_3DEngine/blob/master/docs/GIF04.gif?raw=true)
+
+### PARTICLE SYSTEM TUTORIAL
+
+First of all, to see particle emitter working, you must be in play mode, so fist of all, press play button of time manager.
+
+In the particle system component you can see a checkbox to open the particle editor.
+
+The particle editor consists of three boxes and a larger box at the bottom area. From the three boxes at the top starting from the left, there is the texture and animation editor, the editor of the initial state of the particles and the editor of the final state of the particles.
+
+- Texture and animation editor: In this area, the loaded texture that the particles will use appears in the box. Below the canvas where the texture is shown, there is the selector of how many rows and columns the spritesheet has, there is also another option to select how many frames of the animation you are going to use, and at the end, the option to set if the animation advances starting from the upper left corner and advancing to the right row to row, or advancing down and column to column.
+
+- The editor of the initial/final state of the particles: In these editors you can set initial and final states options with values and variables. These states are linearly interpolated during the lifetime of the particle. You can select a color filter and alpha, size and variation, color variation of the filter (from 0.0f to 1.0f) and you can finally establish an external force in three axes and its variation.
+
+- The last and largest box is for the emitter options, with three columns.
+
+- The first column serves to set the shape of the emitter, sphere, semisphere, cone, box and circle, each with its variables.
+
+- The second column contains the life of the emitter, which if negative, the emitter never dies, the number of particles emitted per second, the life and variation of the life of each particle, duration of the emission in seconds and the number of alive particles, there is also a checkbox to make the emission loop or not, so if the life of the emitter is negative or this checkbox is active, the emitter will not die, finally there is the option to set the speed and variation of the particles emitted.
+
+- In the last column, there is the option of what type of billbioard is wanted for the particles, null, billboard and vertical or horitzontal billboard, there are also two checkboxes to draw or not the emitter and to draw or not the AABB of the particle system, finally there are the options to set the maximum and minimum point of the AABB  of the particle system.
+
+Going back to the options that the component has, there is the option to save and load the particles (the three upper boxes of the particle editor) and the option to save and load the emitter (the bottom box of the particle editor), we save two different resources because with that you can swap particles and emitters with different particle systems. There are also the options to load a particle and emitter as a child of the particle system that is being edited, so if the system that is being edited has the option to die (the emitter does not loop and it has positive life), when this die, the child emitter will be executed, there is also the option to unlink the children, with the "Unload children" button, then there are two texts that will show the paths of the particle and emitter loaded as a children, if this do not show paths, it means that this does not have children assigned.
+Finally there is a button to select the texture that you want to load in the particle system.
+
+### Speed-Up video of the Engine
+
 <iframe width="560" height="315" src="https://www.youtube.com/embed/IHkEHwYG4kM" frameborder="0" gesture="media" allow="encrypted-media" allowfullscreen></iframe>
 
 ## CREDITS
 
-Github project page: https://github.com/xavierolivenza/UPC_3DEngine
+Github project page: <a="https://github.com/xavierolivenza/UPC_3DEngine">
+
+Sergio Alvarez's Github account
+
+ - Github: <a="https://github.com/Sergio111">
+
+Xavier Olivenza's Github account
+
+ - Github: <a="https://github.com/xavierolivenza">
 
 ## LICENSE
 
