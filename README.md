@@ -3,6 +3,10 @@
 UPC_3DEngine is a project for the subject 3DEngine of the VideoGame Developing career in CITM, UPC fundation in Terrassa.
 The main objective is to create a simple 3D game editor.
 
+## WEBSITE
+
+Web Page: https://xavierolivenza.github.io/UPC_3DEngine/
+
 ## INSTALLATION
 
 Unzip the realese folder and execute the .exe file.
@@ -28,8 +32,6 @@ WARNING:
 -This software is developed and tested in Windows OS, if you use this software in any other OS, we don't ensure this will work (we don't have any other computer with other OS to test it). Sorry for the inconvinience
 
 -You can only load geometry files (.fbx, .FBX, .obj, .OBJ, .dae, .DAE) with textures in format (.jpg, .JPG, .png, .PNG, .tga, .TGA, .dds, .DDS).
-
--If you charge a huge model or a model that has errors, the camera is moved to a far distance without sight of the plane and the axis. Charging a new smaller/correct one will make the camera return to a normal position. You can also open camera options and change position and reference variables to force the camera move where you want.
 
 -When you charge a new module without texture it will automatically charge checkers texture, the objective of that is to see if the UV are correct if you want the model without texture just go to render options and disable GL_TEXTURE_2D.
 
@@ -69,6 +71,12 @@ TIPS:
 	
 	-Press R to enable Scalation gizmo
 	
+-Particle System controls
+	
+	-Spawn fireworks that execute a child emitter with 1
+	
+	-Spawn fireworks that are individual GameObjects executed one after the other with 2
+	
 -Drag any FBX and drop it into the executable to load it, if you load its textures before the fbx file, this will be automatically loaded with textures
 
 ### WINDOWS
@@ -99,19 +107,47 @@ TIPS:
 
 -View: This window let the user choose which windows visualize. It can also be done with LAlt + number (1 to 8 by now)
 
--Create: One option Create Camera to create one gameobject with camera.
+-Create: Two options, Create Camera to create one gameobject with camera and create Particle System to create a gameobject with particle system component
 
 -Help: This window has the options to download latest release, report bug, and show the documentation. It also has about, which is a window with useful information like license, libraries used, authors, etc...
 
 -Close: Closes the engine
 
-## Innovation grade candidates
+## PARTICLE SYSTEM TUTORIAL
 
--Adaptative Octree
+In the particle system component you can see a checkbox to open the particle editor.
 
--Gizmos
+The particle editor consists of three boxes and a larger box at the bottom area. From the three boxes at the top starting from the left, there is the texture and animation editor, the editor of the initial state of the particles and the editor of the final state of the particles.
+
+- Texture and animation editor: In this area, the loaded texture that the particles will use appears in the box. Below the canvas where the texture is shown, there is the selector of how many rows and columns the spritesheet has, there is also another option to select how many frames of the animation you are going to use, and at the end, the option to set if the animation advances starting from the upper left corner and advancing to the right row to row, or advancing down and column to column.
+
+- The editor of the initial/final state of the particles: In these editors you can set initial and final states options with values and variables. These states are linearly interpolated during the lifetime of the particle. You can select a color filter and alpha, size and variation, color variation of the filter (from 0.0f to 1.0f) and you can finally establish an external force in three axes and its variation.
+
+- The last and largest box is for the emitter options, with three columns.
+
+- The first column serves to set the shape of the emitter, sphere, semisphere, cone, box and circle, each with its variables.
+
+- The second column contains the life of the emitter, which if negative, the emitter never dies, the number of particles emitted per second, the life and variation of the life of each particle, duration of the emission in seconds and the number of alive particles, there is also a checkbox to make the emission loop or not, so if the life of the emitter is negative or this checkbox is active, the emitter will not die, finally there is the option to set the speed and variation of the particles emitted.
+
+- In the last column, there is the option of what type of billbioard is wanted for the particles, null, billboard and vertical or horitzontal billboard, there are also two checkboxes to draw or not the emitter and to draw or not the AABB of the particle system, finally there are the options to set the maximum and minimum point of the AABB  of the particle system.
+
+Going back to the options that the component has, there is the option to save and load the particles (the three upper boxes of the particle editor) and the option to save and load the emitter (the bottom box of the particle editor), we save two different resources because with that you can swap particles and emitters with different particle systems. There are also the options to load a particle and emitter as a child of the particle system that is being edited, so if the system that is being edited has the option to die (the emitter does not loop and it has positive life), when this die, the child emitter will be executed, there is also the option to unlink the children, with the "Unload children" button, then there are two texts that will show the paths of the particle and emitter loaded as a children, if this do not show paths, it means that this does not have children assigned.
+Finally there is a button to select the texture that you want to load in the particle system.
 
 ## CHANGELOG
+
+v1.0(Third Assignment):
+
+	-Added particle system component
+	-Implemented particle editor
+	-Particles can have a texture and animation
+	-Particles resource and emitter resource can be saved and loaded
+	-Scenes are saved and loaded with particle systems
+	-Added fireworks with 1 and 2
+	-Added smoke to street_scene
+	-Added snow to street_scene
+	-Added fire to street_scene
+	-Added ground smoke to street_scene
 
 v0.7.1(Second Assignment):
 
@@ -198,8 +234,6 @@ v0.1:
 ## CREDITS
 
 Github project page: https://github.com/xavierolivenza/UPC_3DEngine
-
-Web Page: https://xavierolivenza.github.io/UPC_3DEngine/
 
 Sergio Alvarez's Github account
 
