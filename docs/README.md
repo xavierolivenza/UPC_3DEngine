@@ -9,7 +9,7 @@ The main objective is to create a simple 3D game editor.
 
 <img src="https://github.com/xavierolivenza/UPC_3DEngine/blob/master/docs/Xavier_Olivenza.png?raw=true" width="300">
 
-- Github: https://github.com/xavierolivenza
+- Github: [](https://github.com/xavierolivenza)
 
 What I have done:
 
@@ -65,21 +65,25 @@ What I have done:
 
 The engine uses a structure of GameObjects. All the GameObject have a tranformation component and several components which determine their GameObject type, for example, component mesh, component material, component camera, etc... All the GameObjects have an active and static button to choose if the user can or can't modifiy the transformation. The component transformation has three dragfloat3 to modify rotation, scale and translation.
 
-### Assimp, DevIL and Own File Format //TODO
+### Assimp, DevIL and Own File Format
 
-At first we draw geometry with direct draw mode of openGL. Then we started using Assimp in the code to be able to read fbx files, collect the data of vertices, indices, normals and UVs, save them and show the model on screen with OpenGL. This was not very good in terms of performance because reading files with assimp or devil is too slow (not because the libraries, but the formats and all the data they contain) and has a lot of cost. To solve this, we implemented our own file format to enhance the performance in loading by reading all the data stored in our format files, that is much faster than Assimp importation.
+At first we draw geometry with direct draw mode of openGL. Then we started using Assimp in the code to be able to read fbx files, collect the data of vertices, indices, normals and UVs, save them and show the model on screen with OpenGL. And we used DevIL to load textures. DevIL is an open source library to develop applications with very powerful image loading capabilities. This was not very good in terms of performance because reading files with assimp or devil is too slow (not because the libraries, but the formats and all the data they contain) and has a lot of cost. To solve this, we implemented our own file format to enhance the performance in loading by reading all the data stored in our format files, that is much faster than Assimp importation.
 
 ### Scene serialization
 
 You can save any scene you have worked in by clicking File->Save File and introducing a name to the scene, if the name is already in use, it will overwritte the first one. We store the hierarchy of the GameObjects, and all it's components. All this information is stored in a JSON.
 
-### Frustrum culling and octree //TODO
+### Frustrum culling and octree
+
+The frustum culling is an optimization that consists in culling (not drawing) the GamObjects which AABB is enterily outside the main camera. This is a great enhancement because you win a lot in performance due to not having to waste in drawing all the GameObjects that you don't really need to. Our frustum culling works with an adaptative octree, that iterates all the GameObjects and distribute them in children that it creates.
 
 ### Mouse Picking
 
 When you click a geometry that is inside the editor camera, we use the raycast to find which object's AABB you have clicked, so the user can select any GameObject in the scene to visualize and modify it's components.
 
-### Time manager //TODO
+### Time manager
+
+We implemented a time manager similar to Unity time manager. We have a start button, which makes all GameObjects start updating it's logic, a pause button which stops updates, a stop button which makes all GameObjects return to it's original state and when you click pause button, you have a continue button which makes GameObjects update again and frame button, which makes update only one frame. There's also a window where you can se how real time and game time advances and the possibility to modify time.
 
 ### Resource Manager
 
@@ -103,6 +107,7 @@ Finally you can save and load all the particle resources and emitters each with 
 ![](https://github.com/xavierolivenza/UPC_3DEngine/blob/master/docs/GIF02.gif?raw=true)
 ![](https://github.com/xavierolivenza/UPC_3DEngine/blob/master/docs/GIF03.gif?raw=true)
 ![](https://github.com/xavierolivenza/UPC_3DEngine/blob/master/docs/GIF04.gif?raw=true)
+<iframe width="560" height="315" src="https://www.youtube.com/embed/IHkEHwYG4kM" frameborder="0" gesture="media" allow="encrypted-media" allowfullscreen></iframe>
 
 ## CREDITS
 
