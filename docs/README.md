@@ -9,7 +9,7 @@ Made by Xavier Olivenza and Sergio Alvarez. The main objective is to create a si
 
 <img src="https://github.com/xavierolivenza/UPC_3DEngine/blob/master/docs/Xavier_Olivenza.png?raw=true" width="300">
 
-- Github: <a href="https://github.com/xavierolivenza"></a>
+- Github: <a="https://github.com/xavierolivenza"></a>
 
 What I have done:
 
