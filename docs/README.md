@@ -1,7 +1,7 @@
 # UPC_3DEngine
 
-UPC_3DEngine is a project for the subject 3DEngine of the VideoGame Developing career in CITM, UPC fundation in Terrassa.
-The main objective is to create a simple 3D game editor.
+UPC_3DEngine is a universitary project for the subject 3DEngine of the VideoGame Developing career in CITM, UPC fundation in Terrassa.
+Made by Xavier Olivenza and Sergio Alvarez. The main objective is to create a simple 3D game editor. By doing that, students can learn about different techniques used in actual videogame industry. It's also a great tool to itroduce programmers that have worked and programmed only in 2D environment to 3D programming in videogames.
 
 ## TEAM MEMBERS
 
@@ -9,7 +9,7 @@ The main objective is to create a simple 3D game editor.
 
 <img src="https://github.com/xavierolivenza/UPC_3DEngine/blob/master/docs/Xavier_Olivenza.png?raw=true" width="300">
 
-- Github: <a href="https://github.com/xavierolivenza">
+- Github: [](https://github.com/xavierolivenza)
 
 What I have done:
 
